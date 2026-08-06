@@ -4,321 +4,27 @@
 <script>document.documentElement.classList.add('js');</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="VERITÉ — a verdadeira essência. Uma casa de perfumaria dedicada à sofisticação, à qualidade e à autenticidade."/>
+<meta name="description" content="VERITÉ — a verdade está na sua essência. Uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade."/>
 <meta name="theme-color" content="#0c0c0d"/>
-<title>VERITÉ — A Verdadeira Essência</title>
+<title>VERITÉ — A verdade está na sua essência</title>
 <link rel="canonical" href="https://verite-web.vercel.app/"/>
+<link rel="stylesheet" href="assets/css/style.css"/>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230c0c0d'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Georgia,serif' font-size='34' fill='%23b18a4f'%3EV%3C/text%3E%3C/svg%3E"/>
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="VERITÉ"/>
 <meta property="og:url" content="https://verite-web.vercel.app/"/>
-<meta property="og:title" content="VERITÉ — A Verdadeira Essência"/>
-<meta property="og:description" content="Uma casa de perfumaria dedicada à sofisticação, à qualidade e à autenticidade."/>
+<meta property="og:title" content="VERITÉ — A verdade está na sua essência"/>
+<meta property="og:description" content="Uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade."/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="VERITÉ — A Verdadeira Essência"/>
-<meta name="twitter:description" content="Uma casa de perfumaria dedicada à sofisticação, à qualidade e à autenticidade."/>
-<style>
-  :root{
-    --black:#0c0c0d;
-    --black-2:#161618;
-    --white:#ffffff;
-    --off-white:#faf9f6;
-    --gold:#b18a4f;
-    --gold-light:#d9bd85;
-    --gold-deep:#8a6a37;
-    --radius:2px;
-  }
-
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
-
-  body{
-    margin:0;
-    background:var(--white);
-    color:var(--black);
-    font-family:'Futura','Century Gothic',Optima,Candara,'Segoe UI',ui-sans-serif,system-ui,-apple-system,sans-serif;
-    font-size:16px;
-    line-height:1.75;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-
-  .font-display{
-    font-family:'Cormorant Garamond','Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,ui-serif,serif;
-  }
-
-  a{color:inherit;}
-  h1,h2,h3{text-wrap:balance; margin:0; font-weight:400;}
-  img,svg{max-width:100%;}
-
-  .skip-link{
-    position:absolute; left:1rem; top:-4rem; z-index:100;
-    background:var(--gold); color:var(--black); padding:.75rem 1.3rem; border-radius:2px;
-    text-decoration:none; font-size:.85rem; letter-spacing:.03em;
-    transition:top .25s ease;
-  }
-  .skip-link:focus{top:1rem;}
-
-  .wrap{max-width:1080px; margin:0 auto; padding:0 2rem;}
-  .col{max-width:60ch; margin:0 auto;}
-
-  .eyebrow{
-    font-size:.7rem;
-    letter-spacing:.32em;
-    text-transform:uppercase;
-    color:var(--gold);
-    font-weight:600;
-    margin:0 0 1.4rem 0;
-  }
-
-  .hairline{
-    height:1px; width:64px; margin:0 auto;
-    background:var(--gold);
-  }
-
-  /* ---------- Section theming: local tokens, never global flip ---------- */
-  .section{padding:7rem 0; scroll-margin-top:5.5rem;}
-  .section-light{--sec-bg:var(--white); --sec-fg:var(--black); --sec-fg-soft:#57534c; --sec-line:rgba(12,12,13,.12);
-    background:var(--sec-bg); color:var(--sec-fg);}
-  .section-dark{--sec-bg:var(--black); --sec-fg:var(--off-white); --sec-fg-soft:#b7b2a8; --sec-line:rgba(250,249,246,.16);
-    background:var(--sec-bg); color:var(--sec-fg);}
-  .section-2{--sec-bg:var(--black-2);}
-
-  /* ---------- Header ---------- */
-  header{
-    position:sticky; top:0; z-index:50;
-    background:color-mix(in srgb, var(--black) 86%, transparent);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid rgba(250,249,246,.14);
-  }
-  .nav-inner{
-    display:flex; align-items:center; justify-content:space-between;
-    padding-top:1rem; padding-bottom:1rem;
-  }
-  .brand-mini{
-    display:flex; align-items:center; gap:.7rem;
-    text-decoration:none; color:var(--off-white);
-  }
-  .brand-mini .emblem-mini{width:26px; height:26px; color:var(--gold); flex:none;}
-  .brand-mini .word{
-    font-family:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
-    font-size:1.05rem; letter-spacing:.28em; text-transform:uppercase;
-  }
-  nav.links{display:flex; gap:2.4rem; list-style:none; margin:0; padding:0;}
-  nav.links a, nav.links .disabled-link{
-    text-decoration:none; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--sec-fg-soft, #b7b2a8); position:relative; padding-bottom:.3rem;
-    transition:color .25s ease;
-  }
-  header nav.links a{color:#b7b2a8;}
-  nav.links a::after{
-    content:""; position:absolute; left:0; right:100%; bottom:0; height:1px;
-    background:var(--gold); transition:right .3s ease;
-  }
-  nav.links a:hover{color:var(--off-white);}
-  nav.links a:hover::after{right:0;}
-  nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
-
-  .nav-toggle{
-    display:none; appearance:none; background:none; border:1px solid rgba(250,249,246,.3);
-    border-radius:2px; width:42px; height:38px; padding:0; cursor:pointer;
-    position:relative; flex:none;
-  }
-  .nav-toggle::before, .nav-toggle::after, .nav-toggle span{
-    content:""; position:absolute; left:11px; right:11px; height:1px; background:var(--off-white);
-    transition:transform .3s ease, opacity .3s ease, top .3s ease, background-color .3s ease;
-  }
-  .nav-toggle::before{top:14px;}
-  .nav-toggle span{top:19px;}
-  .nav-toggle::after{top:24px;}
-  .nav-toggle[aria-expanded="true"] span{background:transparent;}
-  .nav-toggle[aria-expanded="true"]::before{top:19px; transform:rotate(45deg);}
-  .nav-toggle[aria-expanded="true"]::after{top:19px; transform:rotate(-45deg);}
-  .nav-toggle:focus-visible{outline:1px solid var(--gold); outline-offset:2px;}
-
-  @media (max-width:860px){
-    :where(html.js) .nav-toggle{display:block;}
-    nav.links{
-      display:flex; flex-direction:column; align-items:flex-start; gap:0;
-      position:absolute; top:100%; left:0; right:0;
-      background:var(--black); border-bottom:1px solid rgba(250,249,246,.14);
-      overflow:hidden; padding:.5rem 2rem 1.6rem;
-      transition:max-height .35s ease, padding .35s ease;
-    }
-    :where(html.js) nav.links{max-height:0; padding:0 2rem;}
-    :where(html.js) nav.links.is-open{max-height:70vh; padding:.5rem 2rem 1.6rem;}
-    nav.links a{width:100%; padding:.9rem 0; border-bottom:1px solid rgba(250,249,246,.1); font-size:.8rem;}
-    nav.links a::after{display:none;}
-  }
-
-  /* ---------- Buttons ---------- */
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:.6rem;
-    padding:1rem 2.4rem;
-    font-family:inherit;
-    font-size:.74rem; letter-spacing:.2em; text-transform:uppercase; font-weight:600;
-    text-decoration:none; cursor:pointer; border:1px solid var(--gold);
-    background:transparent; color:inherit;
-    transition:background-color .3s ease, color .3s ease, transform .25s ease, box-shadow .25s ease;
-  }
-  .section-dark .btn{color:var(--off-white);}
-  .section-dark .btn:hover{background:var(--gold); color:var(--black); transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(177,138,79,.6);}
-  .section-light .btn{color:var(--black);}
-  .section-light .btn:hover{background:var(--gold); color:var(--white); transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(177,138,79,.5);}
-  .btn:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
-  .btn[disabled]{opacity:.4; cursor:not-allowed; pointer-events:none;}
-
-  /* ---------- Hero ---------- */
-  .hero{
-    min-height:100svh;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center;
-    padding:8rem 2rem 4rem;
-    position:relative; isolation:isolate;
-    background:
-      radial-gradient(ellipse 55% 45% at 50% 20%, rgba(177,138,79,.14), transparent 70%),
-      var(--black);
-  }
-  .hero .emblem-wrap{
-    width:min(150px, 34vw); margin:0 auto 2.4rem; color:var(--gold);
-    animation:emblem-in 1.2s cubic-bezier(.2,.8,.2,1) both,
-              emblem-float 8s ease-in-out 1.2s infinite;
-  }
-  @keyframes emblem-in{ from{opacity:0; transform:translateY(14px) scale(.94);} to{opacity:1; transform:translateY(0) scale(1);} }
-  @keyframes emblem-float{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
-
-  .hero h1{
-    font-family:'Cormorant Garamond','Iowan Old Style','Palatino Linotype',Georgia,serif;
-    font-size:clamp(3rem, 9vw, 6rem);
-    letter-spacing:.14em;
-    color:var(--off-white);
-    animation:fade-up 1s .2s cubic-bezier(.2,.8,.2,1) both;
-  }
-  .hero .slogan{
-    font-family:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
-    font-style:italic; font-size:clamp(1.05rem,2.4vw,1.4rem);
-    color:var(--gold-light); letter-spacing:.04em; margin-top:1.1rem;
-    animation:fade-up 1s .35s cubic-bezier(.2,.8,.2,1) both;
-  }
-  .hero-cta{margin-top:3rem; animation:fade-up 1s .5s cubic-bezier(.2,.8,.2,1) both;}
-  @keyframes fade-up{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
-  @media (prefers-reduced-motion:reduce){
-    .hero .emblem-wrap, .hero h1, .hero .slogan, .hero-cta{animation:none;}
-  }
-  .scroll-cue{
-    margin-top:4rem; width:1px; height:52px;
-    background:linear-gradient(rgba(250,249,246,.35), transparent);
-    position:relative;
-  }
-  .scroll-cue::after{
-    content:""; position:absolute; left:-1.5px; top:0; width:4px; height:4px;
-    border-radius:50%; background:var(--gold);
-    animation:scroll-dot 2.6s ease-in-out infinite;
-  }
-  @keyframes scroll-dot{
-    0%{transform:translateY(-4px); opacity:0;} 20%{opacity:1;} 80%{opacity:1;} 100%{transform:translateY(50px); opacity:0;}
-  }
-  @media (prefers-reduced-motion:reduce){ .scroll-cue::after{animation:none; opacity:0;} }
-
-  /* ---------- Section headings ---------- */
-  .section-head{text-align:center; max-width:640px; margin:0 auto 3.6rem;}
-  .section-head h2{
-    font-family:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
-    font-size:clamp(1.9rem,3.6vw,2.6rem);
-  }
-
-  .reveal{transition:opacity .9s ease, transform .9s ease;}
-  :where(html.js) .reveal{opacity:0; transform:translateY(20px);}
-  .reveal.in{opacity:1; transform:translateY(0);}
-  @media (prefers-reduced-motion:reduce){ :where(html.js) .reveal{opacity:1; transform:none; transition:none;} }
-
-  /* ---------- Sobre ---------- */
-  .story{text-align:center;}
-  .story p{color:var(--sec-fg-soft); font-size:1.08rem;}
-
-  /* ---------- Valores ---------- */
-  .valores-grid{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:2.6rem;
-    margin-top:1rem;
-  }
-  @media (max-width:820px){ .valores-grid{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:480px){ .valores-grid{grid-template-columns:1fr;} }
-  .valor{text-align:center; padding-top:1.6rem; border-top:1px solid var(--sec-line); transition:transform .35s ease;}
-  .valor:hover{transform:translateY(-6px);}
-  .valor .icon{width:44px; height:44px; margin:0 auto 1.4rem; color:var(--gold);}
-  .valor .icon svg{width:100%; height:100%; display:block;}
-  .valor h3{
-    font-family:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
-    font-size:1.2rem; letter-spacing:.06em; margin-bottom:.6rem;
-  }
-  .valor p{font-size:.86rem; color:var(--sec-fg-soft); margin:0;}
-
-  /* ---------- Filosofia ---------- */
-  .filosofia{text-align:center;}
-  .filosofia p{color:var(--sec-fg-soft); font-size:1.08rem;}
-
-  /* ---------- Manifesto ---------- */
-  .manifesto{text-align:center;}
-  .manifesto .col{max-width:52ch;}
-  .manifesto p{
-    font-family:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
-    font-size:clamp(1.3rem,2.6vw,1.8rem);
-    font-style:italic;
-    line-height:1.65;
-    color:var(--off-white);
-    margin:0;
-  }
-  .manifesto .hairline{margin-bottom:2.6rem;}
-  .manifesto .hairline.bottom{margin-top:2.6rem; margin-bottom:0;}
-
-  /* ---------- Newsletter ---------- */
-  .newsletter{text-align:center;}
-  .newsletter form{
-    display:flex; gap:0; max-width:460px; margin:2.6rem auto 0;
-    border-bottom:1px solid var(--black);
-  }
-  .newsletter input[type="email"]{
-    flex:1; border:none; background:transparent; padding:.9rem .2rem;
-    font-family:inherit; font-size:.95rem; color:var(--black); outline:none;
-    letter-spacing:.02em;
-  }
-  .newsletter input[type="email"]::placeholder{color:#8c887f;}
-  .newsletter button{
-    border:none; background:transparent; color:var(--black);
-    font-family:inherit; font-size:.74rem; letter-spacing:.18em; text-transform:uppercase;
-    padding:.9rem .3rem; cursor:pointer; transition:color .25s ease;
-  }
-  .newsletter button:hover{color:var(--gold-deep);}
-  .newsletter button:focus-visible{outline:1px solid var(--gold); outline-offset:2px;}
-  .newsletter .note{font-size:.78rem; color:#8c887f; margin-top:1.1rem; letter-spacing:.02em;}
-  .newsletter .thanks{
-    max-width:460px; margin:2.6rem auto 0; font-family:'Cormorant Garamond',Georgia,serif;
-    font-style:italic; font-size:1.15rem; color:var(--gold-deep); display:none;
-  }
-  .newsletter.is-sent form, .newsletter.is-sent .note{display:none;}
-  .newsletter.is-sent .thanks{display:block;}
-
-  /* ---------- Footer ---------- */
-  footer{padding:4.5rem 0 2.6rem; text-align:center;}
-  footer .emblem-wrap{width:40px; height:40px; margin:0 auto 1.6rem; color:var(--gold);}
-  footer nav.links{
-    justify-content:center; margin-bottom:2.4rem; flex-wrap:wrap; row-gap:.8rem;
-  }
-  footer .disabled-link{color:#726e66; cursor:default;}
-  footer .copyright{font-size:.72rem; letter-spacing:.08em; color:#726e66;}
-
-  @media (max-width:820px){
-    .section{padding:5rem 0;}
-  }
-</style>
+<meta name="twitter:title" content="VERITÉ — A verdade está na sua essência"/>
+<meta name="twitter:description" content="Uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade."/>
 </head>
 <body>
-<a class="skip-link" href="#sobre">Pular para conteúdo</a>
+<a class="skip-link" href="#a-verite">Pular para conteúdo</a>
 
 <header>
   <div class="wrap nav-inner">
-    <a class="brand-mini" href="#hero">
+    <a class="brand-mini" href="#inicio">
       <span class="emblem-mini">
         <svg viewBox="0 0 160 160" role="img" aria-label="VERITÉ">
           <circle cx="80" cy="80" r="70" fill="none" stroke="currentColor" stroke-width="1.4"/>
@@ -331,17 +37,19 @@
       <span></span>
     </button>
     <nav id="primary-nav" class="links">
-      <a href="#sobre">Essência</a>
-      <a href="#valores">Valores</a>
-      <a href="#filosofia">Filosofia</a>
+      <a href="#inicio">Início</a>
+      <a href="#a-verite">A VERITÉ</a>
+      <a href="#essencia">Nossa Essência</a>
       <a href="#manifesto">Manifesto</a>
+      <a href="#contato">Contato</a>
     </nav>
   </div>
 </header>
 
 <main>
 
-  <section id="hero" class="section section-dark hero">
+  <!-- ============ Início / Hero ============ -->
+  <section id="inicio" class="section section-dark hero">
     <div class="emblem-wrap">
       <svg viewBox="0 0 160 160" role="img" aria-label="Emblema VERITÉ">
         <circle cx="80" cy="80" r="70" fill="none" stroke="currentColor" stroke-width="1"/>
@@ -349,181 +57,281 @@
         <text x="80" y="104" text-anchor="middle" font-family="'Cormorant Garamond','Iowan Old Style',Georgia,serif" font-size="74" fill="currentColor">V</text>
       </svg>
     </div>
+    <p class="hero-kicker">Casa de Perfumaria</p>
     <h1>VERITÉ</h1>
-    <p class="slogan">A verdadeira essência.</p>
+    <p class="slogan">A verdade está na sua essência.</p>
+    <p class="sub">Uma fragrância não é só um aroma — é presença, lembrança e verdade.</p>
     <div class="hero-cta">
-      <a class="btn" href="#sobre">Conheça a VERITÉ</a>
+      <a class="btn" href="#a-verite">Conheça a VERITÉ</a>
+      <a class="btn btn-ghost" href="#contato">Fale Conosco</a>
     </div>
     <div class="scroll-cue" aria-hidden="true"></div>
   </section>
 
-  <section id="sobre" class="section section-light">
+  <!-- ============ A VERITÉ (história da marca) ============ -->
+  <section id="a-verite" class="section section-light">
     <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Nossa Essência</p>
-        <h2>Nossa Essência</h2>
-      </div>
-      <div class="story col reveal">
-        <p>A VERITÉ nasceu para transformar fragrâncias em experiências. Acreditamos que um perfume é mais do que um aroma: é uma assinatura, uma lembrança e uma forma de expressar quem somos.</p>
+      <div class="section-head-split reveal">
+        <div>
+          <p class="eyebrow">Nossa História</p>
+          <h2>A VERITÉ</h2>
+        </div>
+        <p class="lead">A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela revela personalidade, desperta lembranças e deixa uma presença que continua mesmo depois que a pessoa vai embora.</p>
       </div>
     </div>
   </section>
 
-  <section id="valores" class="section section-dark">
+  <!-- ============ Nossa Essência (valores) ============ -->
+  <section id="essencia" class="section section-dark">
+    <div class="watermark" aria-hidden="true">V</div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">O Que Nos Define</p>
-        <h2>Nossos Valores</h2>
+        <h2>Nossa Essência</h2>
       </div>
-      <div class="valores-grid">
-        <div class="valor reveal">
-          <div class="icon">
+      <ol class="essencia-list">
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <circle cx="24" cy="20" r="15"/>
+              <circle cx="24" cy="20" r="6"/>
+              <path d="M17 33 L14 44 L24 39 L34 44 L31 33"/>
+            </svg>
+          </span>
+          <span class="body"><h3>Autenticidade</h3><p>A verdade em cada gesto.</p></span>
+        </li>
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
               <path d="M24 4 L44 20 L24 44 L4 20 Z"/>
               <path d="M4 20 L44 20"/>
               <path d="M14 20 L24 4"/>
               <path d="M34 20 L24 4"/>
             </svg>
-          </div>
-          <h3>Sofisticação</h3>
-          <p>Elegância em cada detalhe.</p>
-        </div>
-        <div class="valor reveal">
-          <div class="icon">
+          </span>
+          <span class="body"><h3>Elegância</h3><p>Sofisticação em cada detalhe.</p></span>
+        </li>
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
               <circle cx="24" cy="24" r="19"/>
               <path d="M15 24.5 L21 30.5 L33 17"/>
             </svg>
-          </div>
-          <h3>Qualidade</h3>
-          <p>Excelência que se sente.</p>
-        </div>
-        <div class="valor reveal">
-          <div class="icon">
+          </span>
+          <span class="body"><h3>Qualidade</h3><p>Excelência que se sente.</p></span>
+        </li>
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
-              <circle cx="24" cy="20" r="15"/>
-              <circle cx="24" cy="20" r="6"/>
-              <path d="M17 33 L14 44 L24 39 L34 44 L31 33"/>
+              <circle cx="24" cy="24" r="2.6" fill="currentColor" stroke="none"/>
+              <circle cx="24" cy="24" r="10"/>
+              <circle cx="24" cy="24" r="18" opacity=".55"/>
             </svg>
-          </div>
-          <h3>Autenticidade</h3>
-          <p>A verdade em cada gesto.</p>
-        </div>
-        <div class="valor reveal">
-          <div class="icon">
+          </span>
+          <span class="body"><h3>Presença</h3><p>Uma marca que permanece.</p></span>
+        </li>
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
             <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
               <circle cx="15" cy="24" r="8"/>
               <path d="M23 24 L42 24"/>
               <path d="M35 24 L35 31"/>
               <path d="M42 24 L42 30"/>
             </svg>
-          </div>
-          <h3>Exclusividade</h3>
-          <p>Único, como você.</p>
+          </span>
+          <span class="body"><h3>Exclusividade</h3><p>Único, como você.</p></span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ Mais do que uma fragrância ============ -->
+  <section id="experiencia" class="section section-beige experiencia">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Nossa Visão</p>
+        <h2>Mais do que uma fragrância</h2>
+      </div>
+      <div class="col reveal">
+        <p>A VERITÉ existe para ir além do aroma. Criamos experiências marcantes, produtos pensados em cada detalhe e uma ligação genuína com quem nos escolhe — porque uma verdadeira essência não se usa, se vive.</p>
+      </div>
+      <div class="pillars reveal">
+        <div class="pillar">
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M24 6 L27.5 20.5 L42 24 L27.5 27.5 L24 42 L20.5 27.5 L6 24 L20.5 20.5 Z"/>
+            </svg>
+          </span>
+          <span>Experiências</span>
+        </div>
+        <div class="pillar">
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <rect x="10" y="10" width="28" height="28" rx="2"/>
+              <path d="M10 24 L38 24"/>
+              <path d="M24 10 L24 38"/>
+            </svg>
+          </span>
+          <span>Produtos</span>
+        </div>
+        <div class="pillar">
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <circle cx="19" cy="24" r="12"/>
+              <circle cx="29" cy="24" r="12"/>
+            </svg>
+          </span>
+          <span>Conexão</span>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="filosofia" class="section section-light">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Filosofia</p>
-        <h2>A verdade da elegância</h2>
-      </div>
-      <div class="filosofia col reveal">
-        <p>Para a VERITÉ, elegância não está no excesso, mas na verdade de cada detalhe. Valorizamos a autenticidade acima das tendências, a qualidade acima da pressa, e experiências que permanecem muito depois do primeiro encontro.</p>
-      </div>
-    </div>
-  </section>
-
+  <!-- ============ Manifesto ============ -->
   <section id="manifesto" class="section section-dark section-2 manifesto">
     <div class="wrap">
-      <div class="hairline reveal"></div>
+      <div class="hairline glow reveal"></div>
       <div class="col reveal">
         <p>Nossa missão é criar experiências que permaneçam na memória.<br>
         Cada detalhe importa. Cada escolha tem propósito.<br>
         A verdadeira essência está em ser autêntico.</p>
       </div>
-      <div class="hairline bottom reveal"></div>
+      <div class="hairline glow bottom reveal"></div>
     </div>
   </section>
 
-  <section id="newsletter" class="section section-light newsletter">
+  <!-- ============ Lançamento (teaser misterioso) ============ -->
+  <section id="lancamento" class="section launch">
+    <span class="spark" aria-hidden="true"></span>
+    <span class="spark" aria-hidden="true"></span>
+    <span class="spark" aria-hidden="true"></span>
+    <span class="spark" aria-hidden="true"></span>
     <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Em Breve</p>
-        <h2>Seja um dos primeiros a conhecer a VERITÉ</h2>
+      <p class="eyebrow reveal">Em Breve</p>
+      <h2 class="reveal">Algo inesquecível está chegando.</h2>
+      <p class="sub reveal">A primeira coleção VERITÉ está sendo preparada.</p>
+      <div data-form-container>
+        <form class="stack-form reveal" id="launch-form" data-fake-submit>
+          <div class="field">
+            <label for="launch-name">Nome</label>
+            <input id="launch-name" name="name" type="text" placeholder="Seu nome" required/>
+          </div>
+          <div class="field">
+            <label for="launch-email">E-mail</label>
+            <input id="launch-email" name="email" type="email" placeholder="Seu melhor e-mail" required/>
+          </div>
+          <button type="submit" class="btn btn-block">Quero conhecer primeiro</button>
+        </form>
+        <p class="note reveal">Sem spam. Apenas a verdade da sua essência.</p>
+        <p class="form-thanks">Obrigado. Você será um dos primeiros a conhecer a VERITÉ.</p>
       </div>
-      <form class="reveal" id="newsletter-form">
-        <label class="sr-only" for="newsletter-email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">E-mail</label>
-        <input id="newsletter-email" type="email" name="email" placeholder="Seu melhor e-mail" required/>
-        <button type="submit">Entrar</button>
-      </form>
-      <p class="note reveal">Sem spam. Apenas essência.</p>
-      <p class="thanks">Obrigado. Você será um dos primeiros a conhecer a VERITÉ.</p>
     </div>
   </section>
+
+  <!-- ============ Contato ============ -->
+  <section id="contato" class="section section-light">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Fale Com a VERITÉ</p>
+        <h2>Contato</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-intro reveal">
+          <p>Tem uma pergunta, uma parceria em mente ou só quer trocar uma palavra com a VERITÉ? Estamos construindo esta casa com atenção a cada detalhe — inclusive à conversa com quem vai vesti-la.</p>
+          <ul class="contact-list">
+            <li class="disabled-link" title="Em breve">
+              <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="4" y="10" width="40" height="28" rx="2"/><path d="M4 12 L24 28 L44 12"/></svg></span>
+              <span><span class="label">E-mail</span><span class="value">Em breve</span></span>
+            </li>
+            <li class="disabled-link" title="Em breve">
+              <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="36" height="36" rx="10"/><circle cx="24" cy="24" r="9"/><circle cx="34" cy="14" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+              <span><span class="label">Instagram</span><span class="value">Em breve</span></span>
+            </li>
+            <li class="disabled-link" title="Preparado para ser adicionado futuramente">
+              <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><path d="M24 6a18 18 0 0 0-15.4 27.3L6 42l9-2.5A18 18 0 1 0 24 6Z"/></svg></span>
+              <span><span class="label">WhatsApp</span><span class="value">Em breve</span></span>
+            </li>
+          </ul>
+        </div>
+        <div class="contact-form reveal" data-form-container>
+          <form class="stack-form" id="contact-form" data-fake-submit>
+            <div class="field">
+              <label for="contact-name">Nome</label>
+              <input id="contact-name" name="name" type="text" placeholder="Seu nome" required/>
+            </div>
+            <div class="field">
+              <label for="contact-email">E-mail</label>
+              <input id="contact-email" name="email" type="email" placeholder="Seu melhor e-mail" required/>
+            </div>
+            <div class="field">
+              <label for="contact-message">Mensagem</label>
+              <textarea id="contact-message" name="message" rows="4" placeholder="Sua mensagem" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-block">Enviar Mensagem</button>
+          </form>
+          <p class="form-thanks">Obrigado pela mensagem. Responderemos em breve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    V3 TODO: a seção "Coleção" (grid de produtos: perfumes, óleos, kits) entra
+    aqui, entre #lancamento e #contato, reaproveitando os padrões já
+    estabelecidos em assets/css/style.css (.section / .section-head /
+    .reveal / .btn) mais um novo .colecao-grid + .produto-card a definir
+    quando as páginas de produto e o checkout forem construídos.
+  -->
 
 </main>
 
-<footer class="section-dark">
+<footer>
   <div class="wrap">
-    <div class="emblem-wrap">
-      <svg viewBox="0 0 160 160" role="img" aria-label="VERITÉ">
-        <circle cx="80" cy="80" r="70" fill="none" stroke="currentColor" stroke-width="1.4"/>
-        <text x="80" y="103" text-anchor="middle" font-family="'Cormorant Garamond','Iowan Old Style',Georgia,serif" font-size="70" fill="currentColor">V</text>
-      </svg>
+    <div class="footer-grid">
+      <div class="footer-brand reveal">
+        <div class="emblem-wrap">
+          <svg viewBox="0 0 160 160" role="img" aria-label="VERITÉ">
+            <circle cx="80" cy="80" r="70" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <text x="80" y="103" text-anchor="middle" font-family="'Cormorant Garamond','Iowan Old Style',Georgia,serif" font-size="70" fill="currentColor">V</text>
+          </svg>
+        </div>
+        <span class="word">Verité</span>
+        <p>A verdade está na sua essência.</p>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Navegar</h4>
+        <ul>
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#a-verite">A VERITÉ</a></li>
+          <li><a href="#essencia">Nossa Essência</a></li>
+          <li><a href="#manifesto">Manifesto</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Contato</h4>
+        <ul>
+          <li class="disabled-link" title="Em breve">E-mail — em breve</li>
+          <li class="disabled-link" title="Em breve">Instagram — em breve</li>
+          <li class="disabled-link" title="Em breve">WhatsApp — em breve</li>
+        </ul>
+      </div>
     </div>
-    <nav class="links">
-      <a href="#sobre">Sobre</a>
-      <a href="#manifesto">Manifesto</a>
-      <span class="disabled-link" aria-disabled="true" title="Em breve">Contato</span>
-      <span class="disabled-link" aria-disabled="true" title="Em breve">Instagram</span>
-    </nav>
-    <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
+    <div class="footer-bottom">
+      <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
+      <a class="to-top" href="#inicio">
+        Voltar ao topo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+      </a>
+    </div>
   </div>
 </footer>
 
-<script>
-(function(){
-  var toggle = document.querySelector('.nav-toggle');
-  var nav = document.getElementById('primary-nav');
-  if(toggle && nav){
-    toggle.addEventListener('click', function(){
-      var open = nav.classList.toggle('is-open');
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    nav.querySelectorAll('a').forEach(function(a){
-      a.addEventListener('click', function(){
-        nav.classList.remove('is-open');
-        toggle.setAttribute('aria-expanded', 'false');
-      });
-    });
-  }
-
-  if('IntersectionObserver' in window){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          entry.target.classList.add('in');
-          io.unobserve(entry.target);
-        }
-      });
-    }, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
-    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
-  } else {
-    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
-  }
-
-  var form = document.getElementById('newsletter-form');
-  if(form){
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      form.closest('.newsletter').classList.add('is-sent');
-    });
-  }
-})();
-</script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
