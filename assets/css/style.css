@@ -170,6 +170,37 @@ p{margin:0;}
    content needs its own stacking above the ambient layer */
 .hero > *:not(.ambient), .page-hero > *:not(.ambient){position:relative; z-index:1;}
 
+/* soft glow that quietly follows the cursor inside the hero/page-hero
+   ambient layer — assets/js/pointer.js sets --gx/--gy on mousemove */
+.ambient-cursor{
+  position:absolute; inset:0;
+  background:radial-gradient(circle at var(--gx,50%) var(--gy,50%), rgba(177,138,79,.16), transparent 55%);
+}
+
+/* =======================================================================
+   Custom cursor — a small gold dot glued to the pointer plus a larger
+   ring that eases toward it (lerped in JS) and grows over anything
+   clickable. assets/js/pointer.js only creates these on fine-pointer,
+   motion-ok devices; everywhere else the native cursor is untouched.
+   ======================================================================= */
+html.has-custom-cursor, html.has-custom-cursor a, html.has-custom-cursor button,
+html.has-custom-cursor input, html.has-custom-cursor textarea{cursor:none;}
+.cursor-dot, .cursor-ring{
+  position:fixed; top:0; left:0; z-index:9999; border-radius:50%;
+  pointer-events:none; opacity:0; transition:opacity .3s ease;
+}
+.cursor-dot{
+  width:7px; height:7px; background:var(--gold-light);
+  box-shadow:0 0 10px rgba(217,189,133,.7);
+}
+.cursor-dot.is-visible{opacity:1;}
+.cursor-ring{
+  width:34px; height:34px; border:1px solid rgba(177,138,79,.55);
+  transition:opacity .3s ease, width .3s var(--ease), height .3s var(--ease), border-color .3s ease;
+}
+.cursor-ring.is-visible{opacity:1;}
+.cursor-ring.is-active{width:56px; height:56px; border-color:var(--gold-light); background:rgba(177,138,79,.08);}
+
 /* =======================================================================
    Header / navigation
    ======================================================================= */
@@ -264,6 +295,12 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   transition:transform .7s ease;
 }
 .btn:hover::before{transform:translateX(120%) skewX(-12deg);}
+.btn::after{
+  content:""; position:absolute; inset:0; z-index:-1; opacity:0;
+  background:radial-gradient(120px circle at var(--bx,50%) var(--by,50%), rgba(177,138,79,.35), transparent 70%);
+  transition:opacity .35s ease;
+}
+.btn:hover::after{opacity:1;}
 .section-dark .btn, .section-2 .btn, .section-3 .btn{color:var(--off-white);}
 .section-dark .btn:hover, .section-2 .btn:hover, .section-3 .btn:hover{background:var(--gold); color:var(--black); transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(177,138,79,.6);}
 .section-light .btn, .section-beige .btn{color:var(--sec-fg);}
@@ -441,7 +478,7 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 .produto-card{
   aspect-ratio:3/4; border:1px solid var(--sec-line); border-radius:2px;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem;
-  position:relative; overflow:hidden; transition:transform .4s ease, border-color .4s ease;
+  position:relative; overflow:hidden; transition:transform .12s ease-out, border-color .4s ease, box-shadow .4s ease;
 }
 .produto-card::before{
   content:""; position:absolute; inset:0; z-index:0;
@@ -582,7 +619,7 @@ footer > .wrap{position:relative; z-index:1;}
 .product-tile-media{
   aspect-ratio:4/5; border:1px solid var(--sec-line); border-radius:2px; overflow:hidden;
   background:color-mix(in srgb, var(--sec-fg) 4%, transparent); margin-bottom:1rem;
-  transition:border-color .4s ease, box-shadow .4s ease;
+  transition:transform .12s ease-out, border-color .4s ease, box-shadow .4s ease;
 }
 .product-tile:hover .product-tile-media{border-color:var(--gold); box-shadow:0 20px 40px -26px rgba(177,138,79,.4);}
 .product-tile-media img{width:100%; height:100%; object-fit:cover; display:block;}
