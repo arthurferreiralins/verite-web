@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="VERITÉ — Produto."/>
+<meta name="theme-color" content="#0c0c0d"/>
+<title>Produto — VERITÉ</title>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
+<link rel="apple-touch-icon" href="assets/img/favicon-256.png"/>
+<meta name="robots" content="noindex"/>
+</head>
+<body>
+<a class="skip-link" href="#produto-detail">Pular para conteúdo</a>
+
+<header>
+  <div class="wrap nav-inner">
+    <a class="brand-mini" href="index.html#inicio">
+      <span class="emblem-mini">
+        <img src="assets/img/verite-emblem.webp" alt="" />
+      </span>
+      <span class="word">Verité</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Abrir menu">
+      <span></span>
+    </button>
+    <nav id="primary-nav" class="links">
+      <a href="index.html#inicio">Início</a>
+      <a href="index.html#a-verite">A VERITÉ</a>
+      <a href="produtos.html" class="is-active">Produtos</a>
+      <a href="index.html#essencia">Nossa Essência</a>
+      <a href="index.html#manifesto">Manifesto</a>
+      <a href="index.html#contato">Contato</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="produto-detail" class="section section-light">
+    <div class="wrap">
+
+      <div class="product-detail-empty" id="product-not-found">
+        <p class="eyebrow">Produtos</p>
+        <h1>Este produto ainda não está disponível.</h1>
+        <p class="sub">Volte para a página de produtos para conferir as categorias da VERITÉ.</p>
+        <a class="btn" href="produtos.html">Voltar para Produtos</a>
+      </div>
+
+      <div class="product-detail-content" id="product-content" hidden>
+        <div class="product-detail-grid">
+          <div class="product-gallery" id="product-gallery"></div>
+          <div class="product-info">
+            <p class="eyebrow" id="product-category"></p>
+            <h1 id="product-name"></h1>
+            <p class="product-volume" id="product-volume"></p>
+            <p class="product-price" id="product-price"></p>
+            <p class="product-description" id="product-description"></p>
+            <a class="btn btn-block" id="product-buy" href="#" hidden>Comprar</a>
+          </div>
+        </div>
+        <div class="product-related" id="product-related" hidden>
+          <h2>Você também pode gostar</h2>
+          <div class="product-grid" id="related-grid"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand reveal">
+        <div class="emblem-wrap">
+          <img src="assets/img/verite-emblem.webp" alt="" />
+        </div>
+        <span class="word">Verité</span>
+        <p>A verdade está na sua essência.</p>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Navegar</h4>
+        <ul>
+          <li><a href="index.html#inicio">Início</a></li>
+          <li><a href="index.html#a-verite">A VERITÉ</a></li>
+          <li><a href="produtos.html">Produtos</a></li>
+          <li><a href="index.html#essencia">Nossa Essência</a></li>
+          <li><a href="index.html#manifesto">Manifesto</a></li>
+          <li><a href="index.html#contato">Contato</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Contato</h4>
+        <ul>
+          <li class="disabled-link" title="Em breve">Instagram — em breve</li>
+          <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
+      <a class="to-top" href="produtos.html">
+        Voltar para Produtos
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/products-data.js"></script>
+<script src="assets/js/products.js"></script>
+<script src="assets/js/product-detail.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
