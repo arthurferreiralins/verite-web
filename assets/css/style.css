@@ -26,6 +26,16 @@
 html{scroll-behavior:smooth;}
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
 
+/* Fixed, whole-viewport film-grain texture — a physical, printed-paper
+   quality under every section instead of flat vector gradients. Pure
+   data-URI SVG noise, no image request, opacity kept very low so it
+   never fights legibility. */
+body::before{
+  content:""; position:fixed; inset:0; z-index:9998; pointer-events:none;
+  opacity:.035; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 body{
   margin:0;
   background:var(--white);
@@ -200,6 +210,44 @@ html.has-custom-cursor input, html.has-custom-cursor textarea{cursor:none;}
 }
 .cursor-ring.is-visible{opacity:1;}
 .cursor-ring.is-active{width:56px; height:56px; border-color:var(--gold-light); background:rgba(177,138,79,.08);}
+
+/* =======================================================================
+   Marquee — an infinite, gently scrolling band of brand words. Decorative
+   only (aria-hidden) since the same 5 values already exist as real
+   markup in #essencia; this is a typographic/motion accent, not content.
+   ======================================================================= */
+.marquee{
+  overflow:hidden; background:var(--black);
+  border-top:1px solid rgba(177,138,79,.16); border-bottom:1px solid rgba(177,138,79,.16);
+  padding:1.15rem 0;
+}
+.marquee-track{
+  display:flex; align-items:center; gap:2.6rem; width:max-content;
+  animation:marquee-scroll 34s linear infinite;
+}
+@media (prefers-reduced-motion:reduce){ .marquee-track{animation:none;} }
+.marquee-track span{
+  font-family:var(--font-display); font-style:italic; font-size:1.05rem;
+  letter-spacing:.05em; color:var(--gold-light); opacity:.8; white-space:nowrap;
+}
+.marquee-track span.dot{font-style:normal; color:var(--gold); opacity:.5;}
+@keyframes marquee-scroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+/* =======================================================================
+   Intro veil — a brief, elegant emblem reveal on first paint of the
+   homepage. Pure CSS (animation-fill-mode removes it from layout/hit-
+   testing once done); skipped entirely under reduced motion so nothing
+   ever blocks content for those users.
+   ======================================================================= */
+.intro-veil{
+  position:fixed; inset:0; z-index:10000; background:var(--black);
+  display:flex; align-items:center; justify-content:center;
+  animation:veil-out .8s var(--ease) .5s forwards;
+}
+.intro-veil img{width:56px; height:auto; animation:veil-emblem .6s var(--ease) both;}
+@keyframes veil-out{ to{opacity:0; visibility:hidden; pointer-events:none;} }
+@keyframes veil-emblem{ from{opacity:0; transform:scale(.88);} to{opacity:.95; transform:scale(1);} }
+@media (prefers-reduced-motion:reduce){ .intro-veil{display:none;} }
 
 /* =======================================================================
    Header / navigation
