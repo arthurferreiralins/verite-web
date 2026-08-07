@@ -99,14 +99,89 @@ p{margin:0;}
 .section > .wrap{position:relative; z-index:1;}
 
 /* =======================================================================
+   Ambient background system — small gold particles, soft glow orbs, faint
+   abstract shapes, a slow gradient wash. Pure CSS keyframes (transform +
+   opacity only, GPU-friendly, no continuous JS loop) — assets/js/ambient.js
+   only sets each .mote's per-particle custom properties once on load and
+   drives one shared rAF-throttled scroll listener for [data-parallax].
+   Any section using this needs the .has-ambient utility (adds the
+   overflow:hidden the decor requires so nothing bleeds into neighbours).
+   ======================================================================= */
+.has-ambient{overflow:hidden;}
+.ambient{position:absolute; inset:0; z-index:0; pointer-events:none;}
+
+.ambient-orb{
+  position:absolute; border-radius:50%; filter:blur(60px);
+  background:radial-gradient(circle, rgba(177,138,79,.4), transparent 72%);
+  animation:orb-drift 22s ease-in-out infinite; will-change:transform, opacity;
+}
+.ambient-orb.orb-b{animation-duration:28s; animation-direction:reverse;}
+.ambient-orb.orb-c{animation-duration:35s;}
+@keyframes orb-drift{
+  0%,100%{transform:translate(0,0) scale(1); opacity:.4;}
+  50%{transform:translate(3%,-4%) scale(1.18); opacity:.7;}
+}
+@media (prefers-reduced-motion:reduce){ .ambient-orb{animation:none; opacity:.45;} }
+
+.ambient-shape{
+  position:absolute; border:1px solid rgba(177,138,79,.14); border-radius:50%;
+  animation:shape-spin 70s linear infinite;
+}
+.ambient-shape.shape-diamond{border-radius:4px; transform:rotate(45deg);}
+@keyframes shape-spin{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+@media (prefers-reduced-motion:reduce){ .ambient-shape{animation:none;} }
+
+.ambient-particles{position:absolute; inset:0;}
+.mote{
+  position:absolute; left:var(--mx,50%); top:var(--my,50%);
+  width:var(--ms,2.5px); height:var(--ms,2.5px); border-radius:50%;
+  background:var(--gold-light); opacity:0;
+  animation:mote-drift var(--md,16s) ease-in-out var(--mdl,0s) infinite;
+}
+@keyframes mote-drift{
+  0%{transform:translate(0,0); opacity:0;}
+  12%{opacity:.85;}
+  50%{transform:translate(var(--mdx,10px), var(--mdy,-60px)); opacity:.55;}
+  88%{opacity:.15;}
+  100%{transform:translate(calc(var(--mdx,10px) * 1.7), calc(var(--mdy,-60px) * 1.8)); opacity:0;}
+}
+@media (prefers-reduced-motion:reduce){ .mote{display:none;} }
+
+.ambient-wash{
+  position:absolute; inset:-15% -10%; z-index:0;
+  background:linear-gradient(120deg, rgba(177,138,79,.09), transparent 32%, rgba(177,138,79,.05) 62%, transparent 88%);
+  background-size:220% 220%;
+  animation:wash-shift 42s ease-in-out infinite;
+}
+@keyframes wash-shift{ 0%,100%{background-position:0% 0%;} 50%{background-position:100% 60%;} }
+@media (prefers-reduced-motion:reduce){ .ambient-wash{animation:none;} }
+
+/* traveling highlight along a hairline — "brilho dourado passando" */
+.hairline.sweep{position:relative; overflow:hidden;}
+.hairline.sweep::before{
+  content:""; position:absolute; top:0; left:-60%; width:60%; height:100%;
+  background:linear-gradient(90deg, transparent, var(--gold-light), transparent);
+  animation:hairline-sweep 7s ease-in-out infinite;
+}
+@keyframes hairline-sweep{ 0%{left:-60%;} 55%{left:110%;} 100%{left:110%;} }
+@media (prefers-reduced-motion:reduce){ .hairline.sweep::before{animation:none; display:none;} }
+
+/* .hero / .page-hero place content directly (no .wrap), so their real
+   content needs its own stacking above the ambient layer */
+.hero > *:not(.ambient), .page-hero > *:not(.ambient){position:relative; z-index:1;}
+
+/* =======================================================================
    Header / navigation
    ======================================================================= */
 header{
   position:sticky; top:0; z-index:50;
   background:color-mix(in srgb, var(--black) 86%, transparent);
   backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(250,249,246,.14);
   transition:padding .35s ease, background-color .35s ease, box-shadow .35s ease;
+}
+header::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(177,138,79,.45) 45%, rgba(177,138,79,.45) 55%, transparent);
 }
 header.is-scrolled{
   background:color-mix(in srgb, var(--black) 94%, transparent);
@@ -224,7 +299,8 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 @keyframes emblem-float{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
 .hero h1{
   font-family:var(--font-display); font-size:clamp(3.2rem, 10vw, 6.6rem); letter-spacing:.15em;
-  color:var(--off-white); animation:fade-up 1s .2s var(--ease) both;
+  color:var(--off-white); text-shadow:0 0 60px rgba(177,138,79,.3);
+  animation:fade-up 1s .2s var(--ease) both;
 }
 .hero .slogan{
   font-family:var(--font-display); font-style:italic; font-size:clamp(1.15rem,2.6vw,1.55rem);
@@ -289,7 +365,8 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   padding:1.9rem 0; border-bottom:1px solid var(--sec-line);
   transition:transform .4s ease, padding-left .4s ease;
 }
-.essencia-item:hover{transform:translateX(10px);}
+.essencia-item:hover{transform:translateX(10px); border-color:rgba(177,138,79,.5);}
+.essencia-item:hover .icon{color:var(--gold-light);}
 .essencia-item .num{
   font-family:var(--font-display); font-size:1.1rem; color:var(--sec-fg-soft); opacity:.6;
 }
@@ -310,8 +387,10 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 .experiencia{text-align:center;}
 .experiencia p{color:var(--sec-fg-soft); font-size:1.1rem;}
 .pillars{display:flex; justify-content:center; gap:3.2rem; margin-top:3rem; flex-wrap:wrap;}
-.pillar{display:flex; flex-direction:column; align-items:center; gap:.7rem; max-width:160px;}
-.pillar .icon{width:30px; height:30px; color:var(--gold);}
+.pillar{display:flex; flex-direction:column; align-items:center; gap:.7rem; max-width:160px; transition:transform .35s ease;}
+.pillar:hover{transform:translateY(-5px);}
+.pillar .icon{width:30px; height:30px; color:var(--gold); transition:color .3s ease;}
+.pillar:hover .icon{color:var(--gold-light);}
 .pillar span{font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--sec-fg-soft);}
 
 /* =======================================================================
@@ -323,13 +402,6 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
     radial-gradient(ellipse 50% 60% at 50% 0%, rgba(177,138,79,.14), transparent 70%),
     var(--black-3);
 }
-.launch .spark{position:absolute; width:3px; height:3px; border-radius:50%; background:var(--gold-light); opacity:0; animation:spark-fade 6s ease-in-out infinite;}
-.launch .spark:nth-child(1){top:22%; left:18%; animation-delay:.2s;}
-.launch .spark:nth-child(2){top:65%; left:82%; animation-delay:1.8s;}
-.launch .spark:nth-child(3){top:40%; left:88%; animation-delay:3.2s;}
-.launch .spark:nth-child(4){top:78%; left:12%; animation-delay:4.4s;}
-@keyframes spark-fade{ 0%,100%{opacity:0; transform:scale(.6);} 50%{opacity:.9; transform:scale(1.4);} }
-@media (prefers-reduced-motion:reduce){ .launch .spark{display:none;} }
 .launch .eyebrow{color:var(--gold-light);}
 .launch h2{font-family:var(--font-display); font-size:clamp(2rem,4.2vw,3rem); color:var(--off-white);}
 .launch .sub{max-width:42ch; margin:1.2rem auto 0; color:var(--sec-fg-soft); font-size:1.05rem;}
@@ -376,7 +448,7 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   background:radial-gradient(ellipse 70% 60% at 50% 40%, rgba(177,138,79,.14), transparent 75%);
   opacity:.6; transition:opacity .4s ease;
 }
-.produto-card:hover{transform:translateY(-6px); border-color:var(--gold);}
+.produto-card:hover{transform:translateY(-6px); border-color:var(--gold); box-shadow:0 24px 46px -26px rgba(177,138,79,.4);}
 .produto-card:hover::before{opacity:1;}
 .produto-card .produto-num{
   font-family:var(--font-display); font-size:2.6rem; color:var(--gold-light); opacity:.8; position:relative; z-index:1;
@@ -414,7 +486,8 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 /* =======================================================================
    Footer
    ======================================================================= */
-footer{background:var(--black); color:var(--off-white); padding-top:5rem;}
+footer{background:var(--black); color:var(--off-white); padding-top:5rem; position:relative; overflow:hidden;}
+footer > .wrap{position:relative; z-index:1;}
 .footer-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:3rem; padding-bottom:3.4rem; border-bottom:1px solid rgba(250,249,246,.14);}
 @media (max-width:760px){ .footer-grid{grid-template-columns:1fr; gap:2.6rem; text-align:center;} }
 .footer-brand .emblem-wrap{height:34px; width:auto; margin-bottom:1.2rem;}
@@ -426,9 +499,10 @@ footer{background:var(--black); color:var(--off-white); padding-top:5rem;}
 .footer-col h4{font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; font-weight:600;}
 .footer-col ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.85rem;}
 .footer-col a, .footer-col .disabled-link{
-  text-decoration:none; color:#b7b2a8; font-size:.9rem; transition:color .25s ease;
+  text-decoration:none; color:#b7b2a8; font-size:.9rem; display:inline-block;
+  transition:color .25s ease, transform .25s ease;
 }
-.footer-col a:hover{color:var(--off-white);}
+.footer-col a:hover{color:var(--off-white); transform:translateX(4px);}
 .footer-col .disabled-link{color:#726e66; cursor:default; font-style:italic;}
 
 .footer-bottom{
@@ -450,6 +524,7 @@ footer{background:var(--black); color:var(--off-white); padding-top:5rem;}
    ======================================================================= */
 .page-hero{
   padding:9rem 2rem 4.5rem; text-align:center; color:var(--off-white);
+  position:relative; overflow:hidden;
   background:
     radial-gradient(ellipse 55% 45% at 50% 0%, rgba(177,138,79,.16), transparent 70%),
     var(--black);
@@ -480,10 +555,17 @@ footer{background:var(--black); color:var(--off-white); padding-top:5rem;}
 
 .category-empty{
   max-width:420px; margin:0 auto; text-align:center; padding:3.2rem 2rem;
-  border:1px solid var(--sec-line); border-radius:2px;
+  border:1px solid var(--sec-line); border-radius:2px; position:relative; z-index:1;
+  transition:border-color .4s ease, transform .4s ease;
 }
-.category-empty .icon{width:40px; height:40px; margin:0 auto 1.4rem; color:var(--gold);}
+.category-empty:hover{border-color:rgba(177,138,79,.5); transform:translateY(-4px);}
+.category-empty .icon{
+  width:40px; height:40px; margin:0 auto 1.4rem; color:var(--gold);
+  animation:icon-breathe 5s ease-in-out infinite;
+}
 .category-empty .icon svg{width:100%; height:100%; display:block;}
+@keyframes icon-breathe{ 0%,100%{opacity:.75; transform:scale(1);} 50%{opacity:1; transform:scale(1.08);} }
+@media (prefers-reduced-motion:reduce){ .category-empty .icon{animation:none;} }
 .category-empty-title{
   font-family:var(--font-display); font-style:italic; font-size:1.4rem; color:inherit;
 }
@@ -500,7 +582,9 @@ footer{background:var(--black); color:var(--off-white); padding-top:5rem;}
 .product-tile-media{
   aspect-ratio:4/5; border:1px solid var(--sec-line); border-radius:2px; overflow:hidden;
   background:color-mix(in srgb, var(--sec-fg) 4%, transparent); margin-bottom:1rem;
+  transition:border-color .4s ease, box-shadow .4s ease;
 }
+.product-tile:hover .product-tile-media{border-color:var(--gold); box-shadow:0 20px 40px -26px rgba(177,138,79,.4);}
 .product-tile-media img{width:100%; height:100%; object-fit:cover; display:block;}
 .product-tile h3{font-family:var(--font-display); font-size:1.15rem; margin-bottom:.3rem;}
 .product-tile-volume{font-size:.78rem; color:var(--sec-fg-soft);}

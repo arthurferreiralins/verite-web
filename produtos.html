@@ -45,12 +45,19 @@
 <main>
 
   <!-- ============ Topo da página ============ -->
-  <section id="top" class="page-hero">
+  <section id="top" class="page-hero has-ambient">
+    <div class="ambient" data-parallax="20" aria-hidden="true">
+      <div class="ambient-orb orb-a" style="width:320px;height:320px;top:-70px;right:8%;"></div>
+      <div class="ambient-orb orb-b" style="width:260px;height:260px;bottom:-60px;left:6%;"></div>
+      <div class="ambient-shape" style="width:200px;height:200px;top:28%;left:14%;"></div>
+      <div class="ambient-particles" data-count="14"></div>
+    </div>
     <div class="emblem-wrap">
       <img src="assets/img/verite-emblem.webp" alt="" />
     </div>
     <h1>Nossos Produtos</h1>
     <p class="slogan">Em breve, novas formas de revelar a sua essência.</p>
+    <div class="hairline sweep" aria-hidden="true" style="margin-top:1.8rem;"></div>
     <nav class="category-nav" aria-label="Categorias de produtos">
       <a href="#perfumes">Perfumes</a>
       <a href="#oleos-corporais">Óleos Corporais</a>
@@ -60,7 +67,11 @@
   </section>
 
   <!-- ============ Perfumes ============ -->
-  <section id="perfumes" class="section section-light category-block" data-category="perfumes">
+  <section id="perfumes" class="section section-light category-block has-ambient" data-category="perfumes">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:280px;height:280px;top:-70px;left:10%; background:radial-gradient(circle, rgba(177,138,79,.24), transparent 72%);"></div>
+      <div class="ambient-particles" data-count="6"></div>
+    </div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">Categoria</p>
@@ -80,7 +91,11 @@
   </section>
 
   <!-- ============ Óleos Corporais ============ -->
-  <section id="oleos-corporais" class="section section-dark category-block" data-category="oleos-corporais">
+  <section id="oleos-corporais" class="section section-dark category-block has-ambient" data-category="oleos-corporais">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:320px;height:320px;top:-80px;right:6%;"></div>
+      <div class="ambient-particles" data-count="10"></div>
+    </div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">Categoria</p>
@@ -101,7 +116,11 @@
   </section>
 
   <!-- ============ Kits ============ -->
-  <section id="kits" class="section section-beige category-block" data-category="kits">
+  <section id="kits" class="section section-beige category-block has-ambient" data-category="kits">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:280px;height:280px;bottom:-70px;right:10%; background:radial-gradient(circle, rgba(177,138,79,.3), transparent 72%);"></div>
+      <div class="ambient-particles" data-count="6"></div>
+    </div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">Categoria</p>
@@ -125,7 +144,11 @@
   </section>
 
   <!-- ============ Novidades ============ -->
-  <section id="novidades" class="section section-light category-block" data-category="novidades">
+  <section id="novidades" class="section section-light category-block has-ambient" data-category="novidades">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:280px;height:280px;top:-70px;left:50%;margin-left:-140px; background:radial-gradient(circle, rgba(177,138,79,.24), transparent 72%);"></div>
+      <div class="ambient-particles" data-count="6"></div>
+    </div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">Categoria</p>
@@ -145,11 +168,13 @@
   </section>
 
   <!-- ============ Destaque: primeira coleção ============ -->
-  <section class="section section-dark section-3 launch">
-    <span class="spark" aria-hidden="true"></span>
-    <span class="spark" aria-hidden="true"></span>
-    <span class="spark" aria-hidden="true"></span>
-    <span class="spark" aria-hidden="true"></span>
+  <section class="section section-dark section-3 launch has-ambient">
+    <div class="ambient-wash" aria-hidden="true"></div>
+    <div class="ambient" data-parallax="10" aria-hidden="true">
+      <div class="ambient-orb orb-c" style="width:420px;height:420px;top:-120px;left:50%;margin-left:-210px;"></div>
+      <div class="ambient-shape shape-diamond" style="width:180px;height:180px;bottom:8%;left:10%;"></div>
+      <div class="ambient-particles" data-count="16"></div>
+    </div>
     <div class="wrap">
       <h2 class="reveal">A primeira coleção VERITÉ está chegando.</h2>
       <div class="hero-cta reveal" style="margin-top:2.4rem;">
@@ -171,6 +196,9 @@
 </main>
 
 <footer>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient-orb" style="width:280px;height:280px;top:-40px;left:50%;margin-left:-140px; animation-duration:26s;"></div>
+  </div>
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand reveal">
@@ -210,6 +238,7 @@
 
 <script src="assets/js/products-data.js"></script>
 <script src="assets/js/products.js"></script>
+<script src="assets/js/ambient.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>

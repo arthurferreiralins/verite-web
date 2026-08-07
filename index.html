@@ -48,13 +48,20 @@
 <main>
 
   <!-- ============ Início / Hero ============ -->
-  <section id="inicio" class="section section-dark hero">
+  <section id="inicio" class="section section-dark hero has-ambient">
+    <div class="ambient" data-parallax="22" aria-hidden="true">
+      <div class="ambient-orb orb-a" style="width:380px;height:380px;top:-90px;left:6%;"></div>
+      <div class="ambient-orb orb-b" style="width:300px;height:300px;bottom:-70px;right:4%;"></div>
+      <div class="ambient-shape" style="width:240px;height:240px;top:14%;right:12%;"></div>
+      <div class="ambient-particles" data-count="18"></div>
+    </div>
     <div class="emblem-wrap emblem-wrap-full">
       <img src="assets/img/verite-logo-full.webp" alt="VERITÉ Perfumes"/>
     </div>
     <h1 class="sr-only">VERITÉ</h1>
     <p class="slogan">A verdade está na sua essência.</p>
     <p class="sub">Uma fragrância não é só um aroma — é presença, lembrança e verdade.</p>
+    <div class="hairline sweep" aria-hidden="true" style="margin-top:2rem;"></div>
     <div class="hero-cta">
       <a class="btn" href="#a-verite">Conheça a VERITÉ</a>
       <a class="btn btn-ghost" href="#contato">Fale Conosco</a>
@@ -63,7 +70,10 @@
   </section>
 
   <!-- ============ A VERITÉ (história da marca) ============ -->
-  <section id="a-verite" class="section section-light">
+  <section id="a-verite" class="section section-light has-ambient">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:320px;height:320px;top:-100px;right:8%; background:radial-gradient(circle, rgba(177,138,79,.22), transparent 72%);"></div>
+    </div>
     <div class="wrap">
       <div class="section-head-split reveal">
         <div>
@@ -76,7 +86,11 @@
   </section>
 
   <!-- ============ Nossa Coleção (preview sem produtos) ============ -->
-  <section id="colecao" class="section section-dark section-2 colecao">
+  <section id="colecao" class="section section-dark section-2 colecao has-ambient">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb orb-b" style="width:340px;height:340px;top:-80px;left:50%;margin-left:-170px;"></div>
+      <div class="ambient-particles" data-count="10"></div>
+    </div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">Primeira Coleção</p>
@@ -103,8 +117,12 @@
   </section>
 
   <!-- ============ Nossa Essência (valores) ============ -->
-  <section id="essencia" class="section section-dark">
+  <section id="essencia" class="section section-dark has-ambient">
     <div class="watermark" aria-hidden="true">V</div>
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:360px;height:360px;top:-60px;right:-90px;"></div>
+      <div class="ambient-particles" data-count="8"></div>
+    </div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">O Que Nos Define</p>
@@ -172,7 +190,10 @@
   </section>
 
   <!-- ============ Mais do que uma fragrância ============ -->
-  <section id="experiencia" class="section section-beige experiencia">
+  <section id="experiencia" class="section section-beige experiencia has-ambient">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:300px;height:300px;bottom:-90px;left:8%; background:radial-gradient(circle, rgba(177,138,79,.3), transparent 72%);"></div>
+    </div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">Nossa Visão</p>
@@ -214,11 +235,13 @@
   </section>
 
   <!-- ============ Lançamento (teaser misterioso) ============ -->
-  <section id="lancamento" class="section section-dark section-3 launch">
-    <span class="spark" aria-hidden="true"></span>
-    <span class="spark" aria-hidden="true"></span>
-    <span class="spark" aria-hidden="true"></span>
-    <span class="spark" aria-hidden="true"></span>
+  <section id="lancamento" class="section section-dark section-3 launch has-ambient">
+    <div class="ambient-wash" aria-hidden="true"></div>
+    <div class="ambient" data-parallax="10" aria-hidden="true">
+      <div class="ambient-orb orb-c" style="width:420px;height:420px;top:-120px;left:50%;margin-left:-210px;"></div>
+      <div class="ambient-shape shape-diamond" style="width:180px;height:180px;bottom:8%;right:10%;"></div>
+      <div class="ambient-particles" data-count="16"></div>
+    </div>
     <div class="wrap">
       <p class="eyebrow reveal">Em Breve</p>
       <h2 class="reveal">Algo inesquecível está chegando.</h2>
@@ -294,6 +317,9 @@
 </main>
 
 <footer>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient-orb" style="width:280px;height:280px;top:-40px;left:50%;margin-left:-140px; animation-duration:26s;"></div>
+  </div>
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand reveal">
@@ -331,6 +357,7 @@
   </div>
 </footer>
 
+<script src="assets/js/ambient.js"></script>
 <script src="assets/js/main.js"></script>
 </body>
 </html>
