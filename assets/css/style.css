@@ -315,15 +315,6 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 .pillar span{font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--sec-fg-soft);}
 
 /* =======================================================================
-   Manifesto
-   ======================================================================= */
-.manifesto{text-align:center;}
-.manifesto .col{max-width:54ch;}
-.manifesto p{font-family:var(--font-display); font-size:clamp(1.35rem,2.8vw,1.9rem); font-style:italic; line-height:1.65; color:var(--off-white);}
-.manifesto .hairline{margin-bottom:2.6rem;}
-.manifesto .hairline.bottom{margin-top:2.6rem; margin-bottom:0;}
-
-/* =======================================================================
    Lançamento — mystery / coming-soon teaser
    ======================================================================= */
 .launch{
