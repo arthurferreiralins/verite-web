@@ -99,8 +99,9 @@
         <div>
           <p class="eyebrow">Nossa História</p>
           <h2>A VERITÉ</h2>
+          <div class="hairline sweep" style="margin:1.6rem 0 0;"></div>
         </div>
-        <p class="lead">A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela revela personalidade, desperta lembranças e deixa uma presença que continua mesmo depois que a pessoa vai embora.</p>
+        <p class="lead">A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela <em>revela personalidade</em>, <em>desperta lembranças</em> e deixa uma <em>presença</em> que continua mesmo depois que a pessoa vai embora.</p>
       </div>
     </div>
   </section>
@@ -114,11 +115,10 @@
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">Primeira Coleção</p>
-        <h2>Produtos</h2>
+        <h2>A primeira coleção VERITÉ está chegando.</h2>
+        <p class="colecao-tagline">Três expressões. Uma essência.</p>
       </div>
-      <div class="col reveal">
-        <p>Três expressões de uma mesma verdade estão sendo criadas com o mesmo cuidado que define tudo o que carrega o nome VERITÉ. Em breve, cada uma revelará sua própria personalidade.</p>
-      </div>
+      <div class="hairline sweep reveal" style="margin-bottom:3rem;"></div>
       <div class="colecao-grid">
         <div class="produto-card reveal">
           <span class="produto-num">I</span>
@@ -210,18 +210,24 @@
   </section>
 
   <!-- ============ Mais do que uma fragrância ============ -->
-  <section id="experiencia" class="section section-beige experiencia has-ambient">
+  <section id="experiencia" class="section section-dark section-2 experiencia has-ambient">
+    <div class="watermark" aria-hidden="true">V</div>
     <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:300px;height:300px;bottom:-90px;left:8%; background:radial-gradient(circle, rgba(177,138,79,.3), transparent 72%);"></div>
+      <div class="ambient-orb" style="width:340px;height:340px;bottom:-100px;left:6%;"></div>
+      <div class="ambient-orb orb-b" style="width:280px;height:280px;top:-70px;right:8%;"></div>
+      <div class="ambient-particles" data-count="10"></div>
     </div>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow">Nossa Visão</p>
         <h2>Mais do que uma fragrância</h2>
       </div>
-      <div class="col reveal">
-        <p>A VERITÉ existe para ir além do aroma. Criamos experiências marcantes, produtos pensados em cada detalhe e uma ligação genuína com quem nos escolhe — porque uma verdadeira essência não se usa, se vive.</p>
+      <div class="statement-lines">
+        <p class="statement-line reveal" style="transition-delay:.05s">A VERITÉ existe para ir além do aroma.</p>
+        <p class="statement-line reveal" style="transition-delay:.25s">Criamos experiências marcantes e produtos pensados em cada detalhe.</p>
+        <p class="statement-line reveal" style="transition-delay:.45s">Uma ligação genuína com quem nos escolhe.</p>
       </div>
+      <p class="experiencia-tagline reveal" style="transition-delay:.65s">Porque uma verdadeira essência não se usa — se vive.</p>
       <div class="pillars reveal">
         <div class="pillar">
           <span class="icon">
@@ -263,23 +269,28 @@
       <div class="ambient-particles" data-count="16"></div>
     </div>
     <div class="wrap">
-      <p class="eyebrow reveal">Em Breve</p>
-      <h2 class="reveal">Algo inesquecível está chegando.</h2>
-      <p class="sub reveal">A primeira coleção VERITÉ está sendo preparada.</p>
+      <p class="eyebrow reveal">Lista de Espera</p>
+      <h2 class="reveal">Seja um dos primeiros a conhecer a VERITÉ.</h2>
+      <p class="sub reveal">Em breve, novidades diretamente para você.</p>
       <div data-form-container>
-        <form class="stack-form reveal" id="launch-form" data-fake-submit>
+        <form class="stack-form reveal" id="launch-form" data-fake-submit novalidate>
           <div class="field">
             <label for="launch-name">Nome</label>
             <input id="launch-name" name="name" type="text" placeholder="Seu nome" required/>
+            <span class="field-error" aria-live="polite"></span>
           </div>
           <div class="field">
             <label for="launch-email">E-mail</label>
             <input id="launch-email" name="email" type="email" placeholder="Seu melhor e-mail" required/>
+            <span class="field-error" aria-live="polite"></span>
           </div>
-          <button type="submit" class="btn btn-block">Quero conhecer primeiro</button>
+          <button type="submit" class="btn btn-block">
+            <span class="btn-label">Quero conhecer primeiro</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
         </form>
         <p class="note reveal">Sem spam. Apenas a verdade da sua essência.</p>
-        <p class="form-thanks">Obrigado. Você será um dos primeiros a conhecer a VERITÉ.</p>
+        <p class="form-thanks" role="status">Obrigado. Você será um dos primeiros a conhecer a VERITÉ.</p>
       </div>
     </div>
   </section>
@@ -296,6 +307,10 @@
           <p>Tem uma pergunta, uma parceria em mente ou só quer trocar uma palavra com a VERITÉ? Estamos construindo esta casa com atenção a cada detalhe — inclusive à conversa com quem vai vesti-la.</p>
           <ul class="contact-list">
             <li class="disabled-link" title="Em breve">
+              <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="4" y="10" width="40" height="28" rx="2"/><path d="M4 12 L24 28 L44 12"/></svg></span>
+              <span><span class="label">E-mail</span><span class="value">Em breve</span></span>
+            </li>
+            <li class="disabled-link" title="Em breve">
               <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="36" height="36" rx="10"/><circle cx="24" cy="24" r="9"/><circle cx="34" cy="14" r="1.6" fill="currentColor" stroke="none"/></svg></span>
               <span><span class="label">Instagram</span><span class="value">Em breve</span></span>
             </li>
@@ -308,18 +323,33 @@
           </ul>
         </div>
         <div class="contact-form reveal" data-form-container>
-          <form class="stack-form" id="contact-form" data-fake-submit>
+          <form class="stack-form" id="contact-form" data-fake-submit novalidate>
             <div class="field">
               <label for="contact-name">Nome</label>
               <input id="contact-name" name="name" type="text" placeholder="Seu nome" required/>
+              <span class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="contact-email">E-mail</label>
+              <input id="contact-email" name="email" type="email" placeholder="Seu melhor e-mail" required/>
+              <span class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="contact-subject">Assunto</label>
+              <input id="contact-subject" name="subject" type="text" placeholder="Sobre o que você quer falar?" required/>
+              <span class="field-error" aria-live="polite"></span>
             </div>
             <div class="field">
               <label for="contact-message">Mensagem</label>
               <textarea id="contact-message" name="message" rows="4" placeholder="Sua mensagem" required></textarea>
+              <span class="field-error" aria-live="polite"></span>
             </div>
-            <button type="submit" class="btn btn-block">Enviar Mensagem</button>
+            <button type="submit" class="btn btn-block">
+              <span class="btn-label">Enviar Mensagem</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
           </form>
-          <p class="form-thanks">Obrigado pela mensagem. Responderemos em breve.</p>
+          <p class="form-thanks" role="status">Obrigado pela mensagem. Responderemos em breve.</p>
         </div>
       </div>
     </div>
@@ -337,6 +367,7 @@
 </main>
 
 <footer>
+  <div class="watermark" aria-hidden="true">V</div>
   <div class="ambient" aria-hidden="true">
     <div class="ambient-orb" style="width:280px;height:280px;top:-40px;left:50%;margin-left:-140px; animation-duration:26s;"></div>
   </div>

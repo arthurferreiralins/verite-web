@@ -99,13 +99,21 @@ p{margin:0;}
 .section-beige{--sec-bg:var(--beige); --sec-fg:var(--ink-on-beige); --sec-fg-soft:#6b5f4c; --sec-line:rgba(44,38,32,.16);
   background:var(--sec-bg); color:var(--sec-fg);}
 
-/* ghost watermark used behind a couple of sections for editorial depth */
+/* ghost watermark used behind a couple of sections for editorial depth —
+   the V drifts extremely slowly, never enough to distract from text */
 .watermark{
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  font-family:var(--font-display); font-size:min(32vw,26rem); letter-spacing:.06em;
-  color:currentColor; opacity:.045; white-space:nowrap; pointer-events:none;
+  position:absolute; top:50%; right:-3%; left:auto;
+  font-family:var(--font-display); font-size:min(26vw,22rem); letter-spacing:.06em;
+  color:currentColor; opacity:.032; white-space:nowrap; pointer-events:none;
   z-index:0; user-select:none;
+  animation:watermark-drift 46s ease-in-out infinite;
 }
+@keyframes watermark-drift{
+  0%,100%{transform:translateY(-50%) scale(1);}
+  50%{transform:translateY(-52%) scale(1.025);}
+}
+@media (prefers-reduced-motion:reduce){ .watermark{animation:none; transform:translateY(-50%);} }
+@media (max-width:900px){ .watermark{opacity:.02; font-size:min(40vw,15rem); right:-10%;} }
 .section > .wrap{position:relative; z-index:1;}
 
 /* =======================================================================
@@ -324,6 +332,22 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   :where(html.js) nav.links.is-open{max-height:70vh; padding:.5rem 2rem 1.6rem;}
   nav.links a{width:100%; padding:1rem 0; border-bottom:1px solid rgba(250,249,246,.1); font-size:.8rem;}
   nav.links a::after{display:none;}
+
+  /* links cascade in, one after another, once the menu opens */
+  :where(html.js) nav.links a{
+    opacity:0; transform:translateY(-6px);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+  :where(html.js) nav.links.is-open a{opacity:1; transform:translateY(0);}
+  nav.links a:nth-child(1){transition-delay:0s;}
+  nav.links a:nth-child(2){transition-delay:.05s;}
+  nav.links a:nth-child(3){transition-delay:.1s;}
+  nav.links a:nth-child(4){transition-delay:.15s;}
+  nav.links a:nth-child(5){transition-delay:.2s;}
+  nav.links a:nth-child(6){transition-delay:.25s;}
+}
+@media (max-width:860px) and (prefers-reduced-motion:reduce){
+  :where(html.js) nav.links a{opacity:1; transform:none; transition:none;}
 }
 
 /* =======================================================================
@@ -354,6 +378,7 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 .section-light .btn, .section-beige .btn{color:var(--sec-fg);}
 .section-light .btn:hover, .section-beige .btn:hover{background:var(--gold); color:var(--white); transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(177,138,79,.5);}
 .btn:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
+.btn:active{transform:scale(.96);}
 .btn[disabled]{opacity:.4; cursor:not-allowed; pointer-events:none;}
 .btn-block{width:100%;}
 .btn-ghost{border-color:var(--sec-line); font-size:.68rem;}
@@ -420,7 +445,15 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   text-align:left; max-width:none; margin-bottom:3.4rem;
 }
 .section-head-split h2{font-family:var(--font-display); font-size:clamp(2rem,3.8vw,2.9rem);}
-.section-head-split .lead{color:var(--sec-fg-soft); font-size:1.05rem; padding-bottom:.2rem;}
+.section-head-split .lead{
+  color:var(--sec-fg-soft); font-size:clamp(1.15rem,2.2vw,1.45rem); line-height:1.8; padding-bottom:.2rem;
+}
+.section-head-split .lead em{
+  font-style:italic; font-family:var(--font-display); color:var(--gold-deep);
+}
+.section-dark .section-head-split .lead em, .section-2 .section-head-split .lead em, .section-3 .section-head-split .lead em{
+  color:var(--gold-light);
+}
 @media (max-width:760px){
   .section-head-split{grid-template-columns:1fr; text-align:center;}
 }
@@ -445,12 +478,29 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
    ======================================================================= */
 .essencia-list{list-style:none; margin:0; padding:0; border-top:1px solid var(--sec-line); counter-reset:val;}
 .essencia-item{
-  counter-increment:val;
+  counter-increment:val; position:relative;
   display:grid; grid-template-columns:3.4rem 3.2rem 1fr; align-items:center; gap:1.6rem;
   padding:1.9rem 0; border-bottom:1px solid var(--sec-line);
-  transition:transform .4s ease, padding-left .4s ease;
+  /* opacity kept at .reveal's own .9s so the fade-in isn't clipped short
+     by this rule's transform/padding-left durations overriding it (same
+     specificity, later in source — the whole shorthand would otherwise
+     replace .reveal's, not merge with it) */
+  transition:opacity .9s ease, transform .4s ease, padding-left .4s ease, border-color .4s ease;
 }
-.essencia-item:hover{transform:translateX(10px); border-color:rgba(177,138,79,.5);}
+.essencia-item::after{
+  content:""; position:absolute; left:0; bottom:-1px; height:1px; width:0;
+  background:linear-gradient(90deg, var(--gold-light), transparent);
+  transition:width .5s var(--ease);
+}
+.essencia-item:nth-of-type(1){transition-delay:0s;}
+.essencia-item:nth-of-type(2){transition-delay:.08s;}
+.essencia-item:nth-of-type(3){transition-delay:.16s;}
+.essencia-item:nth-of-type(4){transition-delay:.24s;}
+.essencia-item:nth-of-type(5){transition-delay:.32s;}
+/* :hover comes after the nth-of-type delays above (equal specificity,
+   later wins) so hovering never inherits the entrance stagger */
+.essencia-item:hover{transform:translateX(10px); border-color:rgba(177,138,79,.5); transition-delay:0s;}
+.essencia-item:hover::after{width:100%;}
 .essencia-item:hover .icon{color:var(--gold-light);}
 .essencia-item .num{
   font-family:var(--font-display); font-size:1.1rem; color:var(--sec-fg-soft); opacity:.6;
@@ -470,7 +520,17 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
    Mais do que uma fragrância
    ======================================================================= */
 .experiencia{text-align:center;}
-.experiencia p{color:var(--sec-fg-soft); font-size:1.1rem;}
+.experiencia .section-head h2{font-size:clamp(2.4rem,5.6vw,4.2rem);}
+.statement-lines{max-width:56ch; margin:0 auto;}
+.statement-line{
+  font-family:var(--font-display); font-size:clamp(1.5rem,3vw,2.15rem); line-height:1.5;
+  color:var(--off-white); margin:0;
+}
+.statement-line + .statement-line{margin-top:.5rem;}
+.experiencia-tagline{
+  display:block; font-family:var(--font-display); font-style:italic; color:var(--gold-light);
+  font-size:1.2rem; margin-top:2.2rem;
+}
 .pillars{display:flex; justify-content:center; gap:3.2rem; margin-top:3rem; flex-wrap:wrap;}
 .pillar{display:flex; flex-direction:column; align-items:center; gap:.7rem; max-width:160px; transition:transform .35s ease;}
 .pillar:hover{transform:translateY(-5px);}
@@ -502,6 +562,28 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 .field input::placeholder, .field textarea::placeholder{color:var(--sec-fg-soft); opacity:.7;}
 .section-light .field, .section-beige .field{border-color:var(--sec-line);}
 
+.field.is-invalid{border-color:#c17a6f;}
+.field-error{
+  display:block; max-height:0; overflow:hidden; opacity:0;
+  font-size:.72rem; color:#e8a99c; letter-spacing:.02em;
+  transition:max-height .3s ease, opacity .3s ease, margin-top .3s ease;
+}
+.field.is-invalid .field-error{max-height:1.4rem; opacity:1; margin-top:.4rem;}
+/* darker on light/beige backgrounds — the lighter tone above is tuned for
+   the dark launch section, it wouldn't hit AA contrast on white */
+.section-light .field-error, .section-beige .field-error{color:#a3392a;}
+
+.btn .spinner{
+  display:none; position:absolute; left:50%; top:50%; width:15px; height:15px;
+  margin:-8px 0 0 -8px; border:2px solid currentColor; border-right-color:transparent;
+  border-radius:50%; animation:btn-spin .7s linear infinite;
+}
+.btn.is-loading{pointer-events:none;}
+.btn.is-loading .btn-label{opacity:0;}
+.btn.is-loading .spinner{display:block;}
+@keyframes btn-spin{ to{transform:rotate(360deg);} }
+@media (prefers-reduced-motion:reduce){ .btn .spinner{animation-duration:1.4s;} }
+
 .launch .note{font-size:.78rem; color:var(--sec-fg-soft); margin-top:1.2rem; letter-spacing:.02em;}
 .form-thanks{
   max-width:460px; margin:2.8rem auto 0; font-family:var(--font-display); font-style:italic;
@@ -512,36 +594,58 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 .is-sent .form-thanks{display:block;}
 
 /* =======================================================================
-   Nossa Coleção — product-card shells with no product content yet;
-   swap each .produto-num/.produto-tag pair for real name/image/price
-   later without touching the grid itself.
+   Primeira Coleção — three "mystery" glass cards for the secret future
+   launches. No product shape, no imagery: dark glass, light from behind,
+   a roman numeral, a hover reveal. Swap each .produto-num/.produto-tag
+   pair for real name/image/price later without touching the grid itself.
    ======================================================================= */
 .colecao{text-align:center;}
+.colecao .section-head h2{font-size:clamp(1.9rem,3.6vw,2.9rem);}
+.colecao-tagline{
+  font-family:var(--font-display); font-style:italic; color:var(--gold-light);
+  font-size:1.1rem; margin-top:1rem;
+}
 .colecao > .wrap > p, .colecao .col p{color:var(--sec-fg-soft); font-size:1.08rem;}
 .colecao-grid{
   display:grid; grid-template-columns:repeat(3,1fr); gap:1.8rem;
-  margin-top:3.2rem;
+  margin-top:3.4rem;
 }
 @media (max-width:760px){ .colecao-grid{grid-template-columns:1fr; max-width:320px; margin-left:auto; margin-right:auto;} }
 .produto-card{
-  aspect-ratio:3/4; border:1px solid var(--sec-line); border-radius:2px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem;
-  position:relative; overflow:hidden; transition:transform .12s ease-out, border-color .4s ease, box-shadow .4s ease;
+  aspect-ratio:3/4; border:1px solid rgba(177,138,79,.22); border-radius:3px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.1rem;
+  position:relative; overflow:hidden; isolation:isolate;
+  background:linear-gradient(165deg, rgba(255,255,255,.035), rgba(0,0,0,.35));
+  backdrop-filter:blur(3px);
+  /* opacity kept at .reveal's own .9s — see the same note on .essencia-item */
+  transition:opacity .9s ease, transform .12s ease-out, border-color .4s ease, box-shadow .4s ease;
 }
 .produto-card::before{
-  content:""; position:absolute; inset:0; z-index:0;
-  background:radial-gradient(ellipse 70% 60% at 50% 40%, rgba(177,138,79,.14), transparent 75%);
-  opacity:.6; transition:opacity .4s ease;
+  content:""; position:absolute; inset:-25%; z-index:0;
+  background:radial-gradient(circle at 50% 32%, rgba(177,138,79,.4), transparent 62%);
+  filter:blur(26px); opacity:.5;
+  animation:orb-drift 15s ease-in-out infinite;
 }
-.produto-card:hover{transform:translateY(-6px); border-color:var(--gold); box-shadow:0 24px 46px -26px rgba(177,138,79,.4);}
-.produto-card:hover::before{opacity:1;}
+.produto-card::after{
+  content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
+  background:linear-gradient(115deg, transparent 32%, rgba(255,255,255,.09) 50%, transparent 68%);
+  transform:translateX(-130%);
+  transition:transform 1s ease;
+}
+.produto-card:hover{transform:translateY(-8px); border-color:rgba(177,138,79,.55); box-shadow:0 28px 54px -26px rgba(177,138,79,.45);}
+.produto-card:hover::before{opacity:.85;}
+.produto-card:hover::after{transform:translateX(130%);}
 .produto-card .produto-num{
-  font-family:var(--font-display); font-size:2.6rem; color:var(--gold-light); opacity:.8; position:relative; z-index:1;
+  font-family:var(--font-display); font-size:2.8rem; color:var(--gold-light); opacity:.85; position:relative; z-index:1;
+  text-shadow:0 0 34px rgba(177,138,79,.55); transition:opacity .4s ease, text-shadow .4s ease;
 }
+.produto-card:hover .produto-num{opacity:1; text-shadow:0 0 46px rgba(177,138,79,.8);}
 .produto-card .produto-tag{
-  font-size:.66rem; letter-spacing:.22em; text-transform:uppercase; color:var(--sec-fg-soft);
-  position:relative; z-index:1;
+  font-size:.66rem; letter-spacing:.24em; text-transform:uppercase; color:var(--sec-fg-soft);
+  position:relative; z-index:1; opacity:.75; transition:opacity .4s ease;
 }
+.produto-card:hover .produto-tag{opacity:1;}
+@media (prefers-reduced-motion:reduce){ .produto-card::before{animation:none;} }
 
 /* =======================================================================
    Contato
@@ -573,6 +677,17 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
    ======================================================================= */
 footer{background:var(--black); color:var(--off-white); padding-top:5rem; position:relative; overflow:hidden;}
 footer > .wrap{position:relative; z-index:1;}
+/* footer's own 3-column grid is wide and left-aligned, so the generic
+   right-anchored .watermark would land right on top of the "Navegar"
+   links — pin it low and to the left instead, behind the short brand
+   column where there's no text past the third line */
+footer .watermark{
+  top:auto; bottom:-14%; left:-2%; right:auto; font-size:min(18vw,15rem);
+  animation:watermark-drift-footer 46s ease-in-out infinite;
+}
+@keyframes watermark-drift-footer{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.025);} }
+@media (prefers-reduced-motion:reduce){ footer .watermark{animation:none;} }
+@media (max-width:900px){ footer .watermark{bottom:-6%; font-size:min(30vw,11rem);} }
 .footer-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:3rem; padding-bottom:3.4rem; border-bottom:1px solid rgba(250,249,246,.14);}
 @media (max-width:760px){ .footer-grid{grid-template-columns:1fr; gap:2.6rem; text-align:center;} }
 .footer-brand .emblem-wrap{height:34px; width:auto; margin-bottom:1.2rem;}

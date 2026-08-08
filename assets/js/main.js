@@ -64,12 +64,49 @@
   }
 
   /* Forms are front-end only for now — no email service wired up yet.
-     Each just swaps its container into a thank-you state. */
+     Each validates inline (no alert()), shows a loading state on the
+     button, then swaps its container into a thank-you state. */
   document.querySelectorAll('[data-fake-submit]').forEach(function(form){
+    form.querySelectorAll('input, textarea').forEach(function(input){
+      input.addEventListener('input', function(){
+        var field = input.closest('.field');
+        if(field) field.classList.remove('is-invalid');
+      });
+    });
+
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      var container = form.closest('[data-form-container]') || form.parentElement;
-      container.classList.add('is-sent');
+
+      var valid = true;
+      var firstInvalid = null;
+      form.querySelectorAll('[required]').forEach(function(input){
+        var field = input.closest('.field');
+        var ok = input.checkValidity();
+        if(field){
+          field.classList.toggle('is-invalid', !ok);
+          var err = field.querySelector('.field-error');
+          if(err){
+            err.textContent = ok ? '' :
+              (input.validity.valueMissing ? 'Este campo é obrigatório.' : 'Verifique o formato deste campo.');
+          }
+        }
+        if(!ok){
+          valid = false;
+          if(!firstInvalid) firstInvalid = input;
+        }
+      });
+      if(!valid){
+        if(firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      var btn = form.querySelector('button[type="submit"]');
+      if(btn) btn.classList.add('is-loading');
+      window.setTimeout(function(){
+        if(btn) btn.classList.remove('is-loading');
+        var container = form.closest('[data-form-container]') || form.parentElement;
+        container.classList.add('is-sent');
+      }, 750);
     });
   });
 })();
