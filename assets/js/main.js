@@ -48,6 +48,17 @@
     });
   }
 
+  /* FAQ accordion — plain button + aria-expanded, no accordion library */
+  document.querySelectorAll('.faq-trigger').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.closest('.faq-item');
+      var panel = document.getElementById(btn.getAttribute('aria-controls'));
+      var open = item.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(panel) panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    });
+  });
+
   /* Nossa Essência: whichever value is crossing the vertical center of the
      viewport gets individual emphasis, so each word gets its own moment
      as the user scrolls through the list instead of five equal cards */

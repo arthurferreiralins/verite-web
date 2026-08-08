@@ -376,6 +376,7 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   nav.links a:nth-child(4){transition-delay:.15s;}
   nav.links a:nth-child(5){transition-delay:.2s;}
   nav.links a:nth-child(6){transition-delay:.25s;}
+  nav.links a:nth-child(7){transition-delay:.3s;}
 }
 @media (max-width:860px) and (prefers-reduced-motion:reduce){
   :where(html.js) nav.links a{opacity:1; transform:none; transition:none;}
@@ -588,21 +589,45 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   display:block; font-family:var(--font-display); font-style:italic; color:var(--gold-light);
   font-size:1.2rem; margin-top:2.2rem;
 }
-.concept-words{
-  display:flex; justify-content:center; flex-wrap:wrap; gap:.6rem 1.2rem;
-  margin-top:2.6rem;
+/* the five words get to be the moment, not a caption — big, editorial,
+   each one settling into focus a beat after the last */
+.concept-reveal{
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:baseline;
+  gap:.6rem 2.2rem; margin-top:3.4rem; max-width:52rem; margin-left:auto; margin-right:auto;
 }
-.concept-words span{
-  font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:var(--gold);
-  opacity:.75;
+.concept-reveal span{
+  font-family:var(--font-display); font-size:clamp(1.7rem,4.4vw,3.1rem);
+  text-transform:uppercase; letter-spacing:.03em; color:var(--gold-light);
+  opacity:.92;
 }
-.concept-words span:not(:last-child)::after{content:"·"; margin-left:1.2rem; color:rgba(177,138,79,.4);}
+@media (max-width:640px){ .concept-reveal{gap:.4rem 1.4rem;} }
 .pillars{display:flex; justify-content:center; gap:3.2rem; margin-top:3rem; flex-wrap:wrap;}
 .pillar{display:flex; flex-direction:column; align-items:center; gap:.7rem; max-width:160px; transition:transform .35s ease;}
 .pillar:hover{transform:translateY(-5px);}
 .pillar .icon{width:30px; height:30px; color:var(--gold); transition:color .3s ease;}
 .pillar:hover .icon{color:var(--gold-light);}
 .pillar span{font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--sec-fg-soft);}
+
+/* =======================================================================
+   Manifesto VERITÉ — short, cinematic, one line at a time
+   ======================================================================= */
+.manifesto-section{text-align:center;}
+.manifesto-lines{max-width:44rem; margin:2.4rem auto 0;}
+.manifesto-line{
+  font-family:var(--font-display); font-style:italic; font-size:clamp(1.3rem,2.8vw,1.9rem);
+  line-height:1.7; color:var(--off-white); margin:0;
+}
+.manifesto-line + .manifesto-line{margin-top:.3rem;}
+.manifesto-pause{margin-top:1.8rem;}
+.manifesto-signature{margin-top:3.2rem;}
+.manifesto-brand{
+  font-family:var(--font-display); font-size:clamp(2.1rem,5vw,3.3rem); letter-spacing:.22em;
+  color:var(--gold-light); text-shadow:0 0 44px rgba(177,138,79,.4); margin:0;
+}
+.manifesto-slogan{
+  font-family:var(--font-display); font-style:italic; color:var(--sec-fg-soft);
+  font-size:1.1rem; margin:.9rem 0 0;
+}
 
 /* =======================================================================
    Lançamento — mystery / coming-soon teaser
@@ -651,11 +676,18 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 @media (prefers-reduced-motion:reduce){ .btn .spinner{animation-duration:1.4s;} }
 
 .launch .note{font-size:.78rem; color:var(--sec-fg-soft); margin-top:1.2rem; letter-spacing:.02em;}
-.form-thanks{
-  max-width:460px; margin:2.8rem auto 0; font-family:var(--font-display); font-style:italic;
-  font-size:1.15rem; color:var(--gold-light); display:none;
+.form-thanks{max-width:460px; margin:2.8rem auto 0; display:none;}
+.form-thanks-title{
+  font-family:var(--font-display); font-size:1.4rem; color:var(--gold-light); margin:0;
 }
-.section-light .form-thanks, .section-beige .form-thanks{color:var(--gold-deep);}
+.form-thanks-sub{
+  font-family:var(--font-display); font-style:italic; color:var(--sec-fg-soft);
+  font-size:1rem; margin:.6rem 0 0;
+}
+/* single-paragraph .form-thanks (contact form) keeps its own italic look */
+p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15rem; color:var(--gold-light);}
+.section-light .form-thanks-title, .section-beige .form-thanks-title,
+.section-light p.form-thanks, .section-beige p.form-thanks{color:var(--gold-deep);}
 .is-sent form, .is-sent .note{display:none;}
 .is-sent .form-thanks{display:block;}
 
@@ -742,6 +774,37 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 @media (prefers-reduced-motion:reduce){ .produto-card::before{animation:none;} }
 
 /* =======================================================================
+   Perguntas Frequentes — accessible accordion: real <button>, aria-expanded
+   + aria-controls, a grid-template-rows 0fr→1fr trick for the smooth
+   height animation (no scrollHeight measuring in JS needed).
+   ======================================================================= */
+.faq-list{max-width:760px; margin:3rem auto 0; border-top:1px solid var(--sec-line);}
+.faq-item{border-bottom:1px solid var(--sec-line);}
+.faq-item h3{margin:0;}
+.faq-trigger{
+  width:100%; display:flex; align-items:center; justify-content:space-between; gap:1.4rem;
+  background:none; border:none; cursor:pointer; text-align:left; color:inherit;
+  padding:1.5rem 0; font-family:var(--font-display); font-size:1.12rem;
+  transition:color .3s ease;
+}
+.faq-trigger:hover{color:var(--gold-deep);}
+.faq-trigger:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
+.faq-icon{position:relative; width:18px; height:18px; flex:none;}
+.faq-icon::before, .faq-icon::after{
+  content:""; position:absolute; top:50%; left:50%; background:var(--gold);
+  transform:translate(-50%,-50%);
+}
+.faq-icon::before{width:14px; height:1.5px;}
+.faq-icon::after{width:1.5px; height:14px; transition:transform .35s var(--ease), opacity .35s ease;}
+.faq-item.is-open .faq-icon::after{transform:translate(-50%,-50%) rotate(90deg); opacity:0;}
+.faq-panel{display:grid; grid-template-rows:0fr; transition:grid-template-rows .4s var(--ease);}
+.faq-item.is-open .faq-panel{grid-template-rows:1fr;}
+.faq-panel-inner{overflow:hidden; min-height:0;}
+.faq-panel-inner p{color:var(--sec-fg-soft); font-size:.98rem; line-height:1.8; padding-bottom:1.6rem; margin:0;}
+.faq-panel-inner a{color:var(--gold-deep); text-decoration:underline; text-underline-offset:3px;}
+@media (prefers-reduced-motion:reduce){ .faq-panel{transition:none;} }
+
+/* =======================================================================
    Contato
    ======================================================================= */
 .contact-grid{display:grid; grid-template-columns:.85fr 1.15fr; gap:4rem; text-align:left;}
@@ -805,6 +868,11 @@ footer .watermark{
 }
 .footer-col a:hover{color:var(--off-white); transform:translateX(4px);}
 .footer-col .disabled-link{color:#726e66; cursor:default; font-style:italic;}
+
+.footer-legal{text-align:center; padding-top:2.6rem; font-size:.76rem;}
+.footer-legal a{text-decoration:none; color:#8c887d; transition:color .25s ease;}
+.footer-legal a:hover{color:var(--off-white);}
+.footer-legal-dot{margin:0 .8rem; color:#5c584f;}
 
 .footer-bottom{
   display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
@@ -913,6 +981,50 @@ footer .watermark{
 
 .product-related{margin-top:5rem; padding-top:3.5rem; border-top:1px solid var(--sec-line);}
 .product-related h2{font-family:var(--font-display); font-size:clamp(1.5rem,2.8vw,1.9rem); margin-bottom:2rem; text-align:center;}
+
+/* =======================================================================
+   Legal pages — Privacidade / Termos, and shared by the 404 page's
+   simpler centered variant. Plain long-form reading, generous width cap.
+   ======================================================================= */
+.legal-page{padding-top:9rem;}
+.legal-page h1{font-family:var(--font-display); font-size:clamp(2.2rem,4.5vw,3.2rem); margin-bottom:.6rem;}
+.legal-updated{font-size:.8rem; color:var(--sec-fg-soft); letter-spacing:.02em; margin-bottom:3.2rem;}
+.legal-body{max-width:68ch;}
+.legal-body h2{
+  font-family:var(--font-display); font-size:1.35rem; margin:0 0 1rem;
+  padding-top:1.8rem; border-top:1px solid var(--sec-line);
+}
+.legal-body h2:first-of-type{border-top:none; padding-top:0;}
+.legal-body p{color:var(--sec-fg-soft); line-height:1.85; margin:0 0 1.8rem;}
+.legal-body a{color:var(--gold-deep); text-decoration:underline; text-underline-offset:3px;}
+.legal-note{
+  font-style:italic; color:var(--gold-deep); background:rgba(177,138,79,.08);
+  border-left:2px solid var(--gold); padding:.9rem 1.2rem; border-radius:2px;
+  margin:0 0 1.8rem;
+}
+.legal-note-inline{font-style:italic; color:var(--gold-deep);}
+.legal-page .btn{margin-top:1rem;}
+
+/* =======================================================================
+   404 — branded, not the framework default
+   ======================================================================= */
+.not-found{
+  min-height:100svh; display:flex; align-items:center; justify-content:center;
+  padding:6rem 2rem; text-align:center; position:relative;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 30%, rgba(177,138,79,.15), transparent 70%),
+    var(--black);
+}
+.not-found-content{position:relative; z-index:1; max-width:34rem;}
+.not-found-content .emblem-wrap{width:54px; margin:0 auto 1.6rem; color:var(--gold);}
+.not-found-content .emblem-wrap img{width:100%; height:auto; display:block;}
+.not-found-code{
+  font-family:var(--font-display); font-size:clamp(3.6rem,10vw,6rem); color:var(--gold-light);
+  letter-spacing:.06em; text-shadow:0 0 50px rgba(177,138,79,.35); margin:0 0 .6rem;
+}
+.not-found-content h1{font-family:var(--font-display); font-size:clamp(1.5rem,3vw,2.1rem); color:var(--off-white);}
+.not-found-content .sub{max-width:38ch; margin:1.1rem auto 0; color:#b7b2a8;}
+.not-found-content .hero-cta{margin-top:2.4rem;}
 
 @media (max-width:820px){
   .section{padding:5.5rem 0;}
