@@ -48,6 +48,19 @@
     });
   }
 
+  /* Nossa Essência: whichever value is crossing the vertical center of the
+     viewport gets individual emphasis, so each word gets its own moment
+     as the user scrolls through the list instead of five equal cards */
+  var essenciaItems = document.querySelectorAll('.essencia-item');
+  if(essenciaItems.length && 'IntersectionObserver' in window){
+    var focusObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        entry.target.classList.toggle('is-focused', entry.isIntersecting);
+      });
+    }, {rootMargin:'-45% 0px -45% 0px'});
+    essenciaItems.forEach(function(el){ focusObserver.observe(el); });
+  }
+
   /* Scroll-in reveal, staggered within any shared parent via CSS nth-child delays */
   if('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
@@ -58,9 +71,9 @@
         }
       });
     }, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
-    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+    document.querySelectorAll('.reveal, .reveal-blur').forEach(function(el){ io.observe(el); });
   } else {
-    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+    document.querySelectorAll('.reveal, .reveal-blur').forEach(function(el){ el.classList.add('in'); });
   }
 
   /* Forms are front-end only for now — no email service wired up yet.

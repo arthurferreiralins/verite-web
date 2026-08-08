@@ -13,6 +13,7 @@
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isNarrow = window.matchMedia && window.matchMedia('(max-width: 700px)').matches;
+  var finePointer = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
 
   function rand(min, max){ return Math.random() * (max - min) + min; }
 
@@ -43,6 +44,10 @@
     var layers = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
     if(!layers.length) return;
 
+    // desktop-only depth cue: the same layers drift a few px opposite the
+    // mouse, combined with the scroll offset into one transform per frame
+    var mouseX = 0, mouseY = 0;
+
     var ticking = false;
     function apply(){
       layers.forEach(function(layer){
@@ -51,19 +56,29 @@
         // progress: -1 (section just below viewport) .. 1 (just above), 0 centered
         var progress = (rect.top + rect.height / 2 - vh / 2) / vh;
         var strength = parseFloat(layer.getAttribute('data-parallax')) || 18;
-        layer.style.transform = 'translate3d(0,' + (progress * strength).toFixed(1) + 'px,0)';
+        var dx = finePointer ? mouseX * 10 : 0;
+        var dy = finePointer ? mouseY * 6 : 0;
+        layer.style.transform =
+          'translate3d(' + dx.toFixed(1) + 'px,' + (progress * strength + dy).toFixed(1) + 'px,0)';
       });
       ticking = false;
     }
-    function onScroll(){
+    function requestApply(){
       if(!ticking){
         window.requestAnimationFrame(apply);
         ticking = true;
       }
     }
     apply();
-    window.addEventListener('scroll', onScroll, {passive:true});
-    window.addEventListener('resize', onScroll, {passive:true});
+    window.addEventListener('scroll', requestApply, {passive:true});
+    window.addEventListener('resize', requestApply, {passive:true});
+    if(finePointer){
+      window.addEventListener('mousemove', function(e){
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        requestApply();
+      }, {passive:true});
+    }
   }
 
   document.addEventListener('DOMContentLoaded', function(){
