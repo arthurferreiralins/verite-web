@@ -1,4 +1,4 @@
-const { sql } = require('../_lib/db');
+const { sql } = require('../../_lib/db');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {

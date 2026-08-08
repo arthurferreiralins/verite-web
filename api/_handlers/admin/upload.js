@@ -1,5 +1,5 @@
 const { put, del } = require('@vercel/blob');
-const { requireAdminSession } = require('../_lib/auth');
+const { requireAdminSession } = require('../../_lib/auth');
 
 const ALLOWED_TYPES = {
   'image/jpeg': 'jpg',
@@ -80,4 +80,5 @@ module.exports = async function handler(req, res) {
   }
 };
 
-module.exports.config = { api: { bodyParser: false } };
+// bodyParser is disabled at the dispatcher level (api/admin/[...slug].js),
+// not here — this file is no longer a top-level Vercel route on its own.

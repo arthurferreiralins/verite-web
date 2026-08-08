@@ -1,15 +1,8 @@
-const { sql } = require('../_lib/db');
-const { requireAdminSession } = require('../_lib/auth');
+const { sql } = require('../../_lib/db');
+const { requireAdminSession } = require('../../_lib/auth');
+const { readJsonBody } = require('../../_lib/readBody');
 
 const STATUSES = ['novo', 'lido', 'respondido'];
-
-function parseBody(req) {
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { body = {}; }
-  }
-  return body || {};
-}
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -30,7 +23,7 @@ module.exports = async function handler(req, res) {
       res.status(400).json({ ok: false, error: 'ID da mensagem é obrigatório.' });
       return;
     }
-    const body = parseBody(req);
+    const body = await readJsonBody(req);
     if (!STATUSES.includes(body.status)) {
       res.status(400).json({ ok: false, error: 'Status inválido.' });
       return;

@@ -1,4 +1,4 @@
-const { getSession } = require('../_lib/auth');
+const { getSession } = require('../../_lib/auth');
 
 module.exports = async function handler(req, res) {
   const session = getSession(req);

@@ -1,5 +1,5 @@
-const { sql } = require('../_lib/db');
-const { requireAdminSession } = require('../_lib/auth');
+const { sql } = require('../../_lib/db');
+const { requireAdminSession } = require('../../_lib/auth');
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);

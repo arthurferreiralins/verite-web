@@ -1,14 +1,7 @@
-const { sql } = require('../_lib/db');
-const { requireAdminSession } = require('../_lib/auth');
-const { isOptionalString, str } = require('../_lib/validate');
-
-function parseBody(req) {
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { body = {}; }
-  }
-  return body || {};
-}
+const { sql } = require('../../_lib/db');
+const { requireAdminSession } = require('../../_lib/auth');
+const { isOptionalString, str } = require('../../_lib/validate');
+const { readJsonBody } = require('../../_lib/readBody');
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -21,7 +14,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
-    const body = parseBody(req);
+    const body = await readJsonBody(req);
     if (!isOptionalString(body.brandName, 100) || !isOptionalString(body.instagramUrl, 300) || !isOptionalString(body.whatsappNumber, 40) || !isOptionalString(body.contactEmail, 254)) {
       res.status(400).json({ ok: false, error: 'Valores inválidos.' });
       return;

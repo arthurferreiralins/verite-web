@@ -1,14 +1,7 @@
-const { sql } = require('../_lib/db');
-const { requireAdminSession } = require('../_lib/auth');
-const { isNonEmptyString, str } = require('../_lib/validate');
-
-function parseBody(req) {
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { body = {}; }
-  }
-  return body || {};
-}
+const { sql } = require('../../_lib/db');
+const { requireAdminSession } = require('../../_lib/auth');
+const { isNonEmptyString, str } = require('../../_lib/validate');
+const { readJsonBody } = require('../../_lib/readBody');
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -23,7 +16,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const body = parseBody(req);
+    const body = await readJsonBody(req);
     const question = str(body.question);
     const answer = str(body.answer);
     if (!isNonEmptyString(question, 300) || !isNonEmptyString(answer, 4000)) {
@@ -42,7 +35,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'PUT') {
-    const body = parseBody(req);
+    const body = await readJsonBody(req);
 
     if (!id && Array.isArray(body.reorder)) {
       for (const entry of body.reorder) {

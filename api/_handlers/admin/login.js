@@ -1,14 +1,7 @@
-const { verifyPassword, createSessionCookie } = require('../_lib/auth');
-const { getClientIp, isLoginRateLimited, recordLoginAttempt } = require('../_lib/rateLimit');
-const { isValidEmail, isNonEmptyString } = require('../_lib/validate');
-
-function parseBody(req) {
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { body = {}; }
-  }
-  return body || {};
-}
+const { verifyPassword, createSessionCookie } = require('../../_lib/auth');
+const { getClientIp, isLoginRateLimited, recordLoginAttempt } = require('../../_lib/rateLimit');
+const { isValidEmail, isNonEmptyString } = require('../../_lib/validate');
+const { readJsonBody } = require('../../_lib/readBody');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,7 +10,7 @@ module.exports = async function handler(req, res) {
   }
 
   const ip = getClientIp(req);
-  const body = parseBody(req);
+  const body = await readJsonBody(req);
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
   const password = typeof body.password === 'string' ? body.password : '';
 

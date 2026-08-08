@@ -1,17 +1,10 @@
-const { sql } = require('../_lib/db');
-const { requireAdminSession } = require('../_lib/auth');
-const { isNonEmptyString, isValidSlug, isValidPrice, slugify, str } = require('../_lib/validate');
+const { sql } = require('../../_lib/db');
+const { requireAdminSession } = require('../../_lib/auth');
+const { isNonEmptyString, isValidSlug, isValidPrice, slugify, str } = require('../../_lib/validate');
+const { readJsonBody } = require('../../_lib/readBody');
 
 const CATEGORIES = ['perfumes', 'oleos-corporais', 'kits', 'novidades'];
 const STATUSES = ['draft', 'published'];
-
-function parseBody(req) {
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { body = {}; }
-  }
-  return body || {};
-}
 
 async function uniqueSlug(base, ignoreId) {
   let candidate = base || 'produto';
@@ -52,7 +45,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
-    const body = parseBody(req);
+    const body = await readJsonBody(req);
     const name = str(body.name);
     const category = str(body.category);
 
@@ -102,7 +95,7 @@ module.exports = async function handler(req, res) {
       return;
     }
     const existing = existingRows[0];
-    const body = parseBody(req);
+    const body = await readJsonBody(req);
 
     const name = body.name != null ? str(body.name) : existing.name;
     const category = body.category != null ? str(body.category) : existing.category;

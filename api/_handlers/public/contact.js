@@ -1,6 +1,6 @@
-const { sql } = require('../_lib/db');
-const { getClientIp, isSubmissionRateLimited, recordSubmissionAttempt } = require('../_lib/rateLimit');
-const { isValidEmail, isNonEmptyString, str } = require('../_lib/validate');
+const { sql } = require('../../_lib/db');
+const { getClientIp, isSubmissionRateLimited, recordSubmissionAttempt } = require('../../_lib/rateLimit');
+const { isValidEmail, isNonEmptyString, str } = require('../../_lib/validate');
 
 function parseBody(req) {
   let body = req.body;

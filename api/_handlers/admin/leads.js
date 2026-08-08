@@ -1,5 +1,5 @@
-const { sql } = require('../_lib/db');
-const { requireAdminSession } = require('../_lib/auth');
+const { sql } = require('../../_lib/db');
+const { requireAdminSession } = require('../../_lib/auth');
 
 function csvEscape(value) {
   const s = value == null ? '' : String(value);
