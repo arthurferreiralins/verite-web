@@ -15,7 +15,10 @@ const seo = require('../_handlers/public/seo');
 const routes = { waitlist, contact, products, faq, content, settings, seo };
 
 module.exports = async function handler(req, res) {
-  const slug = req.query.slug;
+  // The catch-all query key comes through as "...slug" (not "slug") on
+  // this runtime, and as a plain string for a single path segment rather
+  // than a 1-item array — read defensively for both shapes.
+  const slug = req.query.slug !== undefined ? req.query.slug : req.query['...slug'];
   const key = Array.isArray(slug) ? slug[0] : slug;
   const target = routes[key];
   if (!target) {
