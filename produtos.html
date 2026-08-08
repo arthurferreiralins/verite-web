@@ -196,13 +196,13 @@
   </section>
 
   <!--
-    Estrutura de catálogo pronta para receber produtos reais:
-    window.VERITE_PRODUCTS (assets/js/products-data.js) alimenta as grades
-    acima via assets/js/products.js — basta adicionar entradas lá (foto,
-    nome, descrição, categoria, volume, preço) que elas substituem
-    automaticamente o estado "Em breve." Página de produto individual já
-    existe em produto.html (leitura por ?slug=), incluindo produtos
-    relacionados e botão de compra (fica oculto até um buyUrl real existir).
+    Catálogo alimentado pelo painel /admin: assets/js/products-loader.js
+    busca produtos publicados em /api/public/products, popula
+    window.VERITE_PRODUCTS e assets/js/products.js renderiza as grades
+    acima — sem produto publicado, cada categoria mostra "Em breve."
+    Página de produto individual em produto.html (leitura por ?slug=)
+    inclui produtos relacionados e botão de compra (oculto até um
+    buyUrl real existir — carrinho/checkout continuam fora de escopo).
   -->
 
 </main>
@@ -257,10 +257,10 @@
   </div>
 </footer>
 
-<script src="assets/js/products-data.js"></script>
-<script src="assets/js/products.js"></script>
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/products.js"></script>
+<script src="assets/js/products-loader.js"></script>
 </body>
 </html>

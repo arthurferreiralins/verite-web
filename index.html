@@ -71,8 +71,8 @@
       <img src="assets/img/verite-logo-full.webp" alt="VERITÉ Perfumes"/>
     </div>
     <h1 class="sr-only">VERITÉ</h1>
-    <p class="slogan">A verdade está na sua essência.</p>
-    <p class="sub">Uma fragrância não é só um aroma — é presença, lembrança e verdade.</p>
+    <p class="slogan" data-content-key="slogan">A verdade está na sua essência.</p>
+    <p class="sub" data-content-key="hero_sub">Uma fragrância não é só um aroma — é presença, lembrança e verdade.</p>
     <div class="hairline sweep" aria-hidden="true" style="margin-top:2rem;"></div>
     <div class="hero-cta">
       <a class="btn" href="#a-verite">Conheça a VERITÉ</a>
@@ -109,7 +109,7 @@
           <h2>A VERITÉ</h2>
           <div class="hairline sweep" style="margin:1.6rem 0 0;"></div>
         </div>
-        <p class="lead">A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela <em>revela personalidade</em>, <em>desperta lembranças</em> e deixa uma <em>presença</em> que continua mesmo depois que a pessoa vai embora.</p>
+        <p class="lead" data-content-key="historia_lead" data-content-html="true">A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela <em>revela personalidade</em>, <em>desperta lembranças</em> e deixa uma <em>presença</em> que continua mesmo depois que a pessoa vai embora.</p>
       </div>
     </div>
   </section>
@@ -123,8 +123,8 @@
     <div class="wrap">
       <div class="section-head reveal-blur">
         <p class="eyebrow">Primeira Coleção</p>
-        <h2>A primeira coleção VERITÉ está chegando.</h2>
-        <p class="colecao-tagline">Três expressões. Uma essência.</p>
+        <h2 data-content-key="colecao_title">A primeira coleção VERITÉ está chegando.</h2>
+        <p class="colecao-tagline" data-content-key="colecao_tagline">Três expressões. Uma essência.</p>
       </div>
       <div class="hairline sweep reveal" style="margin-bottom:3rem;"></div>
       <div class="colecao-grid">
@@ -170,7 +170,7 @@
               <path d="M17 33 L14 44 L24 39 L34 44 L31 33"/>
             </svg>
           </span>
-          <span class="body"><h3>Autenticidade</h3><p>A verdade em cada gesto.</p></span>
+          <span class="body"><h3 data-content-key="essencia_1_title">Autenticidade</h3><p data-content-key="essencia_1_desc">A verdade em cada gesto.</p></span>
         </li>
         <li class="essencia-item reveal">
           <span class="num"></span>
@@ -182,7 +182,7 @@
               <path d="M34 20 L24 4"/>
             </svg>
           </span>
-          <span class="body"><h3>Elegância</h3><p>Sofisticação em cada detalhe.</p></span>
+          <span class="body"><h3 data-content-key="essencia_2_title">Elegância</h3><p data-content-key="essencia_2_desc">Sofisticação em cada detalhe.</p></span>
         </li>
         <li class="essencia-item reveal">
           <span class="num"></span>
@@ -192,7 +192,7 @@
               <path d="M15 24.5 L21 30.5 L33 17"/>
             </svg>
           </span>
-          <span class="body"><h3>Qualidade</h3><p>Excelência que se sente.</p></span>
+          <span class="body"><h3 data-content-key="essencia_3_title">Qualidade</h3><p data-content-key="essencia_3_desc">Excelência que se sente.</p></span>
         </li>
         <li class="essencia-item reveal">
           <span class="num"></span>
@@ -203,7 +203,7 @@
               <circle cx="24" cy="24" r="18" opacity=".55"/>
             </svg>
           </span>
-          <span class="body"><h3>Presença</h3><p>Uma marca que permanece.</p></span>
+          <span class="body"><h3 data-content-key="essencia_4_title">Presença</h3><p data-content-key="essencia_4_desc">Uma marca que permanece.</p></span>
         </li>
         <li class="essencia-item reveal">
           <span class="num"></span>
@@ -215,7 +215,7 @@
               <path d="M42 24 L42 30"/>
             </svg>
           </span>
-          <span class="body"><h3>Exclusividade</h3><p>Único, como você.</p></span>
+          <span class="body"><h3 data-content-key="essencia_5_title">Exclusividade</h3><p data-content-key="essencia_5_desc">Único, como você.</p></span>
         </li>
       </ol>
     </div>
@@ -239,7 +239,7 @@
         <p class="statement-line reveal" style="transition-delay:.25s">Criamos experiências marcantes e produtos pensados em cada detalhe.</p>
         <p class="statement-line reveal" style="transition-delay:.45s">Uma ligação genuína com quem nos escolhe.</p>
       </div>
-      <p class="experiencia-tagline reveal" style="transition-delay:.65s">Porque uma verdadeira essência não se usa — se vive.</p>
+      <p class="experiencia-tagline reveal" data-content-key="experiencia_tagline" style="transition-delay:.65s">Porque uma verdadeira essência não se usa — se vive.</p>
       <div class="concept-reveal" aria-hidden="true">
         <span class="reveal-blur" style="transition-delay:.1s">Presença</span>
         <span class="reveal-blur" style="transition-delay:.3s">Memória</span>
@@ -314,10 +314,10 @@
     </div>
     <div class="wrap">
       <p class="eyebrow reveal">Lista de Espera</p>
-      <h2 class="reveal">Seja um dos primeiros a conhecer a VERITÉ.</h2>
-      <p class="sub reveal">Em breve, novidades diretamente para você.</p>
+      <h2 class="reveal" data-content-key="lancamento_title">Seja um dos primeiros a conhecer a VERITÉ.</h2>
+      <p class="sub reveal" data-content-key="lancamento_sub">Em breve, novidades diretamente para você.</p>
       <div data-form-container>
-        <form class="stack-form reveal" id="launch-form" data-fake-submit novalidate>
+        <form class="stack-form reveal" id="launch-form" data-submit-endpoint="/api/public/waitlist" novalidate>
           <div class="field">
             <label for="launch-name">Nome</label>
             <input id="launch-name" name="name" type="text" placeholder="Seu nome" required/>
@@ -328,10 +328,12 @@
             <input id="launch-email" name="email" type="email" placeholder="Seu melhor e-mail" required/>
             <span class="field-error" aria-live="polite"></span>
           </div>
+          <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"/>
           <button type="submit" class="btn btn-block">
             <span class="btn-label">Quero conhecer primeiro</span>
             <span class="spinner" aria-hidden="true"></span>
           </button>
+          <p class="form-error-general" role="alert" aria-live="polite" hidden></p>
         </form>
         <p class="note reveal">Sem spam. Apenas a verdade da sua essência.</p>
         <div class="form-thanks" role="status">
@@ -430,16 +432,16 @@
         <div class="contact-intro reveal">
           <p>Tem uma pergunta, uma parceria em mente ou só quer trocar uma palavra com a VERITÉ? Estamos construindo esta casa com atenção a cada detalhe — inclusive à conversa com quem vai vesti-la.</p>
           <ul class="contact-list">
-            <li class="disabled-link" title="Em breve">
+            <li class="disabled-link" title="Em breve" data-settings-key="email">
               <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="4" y="10" width="40" height="28" rx="2"/><path d="M4 12 L24 28 L44 12"/></svg></span>
               <span><span class="label">E-mail</span><span class="value">Em breve</span></span>
             </li>
-            <li class="disabled-link" title="Em breve">
+            <li class="disabled-link" title="Em breve" data-settings-key="instagram">
               <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="36" height="36" rx="10"/><circle cx="24" cy="24" r="9"/><circle cx="34" cy="14" r="1.6" fill="currentColor" stroke="none"/></svg></span>
               <span><span class="label">Instagram</span><span class="value">Em breve</span></span>
             </li>
             <li>
-              <a class="contact-link" href="https://wa.me/5581981553632" target="_blank" rel="noopener">
+              <a class="contact-link" href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">
                 <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><path d="M24 6a18 18 0 0 0-15.4 27.3L6 42l9-2.5A18 18 0 1 0 24 6Z"/></svg></span>
                 <span><span class="label">WhatsApp</span><span class="value">+55 81 98155-3632</span></span>
               </a>
@@ -447,7 +449,7 @@
           </ul>
         </div>
         <div class="contact-form reveal" data-form-container>
-          <form class="stack-form" id="contact-form" data-fake-submit novalidate>
+          <form class="stack-form" id="contact-form" data-submit-endpoint="/api/public/contact" novalidate>
             <div class="field">
               <label for="contact-name">Nome</label>
               <input id="contact-name" name="name" type="text" placeholder="Seu nome" required/>
@@ -468,10 +470,12 @@
               <textarea id="contact-message" name="message" rows="4" placeholder="Sua mensagem" required></textarea>
               <span class="field-error" aria-live="polite"></span>
             </div>
+            <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"/>
             <button type="submit" class="btn btn-block">
               <span class="btn-label">Enviar Mensagem</span>
               <span class="spinner" aria-hidden="true"></span>
             </button>
+            <p class="form-error-general" role="alert" aria-live="polite" hidden></p>
           </form>
           <p class="form-thanks" role="status">Obrigado pela mensagem. Responderemos em breve.</p>
         </div>
@@ -480,12 +484,10 @@
   </section>
 
   <!--
-    V4 TODO: quando os produtos existirem, cada .produto-card acima vira um
-    link real (imagem, nome, família olfativa) — reaproveitar a mesma
-    .colecao-grid. A estrutura de catálogo (categorias, ficha de produto,
-    relacionados) já existe em produtos.html/produto.html + assets/js/
-    products-data.js — basta popular VERITE_PRODUCTS quando os produtos
-    reais existirem, o carrinho/checkout ainda fica de fora por enquanto.
+    Os três cards acima viram reais assim que houver produto publicado no
+    painel /admin: assets/js/products-loader.js troca o estado "Em breve"
+    pelos produtos de destaque automaticamente (ver .produto-card-real no
+    CSS). Carrinho/checkout continuam fora de escopo.
   -->
 
 </main>
@@ -519,8 +521,8 @@
       <div class="footer-col reveal">
         <h4>Contato</h4>
         <ul>
-          <li class="disabled-link" title="Em breve">Instagram — em breve</li>
-          <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li class="disabled-link" title="Em breve" data-settings-key="instagram">Instagram — em breve</li>
+          <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
         </ul>
       </div>
     </div>
@@ -542,5 +544,8 @@
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/products.js"></script>
+<script src="assets/js/products-loader.js"></script>
+<script src="assets/js/site-data.js"></script>
 </body>
 </html>

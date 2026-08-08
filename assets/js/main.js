@@ -48,16 +48,22 @@
     });
   }
 
-  /* FAQ accordion — plain button + aria-expanded, no accordion library */
-  document.querySelectorAll('.faq-trigger').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var item = btn.closest('.faq-item');
-      var panel = document.getElementById(btn.getAttribute('aria-controls'));
-      var open = item.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if(panel) panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+  /* FAQ accordion — plain button + aria-expanded, no accordion library.
+     Exposed on window so a data loader can re-bind it after replacing
+     .faq-list with content fetched from the admin panel. */
+  function bindFaqAccordion(root){
+    (root || document).querySelectorAll('.faq-trigger').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var item = btn.closest('.faq-item');
+        var panel = document.getElementById(btn.getAttribute('aria-controls'));
+        var open = item.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if(panel) panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+      });
     });
-  });
+  }
+  bindFaqAccordion(document);
+  window.VeriteBindFaq = bindFaqAccordion;
 
   /* Nossa Essência: whichever value is crossing the vertical center of the
      viewport gets individual emphasis, so each word gets its own moment
@@ -72,25 +78,40 @@
     essenciaItems.forEach(function(el){ focusObserver.observe(el); });
   }
 
-  /* Scroll-in reveal, staggered within any shared parent via CSS nth-child delays */
-  if('IntersectionObserver' in window){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          entry.target.classList.add('in');
-          io.unobserve(entry.target);
-        }
-      });
-    }, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
-    document.querySelectorAll('.reveal, .reveal-blur').forEach(function(el){ io.observe(el); });
-  } else {
-    document.querySelectorAll('.reveal, .reveal-blur').forEach(function(el){ el.classList.add('in'); });
-  }
+  /* Scroll-in reveal, staggered within any shared parent via CSS nth-child delays.
+     Exposed on window so a data loader can bind freshly-injected .reveal
+     elements (e.g. FAQ items rebuilt from the admin panel) — without this,
+     anything added after this initial pass would stay invisible forever
+     since :where(html.js) .reveal starts at opacity:0. */
+  var revealObserver = 'IntersectionObserver' in window ? new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold:.15, rootMargin:'0px 0px -60px 0px'}) : null;
 
-  /* Forms are front-end only for now — no email service wired up yet.
-     Each validates inline (no alert()), shows a loading state on the
-     button, then swaps its container into a thank-you state. */
-  document.querySelectorAll('[data-fake-submit]').forEach(function(form){
+  function bindReveal(root){
+    var items = (root || document).querySelectorAll('.reveal, .reveal-blur');
+    if(revealObserver){
+      items.forEach(function(el){ revealObserver.observe(el); });
+    } else {
+      items.forEach(function(el){ el.classList.add('in'); });
+    }
+  }
+  bindReveal(document);
+  window.VeriteBindReveal = bindReveal;
+
+  /* Waitlist + contact forms submit for real to /api/public/* now.
+     Validation/loading/success states stay exactly the same as before —
+     only what happens between "loading" and "success" changed (a real
+     fetch instead of a simulated delay), plus a graceful inline error
+     state for the network-failure path that never existed while this
+     was fake. */
+  document.querySelectorAll('form[data-submit-endpoint]').forEach(function(form){
+    var generalError = form.querySelector('.form-error-general');
+
     form.querySelectorAll('input, textarea').forEach(function(input){
       input.addEventListener('input', function(){
         var field = input.closest('.field');
@@ -124,13 +145,35 @@
         return;
       }
 
+      if(generalError){ generalError.hidden = true; generalError.textContent = ''; }
       var btn = form.querySelector('button[type="submit"]');
       if(btn) btn.classList.add('is-loading');
-      window.setTimeout(function(){
+
+      var payload = {};
+      new FormData(form).forEach(function(value, key){ payload[key] = value; });
+
+      fetch(form.getAttribute('data-submit-endpoint'), {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+      }).then(function(res){
+        return res.json().catch(function(){ return {}; }).then(function(data){
+          return {res: res, data: data};
+        });
+      }).then(function(result){
         if(btn) btn.classList.remove('is-loading');
+        if(!result.res.ok || !result.data || result.data.ok !== true){
+          throw new Error((result.data && result.data.error) || 'Não foi possível enviar agora. Tente novamente.');
+        }
         var container = form.closest('[data-form-container]') || form.parentElement;
         container.classList.add('is-sent');
-      }, 750);
+      }).catch(function(err){
+        if(btn) btn.classList.remove('is-loading');
+        if(generalError){
+          generalError.textContent = err.message || 'Não foi possível enviar agora. Tente novamente.';
+          generalError.hidden = false;
+        }
+      });
     });
   });
 })();

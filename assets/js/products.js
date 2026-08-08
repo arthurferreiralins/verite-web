@@ -107,5 +107,7 @@
     initCategoryGrids: initCategoryGrids
   };
 
-  document.addEventListener('DOMContentLoaded', initCategoryGrids);
+  // Not auto-run on DOMContentLoaded anymore: assets/js/products-loader.js
+  // fetches window.VERITE_PRODUCTS from the admin-managed catalog first,
+  // then calls initCategoryGrids() once that data has arrived.
 })();
