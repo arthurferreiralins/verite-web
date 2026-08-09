@@ -2,6 +2,7 @@ const { sql } = require('../../_lib/db');
 const { requireAdminSession } = require('../../_lib/auth');
 const { isNonEmptyString, str } = require('../../_lib/validate');
 const { readJsonBody } = require('../../_lib/readBody');
+const { logActivity } = require('../../_lib/activity');
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -30,6 +31,7 @@ module.exports = async function handler(req, res) {
       VALUES (${question}, ${answer}, ${sortOrder}, ${body.active !== false})
       RETURNING *
     `;
+    await logActivity({ action: 'created', entityType: 'faq', entityId: rows[0].id, description: `Pergunta de FAQ criada: "${question}"`, adminEmail: session.email });
     res.status(201).json({ ok: true, item: rows[0] });
     return;
   }
@@ -73,6 +75,7 @@ module.exports = async function handler(req, res) {
       WHERE id = ${id}
       RETURNING *
     `;
+    await logActivity({ action: 'updated', entityType: 'faq', entityId: id, description: `Pergunta de FAQ atualizada: "${rows[0].question}"`, adminEmail: session.email });
     res.status(200).json({ ok: true, item: rows[0] });
     return;
   }
@@ -82,7 +85,10 @@ module.exports = async function handler(req, res) {
       res.status(400).json({ ok: false, error: 'ID da pergunta é obrigatório.' });
       return;
     }
-    await sql`DELETE FROM faq_items WHERE id = ${id}`;
+    const { rows } = await sql`DELETE FROM faq_items WHERE id = ${id} RETURNING question`;
+    if (rows.length) {
+      await logActivity({ action: 'deleted', entityType: 'faq', entityId: id, description: `Pergunta de FAQ excluída: "${rows[0].question}"`, adminEmail: session.email });
+    }
     res.status(200).json({ ok: true });
     return;
   }

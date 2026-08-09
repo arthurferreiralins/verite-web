@@ -1,8 +1,9 @@
 const { sql } = require('../../_lib/db');
 const { requireAdminSession } = require('../../_lib/auth');
 const { readJsonBody } = require('../../_lib/readBody');
+const { logActivity } = require('../../_lib/activity');
 
-const STATUSES = ['novo', 'lido', 'respondido'];
+const STATUSES = ['novo', 'lido', 'respondido', 'arquivado'];
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -33,6 +34,7 @@ module.exports = async function handler(req, res) {
       res.status(404).json({ ok: false, error: 'Mensagem não encontrada.' });
       return;
     }
+    await logActivity({ action: 'status_changed', entityType: 'message', entityId: id, description: `Mensagem de "${rows[0].name}" marcada como ${body.status}`, adminEmail: session.email });
     res.status(200).json({ ok: true, item: rows[0] });
     return;
   }

@@ -5,7 +5,7 @@ module.exports = async function handler(req, res) {
     res.status(405).json({ ok: false, error: 'Método não permitido.' });
     return;
   }
-  const { rows } = await sql`SELECT instagram_url, whatsapp_number, contact_email FROM site_settings WHERE id = 1`;
+  const { rows } = await sql`SELECT instagram_url, whatsapp_number, contact_email, logo_url, favicon_url FROM site_settings WHERE id = 1`;
   const row = rows[0] || {};
   res.setHeader('Cache-Control', 'public, max-age=60');
   res.status(200).json({
@@ -14,6 +14,8 @@ module.exports = async function handler(req, res) {
       instagramUrl: row.instagram_url || null,
       whatsappNumber: row.whatsapp_number || null,
       contactEmail: row.contact_email || null,
+      logoUrl: row.logo_url || null,
+      faviconUrl: row.favicon_url || null,
     },
   });
 };

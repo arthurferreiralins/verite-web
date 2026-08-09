@@ -1,6 +1,7 @@
 const { sql } = require('../../_lib/db');
 const { requireAdminSession } = require('../../_lib/auth');
 const { readJsonBody } = require('../../_lib/readBody');
+const { logActivity } = require('../../_lib/activity');
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -29,6 +30,9 @@ module.exports = async function handler(req, res) {
         RETURNING key
       `;
       if (rows.length) updatedKeys.push(item.key);
+    }
+    if (updatedKeys.length) {
+      await logActivity({ action: 'updated', entityType: 'content', description: `Conteúdo do site atualizado (${updatedKeys.length} campo${updatedKeys.length > 1 ? 's' : ''})`, adminEmail: session.email });
     }
     res.status(200).json({ ok: true, updated: updatedKeys });
     return;

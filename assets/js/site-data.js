@@ -81,6 +81,16 @@
         activateDisabledLi(li, 'mailto:' + settings.contactEmail, settings.contactEmail);
       });
     }
+    if(settings.logoUrl){
+      document.querySelectorAll('[data-logo="emblem"], [data-logo="full"]').forEach(function(img){
+        img.src = settings.logoUrl;
+      });
+    }
+    if(settings.faviconUrl){
+      document.querySelectorAll('link[rel="icon"]').forEach(function(link){
+        link.href = settings.faviconUrl;
+      });
+    }
   }
 
   /* ---------- FAQ ---------- */

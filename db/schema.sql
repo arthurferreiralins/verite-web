@@ -134,3 +134,113 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO seo_settings (id, site_title, meta_description, share_image_url)
 VALUES (1, 'VERITÉ — A verdade está na sua essência', 'Uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade.', 'https://verite-web.vercel.app/assets/img/og-image.jpg')
 ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================
+-- Painel administrativo completo (2026-08-09): categorias, estoque,
+-- campos de perfumaria, pedidos/clientes (estrutura pronta, vazios),
+-- biblioteca de mídia, log de atividades, aparência. Idempotente.
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS categories (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  image_url TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+INSERT INTO categories (name, slug, sort_order) VALUES
+  ('Perfumes', 'perfumes', 1),
+  ('Óleos Corporais', 'oleos-corporais', 2),
+  ('Kits', 'kits', 3),
+  ('Novidades', 'novidades', 4)
+ON CONFLICT (slug) DO NOTHING;
+
+-- products: solta os CHECKs antigos (categoria passa a validar contra a
+-- tabela categories em código; status ganha o estado 'archived').
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_status_check;
+ALTER TABLE products ADD CONSTRAINT products_status_check CHECK (status IN ('draft','published','archived'));
+
+ALTER TABLE products ADD COLUMN IF NOT EXISTS sku TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS stock_quantity INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS track_stock BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS low_stock_threshold INTEGER NOT NULL DEFAULT 5;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS product_type TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS concentration TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS olfactory_family TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS notes_top TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS notes_heart TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS notes_base TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS occasion TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS intensity TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS longevity TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS sillage TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS audience TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_products_sku ON products (sku) WHERE sku IS NOT NULL AND sku <> '';
+
+-- messages: ganha o status 'arquivado' (spec pede NOVA/LIDA/RESPONDIDA/ARQUIVADA).
+ALTER TABLE messages DROP CONSTRAINT IF EXISTS messages_status_check;
+ALTER TABLE messages ADD CONSTRAINT messages_status_check CHECK (status IN ('novo','lido','respondido','arquivado'));
+
+-- site_settings: identidade visual (aparência) + nome de exibição do admin
+-- (login continua só por ADMIN_EMAIL/ADMIN_PASSWORD_HASH via env var — isto
+-- é só um apelido de exibição no painel, não um sistema de usuários).
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS logo_url TEXT;
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS favicon_url TEXT;
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS admin_display_name TEXT;
+
+CREATE TABLE IF NOT EXISTS media (
+  id SERIAL PRIMARY KEY,
+  url TEXT NOT NULL,
+  pathname TEXT NOT NULL,
+  filename TEXT NOT NULL,
+  mime_type TEXT,
+  size_bytes INTEGER,
+  folder TEXT NOT NULL DEFAULT 'geral',
+  uploaded_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS activity_logs (
+  id SERIAL PRIMARY KEY,
+  action TEXT NOT NULL,
+  entity_type TEXT NOT NULL,
+  entity_id TEXT,
+  description TEXT NOT NULL,
+  admin_email TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_activity_logs_created_at ON activity_logs (created_at DESC);
+
+-- Pedidos e clientes: estrutura pronta para o futuro (seção 12/13/34/35 do
+-- pedido) — nenhuma linha é inserida aqui, telas de admin mostram estado
+-- vazio até existir um pedido/cliente real.
+CREATE TABLE IF NOT EXISTS customers (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  phone TEXT,
+  orders_count INTEGER NOT NULL DEFAULT 0,
+  total_spent NUMERIC(10,2) NOT NULL DEFAULT 0,
+  last_order_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+  id SERIAL PRIMARY KEY,
+  order_number TEXT UNIQUE NOT NULL,
+  customer_id INTEGER REFERENCES customers(id) ON DELETE SET NULL,
+  customer_name TEXT NOT NULL,
+  customer_email TEXT NOT NULL,
+  items JSONB NOT NULL DEFAULT '[]',
+  total NUMERIC(10,2) NOT NULL DEFAULT 0,
+  payment_method TEXT,
+  status TEXT NOT NULL DEFAULT 'novo' CHECK (status IN ('novo','confirmado','preparando','enviado','entregue','cancelado')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders (created_at DESC);

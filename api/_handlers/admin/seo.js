@@ -2,6 +2,7 @@ const { sql } = require('../../_lib/db');
 const { requireAdminSession } = require('../../_lib/auth');
 const { isOptionalString, str } = require('../../_lib/validate');
 const { readJsonBody } = require('../../_lib/readBody');
+const { logActivity } = require('../../_lib/activity');
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -28,6 +29,7 @@ module.exports = async function handler(req, res) {
       WHERE id = 1
       RETURNING site_title, meta_description, share_image_url, updated_at
     `;
+    await logActivity({ action: 'updated', entityType: 'seo', description: 'Configurações de SEO atualizadas', adminEmail: session.email });
     res.status(200).json({ ok: true, seo: rows[0] });
     return;
   }

@@ -24,139 +24,424 @@
       </div>
       <div class="field">
         <label for="login-password">Senha</label>
-        <input id="login-password" name="password" type="password" autocomplete="current-password" required/>
+        <div class="password-field">
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required/>
+          <button type="button" id="login-password-toggle" class="password-toggle" aria-label="Mostrar senha">Mostrar</button>
+        </div>
       </div>
       <p id="login-error" class="form-error" role="alert" hidden></p>
       <button type="submit" class="btn-primary btn-block">
         <span class="btn-label">Entrar</span>
         <span class="spinner" aria-hidden="true" hidden></span>
       </button>
+      <p class="login-forgot">Esqueceu a senha? Fale com quem administra o acesso da VERITÉ para redefini-la.</p>
     </form>
   </div>
 </div>
 
 <div id="app-view" class="app-view" hidden>
-  <header class="app-header">
-    <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="sidebar" aria-label="Abrir menu">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="app-brand">
+  <nav id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
       <img src="../assets/img/verite-emblem.webp" alt=""/>
       <span>VERITÉ <em>Admin</em></span>
     </div>
-  </header>
-
-  <nav id="sidebar" class="sidebar">
     <ul class="sidebar-nav">
       <li><a href="#dashboard" data-route="dashboard">Dashboard</a></li>
       <li><a href="#produtos" data-route="produtos">Produtos</a></li>
-      <li><a href="#leads" data-route="leads">Lista de Espera</a></li>
-      <li><a href="#mensagens" data-route="mensagens">Mensagens</a></li>
-      <li><a href="#conteudo" data-route="conteudo">Conteúdo</a></li>
+      <li><a href="#categorias" data-route="categorias">Categorias</a></li>
+      <li><a href="#pedidos" data-route="pedidos">Pedidos</a></li>
+      <li><a href="#clientes" data-route="clientes">Clientes</a></li>
+      <li><a href="#leads" data-route="leads">Lista de espera</a></li>
+      <li><a href="#mensagens" data-route="mensagens">Mensagens <span id="mensagens-nav-badge" class="nav-badge" hidden>0</span></a></li>
+      <li><a href="#conteudo" data-route="conteudo">Conteúdo do site</a></li>
       <li><a href="#faq" data-route="faq">FAQ</a></li>
+      <li><a href="#midia" data-route="midia">Mídia</a></li>
       <li><a href="#seo" data-route="seo">SEO</a></li>
+      <li><a href="#aparencia" data-route="aparencia">Aparência</a></li>
       <li><a href="#configuracoes" data-route="configuracoes">Configurações</a></li>
     </ul>
-    <button id="logout-btn" class="sidebar-logout" type="button">Sair</button>
+    <div class="sidebar-bottom">
+      <a href="https://verite-web.vercel.app" target="_blank" rel="noopener" class="sidebar-link">Ver site</a>
+      <a href="#minha-conta" data-route="minha-conta" class="sidebar-link">Minha conta</a>
+      <button id="logout-btn" class="sidebar-logout" type="button">Sair</button>
+    </div>
   </nav>
 
   <div id="sidebar-scrim" class="sidebar-scrim" hidden></div>
 
-  <main id="main-content" class="main-content">
-
-    <section id="section-dashboard" class="admin-section" data-section="dashboard">
-      <h1>Dashboard</h1>
-      <p class="section-sub">Painel Administrativo VERITÉ</p>
-      <div id="dashboard-cards" class="stat-cards"></div>
-    </section>
-
-    <section id="section-produtos" class="admin-section" data-section="produtos" hidden>
-      <div id="produtos-list-view">
-        <div class="section-toolbar">
-          <div>
-            <h1>Produtos</h1>
-            <p class="section-sub">Catálogo da VERITÉ — comece publicando quando os produtos reais existirem.</p>
-          </div>
-          <button id="produto-new-btn" class="btn-primary" type="button">Novo produto</button>
-        </div>
-        <div id="produtos-table-wrap" class="table-wrap"></div>
+  <div class="app-body">
+    <header class="topbar">
+      <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="sidebar" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-brand">
+        <img src="../assets/img/verite-emblem.webp" alt=""/>
+        <span>VERITÉ <em>Admin</em></span>
       </div>
+      <div class="topbar-search">
+        <input id="global-search" type="search" placeholder="Buscar produtos, mensagens, lista de espera…" autocomplete="off"/>
+        <div id="global-search-results" class="search-results" hidden></div>
+      </div>
+      <div class="topbar-notif">
+        <button id="notif-bell" class="notif-bell" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Notificações">
+          <span class="bell-icon" aria-hidden="true">&#128276;</span>
+          <span id="notif-count" class="notif-count" hidden>0</span>
+        </button>
+        <div id="notif-dropdown" class="notif-dropdown" hidden></div>
+      </div>
+    </header>
 
-      <div id="produtos-form-view" hidden>
-        <div class="section-toolbar">
-          <div>
-            <h1 id="produto-form-title">Novo produto</h1>
+    <main id="main-content" class="main-content">
+
+      <section id="section-dashboard" class="admin-section" data-section="dashboard">
+        <h1>VERITÉ</h1>
+        <p class="section-sub">Painel Administrativo</p>
+        <div id="dashboard-cards" class="stat-cards"></div>
+        <h2 class="dashboard-activity-title">Atividade recente</h2>
+        <div id="dashboard-activity" class="activity-list"></div>
+      </section>
+
+      <section id="section-produtos" class="admin-section" data-section="produtos" hidden>
+        <div id="produtos-list-view">
+          <div class="section-toolbar">
+            <div>
+              <h1>Produtos</h1>
+              <p class="section-sub">Catálogo da VERITÉ — comece publicando quando os produtos reais existirem.</p>
+            </div>
+            <button id="produto-new-btn" class="btn-primary" type="button">+ Novo produto</button>
           </div>
-          <button id="produto-back-btn" class="btn-ghost" type="button">Voltar</button>
+          <div id="produtos-table-wrap" class="table-wrap"></div>
         </div>
-        <form id="produto-form" class="admin-form" novalidate>
-          <input type="hidden" id="produto-id"/>
-          <div class="form-grid">
-            <div class="field">
-              <label for="produto-name">Nome</label>
-              <input id="produto-name" required maxlength="200"/>
-            </div>
-            <div class="field">
-              <label for="produto-slug">Slug</label>
-              <input id="produto-slug" placeholder="gerado automaticamente" maxlength="120"/>
-            </div>
-            <div class="field">
-              <label for="produto-category">Categoria</label>
-              <select id="produto-category" required>
-                <option value="perfumes">Perfumes</option>
-                <option value="oleos-corporais">Óleos Corporais</option>
-                <option value="kits">Kits</option>
-                <option value="novidades">Novidades</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="produto-volume">Volume/tamanho</label>
-              <input id="produto-volume" maxlength="60" placeholder="ex: 50ml"/>
-            </div>
-            <div class="field">
-              <label for="produto-price">Preço (R$)</label>
-              <input id="produto-price" type="number" min="0" step="0.01"/>
-            </div>
-            <div class="field">
-              <label for="produto-sale-price">Preço promocional (R$)</label>
-              <input id="produto-sale-price" type="number" min="0" step="0.01"/>
-            </div>
-          </div>
-          <div class="field">
-            <label for="produto-short-desc">Descrição curta</label>
-            <input id="produto-short-desc" maxlength="240"/>
-          </div>
-          <div class="field">
-            <label for="produto-desc">Descrição completa</label>
-            <textarea id="produto-desc" rows="4" maxlength="4000"></textarea>
-          </div>
 
-          <div class="field">
-            <label>Imagem principal</label>
-            <div id="produto-main-image" class="image-uploader"></div>
+        <div id="produtos-form-view" hidden>
+          <div class="section-toolbar">
+            <div>
+              <h1 id="produto-form-title">Novo produto</h1>
+            </div>
+            <button id="produto-back-btn" class="btn-ghost" type="button">Voltar</button>
           </div>
-          <div class="field">
-            <label>Galeria</label>
-            <div id="produto-gallery" class="image-uploader image-uploader-gallery"></div>
-          </div>
-
-          <div class="form-grid">
+          <form id="produto-form" class="admin-form" novalidate>
+            <input type="hidden" id="produto-id"/>
+            <div class="form-grid">
+              <div class="field">
+                <label for="produto-name">Nome do produto</label>
+                <input id="produto-name" required maxlength="200"/>
+              </div>
+              <div class="field">
+                <label for="produto-slug">Slug</label>
+                <input id="produto-slug" placeholder="gerado automaticamente" maxlength="120"/>
+              </div>
+              <div class="field">
+                <label for="produto-category">Categoria</label>
+                <select id="produto-category" required></select>
+              </div>
+              <div class="field">
+                <label for="produto-type">Tipo</label>
+                <input id="produto-type" maxlength="80" placeholder="ex: Perfume, Óleo corporal…"/>
+              </div>
+              <div class="field">
+                <label for="produto-volume">Volume/tamanho</label>
+                <input id="produto-volume" maxlength="60" placeholder="ex: 50ml"/>
+              </div>
+              <div class="field">
+                <label for="produto-sku">SKU</label>
+                <input id="produto-sku" maxlength="60" placeholder="código interno opcional"/>
+              </div>
+              <div class="field">
+                <label for="produto-price">Preço (R$)</label>
+                <input id="produto-price" type="number" min="0" step="0.01"/>
+              </div>
+              <div class="field">
+                <label for="produto-sale-price">Preço promocional (R$)</label>
+                <input id="produto-sale-price" type="number" min="0" step="0.01"/>
+              </div>
+              <div class="field">
+                <label for="produto-stock">Estoque (unidades)</label>
+                <input id="produto-stock" type="number" min="0" step="1" value="0"/>
+              </div>
+              <div class="field">
+                <label for="produto-order">Ordem de exibição</label>
+                <input id="produto-order" type="number" step="1" value="0"/>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="produto-track-stock" type="checkbox" checked/> Controlar estoque deste produto</label>
+              </div>
+            </div>
             <div class="field">
-              <label for="produto-status">Status</label>
-              <select id="produto-status">
-                <option value="draft">Rascunho</option>
-                <option value="published">Publicado</option>
-              </select>
+              <label for="produto-short-desc">Descrição curta</label>
+              <input id="produto-short-desc" maxlength="240"/>
+            </div>
+            <div class="field">
+              <label for="produto-desc">Descrição completa</label>
+              <textarea id="produto-desc" rows="4" maxlength="4000"></textarea>
+            </div>
+
+            <div class="field">
+              <label>Imagem principal</label>
+              <div id="produto-main-image" class="image-uploader"></div>
+            </div>
+            <div class="field">
+              <label>Galeria</label>
+              <div id="produto-gallery" class="image-uploader image-uploader-gallery"></div>
+            </div>
+
+            <details class="fieldset-collapse">
+              <summary>Detalhes de perfumaria <span class="optional-tag">(opcional)</span></summary>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="produto-concentration">Concentração</label>
+                  <select id="produto-concentration">
+                    <option value="">Selecionar…</option>
+                    <option value="Eau de Parfum">Eau de Parfum</option>
+                    <option value="Eau de Toilette">Eau de Toilette</option>
+                    <option value="Parfum">Parfum</option>
+                    <option value="Cologne">Cologne</option>
+                    <option value="Outro">Outro</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="produto-family">Família olfativa</label>
+                  <input id="produto-family" maxlength="120"/>
+                </div>
+                <div class="field">
+                  <label for="produto-occasion">Ocasião</label>
+                  <input id="produto-occasion" maxlength="120"/>
+                </div>
+                <div class="field">
+                  <label for="produto-audience">Público</label>
+                  <input id="produto-audience" maxlength="120"/>
+                </div>
+                <div class="field">
+                  <label for="produto-intensity">Intensidade</label>
+                  <input id="produto-intensity" maxlength="80"/>
+                </div>
+                <div class="field">
+                  <label for="produto-longevity">Fixação</label>
+                  <input id="produto-longevity" maxlength="80"/>
+                </div>
+                <div class="field">
+                  <label for="produto-sillage">Projeção</label>
+                  <input id="produto-sillage" maxlength="80"/>
+                </div>
+              </div>
+              <div class="field">
+                <label for="produto-notes-top">Notas de saída</label>
+                <input id="produto-notes-top" maxlength="200"/>
+              </div>
+              <div class="field">
+                <label for="produto-notes-heart">Notas de coração</label>
+                <input id="produto-notes-heart" maxlength="200"/>
+              </div>
+              <div class="field">
+                <label for="produto-notes-base">Notas de fundo</label>
+                <input id="produto-notes-base" maxlength="200"/>
+              </div>
+            </details>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="produto-status">Status</label>
+                <select id="produto-status">
+                  <option value="draft">Rascunho</option>
+                  <option value="published">Publicado</option>
+                  <option value="archived">Arquivado</option>
+                </select>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="produto-featured" type="checkbox"/> Produto em destaque</label>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="produto-delete-btn" class="btn-danger-ghost" hidden>Excluir produto</button>
+              <div class="form-actions-right">
+                <button type="button" id="produto-cancel-btn" class="btn-ghost">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                  <span class="btn-label">Salvar</span>
+                  <span class="spinner" aria-hidden="true" hidden></span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="section-categorias" class="admin-section" data-section="categorias" hidden>
+        <div id="categorias-list-view">
+          <div class="section-toolbar">
+            <div>
+              <h1>Categorias</h1>
+              <p class="section-sub">Categorias usadas para organizar o catálogo.</p>
+            </div>
+            <button id="categoria-new-btn" class="btn-primary" type="button">+ Nova categoria</button>
+          </div>
+          <div id="categorias-table-wrap" class="table-wrap"></div>
+        </div>
+        <div id="categorias-form-view" hidden>
+          <div class="section-toolbar">
+            <div><h1 id="categoria-form-title">Nova categoria</h1></div>
+            <button id="categoria-back-btn" class="btn-ghost" type="button">Voltar</button>
+          </div>
+          <form id="categoria-form" class="admin-form" novalidate>
+            <input type="hidden" id="categoria-id"/>
+            <div class="field">
+              <label for="categoria-name">Nome</label>
+              <input id="categoria-name" required maxlength="100"/>
+            </div>
+            <div class="field">
+              <label for="categoria-slug">Slug</label>
+              <input id="categoria-slug" placeholder="gerado automaticamente" maxlength="120"/>
+            </div>
+            <div class="field">
+              <label for="categoria-description">Descrição</label>
+              <textarea id="categoria-description" rows="3" maxlength="1000"></textarea>
+            </div>
+            <div class="field">
+              <label>Imagem (opcional)</label>
+              <div id="categoria-image" class="image-uploader"></div>
             </div>
             <div class="field field-checkbox">
-              <label><input id="produto-featured" type="checkbox"/> Destaque</label>
+              <label><input id="categoria-active" type="checkbox" checked/> Categoria ativa</label>
+            </div>
+            <div class="form-actions">
+              <button type="button" id="categoria-delete-btn" class="btn-danger-ghost" hidden>Excluir categoria</button>
+              <div class="form-actions-right">
+                <button type="button" id="categoria-cancel-btn" class="btn-ghost">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                  <span class="btn-label">Salvar</span>
+                  <span class="spinner" aria-hidden="true" hidden></span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="section-pedidos" class="admin-section" data-section="pedidos" hidden>
+        <div class="section-toolbar">
+          <div>
+            <h1>Pedidos</h1>
+            <p class="section-sub">Pedidos feitos pelo site, quando o checkout existir.</p>
+          </div>
+        </div>
+        <div id="pedidos-table-wrap" class="table-wrap"></div>
+      </section>
+
+      <section id="section-clientes" class="admin-section" data-section="clientes" hidden>
+        <div class="section-toolbar">
+          <div>
+            <h1>Clientes</h1>
+            <p class="section-sub">Pessoas que já fizeram pedidos na VERITÉ.</p>
+          </div>
+        </div>
+        <div id="clientes-table-wrap" class="table-wrap"></div>
+      </section>
+
+      <section id="section-leads" class="admin-section" data-section="leads" hidden>
+        <div class="section-toolbar">
+          <div>
+            <h1>Lista de Espera</h1>
+            <p class="section-sub"><span id="leads-total-count">0</span> pessoas cadastradas pelo site.</p>
+          </div>
+          <div class="toolbar-actions">
+            <input id="leads-search" type="search" placeholder="Buscar por nome ou e-mail"/>
+            <a id="leads-export-btn" class="btn-ghost" href="/api/admin/leads?export=csv">Exportar CSV</a>
+          </div>
+        </div>
+        <div id="leads-table-wrap" class="table-wrap"></div>
+        <div id="leads-pagination" class="pagination"></div>
+      </section>
+
+      <section id="section-mensagens" class="admin-section" data-section="mensagens" hidden>
+        <div class="section-toolbar">
+          <div>
+            <h1>Mensagens</h1>
+            <p class="section-sub">Enviadas pelo formulário de contato do site.</p>
+          </div>
+        </div>
+        <div id="mensagens-list" class="messages-list"></div>
+      </section>
+
+      <section id="section-conteudo" class="admin-section" data-section="conteudo" hidden>
+        <div class="section-toolbar">
+          <div>
+            <h1>Conteúdo do site</h1>
+            <p class="section-sub">Textos do site público. Deixe em branco para manter o texto atual.</p>
+          </div>
+          <button id="conteudo-save-btn" class="btn-primary" type="button">
+            <span class="btn-label">Salvar alterações</span>
+            <span class="spinner" aria-hidden="true" hidden></span>
+          </button>
+        </div>
+        <div id="conteudo-form" class="admin-form content-form"></div>
+      </section>
+
+      <section id="section-faq" class="admin-section" data-section="faq" hidden>
+        <div class="section-toolbar">
+          <div>
+            <h1>FAQ</h1>
+            <p class="section-sub">Perguntas frequentes exibidas no site.</p>
+          </div>
+          <button id="faq-new-btn" class="btn-primary" type="button">+ Nova pergunta</button>
+        </div>
+        <form id="faq-new-form" class="admin-form faq-admin-item" hidden novalidate>
+          <div class="field">
+            <label for="faq-new-question">Pergunta</label>
+            <input id="faq-new-question" required maxlength="300"/>
+          </div>
+          <div class="field">
+            <label for="faq-new-answer">Resposta</label>
+            <textarea id="faq-new-answer" rows="3" required maxlength="4000"></textarea>
+          </div>
+          <div class="form-actions">
+            <div class="form-actions-right">
+              <button type="button" id="faq-new-cancel-btn" class="btn-ghost">Cancelar</button>
+              <button type="submit" class="btn-primary">
+                <span class="btn-label">Criar pergunta</span>
+                <span class="spinner" aria-hidden="true" hidden></span>
+              </button>
             </div>
           </div>
+        </form>
+        <div id="faq-list" class="faq-admin-list"></div>
+      </section>
 
+      <section id="section-midia" class="admin-section" data-section="midia" hidden>
+        <div class="section-toolbar">
+          <div>
+            <h1>Mídia</h1>
+            <p class="section-sub">Imagens já enviadas pelo painel.</p>
+          </div>
+          <div class="toolbar-actions">
+            <input id="midia-search" type="search" placeholder="Buscar por nome de arquivo"/>
+            <label class="btn-primary media-upload-btn">
+              Enviar imagem
+              <input id="midia-upload-input" type="file" accept="image/jpeg,image/png,image/webp" hidden/>
+            </label>
+          </div>
+        </div>
+        <div id="midia-grid" class="media-grid"></div>
+      </section>
+
+      <section id="section-seo" class="admin-section" data-section="seo" hidden>
+        <h1>SEO</h1>
+        <p class="section-sub">Título, descrição e imagem de compartilhamento do site.</p>
+        <p class="info-note">Alterações aqui atualizam o título da aba e a meta description assim que a página carrega. Prévias de compartilhamento no WhatsApp/Twitter/Facebook usam o HTML gravado no site — se você mudar algo aqui, pode ser necessário atualizar o HTML também para essas prévias mudarem.</p>
+        <form id="seo-form" class="admin-form">
+          <div class="field">
+            <label for="seo-title">Título do site</label>
+            <input id="seo-title" maxlength="200"/>
+          </div>
+          <div class="field">
+            <label for="seo-description">Meta description</label>
+            <textarea id="seo-description" rows="3" maxlength="400"></textarea>
+          </div>
+          <div class="field">
+            <label>Imagem de compartilhamento</label>
+            <div id="seo-image" class="image-uploader"></div>
+          </div>
           <div class="form-actions">
-            <button type="button" id="produto-delete-btn" class="btn-danger-ghost" hidden>Excluir produto</button>
             <div class="form-actions-right">
-              <button type="button" id="produto-cancel-btn" class="btn-ghost">Cancelar</button>
               <button type="submit" class="btn-primary">
                 <span class="btn-label">Salvar</span>
                 <span class="spinner" aria-hidden="true" hidden></span>
@@ -164,138 +449,89 @@
             </div>
           </div>
         </form>
-      </div>
-    </section>
+      </section>
 
-    <section id="section-leads" class="admin-section" data-section="leads" hidden>
-      <div class="section-toolbar">
-        <div>
-          <h1>Lista de Espera</h1>
-          <p class="section-sub">Pessoas cadastradas pelo site.</p>
-        </div>
-        <div class="toolbar-actions">
-          <input id="leads-search" type="search" placeholder="Buscar por nome ou e-mail"/>
-          <a id="leads-export-btn" class="btn-ghost" href="/api/admin/leads?export=csv">Exportar CSV</a>
-        </div>
-      </div>
-      <div id="leads-table-wrap" class="table-wrap"></div>
-      <div id="leads-pagination" class="pagination"></div>
-    </section>
-
-    <section id="section-mensagens" class="admin-section" data-section="mensagens" hidden>
-      <div class="section-toolbar">
-        <div>
-          <h1>Mensagens</h1>
-          <p class="section-sub">Enviadas pelo formulário de contato do site.</p>
-        </div>
-      </div>
-      <div id="mensagens-list" class="messages-list"></div>
-    </section>
-
-    <section id="section-conteudo" class="admin-section" data-section="conteudo" hidden>
-      <div class="section-toolbar">
-        <div>
-          <h1>Conteúdo</h1>
-          <p class="section-sub">Textos do site público. Deixe em branco para manter o texto atual.</p>
-        </div>
-        <button id="conteudo-save-btn" class="btn-primary" type="button">
-          <span class="btn-label">Salvar alterações</span>
-          <span class="spinner" aria-hidden="true" hidden></span>
-        </button>
-      </div>
-      <div id="conteudo-form" class="admin-form content-form"></div>
-    </section>
-
-    <section id="section-faq" class="admin-section" data-section="faq" hidden>
-      <div class="section-toolbar">
-        <div>
-          <h1>FAQ</h1>
-          <p class="section-sub">Perguntas frequentes exibidas no site.</p>
-        </div>
-        <button id="faq-new-btn" class="btn-primary" type="button">Nova pergunta</button>
-      </div>
-      <form id="faq-new-form" class="admin-form faq-admin-item" hidden novalidate>
-        <div class="field">
-          <label for="faq-new-question">Pergunta</label>
-          <input id="faq-new-question" required maxlength="300"/>
-        </div>
-        <div class="field">
-          <label for="faq-new-answer">Resposta</label>
-          <textarea id="faq-new-answer" rows="3" required maxlength="4000"></textarea>
-        </div>
-        <div class="form-actions">
-          <div class="form-actions-right">
-            <button type="button" id="faq-new-cancel-btn" class="btn-ghost">Cancelar</button>
-            <button type="submit" class="btn-primary">
-              <span class="btn-label">Criar pergunta</span>
-              <span class="spinner" aria-hidden="true" hidden></span>
-            </button>
+      <section id="section-aparencia" class="admin-section" data-section="aparencia" hidden>
+        <h1>Aparência</h1>
+        <p class="section-sub">Identidade visual do site.</p>
+        <p class="info-note">Logo e favicon enviados aqui substituem automaticamente os do site público assim que a página carrega. Se um dos dois ficar vazio, o arquivo original do site continua sendo usado.</p>
+        <form id="aparencia-form" class="admin-form">
+          <div class="field">
+            <label>Logo principal</label>
+            <div id="aparencia-logo" class="image-uploader"></div>
           </div>
-        </div>
-      </form>
-      <div id="faq-list" class="faq-admin-list"></div>
-    </section>
-
-    <section id="section-seo" class="admin-section" data-section="seo" hidden>
-      <h1>SEO</h1>
-      <p class="section-sub">Título, descrição e imagem de compartilhamento do site.</p>
-      <p class="info-note">Alterações aqui atualizam o título da aba e a meta description assim que a página carrega. Prévias de compartilhamento no WhatsApp/Twitter/Facebook usam o HTML gravado no site — se você mudar algo aqui, pode ser necessário atualizar o HTML também para essas prévias mudarem.</p>
-      <form id="seo-form" class="admin-form">
-        <div class="field">
-          <label for="seo-title">Título do site</label>
-          <input id="seo-title" maxlength="200"/>
-        </div>
-        <div class="field">
-          <label for="seo-description">Meta description</label>
-          <textarea id="seo-description" rows="3" maxlength="400"></textarea>
-        </div>
-        <div class="field">
-          <label>Imagem de compartilhamento</label>
-          <div id="seo-image" class="image-uploader"></div>
-        </div>
-        <div class="form-actions">
-          <div class="form-actions-right">
-            <button type="submit" class="btn-primary">
-              <span class="btn-label">Salvar</span>
-              <span class="spinner" aria-hidden="true" hidden></span>
-            </button>
+          <div class="field">
+            <label>Favicon</label>
+            <div id="aparencia-favicon" class="image-uploader"></div>
           </div>
-        </div>
-      </form>
-    </section>
-
-    <section id="section-configuracoes" class="admin-section" data-section="configuracoes" hidden>
-      <h1>Configurações</h1>
-      <p class="section-sub">Identidade e canais de contato da VERITÉ.</p>
-      <form id="config-form" class="admin-form">
-        <div class="field">
-          <label for="config-brand">Nome da marca</label>
-          <input id="config-brand" maxlength="100"/>
-        </div>
-        <div class="field">
-          <label for="config-instagram">Instagram (link completo)</label>
-          <input id="config-instagram" type="url" maxlength="300" placeholder="https://instagram.com/..."/>
-        </div>
-        <div class="field">
-          <label for="config-whatsapp">WhatsApp (só números, com DDI/DDD)</label>
-          <input id="config-whatsapp" maxlength="40" placeholder="5581999999999"/>
-        </div>
-        <div class="field">
-          <label for="config-email">E-mail de contato</label>
-          <input id="config-email" type="email" maxlength="254"/>
-        </div>
-        <div class="form-actions">
-          <div class="form-actions-right">
-            <button type="submit" class="btn-primary">
-              <span class="btn-label">Salvar</span>
-              <span class="spinner" aria-hidden="true" hidden></span>
-            </button>
+          <div class="form-actions">
+            <div class="form-actions-right">
+              <button type="submit" class="btn-primary">
+                <span class="btn-label">Salvar</span>
+                <span class="spinner" aria-hidden="true" hidden></span>
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </section>
+        </form>
+      </section>
 
-  </main>
+      <section id="section-configuracoes" class="admin-section" data-section="configuracoes" hidden>
+        <h1>Configurações da VERITÉ</h1>
+        <p class="section-sub">Identidade e canais de contato. Slogan: "A verdade está na sua essência."</p>
+        <form id="config-form" class="admin-form">
+          <div class="field">
+            <label for="config-brand">Nome da marca</label>
+            <input id="config-brand" maxlength="100"/>
+          </div>
+          <div class="field">
+            <label for="config-instagram">Instagram (link completo)</label>
+            <input id="config-instagram" type="url" maxlength="300" placeholder="https://instagram.com/..."/>
+          </div>
+          <div class="field">
+            <label for="config-whatsapp">WhatsApp (só números, com DDI/DDD)</label>
+            <input id="config-whatsapp" maxlength="40" placeholder="5581999999999"/>
+          </div>
+          <div class="field">
+            <label for="config-email">E-mail de contato</label>
+            <input id="config-email" type="email" maxlength="254"/>
+          </div>
+          <div class="form-actions">
+            <div class="form-actions-right">
+              <button type="submit" class="btn-primary">
+                <span class="btn-label">Salvar</span>
+                <span class="spinner" aria-hidden="true" hidden></span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section id="section-minha-conta" class="admin-section" data-section="minha-conta" hidden>
+        <h1>Minha conta</h1>
+        <p class="section-sub">Seus dados de acesso ao painel.</p>
+        <form id="conta-form" class="admin-form">
+          <div class="field">
+            <label for="conta-email">E-mail</label>
+            <input id="conta-email" type="email" disabled/>
+          </div>
+          <div class="field">
+            <label for="conta-name">Nome de exibição</label>
+            <input id="conta-name" maxlength="100" placeholder="Como seu nome aparece no painel"/>
+          </div>
+          <p class="info-note">Para trocar o e-mail ou a senha de acesso, atualize as variáveis <code>ADMIN_EMAIL</code>/<code>ADMIN_PASSWORD_HASH</code> nas configurações do projeto na Vercel — por segurança, isso não é feito por aqui.</p>
+          <div class="form-actions">
+            <div class="form-actions-right">
+              <button type="submit" class="btn-primary">
+                <span class="btn-label">Salvar</span>
+                <span class="spinner" aria-hidden="true" hidden></span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+    </main>
+  </div>
 </div>
 
 <div id="toast-container" class="toast-container" aria-live="polite"></div>

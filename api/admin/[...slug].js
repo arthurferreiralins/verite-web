@@ -18,8 +18,19 @@ const content = require('../_handlers/admin/content');
 const faq = require('../_handlers/admin/faq');
 const settings = require('../_handlers/admin/settings');
 const seo = require('../_handlers/admin/seo');
+const categories = require('../_handlers/admin/categories');
+const orders = require('../_handlers/admin/orders');
+const customers = require('../_handlers/admin/customers');
+const media = require('../_handlers/admin/media');
+const notifications = require('../_handlers/admin/notifications');
+const search = require('../_handlers/admin/search');
+const account = require('../_handlers/admin/account');
+const appearance = require('../_handlers/admin/appearance');
 
-const routes = { login, logout, me, dashboard, products, upload, leads, messages, content, faq, settings, seo };
+const routes = {
+  login, logout, me, dashboard, products, upload, leads, messages, content, faq, settings, seo,
+  categories, orders, customers, media, notifications, search, account, appearance,
+};
 
 module.exports = async function handler(req, res) {
   // The catch-all query key comes through as "...slug" (not "slug") on

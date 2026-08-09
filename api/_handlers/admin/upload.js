@@ -1,4 +1,5 @@
 const { put, del } = require('@vercel/blob');
+const { sql } = require('../../_lib/db');
 const { requireAdminSession } = require('../../_lib/auth');
 
 const ALLOWED_TYPES = {
@@ -7,6 +8,7 @@ const ALLOWED_TYPES = {
   'image/webp': 'webp',
 };
 const MAX_BYTES = 5 * 1024 * 1024; // 5MB
+const ALLOWED_FOLDERS = ['products', 'categories', 'seo', 'appearance', 'geral'];
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -20,10 +22,15 @@ module.exports = async function handler(req, res) {
     }
     try {
       await del(url);
-      res.status(200).json({ ok: true });
     } catch (e) {
-      res.status(500).json({ ok: false, error: 'Não foi possível remover a imagem.' });
+      // segue mesmo se o blob já não existir mais
     }
+    try {
+      await sql`DELETE FROM media WHERE url = ${url}`;
+    } catch (e) {
+      // best effort — a tabela media é só um índice de conveniência para a biblioteca de mídia
+    }
+    res.status(200).json({ ok: true });
     return;
   }
 
@@ -38,6 +45,8 @@ module.exports = async function handler(req, res) {
     res.status(400).json({ ok: false, error: 'Formato de imagem não suportado. Use JPEG, PNG ou WebP.' });
     return;
   }
+  const folderParam = typeof req.query.folder === 'string' ? req.query.folder : 'products';
+  const folder = ALLOWED_FOLDERS.includes(folderParam) ? folderParam : 'products';
 
   const chunks = [];
   let totalBytes = 0;
@@ -67,13 +76,21 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const filename = `products/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
   try {
     const blob = await put(filename, buffer, {
       access: 'public',
       contentType,
     });
+    try {
+      await sql`
+        INSERT INTO media (url, pathname, filename, mime_type, size_bytes, folder)
+        VALUES (${blob.url}, ${blob.pathname || filename}, ${filename.split('/').pop()}, ${contentType}, ${buffer.length}, ${folder})
+      `;
+    } catch (e) {
+      // best effort — o upload em si já teve sucesso, a biblioteca de mídia é só um índice
+    }
     res.status(200).json({ ok: true, url: blob.url });
   } catch (e) {
     res.status(500).json({ ok: false, error: 'Falha ao enviar a imagem.' });

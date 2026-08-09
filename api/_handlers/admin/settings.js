@@ -2,6 +2,7 @@ const { sql } = require('../../_lib/db');
 const { requireAdminSession } = require('../../_lib/auth');
 const { isOptionalString, str } = require('../../_lib/validate');
 const { readJsonBody } = require('../../_lib/readBody');
+const { logActivity } = require('../../_lib/activity');
 
 module.exports = async function handler(req, res) {
   const session = requireAdminSession(req, res);
@@ -29,6 +30,7 @@ module.exports = async function handler(req, res) {
       WHERE id = 1
       RETURNING brand_name, instagram_url, whatsapp_number, contact_email, updated_at
     `;
+    await logActivity({ action: 'updated', entityType: 'settings', description: 'Configurações da VERITÉ atualizadas', adminEmail: session.email });
     res.status(200).json({ ok: true, settings: rows[0] });
     return;
   }
