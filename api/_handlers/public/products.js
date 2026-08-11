@@ -7,7 +7,7 @@ module.exports = async function handler(req, res) {
   }
 
   const { rows } = await sql`
-    SELECT slug, name, category, short_description, description, price, sale_price, volume, main_image_url, gallery_urls, featured
+    SELECT slug, name, category, short_description, description, price, sale_price, volume, main_image_url, gallery_urls, featured, seo_title, seo_description
     FROM products
     WHERE status = 'published'
     ORDER BY featured DESC, sort_order ASC, created_at DESC
@@ -31,6 +31,8 @@ module.exports = async function handler(req, res) {
       relatedIds: [],
       buyUrl: null,
       featured: Boolean(p.featured),
+      seoTitle: p.seo_title || '',
+      seoDescription: p.seo_description || '',
     };
   });
 

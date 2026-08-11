@@ -21,6 +21,8 @@ const OPTIONAL_TEXT_FIELDS = [
   ['longevity', 'longevity'],
   ['sillage', 'sillage'],
   ['audience', 'audience'],
+  ['seoTitle', 'seo_title'],
+  ['seoDescription', 'seo_description'],
 ];
 
 function stockStatus(row) {
@@ -58,7 +60,7 @@ async function uniqueSlug(base, ignoreId) {
 }
 
 module.exports = async function handler(req, res) {
-  const session = requireAdminSession(req, res);
+  const session = await requireAdminSession(req, res);
   if (!session) return;
 
   const id = req.query.id ? Number(req.query.id) : null;
@@ -99,14 +101,15 @@ module.exports = async function handler(req, res) {
           (slug, name, category, short_description, description, price, sale_price, volume,
            main_image_url, gallery_urls, status, featured, sort_order, sku, stock_quantity,
            track_stock, low_stock_threshold, product_type, concentration, olfactory_family,
-           notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience)
+           notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience,
+           seo_title, seo_description)
         VALUES
           (${newSlug}, ${newName}, ${src.category}, ${src.short_description}, ${src.description},
            ${src.price}, ${src.sale_price}, ${src.volume}, ${src.main_image_url}, ${src.gallery_urls},
            'draft', false, ${src.sort_order}, ${null}, ${src.stock_quantity}, ${src.track_stock},
            ${src.low_stock_threshold}, ${src.product_type}, ${src.concentration}, ${src.olfactory_family},
            ${src.notes_top}, ${src.notes_heart}, ${src.notes_base}, ${src.occasion}, ${src.intensity},
-           ${src.longevity}, ${src.sillage}, ${src.audience})
+           ${src.longevity}, ${src.sillage}, ${src.audience}, ${src.seo_title}, ${src.seo_description})
         RETURNING *
       `;
       await logActivity({ action: 'duplicated', entityType: 'product', entityId: rows[0].id, description: `Produto "${src.name}" duplicado`, adminEmail: session.email });
@@ -144,7 +147,8 @@ module.exports = async function handler(req, res) {
       INSERT INTO products
         (slug, name, category, short_description, description, price, sale_price, volume, main_image_url, gallery_urls, status, featured, sort_order,
          sku, stock_quantity, track_stock, low_stock_threshold,
-         product_type, concentration, olfactory_family, notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience)
+         product_type, concentration, olfactory_family, notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience,
+         seo_title, seo_description)
       VALUES
         (${slug}, ${name}, ${category}, ${str(body.shortDescription)}, ${str(body.description)},
          ${body.price === '' || body.price == null ? null : Number(body.price)},
@@ -153,7 +157,8 @@ module.exports = async function handler(req, res) {
          ${status}, ${Boolean(body.featured)}, ${Number.isFinite(Number(body.sortOrder)) ? Number(body.sortOrder) : 0},
          ${str(body.sku) || null}, ${stockQty}, ${body.trackStock !== false}, ${lowThreshold},
          ${optionalValues[0]}, ${optionalValues[1]}, ${optionalValues[2]}, ${optionalValues[3]}, ${optionalValues[4]},
-         ${optionalValues[5]}, ${optionalValues[6]}, ${optionalValues[7]}, ${optionalValues[8]}, ${optionalValues[9]})
+         ${optionalValues[5]}, ${optionalValues[6]}, ${optionalValues[7]}, ${optionalValues[8]}, ${optionalValues[9]},
+         ${optionalValues[10]}, ${optionalValues[11]})
       RETURNING *
     `;
     await logActivity({ action: 'created', entityType: 'product', entityId: rows[0].id, description: `Produto "${name}" criado`, adminEmail: session.email });
@@ -241,6 +246,8 @@ module.exports = async function handler(req, res) {
         longevity = ${optionalValues[8]},
         sillage = ${optionalValues[9]},
         audience = ${optionalValues[10]},
+        seo_title = ${optionalValues[11]},
+        seo_description = ${optionalValues[12]},
         updated_at = now()
       WHERE id = ${id}
       RETURNING *

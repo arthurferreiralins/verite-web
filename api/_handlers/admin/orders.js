@@ -9,7 +9,7 @@ const { logActivity } = require('../../_lib/activity');
 const STATUSES = ['novo', 'confirmado', 'preparando', 'enviado', 'entregue', 'cancelado'];
 
 module.exports = async function handler(req, res) {
-  const session = requireAdminSession(req, res);
+  const session = await requireAdminSession(req, res);
   if (!session) return;
 
   const id = req.query.id ? Number(req.query.id) : null;

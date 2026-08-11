@@ -19,7 +19,7 @@ async function uniqueSlug(base, ignoreId) {
 }
 
 module.exports = async function handler(req, res) {
-  const session = requireAdminSession(req, res);
+  const session = await requireAdminSession(req, res);
   if (!session) return;
 
   const id = req.query.id ? Number(req.query.id) : null;

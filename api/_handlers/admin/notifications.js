@@ -4,7 +4,7 @@ const { requireAdminSession } = require('../../_lib/auth');
 // Notificações são sempre derivadas de dados reais no momento da consulta
 // (sem tabela de "lido/não lido" própria) — nunca inventadas.
 module.exports = async function handler(req, res) {
-  const session = requireAdminSession(req, res);
+  const session = await requireAdminSession(req, res);
   if (!session) return;
   if (req.method !== 'GET') {
     res.status(405).json({ ok: false, error: 'Método não permitido.' });

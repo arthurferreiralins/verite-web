@@ -27,7 +27,11 @@
     if(emptyEl) emptyEl.hidden = true;
     if(contentEl) contentEl.hidden = false;
 
-    document.title = product.name + ' — VERITÉ';
+    document.title = product.seoTitle || (product.name + ' — VERITÉ');
+    if(product.seoDescription){
+      var metaDesc = document.querySelector('meta[name="description"]');
+      if(metaDesc) metaDesc.setAttribute('content', product.seoDescription);
+    }
 
     var categoryLabel = (window.VeriteProducts.CATEGORIES.filter(function(c){ return c.id === product.category; })[0] || {}).label || '';
     setText('product-category', categoryLabel);

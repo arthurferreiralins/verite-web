@@ -1,4 +1,4 @@
-const { verifyPassword, createSessionCookie } = require('../../_lib/auth');
+const { verifyPassword, createSessionCookie, getCurrentSessionVersion } = require('../../_lib/auth');
 const { getClientIp, isLoginRateLimited, recordLoginAttempt } = require('../../_lib/rateLimit');
 const { isValidEmail, isNonEmptyString } = require('../../_lib/validate');
 const { readJsonBody } = require('../../_lib/readBody');
@@ -43,6 +43,7 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  res.setHeader('Set-Cookie', createSessionCookie(req, adminEmail));
+  const sessionVersion = await getCurrentSessionVersion();
+  res.setHeader('Set-Cookie', createSessionCookie(req, adminEmail, sessionVersion));
   res.status(200).json({ ok: true });
 };

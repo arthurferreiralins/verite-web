@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { sql } = require('./db');
 
 const SESSION_COOKIE_NAME = 'verite_admin_session';
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // 8h
@@ -72,10 +73,23 @@ function buildCookie(name, value, req, maxAgeSeconds) {
   return attrs.join('; ');
 }
 
-function createSessionCookie(req, email) {
+function createSessionCookie(req, email, sessionVersion) {
   const now = Date.now();
-  const token = sign({ email, iat: now, exp: now + SESSION_TTL_MS });
+  const token = sign({ email, v: Number.isFinite(sessionVersion) ? sessionVersion : 1, iat: now, exp: now + SESSION_TTL_MS });
   return buildCookie(SESSION_COOKIE_NAME, token, req, Math.floor(SESSION_TTL_MS / 1000));
+}
+
+/**
+ * Current value of site_settings.session_version, defaulting to 1 when the
+ * DB isn't reachable yet — never let a DB hiccup block login/session checks.
+ */
+async function getCurrentSessionVersion() {
+  try {
+    const { rows } = await sql`SELECT session_version FROM site_settings WHERE id = 1`;
+    return (rows[0] && Number.isFinite(rows[0].session_version)) ? rows[0].session_version : 1;
+  } catch (e) {
+    return 1;
+  }
 }
 
 function clearSessionCookie(req) {
@@ -106,13 +120,31 @@ function getSession(req) {
 /**
  * Gates an /api/admin/* handler. Returns the session payload when valid,
  * or writes a 401 JSON response and returns null when not — callers
- * should `return` immediately when this returns null.
+ * should `return` immediately when this returns null (now async: every
+ * call site must `await` it).
+ *
+ * The session_version check is what makes "Encerrar outras sessões" (Minha
+ * Conta) actually work: bumping site_settings.session_version invalidates
+ * every cookie signed with an older version. If the DB is unreachable this
+ * check is skipped (fails open) — same resilience philosophy as the rest of
+ * this file: a DB hiccup must never lock the admin out entirely, it just
+ * means the extra revocation check doesn't run for that one request.
  */
-function requireAdminSession(req, res) {
+async function requireAdminSession(req, res) {
   const session = getSession(req);
   if (!session) {
     res.status(401).json({ ok: false, error: 'Não autenticado.' });
     return null;
+  }
+  try {
+    const currentVersion = await getCurrentSessionVersion();
+    const sessionVersion = Number.isFinite(session.v) ? session.v : 1;
+    if (sessionVersion !== currentVersion) {
+      res.status(401).json({ ok: false, error: 'Sessão encerrada em outro dispositivo. Entre novamente.' });
+      return null;
+    }
+  } catch (e) {
+    // fail open — ver comentário acima
   }
   return session;
 }
@@ -124,5 +156,6 @@ module.exports = {
   createSessionCookie,
   clearSessionCookie,
   getSession,
+  getCurrentSessionVersion,
   requireAdminSession,
 };

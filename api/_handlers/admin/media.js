@@ -19,7 +19,7 @@ async function findUsage(url) {
 }
 
 module.exports = async function handler(req, res) {
-  const session = requireAdminSession(req, res);
+  const session = await requireAdminSession(req, res);
   if (!session) return;
 
   if (req.method === 'GET') {

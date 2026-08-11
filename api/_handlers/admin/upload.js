@@ -11,7 +11,7 @@ const MAX_BYTES = 5 * 1024 * 1024; // 5MB
 const ALLOWED_FOLDERS = ['products', 'categories', 'seo', 'appearance', 'geral'];
 
 module.exports = async function handler(req, res) {
-  const session = requireAdminSession(req, res);
+  const session = await requireAdminSession(req, res);
   if (!session) return;
 
   if (req.method === 'DELETE') {

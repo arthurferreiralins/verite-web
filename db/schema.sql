@@ -193,6 +193,13 @@ ALTER TABLE messages ADD CONSTRAINT messages_status_check CHECK (status IN ('nov
 ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS logo_url TEXT;
 ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS favicon_url TEXT;
 ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS admin_display_name TEXT;
+-- Bumped by "Encerrar outras sessões" em Minha Conta: um cookie de sessão só
+-- é aceito se o "version" assinado nele bater com este valor (ver api/_lib/auth.js).
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS session_version INTEGER NOT NULL DEFAULT 1;
+
+-- SEO individual por produto (opcional — cai no SEO global do site quando vazio).
+ALTER TABLE products ADD COLUMN IF NOT EXISTS seo_title TEXT;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS seo_description TEXT;
 
 CREATE TABLE IF NOT EXISTS media (
   id SERIAL PRIMARY KEY,
