@@ -765,18 +765,23 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
 }
 @media (max-width:760px){ .colecao-connector{display:none;} }
 .produto-card{
-  aspect-ratio:3/4; border:1px solid rgba(177,138,79,.22); border-radius:3px;
+  aspect-ratio:3/4; border:1px solid rgba(177,138,79,.3); border-radius:3px;
+  /* a second, inset bezel via outline (not box-shadow, which can't sit
+     inset from the edge) — reads as a museum display case rather than
+     a single flat card edge, visible at rest, not only on hover */
+  outline:1px solid rgba(177,138,79,.14); outline-offset:-10px;
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.1rem;
   position:relative; overflow:hidden; isolation:isolate;
   background:linear-gradient(165deg, rgba(255,255,255,.035), rgba(0,0,0,.35));
   backdrop-filter:blur(3px);
+  box-shadow:0 22px 40px -30px rgba(0,0,0,.7);
   /* opacity kept at .reveal's own .9s — see the same note on .essencia-item */
-  transition:opacity .9s ease, transform .12s ease-out, border-color .4s ease, box-shadow .4s ease;
+  transition:opacity .9s ease, transform .12s ease-out, border-color .4s ease, outline-color .4s ease, box-shadow .4s ease;
 }
 .produto-card::before{
   content:""; position:absolute; inset:-25%; z-index:0;
-  background:radial-gradient(circle at 50% 32%, rgba(177,138,79,.4), transparent 62%);
-  filter:blur(26px); opacity:.5;
+  background:radial-gradient(circle at 50% 32%, rgba(177,138,79,.42), transparent 62%);
+  filter:blur(26px); opacity:.6;
   animation:orb-drift 15s ease-in-out infinite;
 }
 .produto-card::after{
@@ -810,14 +815,23 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
    toggled by assets/js/main.js via IntersectionObserver on coarse-
    pointer devices, where :hover never fires, so touch visitors still
    get the "something is lit up" moment as the card crosses center. */
-.produto-card:hover, .produto-card.is-active{transform:translateY(-8px); border-color:rgba(177,138,79,.55); box-shadow:0 28px 54px -26px rgba(177,138,79,.45); transition-delay:0s;}
-.produto-card:hover::before, .produto-card.is-active::before{opacity:.85;}
-.produto-card:hover::after, .produto-card.is-active::after{transform:translateX(130%);}
-.produto-card .produto-num{
-  font-family:var(--font-display); font-size:2.8rem; color:var(--gold-light); opacity:.85; position:relative; z-index:1;
-  text-shadow:0 0 34px rgba(177,138,79,.55); transition:opacity .4s ease, text-shadow .4s ease;
+.produto-card:hover, .produto-card.is-active{
+  transform:translateY(-8px); border-color:rgba(177,138,79,.6); outline-color:rgba(177,138,79,.32);
+  box-shadow:0 30px 58px -24px rgba(177,138,79,.5); transition-delay:0s;
 }
-.produto-card:hover .produto-num, .produto-card.is-active .produto-num{opacity:1; text-shadow:0 0 46px rgba(177,138,79,.8);}
+.produto-card:hover::before, .produto-card.is-active::before{opacity:.9;}
+.produto-card:hover::after, .produto-card.is-active::after{transform:translateX(130%);}
+/* the numeral itself is metal, not flat colour — a gold-to-shadow-to-gold
+   gradient clipped to the glyph, so it catches "light" like an engraved
+   plaque rather than reading as plain coloured type */
+.produto-card .produto-num{
+  font-family:var(--font-display); font-size:3.4rem; line-height:1; opacity:.92; position:relative; z-index:1;
+  background:linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 42%, var(--gold-deep) 58%, var(--gold-light) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 22px rgba(177,138,79,.5));
+  transition:opacity .4s ease, filter .4s ease;
+}
+.produto-card:hover .produto-num, .produto-card.is-active .produto-num{opacity:1; filter:drop-shadow(0 0 32px rgba(177,138,79,.75));}
 .produto-card .produto-tag{
   font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; color:var(--sec-fg-soft);
   position:relative; z-index:1; opacity:.75; transition:opacity .4s ease;
@@ -828,10 +842,12 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
 @media (prefers-reduced-motion:reduce){ .produto-card::before{animation:none;} }
 
 /* display-case corners — just two, diagonally opposite, restrained on
-   purpose (all four would read as a generic "featured card" template) */
-.produto-frame{position:absolute; inset:16px; z-index:1; pointer-events:none; opacity:.4; transition:opacity .45s ease;}
-.produto-card:hover .produto-frame, .produto-card.is-active .produto-frame{opacity:.85;}
-.produto-frame::before, .produto-frame::after{content:""; position:absolute; width:14px; height:14px; border:1px solid var(--gold-light);}
+   purpose (all four would read as a generic "featured card" template).
+   Visible at rest now (not just on hover) so the "vitrine" reads even
+   before anyone interacts with it. */
+.produto-frame{position:absolute; inset:16px; z-index:1; pointer-events:none; opacity:.55; transition:opacity .45s ease;}
+.produto-card:hover .produto-frame, .produto-card.is-active .produto-frame{opacity:1;}
+.produto-frame::before, .produto-frame::after{content:""; position:absolute; width:16px; height:16px; border:1px solid var(--gold-light);}
 .produto-frame::before{top:0; left:0; border-right:none; border-bottom:none;}
 .produto-frame::after{bottom:0; right:0; border-left:none; border-top:none;}
 
