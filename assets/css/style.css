@@ -224,6 +224,26 @@ p{margin:0;}
 }
 
 /* =======================================================================
+   Floating WhatsApp button — injected by main.js on every page. Sits
+   above regular content but below the custom cursor (z-index 9999).
+   ======================================================================= */
+.whatsapp-float{
+  position:fixed; right:20px; bottom:20px; z-index:500;
+  width:56px; height:56px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(155deg,var(--gold-light),var(--gold) 60%,var(--gold-deep));
+  color:var(--black); box-shadow:0 8px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.08) inset;
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.whatsapp-float:hover, .whatsapp-float:focus-visible{
+  transform:translateY(-3px) scale(1.06);
+  box-shadow:0 12px 28px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.12) inset;
+}
+@media (max-width:640px){
+  .whatsapp-float{ right:14px; bottom:14px; width:50px; height:50px; }
+}
+
+/* =======================================================================
    Custom cursor — a small gold dot glued to the pointer plus a larger
    ring that eases toward it (lerped in JS) and grows over anything
    clickable. assets/js/pointer.js only creates these on fine-pointer,

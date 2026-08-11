@@ -176,4 +176,17 @@
       });
     });
   });
+
+  /* Floating WhatsApp button — injected on every page so a single change
+     here updates all of them. Number is the real one already published
+     in Contato/rodapé (5581981553632); this just makes it reachable from
+     anywhere on the page, not only after scrolling to the footer. */
+  var waLink = document.createElement('a');
+  waLink.className = 'whatsapp-float';
+  waLink.href = 'https://wa.me/5581981553632?text=' + encodeURIComponent('Olá! Vim pelo site da VERITÉ e gostaria de saber mais.');
+  waLink.target = '_blank';
+  waLink.rel = 'noopener';
+  waLink.setAttribute('aria-label', 'Falar com a VERITÉ no WhatsApp');
+  waLink.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.74.46 3.44 1.32 4.94L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.13-2.9-7C17.19 3.03 14.7 2 12.04 2Zm5.83 14.16c-.24.68-1.4 1.3-1.93 1.38-.49.08-1.11.11-1.79-.11-.41-.13-.94-.31-1.62-.6-2.85-1.23-4.71-4.1-4.85-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.09.99-2.37.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.59.17.29.75 1.24 1.61 2 1.11.99 2.04 1.3 2.34 1.44.3.14.47.12.65-.07.18-.19.75-.87.95-1.17.2-.3.4-.24.66-.14.27.1 1.69.8 1.98.94.29.14.48.21.55.33.07.12.07.68-.17 1.36Z"/></svg>';
+  document.body.appendChild(waLink);
 })();
