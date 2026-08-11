@@ -333,7 +333,7 @@ header.is-scrolled{
 header.is-scrolled .nav-inner{padding-top:.75rem; padding-bottom:.75rem;}
 
 .brand-mini{display:flex; align-items:center; gap:.7rem; text-decoration:none; color:var(--off-white);}
-.brand-mini .emblem-mini{height:24px; width:auto; display:flex; align-items:center; flex:none; transition:transform .4s ease;}
+.brand-mini .emblem-mini{height:27px; width:auto; display:flex; align-items:center; flex:none; transition:transform .4s ease;}
 .brand-mini .emblem-mini img{height:100%; width:auto; display:block;}
 .brand-mini:hover .emblem-mini{transform:rotate(8deg);}
 .brand-mini .word{font-family:var(--font-display); font-size:1.05rem; letter-spacing:.28em; text-transform:uppercase;}
@@ -457,6 +457,20 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   background:radial-gradient(circle, rgba(177,138,79,.3), transparent 70%);
   filter:blur(18px); animation:glow-pulse 6s ease-in-out infinite;
 }
+/* a soft "ground" shadow under the full lockup — gives the logo something
+   to rest on instead of floating flat against the gradient, without ever
+   reading as a literal drop-shadow box */
+.hero .emblem-wrap-full::after{
+  content:""; position:absolute; left:50%; bottom:-4%; width:64%; height:22px; z-index:-1;
+  transform:translateX(-50%); border-radius:50%;
+  background:radial-gradient(ellipse, rgba(0,0,0,.45), transparent 72%);
+  filter:blur(7px);
+}
+/* very subtle pointer-driven tilt on the mark itself (assets/js/pointer.js,
+   fine-pointer + motion-ok only) — lives on the <img>, not this wrapper,
+   because the wrapper already owns the emblem-float keyframe and a CSS
+   animation would fight an inline transform set by JS every frame */
+.hero .emblem-wrap-full img{transition:transform .4s ease-out;}
 @keyframes emblem-in{ from{opacity:0; transform:translateY(14px) scale(.94);} to{opacity:1; transform:translateY(0) scale(1);} }
 @keyframes emblem-float{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
 .hero h1{
@@ -527,19 +541,25 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 @media (prefers-reduced-motion:reduce){ :where(html.js) .reveal-blur{opacity:1; transform:none; filter:none; transition:none;} }
 
 /* =======================================================================
-   A VERITÉ (brand story)
+   A VERITÉ (brand story) — editorial drop cap on the lead paragraph
    ======================================================================= */
-.story p{color:var(--sec-fg-soft); font-size:1.12rem; line-height:1.85;}
-.story p::first-letter{
-  font-family:var(--font-display); font-size:3.4rem; line-height:.7; float:left;
-  padding:.15rem .5rem 0 0; color:var(--gold);
+.section-head-split .lead::first-letter{
+  font-family:var(--font-display); font-size:3.6rem; line-height:.6; float:left;
+  padding:.1rem .5rem 0 0; color:var(--gold);
 }
 
 /* =======================================================================
    Nossa Essência — editorial numbered list (works cleanly for 5 items,
    unlike a grid that would wrap awkwardly)
    ======================================================================= */
-.essencia-list{list-style:none; margin:0; padding:0; border-top:1px solid var(--sec-line); counter-reset:val;}
+.essencia-list{list-style:none; margin:0; padding:0; border-top:1px solid var(--sec-line); counter-reset:val; position:relative;}
+/* a thread of gold running down through the numerals, tying the five
+   pillars together as one lineage instead of five separate rows */
+.essencia-list::before{
+  content:""; position:absolute; left:1.7rem; top:0; bottom:0; width:1px;
+  background:linear-gradient(to bottom, transparent, rgba(177,138,79,.3) 12%, rgba(177,138,79,.3) 88%, transparent);
+}
+@media (max-width:640px){ .essencia-list::before{left:1.2rem;} }
 .essencia-item{
   counter-increment:val; position:relative;
   display:grid; grid-template-columns:3.4rem 3.2rem 1fr; align-items:center; gap:1.6rem;
@@ -638,6 +658,10 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
   line-height:1.7; color:var(--off-white); margin:0;
 }
 .manifesto-line + .manifesto-line{margin-top:.3rem;}
+/* the handful of words the manifesto actually hinges on get a quiet
+   color shift — never bold, never a size change, just gold instead of
+   off-white — so the emphasis reads as a whisper, not a shout */
+.manifesto-line .hl{color:var(--gold-light);}
 .manifesto-pause{margin-top:1.8rem;}
 .manifesto-signature{margin-top:3.2rem;}
 .manifesto-brand{
@@ -659,6 +683,17 @@ nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
     var(--black-3);
 }
 .launch .eyebrow{color:var(--gold-light);}
+/* small "you're early" marker above the eyebrow — a pill, not a banner,
+   so it reads as a quiet credential rather than a marketing sticker */
+.access-badge{
+  display:inline-flex; align-items:center; gap:.5rem; margin:0 0 1.6rem;
+  padding:.45rem 1.1rem; border:1px solid rgba(177,138,79,.4); border-radius:999px;
+  font-size:.64rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-light);
+}
+.access-badge::before{
+  content:""; width:5px; height:5px; border-radius:50%; background:var(--gold-light);
+  box-shadow:0 0 8px rgba(217,189,133,.8);
+}
 .launch h2{font-family:var(--font-display); font-size:clamp(2rem,4.2vw,3rem); color:var(--off-white);}
 .launch .sub{max-width:42ch; margin:1.2rem auto 0; color:var(--sec-fg-soft); font-size:1.05rem;}
 
@@ -797,6 +832,14 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
 .produto-card:hover .produto-tag{opacity:1;}
 @media (prefers-reduced-motion:reduce){ .produto-card::before{animation:none;} }
 
+/* display-case corners — just two, diagonally opposite, restrained on
+   purpose (all four would read as a generic "featured card" template) */
+.produto-frame{position:absolute; inset:16px; z-index:1; pointer-events:none; opacity:.4; transition:opacity .45s ease;}
+.produto-card:hover .produto-frame{opacity:.85;}
+.produto-frame::before, .produto-frame::after{content:""; position:absolute; width:14px; height:14px; border:1px solid var(--gold-light);}
+.produto-frame::before{top:0; left:0; border-right:none; border-bottom:none;}
+.produto-frame::after{bottom:0; right:0; border-left:none; border-top:none;}
+
 /* .produto-card-real: same glass card, now standing in for an actual
    published product (see assets/js/products-loader.js) instead of the
    "Em breve" mystery state — no numeral, a real photo + name instead. */
@@ -871,6 +914,10 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
    Footer
    ======================================================================= */
 footer{background:var(--black); color:var(--off-white); padding-top:5rem; position:relative; overflow:hidden;}
+footer::before{
+  content:""; position:absolute; top:0; left:10%; right:10%; height:1px; z-index:1;
+  background:linear-gradient(90deg, transparent, rgba(177,138,79,.28), transparent);
+}
 footer > .wrap{position:relative; z-index:1;}
 /* footer's own 3-column grid is wide and left-aligned, so the generic
    right-anchored .watermark would land right on top of the "Navegar"

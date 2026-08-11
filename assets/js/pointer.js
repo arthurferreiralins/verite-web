@@ -18,6 +18,7 @@
     initButtonSpotlight();
     initCardTilt();
     initHeroGlow();
+    initHeroLogoTilt();
   });
 
   function initCursor(){
@@ -87,6 +88,25 @@
       });
       card.addEventListener('mouseleave', function(){ card.style.transform = ''; });
     });
+  }
+
+  /* Extremely subtle tilt on the hero lockup image only — not the
+     .emblem-wrap-full wrapper, which already owns the emblem-float
+     keyframe. A CSS animation re-asserts `transform` every frame, so an
+     inline transform set here on the same element would just get fought
+     and never actually show; the <img> inside has no animation of its
+     own, so it's free to take the pointer-driven transform cleanly. */
+  function initHeroLogoTilt(){
+    var hero = document.querySelector('.hero');
+    var img = hero && hero.querySelector('.emblem-wrap-full img');
+    if(!hero || !img) return;
+    hero.addEventListener('mousemove', function(e){
+      var r = hero.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      img.style.transform = 'perspective(900px) rotateX(' + (py * -3).toFixed(2) + 'deg) rotateY(' + (px * 4).toFixed(2) + 'deg)';
+    });
+    hero.addEventListener('mouseleave', function(){ img.style.transform = ''; });
   }
 
   function initHeroGlow(){
