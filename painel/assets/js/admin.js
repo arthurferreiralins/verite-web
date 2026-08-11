@@ -288,7 +288,7 @@
   sidebarScrim.addEventListener('click', closeSidebar);
 
   /* ============================ Routing ============================ */
-  var ROUTES = ['dashboard', 'produtos', 'categorias', 'pedidos', 'clientes', 'leads', 'mensagens', 'conteudo', 'faq', 'midia', 'seo', 'aparencia', 'configuracoes', 'minha-conta'];
+  var ROUTES = ['dashboard', 'produtos', 'categorias', 'estoque', 'pedidos', 'clientes', 'leads', 'mensagens', 'conteudo', 'faq', 'midia', 'seo', 'aparencia', 'configuracoes', 'minha-conta'];
   var loaders = {};
   var currentActiveRoute = null;
 
@@ -438,25 +438,20 @@
     api('/api/admin/dashboard').then(function(data){
       var cards = [
         { n: data.productsTotal, label: 'PRODUTOS', sub: data.products.published + ' publicados · ' + data.products.draft + ' rascunhos' },
+        { n: data.orders, label: 'PEDIDOS', sub: null },
+        { n: data.customers, label: 'CLIENTES', sub: null },
         { n: data.leads, label: 'LISTA DE ESPERA', sub: null },
         { n: data.messagesTotal, label: 'MENSAGENS', sub: data.messages.novo + ' novas' },
-        { n: data.orders, label: 'PEDIDOS', sub: null }
+        { n: data.lowStock, label: 'ESTOQUE', sub: data.lowStock > 0 ? 'produto(s) com estoque baixo/esgotado' : 'tudo em dia', warn: data.lowStock > 0 }
       ];
       cards.forEach(function(c){
         var card = document.createElement('div');
-        card.className = 'stat-card';
+        card.className = 'stat-card' + (c.warn ? ' stat-card-warn' : '');
         card.appendChild(textEl('div', String(c.n), 'n'));
         card.appendChild(textEl('div', c.label, 'label'));
         if(c.sub) card.appendChild(textEl('div', c.sub, 'stat-card-sub'));
         wrap.appendChild(card);
       });
-      if(data.lowStock > 0){
-        var warn = document.createElement('div');
-        warn.className = 'stat-card stat-card-warn';
-        warn.appendChild(textEl('div', String(data.lowStock), 'n'));
-        warn.appendChild(textEl('div', 'ESTOQUE BAIXO', 'label'));
-        wrap.appendChild(warn);
-      }
 
       if(!data.activity || !data.activity.length){
         activityWrap.appendChild(textEl('div', 'Nenhuma atividade registrada ainda.', 'empty-state'));
@@ -597,6 +592,18 @@
         });
         actionsTd.appendChild(toggleBtn);
 
+        if(p.status !== 'archived'){
+          var archiveBtn = document.createElement('button');
+          archiveBtn.type = 'button'; archiveBtn.textContent = 'Arquivar';
+          archiveBtn.addEventListener('click', function(){
+            api('/api/admin/products?id=' + p.id, { method: 'PUT', body: { status: 'archived' } }).then(function(){
+              showToast('Produto arquivado.');
+              loadProductsList();
+            }).catch(function(err){ showToast(err.message, true); });
+          });
+          actionsTd.appendChild(archiveBtn);
+        }
+
         var delBtn = document.createElement('button');
         delBtn.type = 'button'; delBtn.textContent = 'Excluir';
         delBtn.addEventListener('click', function(){
@@ -653,6 +660,8 @@
     fillOptional('produto-notes-top', product && product.notes_top);
     fillOptional('produto-notes-heart', product && product.notes_heart);
     fillOptional('produto-notes-base', product && product.notes_base);
+    fillOptional('produto-seo-title', product && product.seo_title);
+    fillOptional('produto-seo-description', product && product.seo_description);
 
     var mainWrap = document.getElementById('produto-main-image');
     var galleryWrap = document.getElementById('produto-gallery');
@@ -727,7 +736,9 @@
       sillage: document.getElementById('produto-sillage').value.trim(),
       notesTop: document.getElementById('produto-notes-top').value.trim(),
       notesHeart: document.getElementById('produto-notes-heart').value.trim(),
-      notesBase: document.getElementById('produto-notes-base').value.trim()
+      notesBase: document.getElementById('produto-notes-base').value.trim(),
+      seoTitle: document.getElementById('produto-seo-title').value.trim(),
+      seoDescription: document.getElementById('produto-seo-description').value.trim()
     };
 
     var btn = produtoForm.querySelector('button[type="submit"]');
@@ -874,6 +885,54 @@
     loadCategoriasList();
   };
 
+  /* ============================ Estoque ============================ */
+  loaders.estoque = function(){
+    var wrap = document.getElementById('estoque-table-wrap');
+    clear(wrap);
+    api('/api/admin/products').then(function(data){
+      if(!data.products.length){
+        wrap.appendChild(textEl('div', 'Nenhum produto cadastrado ainda.', 'empty-state'));
+        return;
+      }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Produto</th><th>SKU</th><th>Quantidade</th><th>Status</th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.products.forEach(function(p){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', p.name));
+        tr.appendChild(textEl('td', p.sku || '—'));
+
+        var qtyTd = document.createElement('td');
+        if(p.track_stock){
+          var qtyInput = document.createElement('input');
+          qtyInput.type = 'number'; qtyInput.min = '0'; qtyInput.step = '1';
+          qtyInput.value = p.stock_quantity;
+          qtyInput.className = 'estoque-qty-input';
+          qtyInput.addEventListener('change', function(){
+            var val = Math.max(0, Math.trunc(Number(qtyInput.value) || 0));
+            api('/api/admin/products?id=' + p.id, { method: 'PUT', body: { stockQuantity: val } }).then(function(){
+              showToast('Estoque de "' + p.name + '" atualizado.');
+              loaders.estoque();
+            }).catch(function(err){ showToast(err.message, true); });
+          });
+          qtyTd.appendChild(qtyInput);
+        } else {
+          qtyTd.appendChild(textEl('span', '—', 'stock-qty'));
+        }
+        tr.appendChild(qtyTd);
+
+        var statusTd = document.createElement('td');
+        statusTd.innerHTML = stockBadgeHtml(p);
+        tr.appendChild(statusTd);
+
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  };
+
   /* ============================ Pedidos ============================ */
   loaders.pedidos = function(){
     var wrap = document.getElementById('pedidos-table-wrap');
@@ -908,12 +967,14 @@
   };
 
   /* ============================ Clientes ============================ */
-  loaders.clientes = function(){
+  var clientesState = { search: '' };
+  function loadClientes(){
     var wrap = document.getElementById('clientes-table-wrap');
     clear(wrap);
-    api('/api/admin/customers').then(function(data){
+    var qs = clientesState.search ? '?search=' + encodeURIComponent(clientesState.search) : '';
+    api('/api/admin/customers' + qs).then(function(data){
       if(!data.items.length){
-        wrap.appendChild(textEl('div', 'Nenhum cliente ainda.', 'empty-state'));
+        wrap.appendChild(textEl('div', clientesState.search ? 'Nenhum cliente encontrado.' : 'Nenhum cliente ainda.', 'empty-state'));
         return;
       }
       var table = document.createElement('table');
@@ -932,6 +993,16 @@
       table.appendChild(tbody);
       wrap.appendChild(table);
     }).catch(function(err){ showToast(err.message, true); });
+  }
+  var clientesSearchTimer = null;
+  document.getElementById('clientes-search').addEventListener('input', function(e){
+    window.clearTimeout(clientesSearchTimer);
+    clientesSearchTimer = window.setTimeout(function(){ clientesState.search = e.target.value.trim(); loadClientes(); }, 300);
+  });
+  loaders.clientes = function(){
+    clientesState.search = '';
+    document.getElementById('clientes-search').value = '';
+    loadClientes();
   };
 
   /* ============================ Leads ============================ */
@@ -1368,6 +1439,17 @@
       showToast('Alterações salvas.');
     }).catch(function(err){ showToast(err.message || 'Não foi possível salvar.', true); })
       .finally(function(){ setLoading(btn, false); });
+  });
+  document.getElementById('conta-logout-others-btn').addEventListener('click', function(){
+    var btn = this;
+    confirmDialog('Isso vai encerrar o acesso ao painel em qualquer outro navegador/dispositivo. Sua sessão aqui continua ativa. Confirmar?').then(function(ok){
+      if(!ok) return;
+      btn.disabled = true;
+      api('/api/admin/account?action=logout-others', { method: 'POST' }).then(function(){
+        showToast('Sessões em outros dispositivos foram encerradas.');
+      }).catch(function(err){ showToast(err.message || 'Não foi possível encerrar as sessões.', true); })
+        .finally(function(){ btn.disabled = false; });
+    });
   });
   loaders['minha-conta'] = function(){ loadConta(); };
 

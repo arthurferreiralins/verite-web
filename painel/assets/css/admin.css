@@ -343,6 +343,14 @@ table.admin-table tr:hover td{background:#faf7ee;}
 .content-form .field label{color:#4a453b;}
 .content-form .field textarea{min-height:70px;}
 
+/* ---------- Minha conta ---------- */
+.account-danger-zone{max-width:760px; margin-top:2rem; padding-top:1.6rem; border-top:1px solid var(--line-light);}
+.account-danger-zone h2{font-size:1.1rem; margin-bottom:.4rem;}
+.account-danger-zone .section-sub{margin-bottom:1rem;}
+
+/* ---------- Estoque ---------- */
+.estoque-qty-input{width:90px; padding:.4rem .5rem; border:1px solid #d8d2c4; border-radius:var(--radius); font:inherit;}
+
 /* ---------- FAQ admin ---------- */
 .faq-admin-list{display:flex; flex-direction:column; gap:.7rem; max-width:760px;}
 .faq-admin-item{background:var(--white); border:1px solid var(--line-light); border-radius:var(--radius); padding:1rem 1.2rem;}

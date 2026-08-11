@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/isokp72elk", "destination": "/isokp72elk/index.html" }
+    { "source": "/painel", "destination": "/painel/index.html" }
   ]
 }
