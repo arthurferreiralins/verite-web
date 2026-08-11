@@ -115,8 +115,8 @@ Algumas coisas desaparecem quando você vai embora.
 Outras permanecem.'),
   ('colecao_title', 'Título da Primeira Coleção', 'A primeira coleção VERITÉ está chegando.'),
   ('colecao_tagline', 'Tagline da Primeira Coleção', 'Três expressões. Uma essência.'),
-  ('lancamento_title', 'Título da Lista de Espera', 'Seja um dos primeiros a conhecer a VERITÉ.'),
-  ('lancamento_sub', 'Subtítulo da Lista de Espera', 'Em breve, novidades diretamente para você.')
+  ('lancamento_title', 'Título da Lista de Espera', 'Seja um dos primeiros a conhecer as próximas criações da VERITÉ.'),
+  ('lancamento_sub', 'Subtítulo da Lista de Espera', 'Um convite discreto para conhecer a VERITÉ antes de todos.')
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO faq_items (question, answer, sort_order, active) VALUES

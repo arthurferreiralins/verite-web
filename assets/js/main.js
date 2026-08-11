@@ -78,6 +78,21 @@
     essenciaItems.forEach(function(el){ focusObserver.observe(el); });
   }
 
+  /* Primeira Coleção cards: on devices with no real hover (touch), the
+     :hover-driven glow/frame/numeral state would simply never appear —
+     so on those devices only, the card nearest the viewport's center
+     gets it via .is-active instead. Devices with a mouse keep relying
+     on :hover exactly as before (this observer just never runs there). */
+  var produtoCards = document.querySelectorAll('.produto-card');
+  if(produtoCards.length && 'IntersectionObserver' in window && window.matchMedia && window.matchMedia('(hover: none)').matches){
+    var produtoObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        entry.target.classList.toggle('is-active', entry.isIntersecting);
+      });
+    }, {rootMargin:'-40% 0px -40% 0px'});
+    produtoCards.forEach(function(el){ produtoObserver.observe(el); });
+  }
+
   /* Scroll-in reveal, staggered within any shared parent via CSS nth-child delays.
      Exposed on window so a data loader can bind freshly-injected .reveal
      elements (e.g. FAQ items rebuilt from the admin panel) — without this,
