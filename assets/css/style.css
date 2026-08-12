@@ -874,6 +874,12 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
 }
 .produto-card .produto-tag::before{content:""; width:20px; height:1px; background:rgba(177,138,79,.5);}
 .produto-card:hover .produto-tag, .produto-card.is-active .produto-tag{opacity:1;}
+.produto-card .produto-caption{
+  font-family:var(--font-display); font-style:italic; font-size:.82rem; line-height:1.5;
+  color:var(--sec-fg-soft); max-width:78%; text-align:center;
+  position:relative; z-index:1; opacity:.6; transition:opacity .5s ease;
+}
+.produto-card:hover .produto-caption, .produto-card.is-active .produto-caption{opacity:.92;}
 @media (prefers-reduced-motion:reduce){ .produto-card::before{animation:none;} }
 
 /* display-case corners — just two, diagonally opposite, restrained on
