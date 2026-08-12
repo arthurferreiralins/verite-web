@@ -790,15 +790,29 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
   transform:translateX(-130%);
   transition:transform 1s ease;
 }
-/* an abstract, formless glow standing in for "something is there" —
-   never a recognisable silhouette, just a soft cloud of light */
+/* an abstract silhouette that only hints at a bottle — a soft tapered
+   contour (neck, shoulder, body) — never sharp or detailed enough to
+   read as an actual product render, just enough to suggest "something
+   with this kind of shape is waiting to be revealed" */
 .produto-card .produto-silhouette{
-  position:absolute; left:50%; top:42%; width:48%; height:58%; z-index:0;
-  transform:translate(-50%,-50%); border-radius:50%; pointer-events:none;
-  background:radial-gradient(ellipse 60% 80% at 50% 50%, rgba(217,189,133,.24), transparent 72%);
-  filter:blur(18px); opacity:.55;
+  position:absolute; left:50%; top:40%; width:34%; height:64%; z-index:0;
+  transform:translate(-50%,-50%); pointer-events:none;
+  clip-path:polygon(42% 0%, 58% 0%, 58% 9%, 70% 17%, 74% 29%, 74% 94%, 60% 100%, 40% 100%, 26% 94%, 26% 29%, 30% 17%, 42% 9%);
+  background:radial-gradient(ellipse 70% 60% at 50% 32%, rgba(217,189,133,.32), transparent 75%);
+  filter:blur(15px); opacity:.5;
   transition:opacity .5s ease, filter .5s ease;
 }
+/* gold light that follows the cursor inside the card (assets/js/pointer.js
+   sets --mx/--my alongside the existing 3D tilt) — a separate element
+   rather than another gradient layer on ::before, which already owns
+   the ambient orb-drift keyframe and would fight a static mouse-driven
+   position the same way the hero emblem float would have */
+.produto-spot{
+  position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0;
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,32%), rgba(217,189,133,.4), transparent 72%);
+  transition:opacity .4s ease;
+}
+.produto-card:hover .produto-spot, .produto-card.is-active .produto-spot{opacity:1;}
 .produto-card:hover .produto-silhouette, .produto-card.is-active .produto-silhouette{opacity:.85; filter:blur(13px);}
 @media (max-width:760px){
   .produto-card .produto-silhouette{animation:silhouette-pulse 6s ease-in-out infinite;}

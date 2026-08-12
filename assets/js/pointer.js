@@ -85,6 +85,10 @@
         var py = (e.clientY - r.top) / r.height - 0.5;
         card.style.transform =
           'perspective(700px) translateY(-6px) rotateX(' + (py * -6).toFixed(2) + 'deg) rotateY(' + (px * 8).toFixed(2) + 'deg)';
+        // .produto-spot reads these to keep its gold light glued to the
+        // cursor position — see style.css
+        card.style.setProperty('--mx', ((px + 0.5) * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', ((py + 0.5) * 100).toFixed(1) + '%');
       });
       card.addEventListener('mouseleave', function(){ card.style.transform = ''; });
     });
