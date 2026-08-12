@@ -802,6 +802,27 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
   filter:blur(15px); opacity:.5;
   transition:opacity .5s ease, filter .5s ease;
 }
+/* a slow gold breath around each card's edge — the one effect on this
+   component that's visible the instant the section scrolls into view,
+   with no hover/touch/mouse required. Its own element (not the card's
+   own box-shadow, which needs to transition freely on hover without a
+   running keyframe animation fighting it every frame). Staggered per
+   card so the three don't breathe in lockstep — reads as alive, not
+   like a synchronized UI widget. */
+.produto-halo{
+  position:absolute; inset:-1px; z-index:0; pointer-events:none; border-radius:3px;
+  animation:card-halo-breathe 7s ease-in-out infinite;
+}
+.produto-card:nth-child(3) .produto-halo{animation-delay:1.6s;}
+.produto-card:nth-child(4) .produto-halo{animation-delay:3.2s;}
+@keyframes card-halo-breathe{
+  0%,100%{box-shadow:0 0 0 1px rgba(177,138,79,.14), 0 0 16px rgba(177,138,79,.08);}
+  50%{box-shadow:0 0 0 1px rgba(177,138,79,.4), 0 0 36px rgba(177,138,79,.3);}
+}
+@media (prefers-reduced-motion:reduce){
+  .produto-halo{animation:none; box-shadow:0 0 0 1px rgba(177,138,79,.22), 0 0 24px rgba(177,138,79,.16);}
+}
+
 /* gold light that follows the cursor inside the card (assets/js/pointer.js
    sets --mx/--my alongside the existing 3D tilt) — a separate element
    rather than another gradient layer on ::before, which already owns
