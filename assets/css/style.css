@@ -868,18 +868,24 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
 }
 .produto-card:hover .produto-num, .produto-card.is-active .produto-num{opacity:1; filter:drop-shadow(0 0 32px rgba(177,138,79,.75));}
 .produto-card .produto-tag{
-  font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; color:var(--sec-fg-soft);
-  position:relative; z-index:1; opacity:.75; transition:opacity .4s ease;
-  display:flex; flex-direction:column; align-items:center; gap:.6rem;
+  font-size:.72rem; letter-spacing:.26em; text-transform:uppercase; color:var(--off-white);
+  position:relative; z-index:1; opacity:.85; transition:opacity .4s ease;
+  display:flex; flex-direction:column; align-items:center; gap:.7rem;
 }
-.produto-card .produto-tag::before{content:""; width:20px; height:1px; background:rgba(177,138,79,.5);}
+.produto-card .produto-tag::before{content:""; width:20px; height:1px; background:rgba(177,138,79,.6);}
 .produto-card:hover .produto-tag, .produto-card.is-active .produto-tag{opacity:1;}
+/* baseline needs to be legible on its own, at rest, with no interaction
+   — a previous pass left this at .6 opacity + .82rem, which measured out
+   to ~13px effective size at ~0.5 visual weight in production: technically
+   rendered, practically unreadable at a glance. Bumped size, dropped the
+   extra opacity multiplier (the colour itself is already muted enough),
+   hover now shifts to full white instead of just nudging opacity. */
 .produto-card .produto-caption{
-  font-family:var(--font-display); font-style:italic; font-size:.82rem; line-height:1.5;
-  color:var(--sec-fg-soft); max-width:78%; text-align:center;
-  position:relative; z-index:1; opacity:.6; transition:opacity .5s ease;
+  font-family:var(--font-display); font-style:italic; font-size:1rem; line-height:1.55;
+  color:var(--sec-fg-soft); max-width:82%; text-align:center;
+  position:relative; z-index:1; opacity:.88; transition:color .4s ease, opacity .4s ease;
 }
-.produto-card:hover .produto-caption, .produto-card.is-active .produto-caption{opacity:.92;}
+.produto-card:hover .produto-caption, .produto-card.is-active .produto-caption{opacity:1; color:var(--off-white);}
 @media (prefers-reduced-motion:reduce){ .produto-card::before{animation:none;} }
 
 /* display-case corners — just two, diagonally opposite, restrained on
