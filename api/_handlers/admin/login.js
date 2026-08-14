@@ -1,6 +1,6 @@
 const { verifyPassword, createSessionCookie, getCurrentSessionVersion } = require('../../_lib/auth');
 const { getClientIp, isLoginRateLimited, recordLoginAttempt } = require('../../_lib/rateLimit');
-const { isValidEmail, isNonEmptyString } = require('../../_lib/validate');
+const { isNonEmptyString } = require('../../_lib/validate');
 const { readJsonBody } = require('../../_lib/readBody');
 
 module.exports = async function handler(req, res) {
@@ -11,11 +11,13 @@ module.exports = async function handler(req, res) {
 
   const ip = getClientIp(req);
   const body = await readJsonBody(req);
+  // ADMIN_EMAIL é só um identificador comparado por igualdade — não precisa
+  // ter formato de e-mail (pode ser um usuário simples como "arthur").
   const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
   const password = typeof body.password === 'string' ? body.password : '';
 
-  if (!isValidEmail(email) || !isNonEmptyString(password)) {
-    res.status(400).json({ ok: false, error: 'Informe e-mail e senha.' });
+  if (!isNonEmptyString(email) || !isNonEmptyString(password)) {
+    res.status(400).json({ ok: false, error: 'Informe usuário e senha.' });
     return;
   }
 
