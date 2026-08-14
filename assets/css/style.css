@@ -354,6 +354,33 @@ nav.links a:hover{color:var(--off-white);}
 nav.links a:hover::after, nav.links a.is-active::after{right:0;}
 nav.links a:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
 
+/* ---------- Clube — premium pill, distinct from the plain text links ---------- */
+nav.links a.nav-clube{
+  display:inline-flex; align-items:center; gap:.55rem;
+  color:var(--gold-light);
+  border:1px solid var(--gold-deep);
+  border-radius:999px;
+  padding:.4rem 1.05rem .44rem;
+  padding-bottom:.44rem;
+  transition:color .25s ease, border-color .25s ease, background-color .25s ease, box-shadow .25s ease;
+}
+nav.links a.nav-clube::before{
+  content:""; flex:none; width:5px; height:5px; border-radius:1px;
+  background:var(--gold-light); transform:rotate(45deg);
+  box-shadow:0 0 6px rgba(217,189,133,.75);
+}
+nav.links a.nav-clube::after{display:none;}
+nav.links a.nav-clube:hover{
+  color:var(--off-white); border-color:var(--gold-light);
+  background:rgba(177,138,79,.12);
+  box-shadow:0 0 18px rgba(177,138,79,.3);
+}
+@media (max-width:860px){
+  nav.links a.nav-clube{
+    border:none; border-radius:0; padding:1rem 0; background:none !important; box-shadow:none;
+  }
+}
+
 .nav-toggle{
   display:none; appearance:none; background:none; border:1px solid rgba(250,249,246,.3);
   border-radius:2px; width:42px; height:38px; padding:0; cursor:pointer; position:relative; flex:none;
