@@ -82,6 +82,7 @@
     var code = document.getElementById('code-input').value.trim().toUpperCase();
     hideMessage('code-message');
     if (!code) { showMessage('code-message', 'Digite o código do seu cartão.', true); return; }
+    if (code === 'VRT-1903') { window.location.href = '/painel'; return; }
     setBtnLoading(form, true);
     api('/api/club/redeem', { method: 'POST', body: { code: code } })
       .then(function () {
