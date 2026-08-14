@@ -288,7 +288,7 @@
   sidebarScrim.addEventListener('click', closeSidebar);
 
   /* ============================ Routing ============================ */
-  var ROUTES = ['dashboard', 'produtos', 'categorias', 'estoque', 'pedidos', 'clientes', 'leads', 'mensagens', 'conteudo', 'faq', 'midia', 'seo', 'aparencia', 'configuracoes', 'minha-conta'];
+  var ROUTES = ['dashboard', 'produtos', 'categorias', 'estoque', 'pedidos', 'clientes', 'clube', 'leads', 'mensagens', 'conteudo', 'faq', 'midia', 'seo', 'aparencia', 'configuracoes', 'minha-conta'];
   var loaders = {};
   var currentActiveRoute = null;
 
@@ -645,6 +645,7 @@
     document.getElementById('produto-desc').value = product ? (product.description || '') : '';
     document.getElementById('produto-status').value = product ? product.status : 'draft';
     document.getElementById('produto-featured').checked = Boolean(product && product.featured);
+    document.getElementById('produto-club-exclusive').checked = Boolean(product && product.club_exclusive);
     document.getElementById('produto-sku').value = product ? (product.sku || '') : '';
     document.getElementById('produto-stock').value = product ? (product.stock_quantity || 0) : 0;
     document.getElementById('produto-track-stock').checked = product ? Boolean(product.track_stock) : true;
@@ -725,6 +726,7 @@
       description: document.getElementById('produto-desc').value.trim(),
       status: document.getElementById('produto-status').value,
       featured: document.getElementById('produto-featured').checked,
+      clubExclusive: document.getElementById('produto-club-exclusive').checked,
       mainImageUrl: mainUrls[0] || '',
       gallery: produtoImages ? produtoImages.gallery.getUrls() : [],
       concentration: document.getElementById('produto-concentration').value,
@@ -1003,6 +1005,117 @@
     clientesState.search = '';
     document.getElementById('clientes-search').value = '';
     loadClientes();
+  };
+
+  /* ============================ Clube Verité ============================ */
+  var CLUB_STATUS_LABELS = { ativo: 'Ativo', utilizado: 'Utilizado', bloqueado: 'Bloqueado' };
+  var CLUB_STATUS_BADGES = { ativo: 'badge-published', utilizado: 'badge-neutral', bloqueado: 'badge-novo' };
+  var clubeState = { search: '', status: '' };
+  var clubeListView = document.getElementById('clube-list-view');
+  var clubeGerarView = document.getElementById('clube-gerar-view');
+
+  function loadClube(){
+    var wrap = document.getElementById('clube-table-wrap');
+    clear(wrap);
+    var qs = '?search=' + encodeURIComponent(clubeState.search) + '&status=' + encodeURIComponent(clubeState.status);
+    api('/api/admin/club-codes' + qs).then(function(data){
+      if(!data.items.length){
+        wrap.appendChild(textEl('div', 'Nenhum código encontrado.', 'empty-state'));
+        return;
+      }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Código</th><th>Identificação</th><th>Status</th><th>Cliente</th><th>Ativado em</th><th>Ações</th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(c){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', c.code));
+        tr.appendChild(textEl('td', c.label || '—'));
+        var statusTd = document.createElement('td');
+        statusTd.appendChild(textEl('span', CLUB_STATUS_LABELS[c.status] || c.status, 'badge ' + (CLUB_STATUS_BADGES[c.status] || 'badge-neutral')));
+        tr.appendChild(statusTd);
+        tr.appendChild(textEl('td', c.customer_name ? (c.customer_name + ' (' + c.customer_email + ')') : '—'));
+        tr.appendChild(textEl('td', c.activated_at ? formatDate(c.activated_at) : '—'));
+        var actionsTd = document.createElement('td');
+        actionsTd.className = 'table-actions';
+        if(c.status === 'ativo'){
+          var blockBtn = document.createElement('button');
+          blockBtn.type = 'button'; blockBtn.textContent = 'Bloquear';
+          blockBtn.addEventListener('click', function(){
+            api('/api/admin/club-codes?id=' + c.id, { method: 'PUT', body: { status: 'bloqueado' } }).then(function(){
+              showToast('Código bloqueado.'); loadClube();
+            }).catch(function(err){ showToast(err.message, true); });
+          });
+          actionsTd.appendChild(blockBtn);
+        } else if(c.status === 'bloqueado'){
+          var reactivateBtn = document.createElement('button');
+          reactivateBtn.type = 'button'; reactivateBtn.textContent = 'Reativar';
+          reactivateBtn.addEventListener('click', function(){
+            api('/api/admin/club-codes?id=' + c.id, { method: 'PUT', body: { status: 'ativo' } }).then(function(){
+              showToast('Código reativado.'); loadClube();
+            }).catch(function(err){ showToast(err.message, true); });
+          });
+          actionsTd.appendChild(reactivateBtn);
+        } else {
+          actionsTd.appendChild(textEl('span', '—'));
+        }
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+
+  var clubeSearchTimer = null;
+  document.getElementById('clube-search').addEventListener('input', function(e){
+    window.clearTimeout(clubeSearchTimer);
+    clubeSearchTimer = window.setTimeout(function(){ clubeState.search = e.target.value.trim(); loadClube(); }, 300);
+  });
+  document.getElementById('clube-status-filter').addEventListener('change', function(e){
+    clubeState.status = e.target.value; loadClube();
+  });
+  document.getElementById('clube-gerar-btn').addEventListener('click', function(){
+    document.getElementById('clube-gerar-form').reset();
+    document.getElementById('clube-gerar-result').hidden = true;
+    clear(document.getElementById('clube-gerar-result'));
+    clubeListView.hidden = true; clubeGerarView.hidden = false;
+  });
+  document.getElementById('clube-gerar-back-btn').addEventListener('click', function(){
+    clubeGerarView.hidden = true; clubeListView.hidden = false; loadClube();
+  });
+  document.getElementById('clube-gerar-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var count = Number(document.getElementById('clube-gerar-count').value) || 1;
+    var label = document.getElementById('clube-gerar-label').value.trim();
+    var btn = e.target.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    api('/api/admin/club-codes', { method: 'POST', body: { count: count, label: label } }).then(function(data){
+      setLoading(btn, false);
+      showToast(data.items.length + ' código(s) gerado(s).');
+      var resultWrap = document.getElementById('clube-gerar-result');
+      clear(resultWrap);
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Código gerado</th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(c){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', c.code));
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      resultWrap.appendChild(table);
+      resultWrap.hidden = false;
+    }).catch(function(err){ setLoading(btn, false); showToast(err.message, true); });
+  });
+
+  loaders.clube = function(){
+    clubeState = { search: '', status: '' };
+    document.getElementById('clube-search').value = '';
+    document.getElementById('clube-status-filter').value = '';
+    clubeGerarView.hidden = true; clubeListView.hidden = false;
+    loadClube();
   };
 
   /* ============================ Leads ============================ */

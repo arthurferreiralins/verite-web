@@ -251,3 +251,84 @@ CREATE TABLE IF NOT EXISTS orders (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders (created_at DESC);
+
+-- ============================================================
+-- Clube Verité (2026-08-14): área de membros integrada à loja.
+-- customers ganha login real (password_hash) e vínculo com o clube;
+-- club_codes é o sistema de convites (gerado no painel, um por cartão);
+-- coupons/customer_coupons são os benefícios reais de cada membro;
+-- favorites sincroniza com o catálogo (products) da própria loja.
+-- Idempotente, como o restante deste arquivo.
+-- ============================================================
+
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS password_hash TEXT;
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS club_member BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS club_code_used TEXT;
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS club_joined_at TIMESTAMPTZ;
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS session_version INTEGER NOT NULL DEFAULT 1;
+
+CREATE TABLE IF NOT EXISTS club_codes (
+  id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
+  status TEXT NOT NULL DEFAULT 'ativo' CHECK (status IN ('ativo','utilizado','bloqueado')),
+  label TEXT NOT NULL DEFAULT '',
+  customer_id INTEGER REFERENCES customers(id) ON DELETE SET NULL,
+  activated_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_club_codes_status ON club_codes (status);
+CREATE INDEX IF NOT EXISTS idx_club_codes_customer ON club_codes (customer_id);
+
+CREATE TABLE IF NOT EXISTS coupons (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  code TEXT UNIQUE NOT NULL,
+  discount_label TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  valid_until DATE,
+  auto_grant BOOLEAN NOT NULL DEFAULT false,
+  active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS customer_coupons (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  coupon_id INTEGER NOT NULL REFERENCES coupons(id) ON DELETE CASCADE,
+  status TEXT NOT NULL DEFAULT 'ativo' CHECK (status IN ('ativo','usado','expirado')),
+  granted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  used_at TIMESTAMPTZ,
+  UNIQUE (customer_id, coupon_id)
+);
+
+CREATE TABLE IF NOT EXISTS favorites (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (customer_id, product_id)
+);
+
+ALTER TABLE products ADD COLUMN IF NOT EXISTS club_exclusive BOOLEAN NOT NULL DEFAULT false;
+
+CREATE TABLE IF NOT EXISTS club_login_attempts (
+  id SERIAL PRIMARY KEY,
+  ip TEXT NOT NULL,
+  success BOOLEAN NOT NULL,
+  attempted_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_club_login_attempts_ip_time ON club_login_attempts (ip, attempted_at);
+
+CREATE TABLE IF NOT EXISTS club_code_attempts (
+  id SERIAL PRIMARY KEY,
+  ip TEXT NOT NULL,
+  success BOOLEAN NOT NULL,
+  attempted_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_club_code_attempts_ip_time ON club_code_attempts (ip, attempted_at);
+
+-- Cupom de boas-vindas: concedido automaticamente a todo novo membro
+-- (auto_grant = true) no momento em que o código é ativado.
+INSERT INTO coupons (name, code, discount_label, description, auto_grant, active) VALUES
+  ('Boas-vindas ao Clube', 'VERITE10', '10% OFF', 'Um agradecimento por fazer parte do Clube Verité.', true, true)
+ON CONFLICT (code) DO NOTHING;

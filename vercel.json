@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/painel", "destination": "/painel/index.html" }
+    { "source": "/painel", "destination": "/painel/index.html" },
+    { "source": "/clube", "destination": "/clube/index.html" }
   ]
 }

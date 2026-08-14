@@ -26,10 +26,12 @@ const notifications = require('../_handlers/admin/notifications');
 const search = require('../_handlers/admin/search');
 const account = require('../_handlers/admin/account');
 const appearance = require('../_handlers/admin/appearance');
+const clubCodes = require('../_handlers/admin/clubCodes');
 
 const routes = {
   login, logout, me, dashboard, products, upload, leads, messages, content, faq, settings, seo,
   categories, orders, customers, media, notifications, search, account, appearance,
+  'club-codes': clubCodes,
 };
 
 module.exports = async function handler(req, res) {

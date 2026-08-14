@@ -51,6 +51,7 @@
       <li><a href="#categorias" data-route="categorias">Categorias</a></li>
       <li><a href="#pedidos" data-route="pedidos">Pedidos</a></li>
       <li><a href="#clientes" data-route="clientes">Clientes</a></li>
+      <li><a href="#clube" data-route="clube">Clube Verité</a></li>
       <li><a href="#leads" data-route="leads">Lista de espera</a></li>
       <li><a href="#mensagens" data-route="mensagens">Mensagens <span id="mensagens-nav-badge" class="nav-badge" hidden>0</span></a></li>
       <li><a href="#conteudo" data-route="conteudo">Conteúdo do site</a></li>
@@ -250,6 +251,9 @@
               <div class="field field-checkbox">
                 <label><input id="produto-featured" type="checkbox"/> Produto em destaque</label>
               </div>
+              <div class="field field-checkbox">
+                <label><input id="produto-club-exclusive" type="checkbox"/> Exclusivo do Clube Verité</label>
+              </div>
             </div>
 
             <div class="form-actions">
@@ -333,8 +337,61 @@
             <h1>Clientes</h1>
             <p class="section-sub">Pessoas que já fizeram pedidos na VERITÉ.</p>
           </div>
+          <div class="toolbar-actions">
+            <input id="clientes-search" type="search" placeholder="Buscar por nome ou e-mail"/>
+          </div>
         </div>
         <div id="clientes-table-wrap" class="table-wrap"></div>
+      </section>
+
+      <section id="section-clube" class="admin-section" data-section="clube" hidden>
+        <div id="clube-list-view">
+          <div class="section-toolbar">
+            <div>
+              <h1>Clube Verité</h1>
+              <p class="section-sub">Códigos de convite, membros e cupons do programa de fidelidade.</p>
+            </div>
+            <button id="clube-gerar-btn" class="btn-primary" type="button">+ Gerar código</button>
+          </div>
+          <div class="toolbar-actions">
+            <input id="clube-search" type="search" placeholder="Buscar por código, cliente ou e-mail"/>
+            <select id="clube-status-filter">
+              <option value="">Todos os status</option>
+              <option value="ativo">Ativo</option>
+              <option value="utilizado">Utilizado</option>
+              <option value="bloqueado">Bloqueado</option>
+            </select>
+          </div>
+          <div id="clube-table-wrap" class="table-wrap"></div>
+        </div>
+        <div id="clube-gerar-view" hidden>
+          <div class="section-toolbar">
+            <div><h1>Gerar códigos</h1></div>
+            <button id="clube-gerar-back-btn" class="btn-ghost" type="button">Voltar</button>
+          </div>
+          <form id="clube-gerar-form" class="admin-form" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="clube-gerar-count">Quantidade</label>
+                <input id="clube-gerar-count" type="number" min="1" max="100" step="1" value="1"/>
+              </div>
+              <div class="field">
+                <label for="clube-gerar-label">Identificação (opcional)</label>
+                <input id="clube-gerar-label" maxlength="120" placeholder="ex: Lote cartões agosto/2026"/>
+              </div>
+            </div>
+            <div class="form-actions">
+              <div class="form-actions-right">
+                <button type="button" id="clube-gerar-cancel-btn" class="btn-ghost">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                  <span class="btn-label">Gerar</span>
+                  <span class="spinner" aria-hidden="true" hidden></span>
+                </button>
+              </div>
+            </div>
+          </form>
+          <div id="clube-gerar-result" class="table-wrap" hidden></div>
+        </div>
       </section>
 
       <section id="section-leads" class="admin-section" data-section="leads" hidden>

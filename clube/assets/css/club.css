@@ -1,0 +1,285 @@
+/* Clube Verité — área de membros. Usa os tokens de cor de ../../assets/css/style.css
+   (--black/--gold/--white/--beige etc.) para permanecer visualmente parte do
+   mesmo site, com uma camada própria de layout/composição mais "VIP". */
+
+.club-body{background:var(--black); color:var(--off-white); font-family:var(--font-sans); cursor:auto;}
+.club-body::before{content:none;} /* desliga o grão global do body::before — o clube tem a própria textura */
+
+.club-app{min-height:100vh; position:relative;}
+
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+.optional-tag{opacity:.6; font-weight:400; font-size:.85em;}
+
+/* ============================ Loading ============================ */
+.club-loading{
+  position:fixed; inset:0; z-index:9000; background:var(--black);
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .5s ease;
+}
+.club-loading.is-hidden{opacity:0; pointer-events:none;}
+.club-loading-emblem{width:56px; height:56px; opacity:.85; animation:club-pulse 1.6s ease-in-out infinite;}
+.club-loading-emblem img{width:100%; height:100%; object-fit:contain;}
+@keyframes club-pulse{0%,100%{opacity:.4; transform:scale(.94);} 50%{opacity:1; transform:scale(1);}}
+
+/* ============================ Gate (código / login) ============================ */
+.club-gate{
+  min-height:100vh; display:grid; place-items:center;
+  padding:2.5rem 1.25rem; position:relative; overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(177,138,79,.14), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 100%, rgba(177,138,79,.08), transparent 60%),
+    var(--black);
+}
+.club-gate-ambient{position:absolute; inset:0; pointer-events:none; overflow:hidden;}
+.gate-spark{position:absolute; width:3px; height:3px; border-radius:50%; background:var(--gold-light); opacity:0; animation:gate-spark-drift 7s ease-in-out infinite;}
+.gate-spark.s1{top:18%; left:12%; animation-delay:0s;}
+.gate-spark.s2{top:70%; left:22%; animation-delay:1.4s;}
+.gate-spark.s3{top:30%; left:85%; animation-delay:2.6s;}
+.gate-spark.s4{top:80%; left:78%; animation-delay:3.8s;}
+.gate-spark.s5{top:50%; left:50%; animation-delay:5s;}
+@keyframes gate-spark-drift{
+  0%,100%{opacity:0; transform:translateY(0);}
+  50%{opacity:.8; transform:translateY(-18px);}
+}
+@media (prefers-reduced-motion: reduce){ .gate-spark{animation:none; opacity:.3;} }
+
+.club-gate-back{
+  position:absolute; top:1.5rem; left:1.5rem; color:var(--gold-light); opacity:.75;
+  font-size:.82rem; letter-spacing:.04em; text-decoration:none; z-index:2;
+}
+.club-gate-back:hover{opacity:1;}
+
+.club-gate-card{
+  position:relative; z-index:1; width:min(440px, calc(100vw - 2.5rem)); box-sizing:border-box;
+  background:linear-gradient(180deg, rgba(22,22,24,.9), rgba(9,9,10,.94));
+  border:1px solid rgba(177,138,79,.35);
+  border-radius:4px;
+  box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.03) inset;
+  padding:2.75rem 2.25rem;
+  text-align:center;
+}
+.club-emblem{width:44px; height:44px; margin:0 auto 1.5rem;}
+.club-emblem img{width:100%; height:100%; object-fit:contain;}
+
+.club-eyebrow{
+  font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-light);
+  margin:0 0 .7rem;
+}
+.club-title{
+  font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500;
+  font-size:clamp(1.6rem,4.6vw,2.1rem); line-height:1.2; margin:0 0 .8rem; color:var(--white);
+}
+.club-lead{color:#b7b2a8; font-size:.95rem; line-height:1.6; margin:0 0 1.8rem;}
+
+.club-form{display:flex; flex-direction:column; gap:1.1rem; text-align:left;}
+.club-field label{display:block; font-size:.76rem; letter-spacing:.06em; text-transform:uppercase; color:#a39c8e; margin-bottom:.4rem;}
+.club-field input{
+  width:100%; background:rgba(255,255,255,.03); border:1px solid rgba(177,138,79,.3); border-radius:2px;
+  color:var(--white); padding:.75rem .85rem; font-size:.95rem; font-family:inherit;
+  transition:border-color .2s ease, background .2s ease;
+}
+.club-field input:focus{outline:none; border-color:var(--gold-light); background:rgba(255,255,255,.05);}
+.club-code-input{text-align:center; letter-spacing:.14em; font-size:1.1rem; text-transform:uppercase;}
+
+.club-btn-primary{
+  position:relative; display:flex; align-items:center; justify-content:center; gap:.6rem;
+  background:linear-gradient(155deg,var(--gold-light),var(--gold) 60%,var(--gold-deep));
+  color:var(--black); border:none; border-radius:2px; padding:.85rem 1.4rem;
+  font-size:.85rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; cursor:pointer;
+  box-shadow:0 10px 26px rgba(177,138,79,.28);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.club-btn-primary:hover{transform:translateY(-1px); box-shadow:0 14px 30px rgba(177,138,79,.36);}
+.club-btn-primary:disabled{opacity:.65; cursor:default; transform:none;}
+.club-spinner{
+  width:14px; height:14px; border-radius:50%; border:2px solid rgba(12,12,13,.35); border-top-color:var(--black);
+  animation:club-spin .7s linear infinite;
+}
+@keyframes club-spin{to{transform:rotate(360deg);}}
+
+.club-link-btn{
+  background:none; border:none; color:var(--gold-light); font-size:.82rem; letter-spacing:.02em;
+  cursor:pointer; margin-top:1.3rem; text-decoration:underline; text-underline-offset:3px; opacity:.85;
+}
+.club-link-btn:hover{opacity:1;}
+
+.club-message{
+  margin-top:1rem; font-size:.85rem; padding:.7rem .9rem; border-radius:2px; text-align:left;
+}
+.club-message.is-error{background:rgba(190,70,50,.12); border:1px solid rgba(190,70,50,.4); color:#e6a793;}
+.club-message.is-ok{background:rgba(90,150,90,.12); border:1px solid rgba(90,150,90,.4); color:#a9d2a9;}
+
+.gate-step{animation:club-fade-in .5s ease both;}
+@keyframes club-fade-in{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.gate-success{padding:1rem 0;}
+.success-glow{
+  width:120px; height:120px; margin:0 auto 1.5rem; border-radius:50%;
+  background:radial-gradient(circle, rgba(217,189,133,.55), transparent 70%);
+  animation:success-pulse 1.8s ease-in-out infinite;
+}
+@keyframes success-pulse{0%,100%{transform:scale(.9); opacity:.7;} 50%{transform:scale(1.08); opacity:1;}}
+
+/* ============================ Dashboard shell ============================ */
+.club-dashboard{min-height:100vh; background:var(--black);}
+
+.club-header{
+  position:sticky; top:0; z-index:500; background:rgba(12,12,13,.92); backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(177,138,79,.25);
+}
+.club-header-inner{
+  max-width:1240px; margin:0 auto; padding:0 1.5rem; height:68px;
+  display:flex; align-items:center; gap:1.5rem;
+}
+.club-brand{display:flex; align-items:center; gap:.6rem; text-decoration:none; flex-shrink:0;}
+.club-brand-emblem{width:26px; height:26px; object-fit:contain;}
+.club-brand-word{
+  font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1rem; letter-spacing:.12em;
+  color:var(--white); text-transform:uppercase;
+}
+.club-brand-sep{color:var(--gold-light); margin:0 .15em; font-weight:300;}
+
+.club-nav{display:flex; align-items:center; gap:1.5rem; flex:1; overflow-x:auto;}
+.club-nav a{
+  color:#b7b2a8; text-decoration:none; font-size:.82rem; letter-spacing:.04em; white-space:nowrap;
+  padding:.4rem 0; border-bottom:1px solid transparent; transition:color .2s ease;
+}
+.club-nav a:hover{color:var(--white);}
+.club-nav a.is-active{color:var(--gold-light); border-bottom-color:var(--gold-light);}
+
+.club-header-actions{display:flex; align-items:center; gap:1rem; flex-shrink:0;}
+.club-back-store{
+  color:#a39c8e; font-size:.78rem; text-decoration:none; letter-spacing:.03em; border:1px solid rgba(177,138,79,.3);
+  padding:.45rem .8rem; border-radius:2px; transition:color .2s ease, border-color .2s ease;
+}
+.club-back-store:hover{color:var(--gold-light); border-color:var(--gold-light);}
+.club-logout{
+  background:none; border:none; color:#a39c8e; font-size:.78rem; letter-spacing:.03em; cursor:pointer;
+}
+.club-logout:hover{color:var(--gold-light);}
+
+.club-menu-toggle{display:none; width:34px; height:34px; border:none; background:none; cursor:pointer; position:relative;}
+.club-menu-toggle span, .club-menu-toggle span::before, .club-menu-toggle span::after{
+  content:''; position:absolute; left:6px; right:6px; height:1px; background:var(--gold-light); transition:transform .2s ease, opacity .2s ease;
+}
+.club-menu-toggle span{top:50%;}
+.club-menu-toggle span::before{top:-8px;}
+.club-menu-toggle span::after{top:8px;}
+.club-nav-scrim{position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:490;}
+
+/* ============================ Content ============================ */
+.club-main{max-width:1240px; margin:0 auto; padding:2.75rem 1.5rem 5rem;}
+.club-section{animation:club-fade-in .4s ease both;}
+
+.club-tagline{color:var(--gold-light); font-size:.85rem; letter-spacing:.05em; margin:0 0 .5rem;}
+.club-hello{
+  font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500;
+  font-size:clamp(1.8rem,4.4vw,2.6rem); margin:0 0 2rem; color:var(--white);
+}
+.club-section-title{
+  font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500;
+  font-size:clamp(1.5rem,3.6vw,2rem); margin:0 0 1.6rem; color:var(--white);
+}
+
+.club-summary-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2.2rem;}
+.club-card{
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  border:1px solid rgba(177,138,79,.28); border-radius:3px; padding:1.3rem 1.4rem;
+  transition:border-color .2s ease, transform .2s ease;
+}
+.club-card:hover{border-color:rgba(217,189,133,.55); transform:translateY(-2px);}
+.club-card-label{font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:#a39c8e; margin:0 0 .5rem;}
+.club-card-value{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.7rem; color:var(--gold-light); margin:0;}
+.club-card-value-sm{font-size:1.05rem; color:var(--white); font-family:inherit;}
+.club-card-sub{font-size:.78rem; color:#8a8378; margin:.3rem 0 0;}
+
+.club-thanks{
+  text-align:center; padding:1.6rem; margin-bottom:2.2rem; border-top:1px solid rgba(177,138,79,.18); border-bottom:1px solid rgba(177,138,79,.18);
+}
+.club-thanks p{
+  font-family:var(--font-display,'Cormorant Garamond',serif); font-style:italic; font-size:1.15rem; color:var(--gold-light); margin:0;
+}
+
+.club-card-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.1rem;}
+.club-mini-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; margin-top:1rem;}
+
+.club-empty{
+  border:1px dashed rgba(177,138,79,.35); border-radius:3px; padding:2.4rem 1.5rem; text-align:center; color:#8a8378;
+  grid-column:1 / -1;
+}
+
+/* cupons / benefícios */
+.coupon-card{
+  border:1px solid rgba(177,138,79,.35); border-radius:3px; padding:1.4rem;
+  background:linear-gradient(155deg, rgba(177,138,79,.08), transparent 60%);
+  position:relative;
+}
+.coupon-discount{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.7rem; color:var(--gold-light); margin:0 0 .3rem;}
+.coupon-name{font-size:.9rem; color:var(--white); margin:0 0 .6rem;}
+.coupon-desc{font-size:.8rem; color:#a39c8e; margin:0 0 .9rem; line-height:1.5;}
+.coupon-code-row{display:flex; align-items:center; justify-content:space-between; gap:.6rem; border-top:1px dashed rgba(177,138,79,.3); padding-top:.8rem;}
+.coupon-code{font-family:monospace; letter-spacing:.08em; color:var(--gold-light); font-size:.9rem;}
+.coupon-copy-btn{
+  background:none; border:1px solid rgba(177,138,79,.4); color:var(--gold-light); font-size:.72rem;
+  letter-spacing:.04em; text-transform:uppercase; padding:.35rem .6rem; border-radius:2px; cursor:pointer;
+}
+.coupon-copy-btn:hover{border-color:var(--gold-light); background:rgba(177,138,79,.1);}
+.coupon-status{position:absolute; top:1rem; right:1rem; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:#8a8378;}
+.coupon-status.is-active{color:#a9d2a9;}
+
+.benefit-card{border:1px solid rgba(177,138,79,.28); border-radius:3px; padding:1.3rem 1.4rem;}
+.benefit-card h3{font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500; font-size:1.1rem; color:var(--white); margin:0 0 .4rem;}
+.benefit-card p{font-size:.82rem; color:#a39c8e; margin:0; line-height:1.5;}
+
+/* produto (favoritos / exclusivos / novidades) */
+.product-mini-card{border:1px solid rgba(177,138,79,.25); border-radius:3px; overflow:hidden; text-decoration:none; display:block; transition:border-color .2s ease, transform .2s ease;}
+.product-mini-card:hover{border-color:rgba(217,189,133,.55); transform:translateY(-2px);}
+.product-mini-media{aspect-ratio:1/1; background:var(--black-2); display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.product-mini-media img{width:100%; height:100%; object-fit:cover;}
+.product-mini-media-empty{color:var(--gold-deep); font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.6rem; opacity:.5;}
+.product-mini-body{padding:.9rem 1rem;}
+.product-mini-name{font-size:.92rem; color:var(--white); margin:0 0 .3rem;}
+.product-mini-price{font-size:.82rem; color:var(--gold-light); margin:0;}
+.product-mini-fav{
+  position:relative; width:100%; text-align:left; background:none; border:none; padding:0; cursor:pointer; color:inherit; font:inherit;
+}
+.product-mini-fav-remove{
+  margin:.6rem 1rem 1rem; background:none; border:1px solid rgba(177,138,79,.35); color:#a39c8e; font-size:.7rem;
+  letter-spacing:.04em; text-transform:uppercase; padding:.35rem .6rem; border-radius:2px; cursor:pointer;
+}
+.product-mini-fav-remove:hover{color:var(--gold-light); border-color:var(--gold-light);}
+
+/* compras */
+.club-table-wrap{overflow-x:auto;}
+.club-table{width:100%; border-collapse:collapse; font-size:.85rem;}
+.club-table th{text-align:left; color:#a39c8e; font-weight:600; letter-spacing:.04em; text-transform:uppercase; font-size:.7rem; padding:.7rem .8rem; border-bottom:1px solid rgba(177,138,79,.3);}
+.club-table td{padding:.85rem .8rem; border-bottom:1px solid rgba(177,138,79,.12); color:var(--white);}
+
+/* minha conta */
+.club-account-form{max-width:460px;}
+.club-account-meta{display:flex; flex-direction:column; gap:.4rem; margin:.4rem 0 1rem; font-size:.82rem; color:#a39c8e;}
+.club-account-meta p{display:flex; justify-content:space-between; margin:0; border-bottom:1px dashed rgba(177,138,79,.2); padding-bottom:.4rem;}
+.club-account-meta span:first-child{text-transform:uppercase; letter-spacing:.04em; font-size:.72rem;}
+.club-account-meta span:last-child{color:var(--white);}
+.club-password-details{margin:1.2rem 0; border-top:1px solid rgba(177,138,79,.2); padding-top:1rem;}
+.club-password-details summary{cursor:pointer; color:var(--gold-light); font-size:.85rem; letter-spacing:.03em; margin-bottom:1rem;}
+.club-password-details[open] .club-field{margin-bottom:1rem;}
+.club-field input:disabled{opacity:.55;}
+
+/* ============================ Responsive ============================ */
+@media (max-width: 860px){
+  .club-nav{
+    position:fixed; top:68px; left:0; right:0; bottom:0; z-index:495;
+    background:var(--black-2); flex-direction:column; align-items:flex-start; gap:0;
+    padding:1rem 1.5rem; transform:translateX(-100%); transition:transform .25s ease; overflow-y:auto;
+  }
+  .club-nav.is-open{transform:translateX(0);}
+  .club-nav a{width:100%; padding:.9rem 0; border-bottom:1px solid rgba(177,138,79,.14) !important;}
+  .club-menu-toggle{display:block;}
+  .club-header-actions .club-back-store{display:none;}
+  .club-summary-grid{grid-template-columns:1fr 1fr;}
+}
+@media (max-width: 520px){
+  .club-summary-grid{grid-template-columns:1fr;}
+  .club-gate-card{padding:2rem 1.4rem;}
+}

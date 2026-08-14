@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Clube Verité — a área exclusiva de membros da VERITÉ. Benefícios, cupons e novidades para quem faz parte."/>
+<meta name="theme-color" content="#0c0c0d"/>
+<title>Clube Verité — VERITÉ</title>
+<link rel="canonical" href="https://verite-web.vercel.app/clube"/>
+<meta name="robots" content="noindex, follow"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
+<link rel="stylesheet" href="/assets/css/style.css"/>
+<link rel="stylesheet" href="/clube/assets/css/club.css"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/img/favicon-64.png"/>
+<link rel="apple-touch-icon" href="/assets/img/favicon-256.png"/>
+</head>
+<body class="club-body">
+
+<div class="club-app" id="club-app">
+
+  <!-- ============ GATE: código / login ============ -->
+  <section id="club-gate" class="club-gate">
+    <div class="club-gate-ambient" aria-hidden="true">
+      <span class="gate-spark s1"></span>
+      <span class="gate-spark s2"></span>
+      <span class="gate-spark s3"></span>
+      <span class="gate-spark s4"></span>
+      <span class="gate-spark s5"></span>
+    </div>
+
+    <a class="club-gate-back" href="/index.html">← Voltar à loja</a>
+
+    <div class="club-gate-card">
+      <div class="club-emblem">
+        <img src="/assets/img/verite-emblem.webp" alt="" />
+      </div>
+
+      <!-- passo 1: código -->
+      <div id="gate-step-code" class="gate-step">
+        <p class="club-eyebrow">Clube Verité</p>
+        <h1 class="club-title">Bem-vindo ao Clube Verité</h1>
+        <p class="club-lead">Digite o código exclusivo que veio no seu cartão para liberar seu acesso.</p>
+        <form id="code-form" class="club-form" novalidate>
+          <div class="field club-field">
+            <label for="code-input" class="sr-only">Código de acesso</label>
+            <input id="code-input" class="club-code-input" placeholder="VRT-XXXX-XXXX" autocomplete="off" autocapitalize="characters" maxlength="14" required/>
+          </div>
+          <button type="submit" class="club-btn-primary">
+            <span class="btn-label">Desbloquear acesso</span>
+            <span class="club-spinner" aria-hidden="true" hidden></span>
+          </button>
+        </form>
+        <p id="code-message" class="club-message" role="alert" aria-live="polite" hidden></p>
+        <button type="button" id="show-login-btn" class="club-link-btn">Já sou membro. Entrar.</button>
+      </div>
+
+      <!-- passo 2: cadastro (após código válido) -->
+      <div id="gate-step-register" class="gate-step" hidden>
+        <p class="club-eyebrow">Código validado</p>
+        <h1 class="club-title">Complete seu cadastro</h1>
+        <p class="club-lead">Só mais um passo para liberar o seu acesso ao Clube.</p>
+        <form id="register-form" class="club-form" novalidate>
+          <div class="field club-field">
+            <label for="reg-name">Nome</label>
+            <input id="reg-name" required maxlength="120" autocomplete="name"/>
+          </div>
+          <div class="field club-field">
+            <label for="reg-email">E-mail</label>
+            <input id="reg-email" type="email" required maxlength="254" autocomplete="email"/>
+          </div>
+          <div class="field club-field">
+            <label for="reg-phone">Telefone <span class="optional-tag">(opcional)</span></label>
+            <input id="reg-phone" maxlength="30" autocomplete="tel"/>
+          </div>
+          <div class="field club-field">
+            <label for="reg-password">Crie uma senha</label>
+            <input id="reg-password" type="password" required minlength="6" autocomplete="new-password"/>
+          </div>
+          <button type="submit" class="club-btn-primary">
+            <span class="btn-label">Ativar meu acesso</span>
+            <span class="club-spinner" aria-hidden="true" hidden></span>
+          </button>
+        </form>
+        <p id="register-message" class="club-message" role="alert" aria-live="polite" hidden></p>
+        <button type="button" id="register-back-btn" class="club-link-btn">Voltar</button>
+      </div>
+
+      <!-- login (membro existente) -->
+      <div id="gate-step-login" class="gate-step" hidden>
+        <p class="club-eyebrow">Área de membros</p>
+        <h1 class="club-title">Entrar no Clube</h1>
+        <p class="club-lead">Use o e-mail e a senha da sua conta do Clube Verité.</p>
+        <form id="login-form" class="club-form" novalidate>
+          <div class="field club-field">
+            <label for="login-email">E-mail</label>
+            <input id="login-email" type="email" required maxlength="254" autocomplete="email"/>
+          </div>
+          <div class="field club-field">
+            <label for="login-password">Senha</label>
+            <input id="login-password" type="password" required autocomplete="current-password"/>
+          </div>
+          <button type="submit" class="club-btn-primary">
+            <span class="btn-label">Entrar</span>
+            <span class="club-spinner" aria-hidden="true" hidden></span>
+          </button>
+        </form>
+        <p id="login-message" class="club-message" role="alert" aria-live="polite" hidden></p>
+        <button type="button" id="show-code-btn" class="club-link-btn">Tenho um código de convite.</button>
+      </div>
+
+      <!-- estado de sucesso -->
+      <div id="gate-step-success" class="gate-step gate-success" hidden>
+        <div class="success-glow" aria-hidden="true"></div>
+        <p class="club-eyebrow">Acesso liberado</p>
+        <h1 class="club-title">Acesso liberado.</h1>
+        <p class="club-lead">Bem-vindo ao Clube Verité.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APP: área de membro ============ -->
+  <div id="club-dashboard" class="club-dashboard" hidden>
+    <header class="club-header">
+      <div class="club-header-inner">
+        <a class="club-brand" href="#inicio">
+          <img src="/assets/img/verite-emblem.webp" alt="" class="club-brand-emblem"/>
+          <span class="club-brand-word">VERITÉ <span class="club-brand-sep">|</span> CLUBE</span>
+        </a>
+        <button class="club-menu-toggle" id="club-menu-toggle" aria-expanded="false" aria-controls="club-nav" aria-label="Abrir menu">
+          <span></span>
+        </button>
+        <nav id="club-nav" class="club-nav">
+          <a href="#inicio" data-club-route="inicio">Início</a>
+          <a href="#beneficios" data-club-route="beneficios">Benefícios</a>
+          <a href="#cupons" data-club-route="cupons">Cupons</a>
+          <a href="#compras" data-club-route="compras">Compras</a>
+          <a href="#favoritos" data-club-route="favoritos">Favoritos</a>
+          <a href="#exclusivos" data-club-route="exclusivos">Exclusivos</a>
+          <a href="#novidades" data-club-route="novidades">Novidades</a>
+          <a href="#minha-conta" data-club-route="minha-conta">Minha Conta</a>
+        </nav>
+        <div class="club-header-actions">
+          <a class="club-back-store" href="/index.html">Voltar à loja</a>
+          <button type="button" id="club-logout-btn" class="club-logout">Sair</button>
+        </div>
+      </div>
+    </header>
+    <div id="club-nav-scrim" class="club-nav-scrim" hidden></div>
+
+    <main class="club-main">
+
+      <section class="club-section" data-club-section="inicio">
+        <p class="club-tagline">Mais do que uma compra. Uma experiência Verité.</p>
+        <h1 class="club-hello">Olá, <span id="home-name">—</span></h1>
+        <div class="club-summary-grid">
+          <div class="club-card club-summary-card">
+            <p class="club-card-label">Status</p>
+            <p class="club-card-value">Membro do Clube</p>
+            <p class="club-card-sub" id="home-since">—</p>
+          </div>
+          <div class="club-card club-summary-card">
+            <p class="club-card-label">Compras</p>
+            <p class="club-card-value" id="home-orders-count">0</p>
+            <p class="club-card-sub">pedidos realizados</p>
+          </div>
+          <div class="club-card club-summary-card">
+            <p class="club-card-label">Cupons ativos</p>
+            <p class="club-card-value" id="home-coupons-count">0</p>
+            <p class="club-card-sub">disponíveis para uso</p>
+          </div>
+          <div class="club-card club-summary-card">
+            <p class="club-card-label">Último pedido</p>
+            <p class="club-card-value club-card-value-sm" id="home-last-order">—</p>
+          </div>
+        </div>
+        <div class="club-thanks">
+          <p>Obrigado por fazer parte do Clube Verité.</p>
+        </div>
+        <div id="home-novidades" class="club-mini-grid"></div>
+      </section>
+
+      <section class="club-section" data-club-section="beneficios" hidden>
+        <p class="club-eyebrow">Benefícios criados exclusivamente para você.</p>
+        <h1 class="club-section-title">Meus Benefícios</h1>
+        <div id="beneficios-grid" class="club-card-grid"></div>
+      </section>
+
+      <section class="club-section" data-club-section="cupons" hidden>
+        <p class="club-eyebrow">Você faz parte de algo exclusivo.</p>
+        <h1 class="club-section-title">Cupons</h1>
+        <div id="cupons-grid" class="club-card-grid"></div>
+      </section>
+
+      <section class="club-section" data-club-section="compras" hidden>
+        <h1 class="club-section-title">Minhas Compras</h1>
+        <div id="compras-wrap" class="club-table-wrap"></div>
+      </section>
+
+      <section class="club-section" data-club-section="favoritos" hidden>
+        <h1 class="club-section-title">Favoritos</h1>
+        <p class="club-lead">Salve os perfumes que você mais ama — sincronizado com a loja.</p>
+        <div id="favoritos-grid" class="club-card-grid"></div>
+      </section>
+
+      <section class="club-section" data-club-section="exclusivos" hidden>
+        <p class="club-eyebrow">Só para membros.</p>
+        <h1 class="club-section-title">Exclusivos do Clube</h1>
+        <div id="exclusivos-grid" class="club-card-grid"></div>
+      </section>
+
+      <section class="club-section" data-club-section="novidades" hidden>
+        <h1 class="club-section-title">Novidades</h1>
+        <p class="club-lead">O que está chegando na VERITÉ.</p>
+        <div id="novidades-grid" class="club-card-grid"></div>
+      </section>
+
+      <section class="club-section" data-club-section="minha-conta" hidden>
+        <h1 class="club-section-title">Minha Conta</h1>
+        <form id="account-form" class="club-form club-account-form" novalidate>
+          <div class="field club-field">
+            <label for="acc-name">Nome</label>
+            <input id="acc-name" required maxlength="120"/>
+          </div>
+          <div class="field club-field">
+            <label for="acc-email">E-mail</label>
+            <input id="acc-email" type="email" disabled/>
+          </div>
+          <div class="field club-field">
+            <label for="acc-phone">Telefone</label>
+            <input id="acc-phone" maxlength="30"/>
+          </div>
+          <div class="club-account-meta">
+            <p><span>Membro desde</span> <span id="acc-since">—</span></p>
+            <p><span>Código utilizado</span> <span id="acc-code">—</span></p>
+          </div>
+          <details class="club-password-details">
+            <summary>Alterar senha</summary>
+            <div class="field club-field">
+              <label for="acc-current-password">Senha atual</label>
+              <input id="acc-current-password" type="password" autocomplete="current-password"/>
+            </div>
+            <div class="field club-field">
+              <label for="acc-new-password">Nova senha</label>
+              <input id="acc-new-password" type="password" minlength="6" autocomplete="new-password"/>
+            </div>
+          </details>
+          <button type="submit" class="club-btn-primary">
+            <span class="btn-label">Salvar alterações</span>
+            <span class="club-spinner" aria-hidden="true" hidden></span>
+          </button>
+        </form>
+        <p id="account-message" class="club-message" role="alert" aria-live="polite" hidden></p>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="club-loading" class="club-loading" aria-hidden="true">
+    <div class="club-loading-emblem">
+      <img src="/assets/img/verite-emblem.webp" alt=""/>
+    </div>
+  </div>
+
+</div>
+
+<script src="/clube/assets/js/club.js"></script>
+</body>
+</html>

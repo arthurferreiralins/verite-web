@@ -146,7 +146,7 @@ module.exports = async function handler(req, res) {
     const { rows } = await sql`
       INSERT INTO products
         (slug, name, category, short_description, description, price, sale_price, volume, main_image_url, gallery_urls, status, featured, sort_order,
-         sku, stock_quantity, track_stock, low_stock_threshold,
+         sku, stock_quantity, track_stock, low_stock_threshold, club_exclusive,
          product_type, concentration, olfactory_family, notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience,
          seo_title, seo_description)
       VALUES
@@ -155,7 +155,7 @@ module.exports = async function handler(req, res) {
          ${body.salePrice === '' || body.salePrice == null ? null : Number(body.salePrice)},
          ${str(body.volume)}, ${str(body.mainImageUrl) || null}, ${gallery},
          ${status}, ${Boolean(body.featured)}, ${Number.isFinite(Number(body.sortOrder)) ? Number(body.sortOrder) : 0},
-         ${str(body.sku) || null}, ${stockQty}, ${body.trackStock !== false}, ${lowThreshold},
+         ${str(body.sku) || null}, ${stockQty}, ${body.trackStock !== false}, ${lowThreshold}, ${Boolean(body.clubExclusive)},
          ${optionalValues[0]}, ${optionalValues[1]}, ${optionalValues[2]}, ${optionalValues[3]}, ${optionalValues[4]},
          ${optionalValues[5]}, ${optionalValues[6]}, ${optionalValues[7]}, ${optionalValues[8]}, ${optionalValues[9]},
          ${optionalValues[10]}, ${optionalValues[11]})
@@ -235,6 +235,7 @@ module.exports = async function handler(req, res) {
         stock_quantity = ${stockQty},
         track_stock = ${body.trackStock !== undefined ? Boolean(body.trackStock) : existing.track_stock},
         low_stock_threshold = ${lowThreshold},
+        club_exclusive = ${body.clubExclusive !== undefined ? Boolean(body.clubExclusive) : existing.club_exclusive},
         product_type = ${optionalValues[0]},
         concentration = ${optionalValues[1]},
         olfactory_family = ${optionalValues[2]},
