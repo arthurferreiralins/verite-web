@@ -332,3 +332,89 @@ CREATE INDEX IF NOT EXISTS idx_club_code_attempts_ip_time ON club_code_attempts 
 INSERT INTO coupons (name, code, discount_label, description, auto_grant, active) VALUES
   ('Boas-vindas ao Clube', 'VERITE10', '10% OFF', 'Um agradecimento por fazer parte do Clube Verité.', true, true)
 ON CONFLICT (code) DO NOTHING;
+
+-- ============================================================
+-- Produção e Estoque (2026-08-16): matérias-primas/frascos/embalagens
+-- (inventory_items), lotes de produção (production_batches, código
+-- VT-LD-XXX), movimentações de entrada/saída (stock_movements, cobre
+-- tanto inventory_items quanto products) e custo/lucro por perfume
+-- (novas colunas cost_* em products). Idempotente, como o resto do arquivo.
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS inventory_items (
+  id SERIAL PRIMARY KEY,
+  type TEXT NOT NULL CHECK (type IN ('materia_prima','frasco','embalagem')),
+  subtype TEXT NOT NULL DEFAULT '',
+  name TEXT NOT NULL,
+  unit TEXT NOT NULL DEFAULT 'un' CHECK (unit IN ('ml','un')),
+  quantity NUMERIC(12,2) NOT NULL DEFAULT 0,
+  unit_cost NUMERIC(10,4) NOT NULL DEFAULT 0,
+  min_threshold NUMERIC(12,2) NOT NULL DEFAULT 0,
+  notes TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_inventory_items_type ON inventory_items (type);
+
+-- product_id é NOT NULL de propósito: todo lote pertence a um produto já
+-- cadastrado em `products` (o formulário de produção escolhe entre os
+-- perfumes existentes, não cria produto novo). ON DELETE RESTRICT evita
+-- apagar um produto que tenha histórico de lotes por engano.
+CREATE TABLE IF NOT EXISTS production_batches (
+  id SERIAL PRIMARY KEY,
+  lote_code TEXT UNIQUE NOT NULL,
+  product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
+  perfume_name TEXT NOT NULL,
+  production_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  essence_item_id INTEGER REFERENCES inventory_items(id) ON DELETE SET NULL,
+  essence_name TEXT NOT NULL DEFAULT '',
+  essence_ml NUMERIC(12,2) NOT NULL DEFAULT 0,
+  base_item_id INTEGER REFERENCES inventory_items(id) ON DELETE SET NULL,
+  base_name TEXT NOT NULL DEFAULT '',
+  base_ml NUMERIC(12,2) NOT NULL DEFAULT 0,
+  other_ingredients JSONB NOT NULL DEFAULT '[]',
+  total_volume_ml NUMERIC(12,2) NOT NULL DEFAULT 0,
+  bottle_size_ml NUMERIC(12,2) NOT NULL DEFAULT 0,
+  bottle_item_id INTEGER REFERENCES inventory_items(id) ON DELETE SET NULL,
+  bottle_name TEXT NOT NULL DEFAULT '',
+  bottle_count INTEGER NOT NULL DEFAULT 0,
+  production_cost NUMERIC(10,2) NOT NULL DEFAULT 0,
+  notes TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'produzindo' CHECK (status IN ('produzindo','macerando','pronto','esgotado')),
+  -- Garante que os frascos deste lote só entram no estoque do produto uma
+  -- única vez, no momento em que o status chega a "pronto" (evita crédito
+  -- duplicado se o status for alternado depois).
+  stock_applied BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_production_batches_product ON production_batches (product_id);
+CREATE INDEX IF NOT EXISTS idx_production_batches_status ON production_batches (status);
+
+-- item_id não é FK de propósito (mesmo padrão de "log de auditoria" de
+-- activity_logs): o histórico deve continuar legível mesmo se o item de
+-- estoque referenciado for excluído depois, por isso item_name é uma cópia.
+CREATE TABLE IF NOT EXISTS stock_movements (
+  id SERIAL PRIMARY KEY,
+  item_type TEXT NOT NULL CHECK (item_type IN ('inventory','product')),
+  item_id INTEGER NOT NULL,
+  item_name TEXT NOT NULL,
+  direction TEXT NOT NULL CHECK (direction IN ('entrada','saida')),
+  quantity NUMERIC(12,2) NOT NULL,
+  previous_stock NUMERIC(12,2) NOT NULL,
+  new_stock NUMERIC(12,2) NOT NULL,
+  reason TEXT NOT NULL DEFAULT '',
+  admin_email TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_stock_movements_item ON stock_movements (item_type, item_id);
+CREATE INDEX IF NOT EXISTS idx_stock_movements_created_at ON stock_movements (created_at DESC);
+
+-- Custo por perfume (seção "Custos e lucro" do painel) — somados formam o
+-- custo total; lucro/margem são calculados em código a partir de price/sale_price.
+ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_essence NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_base NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_bottle NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_cap NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_label NUMERIC(10,2) NOT NULL DEFAULT 0;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_packaging NUMERIC(10,2) NOT NULL DEFAULT 0;

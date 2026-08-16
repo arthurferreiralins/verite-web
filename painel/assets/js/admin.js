@@ -79,6 +79,14 @@
   var STOCK_LABELS = { em_estoque: 'Em estoque', baixo: 'Estoque baixo', esgotado: 'Esgotado' };
   var MESSAGE_STATUS_LABELS = { novo: 'Nova', lido: 'Lida', respondido: 'Respondida', arquivado: 'Arquivada' };
   var ORDER_STATUS_LABELS = { novo: 'Novo', confirmado: 'Confirmado', preparando: 'Preparando', enviado: 'Enviado', entregue: 'Entregue', cancelado: 'Cancelado' };
+  var ALERT_LABELS = { ok: 'Estoque OK', baixo: 'Estoque baixo', critico: 'Estoque crítico' };
+  var BATCH_STATUS_LABELS = { produzindo: 'Produzindo', macerando: 'Macerando', pronto: 'Pronto', esgotado: 'Esgotado' };
+  var INVENTORY_TYPE_LABELS = { materia_prima: 'Matéria-prima', frasco: 'Frasco', embalagem: 'Embalagem' };
+  var INVENTORY_SUBTYPES = {
+    materia_prima: [['essencia', 'Essência'], ['alcool_base', 'Álcool/Base'], ['outro', 'Outro ingrediente']],
+    frasco: [['frasco', 'Frasco'], ['valvula', 'Válvula'], ['tampa', 'Tampa'], ['rotulo', 'Rótulo']],
+    embalagem: [['caixa', 'Caixa'], ['sacola', 'Sacola'], ['cartao', 'Cartão'], ['envio', 'Material de envio']],
+  };
 
   function formatDate(iso){
     if(!iso) return '—';
@@ -288,7 +296,7 @@
   sidebarScrim.addEventListener('click', closeSidebar);
 
   /* ============================ Routing ============================ */
-  var ROUTES = ['dashboard', 'produtos', 'categorias', 'estoque', 'pedidos', 'clientes', 'clube', 'leads', 'mensagens', 'conteudo', 'faq', 'midia', 'seo', 'aparencia', 'configuracoes', 'minha-conta'];
+  var ROUTES = ['dashboard', 'produtos', 'categorias', 'producao', 'estoque', 'financeiro', 'pedidos', 'clientes', 'clube', 'leads', 'mensagens', 'conteudo', 'faq', 'midia', 'seo', 'aparencia', 'configuracoes', 'minha-conta'];
   var loaders = {};
   var currentActiveRoute = null;
 
@@ -436,13 +444,21 @@
     var activityWrap = document.getElementById('dashboard-activity');
     clear(wrap); clear(activityWrap);
     api('/api/admin/dashboard').then(function(data){
+      var totalAlerts = data.lowStock + data.lowStockInventory;
       var cards = [
+        { n: data.perfumesReady, label: 'PERFUMES PRONTOS', sub: 'frascos disponíveis para venda' },
+        { n: data.rawMaterials, label: 'MATÉRIAS-PRIMAS', sub: 'itens cadastrados' },
+        { n: totalAlerts, label: 'ESTOQUE BAIXO/CRÍTICO', sub: totalAlerts > 0 ? 'produto(s)/item(ns) para repor' : 'tudo em dia', warn: totalAlerts > 0 },
+        { n: data.monthlyProductions, label: 'PRODUÇÕES NO MÊS', sub: null },
+        { n: formatMoney(data.monthlyProductionCost), label: 'CUSTO DE PRODUÇÃO (MÊS)', sub: null },
+        { n: formatMoney(data.inventoryValue + data.finishedGoodsValue), label: 'VALOR EM ESTOQUE', sub: 'matérias-primas + produtos prontos' },
+        { n: formatMoney(data.salesTotal), label: 'VENDAS REALIZADAS', sub: null },
+        { n: formatMoney(data.estimatedProfit), label: 'LUCRO ESTIMADO', sub: 'se todo o estoque pronto for vendido' },
         { n: data.productsTotal, label: 'PRODUTOS', sub: data.products.published + ' publicados · ' + data.products.draft + ' rascunhos' },
         { n: data.orders, label: 'PEDIDOS', sub: null },
         { n: data.customers, label: 'CLIENTES', sub: null },
         { n: data.leads, label: 'LISTA DE ESPERA', sub: null },
-        { n: data.messagesTotal, label: 'MENSAGENS', sub: data.messages.novo + ' novas' },
-        { n: data.lowStock, label: 'ESTOQUE', sub: data.lowStock > 0 ? 'produto(s) com estoque baixo/esgotado' : 'tudo em dia', warn: data.lowStock > 0 }
+        { n: data.messagesTotal, label: 'MENSAGENS', sub: data.messages.novo + ' novas' }
       ];
       cards.forEach(function(c){
         var card = document.createElement('div');
@@ -466,6 +482,32 @@
       }
     }).catch(function(err){ showToast(err.message, true); });
     refreshMessagesBadge();
+
+    var alertsWrap = document.getElementById('dashboard-alerts');
+    var alertsTitle = document.getElementById('dashboard-alerts-title');
+    clear(alertsWrap);
+    Promise.all([api('/api/admin/inventory'), api('/api/admin/products')]).then(function(results){
+      var alerts = [];
+      results[0].items.forEach(function(item){
+        if(item.alert_level === 'baixo' || item.alert_level === 'critico'){
+          alerts.push({ level: item.alert_level, text: item.name + ' — ' + item.quantity + ' ' + item.unit + ' em estoque' });
+        }
+      });
+      results[1].products.forEach(function(p){
+        if(p.track_stock && (p.stock_status === 'baixo' || p.stock_status === 'esgotado')){
+          alerts.push({ level: p.stock_status === 'esgotado' ? 'critico' : 'baixo', text: p.name + ' — ' + p.stock_quantity + ' un. em estoque' });
+        }
+      });
+      alerts.sort(function(a, b){ return (a.level === 'critico' ? 0 : 1) - (b.level === 'critico' ? 0 : 1); });
+      alertsTitle.hidden = !alerts.length;
+      alerts.forEach(function(a){
+        var row = document.createElement('div'); row.className = 'activity-item';
+        row.appendChild(textEl('div', a.text, 'activity-desc'));
+        var badge = document.createElement('span'); badge.className = 'badge badge-alert-' + a.level; badge.textContent = ALERT_LABELS[a.level];
+        row.appendChild(badge);
+        alertsWrap.appendChild(row);
+      });
+    }).catch(function(){});
   };
 
   /* ============================ Categorias (cache usado pelo form de produto) ============================ */
@@ -627,6 +669,60 @@
 
   function fillOptional(id, value){ document.getElementById(id).value = value || ''; }
 
+  var PRODUTO_COST_IDS = ['produto-cost-essence', 'produto-cost-base', 'produto-cost-bottle', 'produto-cost-cap', 'produto-cost-label', 'produto-cost-packaging'];
+  function produtoCostTotal(){
+    return PRODUTO_COST_IDS.reduce(function(sum, id){ return sum + (Number(document.getElementById(id).value) || 0); }, 0);
+  }
+  function updateProdutoCostSummary(){
+    var cost = produtoCostTotal();
+    var price = Number(document.getElementById('produto-sale-price').value) || Number(document.getElementById('produto-price').value) || 0;
+    var summary = document.getElementById('produto-cost-summary');
+    var html = '<div><strong>Custo total:</strong> ' + formatMoney(cost) + '</div>';
+    if(price > 0){
+      var profit = price - cost;
+      var margin = profit / price * 100;
+      var cls = profit >= 0 ? 'profit-positive' : 'profit-negative';
+      html += '<div><strong>Lucro por unidade:</strong> <span class="' + cls + '">' + formatMoney(profit) + '</span></div>';
+      html += '<div><strong>Margem:</strong> <span class="' + cls + '">' + margin.toFixed(1) + '%</span></div>';
+    } else {
+      html += '<div>Informe o preço de venda para calcular o lucro.</div>';
+    }
+    summary.innerHTML = html;
+  }
+  PRODUTO_COST_IDS.concat(['produto-price', 'produto-sale-price']).forEach(function(id){
+    document.getElementById(id).addEventListener('input', updateProdutoCostSummary);
+  });
+
+  function loadProdutoBatches(productId){
+    var summaryWrap = document.getElementById('produto-batches-summary');
+    var listWrap = document.getElementById('produto-batches-list');
+    clear(summaryWrap); clear(listWrap);
+    api('/api/admin/products?id=' + productId).then(function(data){
+      var cost = Number(data.product.cost_essence||0) + Number(data.product.cost_base||0) + Number(data.product.cost_bottle||0) + Number(data.product.cost_cap||0) + Number(data.product.cost_label||0) + Number(data.product.cost_packaging||0);
+      var price = data.product.sale_price != null ? Number(data.product.sale_price) : Number(data.product.price || 0);
+      var profitGenerated = data.soldQuantity * (price - cost);
+      summaryWrap.innerHTML = '<div><strong>Quantidade vendida:</strong> ' + data.soldQuantity + ' un.</div><div><strong>Lucro gerado (estimado):</strong> ' + formatMoney(profitGenerated) + '</div>';
+      if(!data.batches.length){
+        listWrap.appendChild(textEl('div', 'Nenhum lote de produção registrado para este perfume ainda.', 'empty-state'));
+        return;
+      }
+      var table = document.createElement('table'); table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Lote</th><th>Data</th><th>Frascos</th><th>Custo</th><th>Status</th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.batches.forEach(function(b){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', b.lote_code, 'lote-code'));
+        tr.appendChild(textEl('td', formatDate(b.production_date)));
+        tr.appendChild(textEl('td', String(b.bottle_count)));
+        tr.appendChild(textEl('td', formatMoney(b.production_cost)));
+        tr.appendChild(textEl('td', BATCH_STATUS_LABELS[b.status] || b.status));
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      listWrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+
   function showProductForm(product){
     produtosListView.hidden = true;
     produtosFormView.hidden = false;
@@ -663,6 +759,22 @@
     fillOptional('produto-notes-base', product && product.notes_base);
     fillOptional('produto-seo-title', product && product.seo_title);
     fillOptional('produto-seo-description', product && product.seo_description);
+
+    document.getElementById('produto-cost-essence').value = product ? (product.cost_essence || 0) : 0;
+    document.getElementById('produto-cost-base').value = product ? (product.cost_base || 0) : 0;
+    document.getElementById('produto-cost-bottle').value = product ? (product.cost_bottle || 0) : 0;
+    document.getElementById('produto-cost-cap').value = product ? (product.cost_cap || 0) : 0;
+    document.getElementById('produto-cost-label').value = product ? (product.cost_label || 0) : 0;
+    document.getElementById('produto-cost-packaging').value = product ? (product.cost_packaging || 0) : 0;
+    updateProdutoCostSummary();
+
+    var batchesBlock = document.getElementById('produto-batches-block');
+    if(product){
+      batchesBlock.hidden = false;
+      loadProdutoBatches(product.id);
+    } else {
+      batchesBlock.hidden = true;
+    }
 
     var mainWrap = document.getElementById('produto-main-image');
     var galleryWrap = document.getElementById('produto-gallery');
@@ -740,7 +852,13 @@
       notesHeart: document.getElementById('produto-notes-heart').value.trim(),
       notesBase: document.getElementById('produto-notes-base').value.trim(),
       seoTitle: document.getElementById('produto-seo-title').value.trim(),
-      seoDescription: document.getElementById('produto-seo-description').value.trim()
+      seoDescription: document.getElementById('produto-seo-description').value.trim(),
+      costEssence: document.getElementById('produto-cost-essence').value,
+      costBase: document.getElementById('produto-cost-base').value,
+      costBottle: document.getElementById('produto-cost-bottle').value,
+      costCap: document.getElementById('produto-cost-cap').value,
+      costLabel: document.getElementById('produto-cost-label').value,
+      costPackaging: document.getElementById('produto-cost-packaging').value
     };
 
     var btn = produtoForm.querySelector('button[type="submit"]');
@@ -887,51 +1005,601 @@
     loadCategoriasList();
   };
 
+  /* ============================ Movimentação de estoque (modal genérico) ============================ */
+  var movementModal = document.getElementById('movement-modal');
+  var movementForm = document.getElementById('movement-form');
+  var movementModalTitle = document.getElementById('movement-modal-title');
+  var movementQuantityInput = document.getElementById('movement-quantity');
+  var movementReasonInput = document.getElementById('movement-reason');
+  var movementContext = null;
+
+  function openMovementModal(itemType, itemId, itemName, direction, onDone){
+    movementContext = { itemType: itemType, itemId: itemId, direction: direction, onDone: onDone };
+    movementModalTitle.textContent = (direction === 'entrada' ? 'Adicionar estoque — ' : 'Retirar estoque — ') + itemName;
+    movementForm.reset();
+    movementModal.hidden = false;
+    movementQuantityInput.focus();
+  }
+  function closeMovementModal(){ movementModal.hidden = true; movementContext = null; }
+  document.getElementById('movement-cancel-btn').addEventListener('click', closeMovementModal);
+  movementModal.addEventListener('click', function(e){ if(e.target === movementModal) closeMovementModal(); });
+  movementForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!movementContext) return;
+    var qty = Number(movementQuantityInput.value);
+    if(!(qty > 0)){ showToast('Informe uma quantidade válida.', true); return; }
+    var btn = movementForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    api('/api/admin/stock-movements', {
+      method: 'POST',
+      body: {
+        itemType: movementContext.itemType,
+        itemId: movementContext.itemId,
+        direction: movementContext.direction,
+        quantity: qty,
+        reason: movementReasonInput.value.trim()
+      }
+    }).then(function(){
+      showToast('Movimentação registrada.');
+      var onDone = movementContext.onDone;
+      closeMovementModal();
+      if(onDone) onDone();
+    }).catch(function(err){ showToast(err.message || 'Não foi possível registrar.', true); })
+      .finally(function(){ setLoading(btn, false); });
+  });
+
   /* ============================ Estoque ============================ */
-  loaders.estoque = function(){
+  var estoqueListView = document.getElementById('estoque-list-view');
+  var estoqueFormView = document.getElementById('estoque-form-view');
+  var estoqueMovView = document.getElementById('estoque-movimentacoes-view');
+  var estoqueForm = document.getElementById('estoque-form');
+  var estoqueState = { tab: 'materia_prima' };
+
+  function alertBadgeHtml(level){
+    return '<span class="badge badge-alert-' + level + '">' + (ALERT_LABELS[level] || level) + '</span>';
+  }
+  function subtypeLabel(type, subtype){
+    var found = '';
+    (INVENTORY_SUBTYPES[type] || []).forEach(function(pair){ if(pair[0] === subtype) found = pair[1]; });
+    return found;
+  }
+  function populateEstoqueSubtypes(type){
+    var select = document.getElementById('estoque-subtype');
+    clear(select);
+    (INVENTORY_SUBTYPES[type] || []).forEach(function(pair){
+      var opt = document.createElement('option');
+      opt.value = pair[0]; opt.textContent = pair[1];
+      select.appendChild(opt);
+    });
+  }
+  function showEstoqueList(){
+    estoqueFormView.hidden = true; estoqueMovView.hidden = true; estoqueListView.hidden = false;
+  }
+
+  function loadEstoqueTab(){
     var wrap = document.getElementById('estoque-table-wrap');
     clear(wrap);
-    api('/api/admin/products').then(function(data){
-      if(!data.products.length){
-        wrap.appendChild(textEl('div', 'Nenhum produto cadastrado ainda.', 'empty-state'));
-        return;
-      }
+
+    if(estoqueState.tab === 'produtos'){
+      api('/api/admin/products').then(function(data){
+        var items = data.products.filter(function(p){ return p.track_stock; });
+        if(!items.length){ wrap.appendChild(textEl('div', 'Nenhum produto com controle de estoque.', 'empty-state')); return; }
+        var table = document.createElement('table');
+        table.className = 'admin-table';
+        table.innerHTML = '<thead><tr><th>Nome</th><th>Quantidade</th><th>Custo unitário</th><th>Valor total</th><th>Última atualização</th><th></th></tr></thead>';
+        var tbody = document.createElement('tbody');
+        items.forEach(function(p){
+          var unitCost = Number(p.cost_essence||0) + Number(p.cost_base||0) + Number(p.cost_bottle||0) + Number(p.cost_cap||0) + Number(p.cost_label||0) + Number(p.cost_packaging||0);
+          var tr = document.createElement('tr');
+          tr.appendChild(textEl('td', p.name));
+          tr.appendChild(textEl('td', p.stock_quantity + ' un.'));
+          tr.appendChild(textEl('td', formatMoney(unitCost)));
+          tr.appendChild(textEl('td', formatMoney(unitCost * p.stock_quantity)));
+          tr.appendChild(textEl('td', formatDate(p.updated_at)));
+          var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+          var inBtn = document.createElement('button'); inBtn.type = 'button'; inBtn.textContent = '+ Entrada';
+          inBtn.addEventListener('click', function(){ openMovementModal('product', p.id, p.name, 'entrada', loadEstoqueTab); });
+          var outBtn = document.createElement('button'); outBtn.type = 'button'; outBtn.textContent = '- Saída';
+          outBtn.addEventListener('click', function(){ openMovementModal('product', p.id, p.name, 'saida', loadEstoqueTab); });
+          actionsTd.appendChild(inBtn); actionsTd.appendChild(outBtn);
+          tr.appendChild(actionsTd);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody); wrap.appendChild(table);
+      }).catch(function(err){ showToast(err.message, true); });
+      return;
+    }
+
+    api('/api/admin/inventory?type=' + estoqueState.tab).then(function(data){
+      if(!data.items.length){ wrap.appendChild(textEl('div', 'Nenhum item cadastrado nesta categoria ainda.', 'empty-state')); return; }
       var table = document.createElement('table');
       table.className = 'admin-table';
-      table.innerHTML = '<thead><tr><th>Produto</th><th>SKU</th><th>Quantidade</th><th>Status</th></tr></thead>';
+      table.innerHTML = '<thead><tr><th>Nome</th><th>Subtipo</th><th>Quantidade</th><th>Custo unitário</th><th>Valor total</th><th>Alerta</th><th>Atualizado</th><th></th></tr></thead>';
       var tbody = document.createElement('tbody');
-      data.products.forEach(function(p){
+      data.items.forEach(function(item){
         var tr = document.createElement('tr');
-        tr.appendChild(textEl('td', p.name));
-        tr.appendChild(textEl('td', p.sku || '—'));
+        tr.appendChild(textEl('td', item.name));
+        tr.appendChild(textEl('td', subtypeLabel(item.type, item.subtype) || item.subtype || '—'));
+        tr.appendChild(textEl('td', Number(item.quantity) + ' ' + item.unit));
+        tr.appendChild(textEl('td', formatMoney(item.unit_cost)));
+        tr.appendChild(textEl('td', formatMoney(Number(item.quantity) * Number(item.unit_cost))));
+        var alertTd = document.createElement('td'); alertTd.innerHTML = alertBadgeHtml(item.alert_level); tr.appendChild(alertTd);
+        tr.appendChild(textEl('td', formatDate(item.updated_at)));
 
-        var qtyTd = document.createElement('td');
-        if(p.track_stock){
-          var qtyInput = document.createElement('input');
-          qtyInput.type = 'number'; qtyInput.min = '0'; qtyInput.step = '1';
-          qtyInput.value = p.stock_quantity;
-          qtyInput.className = 'estoque-qty-input';
-          qtyInput.addEventListener('change', function(){
-            var val = Math.max(0, Math.trunc(Number(qtyInput.value) || 0));
-            api('/api/admin/products?id=' + p.id, { method: 'PUT', body: { stockQuantity: val } }).then(function(){
-              showToast('Estoque de "' + p.name + '" atualizado.');
-              loaders.estoque();
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var inBtn = document.createElement('button'); inBtn.type = 'button'; inBtn.textContent = '+ Entrada';
+        inBtn.addEventListener('click', function(){ openMovementModal('inventory', item.id, item.name, 'entrada', loadEstoqueTab); });
+        actionsTd.appendChild(inBtn);
+        var outBtn = document.createElement('button'); outBtn.type = 'button'; outBtn.textContent = '- Saída';
+        outBtn.addEventListener('click', function(){ openMovementModal('inventory', item.id, item.name, 'saida', loadEstoqueTab); });
+        actionsTd.appendChild(outBtn);
+        var histBtn = document.createElement('button'); histBtn.type = 'button'; histBtn.textContent = 'Histórico';
+        histBtn.addEventListener('click', function(){ showEstoqueMovimentacoes('inventory', item.id, item.name); });
+        actionsTd.appendChild(histBtn);
+        var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function(){ showEstoqueForm(item); });
+        actionsTd.appendChild(editBtn);
+        var delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.textContent = 'Excluir';
+        delBtn.addEventListener('click', function(){
+          confirmDialog('Tem certeza que deseja excluir "' + item.name + '"?').then(function(ok){
+            if(!ok) return;
+            api('/api/admin/inventory?id=' + item.id, { method: 'DELETE' }).then(function(){
+              showToast('Item excluído.'); loadEstoqueTab();
             }).catch(function(err){ showToast(err.message, true); });
           });
-          qtyTd.appendChild(qtyInput);
-        } else {
-          qtyTd.appendChild(textEl('span', '—', 'stock-qty'));
-        }
-        tr.appendChild(qtyTd);
-
-        var statusTd = document.createElement('td');
-        statusTd.innerHTML = stockBadgeHtml(p);
-        tr.appendChild(statusTd);
-
+        });
+        actionsTd.appendChild(delBtn);
+        tr.appendChild(actionsTd);
         tbody.appendChild(tr);
       });
-      table.appendChild(tbody);
-      wrap.appendChild(table);
+      table.appendChild(tbody); wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+
+  document.querySelectorAll('#estoque-tabs .tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#estoque-tabs .tab-btn').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      estoqueState.tab = btn.getAttribute('data-estoque-tab');
+      loadEstoqueTab();
+    });
+  });
+
+  function showEstoqueForm(item){
+    estoqueListView.hidden = true; estoqueMovView.hidden = true; estoqueFormView.hidden = false;
+    estoqueForm.reset();
+    document.getElementById('estoque-form-title').textContent = item ? 'Editar item' : 'Novo item';
+    document.getElementById('estoque-delete-btn').hidden = !item;
+    document.getElementById('estoque-id').value = item ? item.id : '';
+    var type = item ? item.type : (estoqueState.tab !== 'produtos' ? estoqueState.tab : 'materia_prima');
+    document.getElementById('estoque-type').value = type;
+    populateEstoqueSubtypes(type);
+    document.getElementById('estoque-name').value = item ? item.name : '';
+    if(item) document.getElementById('estoque-subtype').value = item.subtype || '';
+    document.getElementById('estoque-unit').value = item ? item.unit : (type === 'materia_prima' ? 'ml' : 'un');
+    document.getElementById('estoque-quantity').value = item ? item.quantity : 0;
+    document.getElementById('estoque-unit-cost').value = item ? item.unit_cost : 0;
+    document.getElementById('estoque-min').value = item ? item.min_threshold : 0;
+    document.getElementById('estoque-notes').value = item ? (item.notes || '') : '';
+    watchDirty(estoqueForm);
+  }
+  document.getElementById('estoque-new-btn').addEventListener('click', function(){ showEstoqueForm(null); });
+  document.getElementById('estoque-form-back-btn').addEventListener('click', function(){ clearDirty(); showEstoqueList(); });
+  document.getElementById('estoque-cancel-btn').addEventListener('click', function(){ document.getElementById('estoque-form-back-btn').click(); });
+
+  estoqueForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('estoque-id').value;
+    var name = document.getElementById('estoque-name').value.trim();
+    if(!name){ showToast('Informe o nome do item.', true); return; }
+    var body = {
+      type: document.getElementById('estoque-type').value,
+      subtype: document.getElementById('estoque-subtype').value,
+      name: name,
+      unit: document.getElementById('estoque-unit').value,
+      quantity: document.getElementById('estoque-quantity').value,
+      unitCost: document.getElementById('estoque-unit-cost').value,
+      minThreshold: document.getElementById('estoque-min').value,
+      notes: document.getElementById('estoque-notes').value.trim()
+    };
+    var btn = estoqueForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    var req = id ? api('/api/admin/inventory?id=' + id, { method: 'PUT', body: body })
+                 : api('/api/admin/inventory', { method: 'POST', body: body });
+    req.then(function(data){
+      clearDirty();
+      showToast(id ? 'Item atualizado.' : 'Item criado.');
+      estoqueState.tab = data.item.type;
+      document.querySelectorAll('#estoque-tabs .tab-btn').forEach(function(b){ b.classList.toggle('is-active', b.getAttribute('data-estoque-tab') === data.item.type); });
+      showEstoqueList();
+      loadEstoqueTab();
+    }).catch(function(err){ showToast(err.message || 'Não foi possível salvar.', true); })
+      .finally(function(){ setLoading(btn, false); });
+  });
+  document.getElementById('estoque-delete-btn').addEventListener('click', function(){
+    var id = document.getElementById('estoque-id').value;
+    if(!id) return;
+    confirmDialog('Tem certeza que deseja excluir este item?').then(function(ok){
+      if(!ok) return;
+      api('/api/admin/inventory?id=' + id, { method: 'DELETE' }).then(function(){
+        clearDirty(); showToast('Item excluído.'); showEstoqueList(); loadEstoqueTab();
+      }).catch(function(err){ showToast(err.message, true); });
+    });
+  });
+
+  function showEstoqueMovimentacoes(itemType, itemId, itemName){
+    estoqueListView.hidden = true; estoqueFormView.hidden = true; estoqueMovView.hidden = false;
+    document.getElementById('estoque-mov-item-name').textContent = itemName;
+    document.getElementById('estoque-mov-entrada-btn').onclick = function(){
+      openMovementModal(itemType, itemId, itemName, 'entrada', function(){ loadMovimentacoes(itemType, itemId); });
+    };
+    document.getElementById('estoque-mov-saida-btn').onclick = function(){
+      openMovementModal(itemType, itemId, itemName, 'saida', function(){ loadMovimentacoes(itemType, itemId); });
+    };
+    loadMovimentacoes(itemType, itemId);
+  }
+  function loadMovimentacoes(itemType, itemId){
+    var wrap = document.getElementById('estoque-mov-table-wrap');
+    clear(wrap);
+    api('/api/admin/stock-movements?itemType=' + itemType + '&itemId=' + itemId).then(function(data){
+      if(!data.movements.length){ wrap.appendChild(textEl('div', 'Nenhuma movimentação registrada ainda.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Data</th><th>Tipo</th><th>Quantidade</th><th>Estoque anterior</th><th>Estoque atual</th><th>Motivo</th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.movements.forEach(function(m){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', formatDate(m.created_at)));
+        var typeTd = document.createElement('td');
+        typeTd.appendChild(textEl('span', m.direction === 'entrada' ? 'Entrada' : 'Saída', 'badge ' + (m.direction === 'entrada' ? 'badge-published' : 'badge-novo')));
+        tr.appendChild(typeTd);
+        tr.appendChild(textEl('td', String(m.quantity)));
+        tr.appendChild(textEl('td', String(m.previous_stock)));
+        tr.appendChild(textEl('td', String(m.new_stock)));
+        tr.appendChild(textEl('td', m.reason || '—'));
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody); wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  document.getElementById('estoque-mov-back-btn').addEventListener('click', showEstoqueList);
+
+  loaders.estoque = function(){
+    showEstoqueList();
+    loadEstoqueTab();
+  };
+
+  /* ============================ Produção ============================ */
+  var producaoListView = document.getElementById('producao-list-view');
+  var producaoFormView = document.getElementById('producao-form-view');
+  var producaoDetailView = document.getElementById('producao-detail-view');
+  var producaoForm = document.getElementById('producao-form');
+  var producaoState = { search: '', status: '' };
+  var producaoIngredientRows = [];
+
+  function showProducaoList(){ producaoFormView.hidden = true; producaoDetailView.hidden = true; producaoListView.hidden = false; }
+
+  function loadProducaoList(){
+    var wrap = document.getElementById('producao-table-wrap');
+    clear(wrap);
+    var qs = [];
+    if(producaoState.search) qs.push('q=' + encodeURIComponent(producaoState.search));
+    if(producaoState.status) qs.push('status=' + encodeURIComponent(producaoState.status));
+    api('/api/admin/production' + (qs.length ? '?' + qs.join('&') : '')).then(function(data){
+      if(!data.batches.length){ wrap.appendChild(textEl('div', 'Nenhum lote de produção registrado ainda.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Lote</th><th>Perfume</th><th>Data</th><th>Frascos</th><th>Custo</th><th>Status</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.batches.forEach(function(b){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', b.lote_code, 'lote-code'));
+        tr.appendChild(textEl('td', b.perfume_name));
+        tr.appendChild(textEl('td', formatDate(b.production_date)));
+        tr.appendChild(textEl('td', String(b.bottle_count)));
+        tr.appendChild(textEl('td', formatMoney(b.production_cost)));
+        var statusTd = document.createElement('td');
+        var statusBadgeClass = b.status === 'pronto' ? 'badge-published' : b.status === 'esgotado' ? 'badge-archived' : 'badge-draft';
+        statusTd.appendChild(textEl('span', BATCH_STATUS_LABELS[b.status] || b.status, 'badge ' + statusBadgeClass));
+        tr.appendChild(statusTd);
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var viewBtn = document.createElement('button'); viewBtn.type = 'button'; viewBtn.textContent = 'Ver lote';
+        viewBtn.addEventListener('click', function(){ showProducaoDetail(b.id); });
+        actionsTd.appendChild(viewBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody); wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+
+  var producaoSearchTimer = null;
+  document.getElementById('producao-search').addEventListener('input', function(){
+    var input = this;
+    window.clearTimeout(producaoSearchTimer);
+    producaoSearchTimer = window.setTimeout(function(){
+      producaoState.search = input.value.trim();
+      loadProducaoList();
+    }, 300);
+  });
+  document.getElementById('producao-status-filter').addEventListener('change', function(){
+    producaoState.status = this.value;
+    loadProducaoList();
+  });
+
+  function loadProductsSelect(selectEl){
+    return api('/api/admin/products').then(function(data){
+      clear(selectEl);
+      var placeholder = document.createElement('option');
+      placeholder.value = ''; placeholder.textContent = 'Selecionar perfume…';
+      selectEl.appendChild(placeholder);
+      data.products.forEach(function(p){
+        var opt = document.createElement('option');
+        opt.value = p.id; opt.textContent = p.name;
+        selectEl.appendChild(opt);
+      });
+    });
+  }
+  function loadInventorySelect(selectEl, type, placeholderText){
+    return api('/api/admin/inventory?type=' + type).then(function(data){
+      clear(selectEl);
+      var placeholder = document.createElement('option');
+      placeholder.value = ''; placeholder.textContent = placeholderText;
+      selectEl.appendChild(placeholder);
+      data.items.forEach(function(item){
+        var opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = item.name + ' (' + item.quantity + ' ' + item.unit + ' em estoque)';
+        opt.setAttribute('data-unit-cost', item.unit_cost);
+        selectEl.appendChild(opt);
+      });
+    });
+  }
+
+  function renderIngredientRows(){
+    var wrap = document.getElementById('producao-ingredients-list');
+    clear(wrap);
+    producaoIngredientRows.forEach(function(row, idx){
+      var rowEl = document.createElement('div');
+      rowEl.className = 'ingredient-row';
+
+      var nameField = document.createElement('div'); nameField.className = 'field';
+      var nameInput = document.createElement('input');
+      nameInput.placeholder = 'Nome do ingrediente'; nameInput.value = row.name || '';
+      nameInput.addEventListener('input', function(){ row.name = nameInput.value; });
+      nameField.appendChild(nameInput);
+
+      var qtyField = document.createElement('div'); qtyField.className = 'field';
+      var qtyInput = document.createElement('input');
+      qtyInput.type = 'number'; qtyInput.min = '0'; qtyInput.step = '0.01'; qtyInput.placeholder = 'Quantidade (ml)';
+      qtyInput.value = row.qty || 0;
+      qtyInput.addEventListener('input', function(){ row.qty = Number(qtyInput.value) || 0; recalcProducao(); });
+      qtyField.appendChild(qtyInput);
+
+      var costField = document.createElement('div'); costField.className = 'field';
+      var costInput = document.createElement('input');
+      costInput.type = 'number'; costInput.min = '0'; costInput.step = '0.01'; costInput.placeholder = 'Custo unit. (R$)';
+      costInput.value = row.unitCost || 0;
+      costInput.addEventListener('input', function(){ row.unitCost = Number(costInput.value) || 0; recalcProducao(); });
+      costField.appendChild(costInput);
+
+      var removeBtn = document.createElement('button');
+      removeBtn.type = 'button'; removeBtn.className = 'ingredient-remove-btn'; removeBtn.textContent = '×';
+      removeBtn.setAttribute('aria-label', 'Remover ingrediente');
+      removeBtn.addEventListener('click', function(){
+        producaoIngredientRows.splice(idx, 1);
+        renderIngredientRows(); recalcProducao();
+      });
+
+      rowEl.appendChild(nameField); rowEl.appendChild(qtyField); rowEl.appendChild(costField); rowEl.appendChild(removeBtn);
+      wrap.appendChild(rowEl);
+    });
+  }
+  document.getElementById('producao-ingredient-add-btn').addEventListener('click', function(){
+    producaoIngredientRows.push({ name: '', qty: 0, unitCost: 0 });
+    renderIngredientRows();
+  });
+
+  function recalcProducao(){
+    var essenceMl = Number(document.getElementById('producao-essence-ml').value) || 0;
+    var baseMl = Number(document.getElementById('producao-base-ml').value) || 0;
+    var otherMl = producaoIngredientRows.reduce(function(s, r){ return s + (Number(r.qty) || 0); }, 0);
+    var totalVolumeInput = document.getElementById('producao-total-volume');
+    if(totalVolumeInput.dataset.auto !== 'false'){
+      totalVolumeInput.value = (essenceMl + baseMl + otherMl) || '';
+      totalVolumeInput.dataset.auto = 'true';
+    }
+    var totalVolume = Number(totalVolumeInput.value) || 0;
+    var bottleSize = Number(document.getElementById('producao-bottle-size').value) || 0;
+    var bottleCount = bottleSize > 0 ? Math.floor(totalVolume / bottleSize) : 0;
+    document.getElementById('producao-bottle-count').value = bottleCount;
+
+    var essenceSelect = document.getElementById('producao-essence-item');
+    var baseSelect = document.getElementById('producao-base-item');
+    var bottleSelect = document.getElementById('producao-bottle-item');
+    var essenceCost = essenceSelect.selectedOptions[0] ? Number(essenceSelect.selectedOptions[0].getAttribute('data-unit-cost') || 0) * essenceMl : 0;
+    var baseCost = baseSelect.selectedOptions[0] ? Number(baseSelect.selectedOptions[0].getAttribute('data-unit-cost') || 0) * baseMl : 0;
+    var bottleCost = bottleSelect.selectedOptions[0] ? Number(bottleSelect.selectedOptions[0].getAttribute('data-unit-cost') || 0) * bottleCount : 0;
+    var otherCost = producaoIngredientRows.reduce(function(s, r){ return s + (Number(r.qty) || 0) * (Number(r.unitCost) || 0); }, 0);
+    var totalCost = essenceCost + baseCost + bottleCost + otherCost;
+
+    var costInput = document.getElementById('producao-cost');
+    if(costInput.dataset.touched !== 'true'){
+      costInput.value = totalCost ? totalCost.toFixed(2) : '';
+    }
+  }
+  ['producao-essence-ml', 'producao-base-ml', 'producao-bottle-size', 'producao-essence-item', 'producao-base-item', 'producao-bottle-item'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', recalcProducao);
+    document.getElementById(id).addEventListener('change', recalcProducao);
+  });
+  document.getElementById('producao-total-volume').addEventListener('input', function(){
+    this.dataset.auto = 'false';
+    recalcProducao();
+  });
+  document.getElementById('producao-cost').addEventListener('input', function(){ this.dataset.touched = 'true'; });
+
+  function showProducaoForm(){
+    producaoListView.hidden = true; producaoDetailView.hidden = true; producaoFormView.hidden = false;
+    producaoForm.reset();
+    producaoIngredientRows = [];
+    renderIngredientRows();
+    document.getElementById('producao-date').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('producao-bottle-count').value = 0;
+    document.getElementById('producao-cost').removeAttribute('data-touched');
+    document.getElementById('producao-total-volume').removeAttribute('data-auto');
+    Promise.all([
+      loadProductsSelect(document.getElementById('producao-product')),
+      loadInventorySelect(document.getElementById('producao-essence-item'), 'materia_prima', 'Selecionar item do estoque…'),
+      loadInventorySelect(document.getElementById('producao-base-item'), 'materia_prima', 'Selecionar item do estoque…'),
+      loadInventorySelect(document.getElementById('producao-bottle-item'), 'frasco', 'Selecionar frasco do estoque…')
+    ]).then(function(){ recalcProducao(); });
+    watchDirty(producaoForm);
+  }
+  document.getElementById('producao-new-btn').addEventListener('click', showProducaoForm);
+  document.getElementById('producao-back-btn').addEventListener('click', function(){
+    if(dirtyGuard.active){
+      confirmDialog('Você tem alterações não salvas. Deseja sair mesmo assim?').then(function(ok){
+        if(!ok) return; clearDirty(); showProducaoList();
+      });
+      return;
+    }
+    showProducaoList();
+  });
+  document.getElementById('producao-cancel-btn').addEventListener('click', function(){ document.getElementById('producao-back-btn').click(); });
+
+  producaoForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var productId = document.getElementById('producao-product').value;
+    if(!productId){ showToast('Selecione o perfume.', true); return; }
+    var body = {
+      productId: Number(productId),
+      productionDate: document.getElementById('producao-date').value,
+      essenceItemId: document.getElementById('producao-essence-item').value || null,
+      essenceMl: document.getElementById('producao-essence-ml').value,
+      baseItemId: document.getElementById('producao-base-item').value || null,
+      baseMl: document.getElementById('producao-base-ml').value,
+      otherIngredients: producaoIngredientRows.filter(function(r){ return r.name; }),
+      totalVolumeMl: document.getElementById('producao-total-volume').value,
+      bottleItemId: document.getElementById('producao-bottle-item').value || null,
+      bottleSizeMl: document.getElementById('producao-bottle-size').value,
+      productionCost: document.getElementById('producao-cost').value,
+      status: document.getElementById('producao-status').value,
+      notes: document.getElementById('producao-notes').value.trim()
+    };
+    var btn = producaoForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    api('/api/admin/production', { method: 'POST', body: body }).then(function(data){
+      clearDirty();
+      showToast('Lote "' + data.batch.lote_code + '" registrado.');
+      showProducaoList();
+      loadProducaoList();
+    }).catch(function(err){ showToast(err.message || 'Não foi possível registrar a produção.', true); })
+      .finally(function(){ setLoading(btn, false); });
+  });
+
+  function showProducaoDetail(id){
+    producaoListView.hidden = true; producaoFormView.hidden = true; producaoDetailView.hidden = false;
+    var body = document.getElementById('producao-detail-body');
+    clear(body);
+    api('/api/admin/production?id=' + id).then(function(data){
+      var b = data.batch;
+      document.getElementById('producao-detail-title').innerHTML = '<span class="lote-code">' + b.lote_code + '</span> — ' + b.perfume_name;
+
+      var grid = document.createElement('div'); grid.className = 'batch-detail-grid';
+      function addItem(label, value){
+        var el = document.createElement('div'); el.className = 'batch-detail-item';
+        el.appendChild(textEl('div', label, 'label'));
+        el.appendChild(textEl('div', value, 'value'));
+        grid.appendChild(el);
+      }
+      addItem('Data de produção', formatDate(b.production_date));
+      addItem('Essência', (b.essence_name || '—') + ' · ' + b.essence_ml + ' ml');
+      addItem('Álcool/Base', (b.base_name || '—') + ' · ' + b.base_ml + ' ml');
+      addItem('Volume total', b.total_volume_ml + ' ml');
+      addItem('Frasco', (b.bottle_name || '—') + ' · ' + b.bottle_size_ml + ' ml cada');
+      addItem('Frascos produzidos', String(b.bottle_count));
+      addItem('Custo da produção', formatMoney(b.production_cost));
+      body.appendChild(grid);
+
+      if(b.other_ingredients && b.other_ingredients.length){
+        body.appendChild(textEl('h2', 'Outros ingredientes', 'dashboard-activity-title'));
+        var table = document.createElement('table'); table.className = 'admin-table';
+        table.innerHTML = '<thead><tr><th>Ingrediente</th><th>Quantidade</th><th>Custo unitário</th></tr></thead>';
+        var tbody = document.createElement('tbody');
+        b.other_ingredients.forEach(function(ing){
+          var tr = document.createElement('tr');
+          tr.appendChild(textEl('td', ing.name));
+          tr.appendChild(textEl('td', ing.qty + ' ml'));
+          tr.appendChild(textEl('td', formatMoney(ing.unitCost)));
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        var tableWrap = document.createElement('div'); tableWrap.className = 'table-wrap'; tableWrap.appendChild(table);
+        body.appendChild(tableWrap);
+      }
+
+      if(b.notes){
+        body.appendChild(textEl('h2', 'Observações', 'dashboard-activity-title'));
+        body.appendChild(textEl('p', b.notes));
+      }
+
+      body.appendChild(textEl('h2', 'Status do lote', 'dashboard-activity-title'));
+      var statusWrap = document.createElement('div'); statusWrap.className = 'toolbar-actions';
+      var select = document.createElement('select'); select.className = 'batch-status-select';
+      ['produzindo', 'macerando', 'pronto', 'esgotado'].forEach(function(s){
+        var opt = document.createElement('option'); opt.value = s; opt.textContent = BATCH_STATUS_LABELS[s];
+        if(s === b.status) opt.selected = true;
+        select.appendChild(opt);
+      });
+      var saveBtn = document.createElement('button'); saveBtn.type = 'button'; saveBtn.className = 'btn-primary'; saveBtn.textContent = 'Atualizar status';
+      saveBtn.addEventListener('click', function(){
+        api('/api/admin/production?id=' + b.id, { method: 'PUT', body: { status: select.value } }).then(function(){
+          showToast('Status do lote atualizado.');
+          showProducaoDetail(b.id);
+          loadProducaoList();
+        }).catch(function(err){ showToast(err.message, true); });
+      });
+      statusWrap.appendChild(select); statusWrap.appendChild(saveBtn);
+      body.appendChild(statusWrap);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  document.getElementById('producao-detail-back-btn').addEventListener('click', showProducaoList);
+
+  loaders.producao = function(){
+    showProducaoList();
+    loadProducaoList();
+  };
+
+  /* ============================ Financeiro ============================ */
+  loaders.financeiro = function(){
+    var wrap = document.getElementById('financeiro-table-wrap');
+    clear(wrap);
+    api('/api/admin/products').then(function(data){
+      var products = data.products;
+      if(!products.length){ wrap.appendChild(textEl('div', 'Nenhum produto cadastrado ainda.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Perfume</th><th>Custo total</th><th>Preço de venda</th><th>Lucro por unidade</th><th>Margem</th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      products.forEach(function(p){
+        var cost = Number(p.cost_essence||0) + Number(p.cost_base||0) + Number(p.cost_bottle||0) + Number(p.cost_cap||0) + Number(p.cost_label||0) + Number(p.cost_packaging||0);
+        var price = p.sale_price != null ? Number(p.sale_price) : (p.price != null ? Number(p.price) : null);
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', p.name));
+        tr.appendChild(textEl('td', formatMoney(cost)));
+        tr.appendChild(textEl('td', price != null ? formatMoney(price) : '—'));
+        if(price != null){
+          var profit = price - cost;
+          var margin = price > 0 ? (profit / price * 100) : 0;
+          tr.appendChild(textEl('td', formatMoney(profit), profit >= 0 ? 'profit-positive' : 'profit-negative'));
+          tr.appendChild(textEl('td', margin.toFixed(1) + '%', profit >= 0 ? 'profit-positive' : 'profit-negative'));
+        } else {
+          tr.appendChild(textEl('td', '—'));
+          tr.appendChild(textEl('td', '—'));
+        }
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody); wrap.appendChild(table);
     }).catch(function(err){ showToast(err.message, true); });
   };
 

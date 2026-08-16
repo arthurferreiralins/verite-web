@@ -351,6 +351,35 @@ table.admin-table tr:hover td{background:#faf7ee;}
 /* ---------- Estoque ---------- */
 .estoque-qty-input{width:90px; padding:.4rem .5rem; border:1px solid #d8d2c4; border-radius:var(--radius); font:inherit;}
 
+/* ---------- Tabs (Estoque) ---------- */
+.tabs{display:flex; gap:.2rem; margin-bottom:1.2rem; flex-wrap:wrap; border-bottom:1px solid var(--line-light);}
+.tab-btn{background:none; border:none; border-bottom:2px solid transparent; padding:.65rem .95rem; margin-bottom:-1px; cursor:pointer; font:inherit; font-weight:600; color:#8a8378; font-size:.86rem;}
+.tab-btn:hover{color:var(--black);}
+.tab-btn.is-active{color:var(--gold-deep); border-bottom-color:var(--gold);}
+
+/* ---------- Alertas de estoque (3 níveis: OK / baixo / crítico) ---------- */
+.badge-alert-ok{background:#e1ecdd; color:#3f6e4a;}
+.badge-alert-baixo{background:#f5e6c8; color:#8a6a37;}
+.badge-alert-critico{background:#f3d9d2; color:#93392a;}
+
+/* ---------- Produção ---------- */
+.lote-code{font-family:var(--font-display); color:var(--gold-deep); font-weight:600; letter-spacing:.02em;}
+.ingredient-row{display:grid; grid-template-columns:2fr 1fr 1fr auto; gap:.5rem; align-items:end; margin-bottom:.7rem;}
+@media (max-width:640px){ .ingredient-row{grid-template-columns:1fr;} }
+.ingredient-row .field{margin-bottom:0;}
+.ingredient-remove-btn{background:none; border:1px solid #d8d2c4; border-radius:var(--radius); width:38px; height:38px; cursor:pointer; color:var(--danger); flex-shrink:0;}
+.batch-status-select{font:inherit; padding:.4rem .6rem; border:1px solid #d8d2c4; border-radius:var(--radius); background:var(--white);}
+.batch-detail-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1.6rem;}
+.batch-detail-item{background:var(--white); border:1px solid var(--line-light); border-radius:var(--radius); padding:.9rem 1.1rem;}
+.batch-detail-item .label{color:#7a7468; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; font-weight:600;}
+.batch-detail-item .value{margin-top:.25rem; font-size:1.05rem;}
+
+/* ---------- Financeiro / resumo de custos ---------- */
+.cost-summary{background:var(--off-white); border-radius:var(--radius); padding:.85rem 1rem; font-size:.88rem; margin-top:.5rem; display:flex; flex-direction:column; gap:.3rem; max-width:400px;}
+.cost-summary strong{color:var(--gold-deep);}
+.profit-positive{color:#3f6e4a; font-weight:700;}
+.profit-negative{color:var(--danger); font-weight:700;}
+
 /* ---------- FAQ admin ---------- */
 .faq-admin-list{display:flex; flex-direction:column; gap:.7rem; max-width:760px;}
 .faq-admin-item{background:var(--white); border:1px solid var(--line-light); border-radius:var(--radius); padding:1rem 1.2rem;}

@@ -27,11 +27,16 @@ const search = require('../_handlers/admin/search');
 const account = require('../_handlers/admin/account');
 const appearance = require('../_handlers/admin/appearance');
 const clubCodes = require('../_handlers/admin/clubCodes');
+const inventory = require('../_handlers/admin/inventory');
+const production = require('../_handlers/admin/production');
+const stockMovements = require('../_handlers/admin/stockMovements');
 
 const routes = {
   login, logout, me, dashboard, products, upload, leads, messages, content, faq, settings, seo,
   categories, orders, customers, media, notifications, search, account, appearance,
   'club-codes': clubCodes,
+  inventory, production,
+  'stock-movements': stockMovements,
 };
 
 module.exports = async function handler(req, res) {

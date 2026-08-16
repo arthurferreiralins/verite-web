@@ -49,6 +49,9 @@
       <li><a href="#dashboard" data-route="dashboard">Dashboard</a></li>
       <li><a href="#produtos" data-route="produtos">Produtos</a></li>
       <li><a href="#categorias" data-route="categorias">Categorias</a></li>
+      <li><a href="#producao" data-route="producao">Produção</a></li>
+      <li><a href="#estoque" data-route="estoque">Estoque</a></li>
+      <li><a href="#financeiro" data-route="financeiro">Financeiro</a></li>
       <li><a href="#pedidos" data-route="pedidos">Pedidos</a></li>
       <li><a href="#clientes" data-route="clientes">Clientes</a></li>
       <li><a href="#clube" data-route="clube">Clube Verité</a></li>
@@ -98,6 +101,8 @@
         <h1>VERITÉ</h1>
         <p class="section-sub">Painel Administrativo</p>
         <div id="dashboard-cards" class="stat-cards"></div>
+        <h2 class="dashboard-activity-title" id="dashboard-alerts-title" hidden>Alertas importantes</h2>
+        <div id="dashboard-alerts" class="activity-list"></div>
         <h2 class="dashboard-activity-title">Atividade recente</h2>
         <div id="dashboard-activity" class="activity-list"></div>
       </section>
@@ -239,6 +244,55 @@
               </div>
             </details>
 
+            <details class="fieldset-collapse">
+              <summary>SEO deste produto <span class="optional-tag">(opcional)</span></summary>
+              <div class="field">
+                <label for="produto-seo-title">Título para SEO</label>
+                <input id="produto-seo-title" maxlength="200" placeholder="deixe em branco para usar o nome do produto"/>
+              </div>
+              <div class="field">
+                <label for="produto-seo-description">Meta description</label>
+                <textarea id="produto-seo-description" rows="2" maxlength="400"></textarea>
+              </div>
+            </details>
+
+            <details class="fieldset-collapse">
+              <summary>Custos e lucro <span class="optional-tag">(opcional)</span></summary>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="produto-cost-essence">Custo da essência (R$)</label>
+                  <input id="produto-cost-essence" type="number" min="0" step="0.01" value="0"/>
+                </div>
+                <div class="field">
+                  <label for="produto-cost-base">Custo da base/álcool (R$)</label>
+                  <input id="produto-cost-base" type="number" min="0" step="0.01" value="0"/>
+                </div>
+                <div class="field">
+                  <label for="produto-cost-bottle">Custo do frasco (R$)</label>
+                  <input id="produto-cost-bottle" type="number" min="0" step="0.01" value="0"/>
+                </div>
+                <div class="field">
+                  <label for="produto-cost-cap">Custo da tampa (R$)</label>
+                  <input id="produto-cost-cap" type="number" min="0" step="0.01" value="0"/>
+                </div>
+                <div class="field">
+                  <label for="produto-cost-label">Custo do rótulo (R$)</label>
+                  <input id="produto-cost-label" type="number" min="0" step="0.01" value="0"/>
+                </div>
+                <div class="field">
+                  <label for="produto-cost-packaging">Custo da embalagem (R$)</label>
+                  <input id="produto-cost-packaging" type="number" min="0" step="0.01" value="0"/>
+                </div>
+              </div>
+              <div id="produto-cost-summary" class="cost-summary"></div>
+            </details>
+
+            <div id="produto-batches-block" class="field" hidden>
+              <label>Produção &amp; vendas</label>
+              <div id="produto-batches-summary" class="cost-summary"></div>
+              <div id="produto-batches-list" class="table-wrap"></div>
+            </div>
+
             <div class="form-grid">
               <div class="field">
                 <label for="produto-status">Status</label>
@@ -319,6 +373,225 @@
             </div>
           </form>
         </div>
+      </section>
+
+      <section id="section-producao" class="admin-section" data-section="producao" hidden>
+        <div id="producao-list-view">
+          <div class="section-toolbar">
+            <div>
+              <h1>Produção</h1>
+              <p class="section-sub">Lotes de produção da VERITÉ.</p>
+            </div>
+            <button id="producao-new-btn" class="btn-primary" type="button">+ Nova Produção</button>
+          </div>
+          <div class="toolbar-actions">
+            <input id="producao-search" type="search" placeholder="Buscar por lote ou perfume"/>
+            <select id="producao-status-filter">
+              <option value="">Todos os status</option>
+              <option value="produzindo">Produzindo</option>
+              <option value="macerando">Macerando</option>
+              <option value="pronto">Pronto</option>
+              <option value="esgotado">Esgotado</option>
+            </select>
+          </div>
+          <div id="producao-table-wrap" class="table-wrap"></div>
+        </div>
+
+        <div id="producao-form-view" hidden>
+          <div class="section-toolbar">
+            <div><h1>Nova Produção</h1></div>
+            <button id="producao-back-btn" class="btn-ghost" type="button">Voltar</button>
+          </div>
+          <form id="producao-form" class="admin-form" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="producao-product">Nome do perfume</label>
+                <select id="producao-product" required></select>
+              </div>
+              <div class="field">
+                <label for="producao-date">Data de produção</label>
+                <input id="producao-date" type="date" required/>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="producao-essence-item">Essência utilizada</label>
+                <select id="producao-essence-item"><option value="">Selecionar item do estoque…</option></select>
+              </div>
+              <div class="field">
+                <label for="producao-essence-ml">Quantidade de essência (ml)</label>
+                <input id="producao-essence-ml" type="number" min="0" step="0.01" value="0"/>
+              </div>
+              <div class="field">
+                <label for="producao-base-item">Álcool/base utilizado</label>
+                <select id="producao-base-item"><option value="">Selecionar item do estoque…</option></select>
+              </div>
+              <div class="field">
+                <label for="producao-base-ml">Quantidade de álcool/base (ml)</label>
+                <input id="producao-base-ml" type="number" min="0" step="0.01" value="0"/>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Outros ingredientes <span class="optional-tag">(opcional)</span></label>
+              <div id="producao-ingredients-list"></div>
+              <button type="button" id="producao-ingredient-add-btn" class="btn-ghost">+ Adicionar ingrediente</button>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="producao-total-volume">Volume total produzido (ml)</label>
+                <input id="producao-total-volume" type="number" min="0" step="0.01" placeholder="calculado automaticamente"/>
+              </div>
+              <div class="field">
+                <label for="producao-bottle-item">Frasco</label>
+                <select id="producao-bottle-item"><option value="">Selecionar frasco do estoque…</option></select>
+              </div>
+              <div class="field">
+                <label for="producao-bottle-size">Tamanho de cada frasco (ml)</label>
+                <input id="producao-bottle-size" type="number" min="0" step="0.01" value="0"/>
+              </div>
+              <div class="field">
+                <label>Frascos produzidos</label>
+                <input id="producao-bottle-count" type="text" value="0" disabled/>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="producao-cost">Custo da produção (R$)</label>
+                <input id="producao-cost" type="number" min="0" step="0.01" placeholder="calculado automaticamente"/>
+              </div>
+              <div class="field">
+                <label for="producao-status">Status inicial</label>
+                <select id="producao-status">
+                  <option value="produzindo">Produzindo</option>
+                  <option value="macerando">Macerando</option>
+                  <option value="pronto">Pronto (já adiciona ao estoque do perfume)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="producao-notes">Observações</label>
+              <textarea id="producao-notes" rows="3" maxlength="2000"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <div class="form-actions-right">
+                <button type="button" id="producao-cancel-btn" class="btn-ghost">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                  <span class="btn-label">Confirmar produção</span>
+                  <span class="spinner" aria-hidden="true" hidden></span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div id="producao-detail-view" hidden>
+          <div class="section-toolbar">
+            <div><h1 id="producao-detail-title">Lote</h1></div>
+            <button id="producao-detail-back-btn" class="btn-ghost" type="button">Voltar</button>
+          </div>
+          <div id="producao-detail-body"></div>
+        </div>
+      </section>
+
+      <section id="section-estoque" class="admin-section" data-section="estoque" hidden>
+        <div id="estoque-list-view">
+          <div class="section-toolbar">
+            <div>
+              <h1>Estoque</h1>
+              <p class="section-sub">Matérias-primas, frascos, embalagens e produtos prontos.</p>
+            </div>
+            <button id="estoque-new-btn" class="btn-primary" type="button">+ Novo item</button>
+          </div>
+          <div class="tabs" id="estoque-tabs">
+            <button type="button" class="tab-btn is-active" data-estoque-tab="materia_prima">Matérias-primas</button>
+            <button type="button" class="tab-btn" data-estoque-tab="frasco">Frascos</button>
+            <button type="button" class="tab-btn" data-estoque-tab="embalagem">Embalagens</button>
+            <button type="button" class="tab-btn" data-estoque-tab="produtos">Produtos prontos</button>
+          </div>
+          <div id="estoque-table-wrap" class="table-wrap"></div>
+        </div>
+
+        <div id="estoque-form-view" hidden>
+          <div class="section-toolbar">
+            <div><h1 id="estoque-form-title">Novo item</h1></div>
+            <button id="estoque-form-back-btn" class="btn-ghost" type="button">Voltar</button>
+          </div>
+          <form id="estoque-form" class="admin-form" novalidate>
+            <input type="hidden" id="estoque-id"/>
+            <input type="hidden" id="estoque-type"/>
+            <div class="form-grid">
+              <div class="field">
+                <label for="estoque-name">Nome</label>
+                <input id="estoque-name" required maxlength="150"/>
+              </div>
+              <div class="field">
+                <label for="estoque-subtype">Subtipo</label>
+                <select id="estoque-subtype"></select>
+              </div>
+              <div class="field">
+                <label for="estoque-unit">Unidade</label>
+                <select id="estoque-unit">
+                  <option value="un">Unidade</option>
+                  <option value="ml">ml</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="estoque-quantity">Quantidade em estoque</label>
+                <input id="estoque-quantity" type="number" min="0" step="0.01" value="0"/>
+              </div>
+              <div class="field">
+                <label for="estoque-unit-cost">Custo unitário (R$)</label>
+                <input id="estoque-unit-cost" type="number" min="0" step="0.0001" value="0"/>
+              </div>
+              <div class="field">
+                <label for="estoque-min">Quantidade mínima (alerta)</label>
+                <input id="estoque-min" type="number" min="0" step="0.01" value="0"/>
+              </div>
+            </div>
+            <div class="field">
+              <label for="estoque-notes">Observações</label>
+              <textarea id="estoque-notes" rows="2" maxlength="1000"></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" id="estoque-delete-btn" class="btn-danger-ghost" hidden>Excluir item</button>
+              <div class="form-actions-right">
+                <button type="button" id="estoque-cancel-btn" class="btn-ghost">Cancelar</button>
+                <button type="submit" class="btn-primary">
+                  <span class="btn-label">Salvar</span>
+                  <span class="spinner" aria-hidden="true" hidden></span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div id="estoque-movimentacoes-view" hidden>
+          <div class="section-toolbar">
+            <div><h1>Movimentações — <span id="estoque-mov-item-name"></span></h1></div>
+            <button id="estoque-mov-back-btn" class="btn-ghost" type="button">Voltar</button>
+          </div>
+          <div class="toolbar-actions">
+            <button id="estoque-mov-entrada-btn" class="btn-primary" type="button">+ Adicionar estoque</button>
+            <button id="estoque-mov-saida-btn" class="btn-ghost" type="button">- Retirar estoque</button>
+          </div>
+          <div id="estoque-mov-table-wrap" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <section id="section-financeiro" class="admin-section" data-section="financeiro" hidden>
+        <div class="section-toolbar">
+          <div>
+            <h1>Financeiro</h1>
+            <p class="section-sub">Custo, preço e lucro por perfume.</p>
+          </div>
+        </div>
+        <div id="financeiro-table-wrap" class="table-wrap"></div>
       </section>
 
       <section id="section-pedidos" class="admin-section" data-section="pedidos" hidden>
@@ -585,6 +858,11 @@
             </div>
           </div>
         </form>
+        <div class="account-danger-zone">
+          <h2>Encerrar outras sessões</h2>
+          <p class="section-sub">Desconecta o painel de qualquer outro navegador ou dispositivo. Sua sessão aqui continua ativa.</p>
+          <button type="button" id="conta-logout-others-btn" class="btn-danger-ghost">Encerrar outras sessões</button>
+        </div>
       </section>
 
     </main>
@@ -592,6 +870,29 @@
 </div>
 
 <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+<div id="movement-modal" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="movement-modal-title">
+    <p id="movement-modal-title" class="modal-title">Adicionar estoque</p>
+    <form id="movement-form" novalidate>
+      <div class="field">
+        <label for="movement-quantity">Quantidade</label>
+        <input id="movement-quantity" type="number" min="0.01" step="0.01" required/>
+      </div>
+      <div class="field">
+        <label for="movement-reason">Motivo</label>
+        <input id="movement-reason" maxlength="200" placeholder="ex: compra de fornecedor, ajuste, perda…"/>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="movement-cancel-btn" class="btn-ghost">Cancelar</button>
+        <button type="submit" class="btn-primary">
+          <span class="btn-label">Confirmar</span>
+          <span class="spinner" aria-hidden="true" hidden></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <div id="confirm-modal" class="modal-overlay" hidden>
   <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title">

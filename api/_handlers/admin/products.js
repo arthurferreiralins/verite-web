@@ -25,6 +25,21 @@ const OPTIONAL_TEXT_FIELDS = [
   ['seoDescription', 'seo_description'],
 ];
 
+// Seção "Custos e lucro" do painel — somados formam o custo total do
+// perfume; lucro/margem são calculados no front a partir de price/sale_price.
+const COST_FIELDS = [
+  ['costEssence', 'cost_essence'],
+  ['costBase', 'cost_base'],
+  ['costBottle', 'cost_bottle'],
+  ['costCap', 'cost_cap'],
+  ['costLabel', 'cost_label'],
+  ['costPackaging', 'cost_packaging'],
+];
+function numOrZero(v) {
+  const n = Number(v);
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+}
+
 function stockStatus(row) {
   if (!row.track_stock) return null;
   if (row.stock_quantity <= 0) return 'esgotado';
@@ -72,7 +87,25 @@ module.exports = async function handler(req, res) {
         res.status(404).json({ ok: false, error: 'Produto não encontrado.' });
         return;
       }
-      res.status(200).json({ ok: true, product: withStockStatus(rows[0]) });
+      const { rows: batchRows } = await sql`
+        SELECT id, lote_code, production_date, bottle_count, production_cost, status
+        FROM production_batches WHERE product_id = ${id} ORDER BY production_date DESC, id DESC
+      `;
+      // Quantidade vendida via pedidos reais (orders.items é JSONB, hoje
+      // sempre vazio porque não existe checkout — a query já fica pronta
+      // para quando pedidos reais passarem a existir).
+      let soldQuantity = 0;
+      try {
+        const { rows: soldRows } = await sql`
+          SELECT COALESCE(SUM((item->>'qty')::numeric), 0) AS sold
+          FROM orders, jsonb_array_elements(items) AS item
+          WHERE (item->>'productId')::int = ${id} AND status <> 'cancelado'
+        `;
+        soldQuantity = Number(soldRows[0].sold) || 0;
+      } catch (e) {
+        soldQuantity = 0;
+      }
+      res.status(200).json({ ok: true, product: withStockStatus(rows[0]), batches: batchRows, soldQuantity });
       return;
     }
     const statusFilter = typeof req.query.status === 'string' ? req.query.status : null;
@@ -102,14 +135,16 @@ module.exports = async function handler(req, res) {
            main_image_url, gallery_urls, status, featured, sort_order, sku, stock_quantity,
            track_stock, low_stock_threshold, product_type, concentration, olfactory_family,
            notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience,
-           seo_title, seo_description)
+           seo_title, seo_description,
+           cost_essence, cost_base, cost_bottle, cost_cap, cost_label, cost_packaging)
         VALUES
           (${newSlug}, ${newName}, ${src.category}, ${src.short_description}, ${src.description},
            ${src.price}, ${src.sale_price}, ${src.volume}, ${src.main_image_url}, ${src.gallery_urls},
            'draft', false, ${src.sort_order}, ${null}, ${src.stock_quantity}, ${src.track_stock},
            ${src.low_stock_threshold}, ${src.product_type}, ${src.concentration}, ${src.olfactory_family},
            ${src.notes_top}, ${src.notes_heart}, ${src.notes_base}, ${src.occasion}, ${src.intensity},
-           ${src.longevity}, ${src.sillage}, ${src.audience}, ${src.seo_title}, ${src.seo_description})
+           ${src.longevity}, ${src.sillage}, ${src.audience}, ${src.seo_title}, ${src.seo_description},
+           ${src.cost_essence}, ${src.cost_base}, ${src.cost_bottle}, ${src.cost_cap}, ${src.cost_label}, ${src.cost_packaging})
         RETURNING *
       `;
       await logActivity({ action: 'duplicated', entityType: 'product', entityId: rows[0].id, description: `Produto "${src.name}" duplicado`, adminEmail: session.email });
@@ -142,13 +177,15 @@ module.exports = async function handler(req, res) {
     const stockQty = Number.isFinite(Number(body.stockQuantity)) ? Math.max(0, Math.trunc(Number(body.stockQuantity))) : 0;
     const lowThreshold = Number.isFinite(Number(body.lowStockThreshold)) ? Math.max(0, Math.trunc(Number(body.lowStockThreshold))) : 5;
     const optionalValues = OPTIONAL_TEXT_FIELDS.map(([key]) => str(body[key]) || null);
+    const costValues = COST_FIELDS.map(([key]) => numOrZero(body[key]));
 
     const { rows } = await sql`
       INSERT INTO products
         (slug, name, category, short_description, description, price, sale_price, volume, main_image_url, gallery_urls, status, featured, sort_order,
          sku, stock_quantity, track_stock, low_stock_threshold, club_exclusive,
          product_type, concentration, olfactory_family, notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience,
-         seo_title, seo_description)
+         seo_title, seo_description,
+         cost_essence, cost_base, cost_bottle, cost_cap, cost_label, cost_packaging)
       VALUES
         (${slug}, ${name}, ${category}, ${str(body.shortDescription)}, ${str(body.description)},
          ${body.price === '' || body.price == null ? null : Number(body.price)},
@@ -158,7 +195,8 @@ module.exports = async function handler(req, res) {
          ${str(body.sku) || null}, ${stockQty}, ${body.trackStock !== false}, ${lowThreshold}, ${Boolean(body.clubExclusive)},
          ${optionalValues[0]}, ${optionalValues[1]}, ${optionalValues[2]}, ${optionalValues[3]}, ${optionalValues[4]},
          ${optionalValues[5]}, ${optionalValues[6]}, ${optionalValues[7]}, ${optionalValues[8]}, ${optionalValues[9]},
-         ${optionalValues[10]}, ${optionalValues[11]})
+         ${optionalValues[10]}, ${optionalValues[11]}, ${optionalValues[12]},
+         ${costValues[0]}, ${costValues[1]}, ${costValues[2]}, ${costValues[3]}, ${costValues[4]}, ${costValues[5]})
       RETURNING *
     `;
     await logActivity({ action: 'created', entityType: 'product', entityId: rows[0].id, description: `Produto "${name}" criado`, adminEmail: session.email });
@@ -215,6 +253,7 @@ module.exports = async function handler(req, res) {
       : existing.low_stock_threshold;
 
     const optionalValues = OPTIONAL_TEXT_FIELDS.map(([key, col]) => (body[key] !== undefined ? (str(body[key]) || null) : existing[col]));
+    const costValues = COST_FIELDS.map(([key, col]) => (body[key] !== undefined ? numOrZero(body[key]) : existing[col]));
 
     const { rows } = await sql`
       UPDATE products SET
@@ -249,6 +288,12 @@ module.exports = async function handler(req, res) {
         audience = ${optionalValues[10]},
         seo_title = ${optionalValues[11]},
         seo_description = ${optionalValues[12]},
+        cost_essence = ${costValues[0]},
+        cost_base = ${costValues[1]},
+        cost_bottle = ${costValues[2]},
+        cost_cap = ${costValues[3]},
+        cost_label = ${costValues[4]},
+        cost_packaging = ${costValues[5]},
         updated_at = now()
       WHERE id = ${id}
       RETURNING *
@@ -267,6 +312,11 @@ module.exports = async function handler(req, res) {
   if (req.method === 'DELETE') {
     if (!id) {
       res.status(400).json({ ok: false, error: 'ID do produto é obrigatório.' });
+      return;
+    }
+    const { rows: batchesUsing } = await sql`SELECT count(*)::int AS n FROM production_batches WHERE product_id = ${id}`;
+    if (batchesUsing[0] && batchesUsing[0].n > 0) {
+      res.status(409).json({ ok: false, error: 'Existem lotes de produção registrados para este produto. Não é possível excluir.' });
       return;
     }
     const { rows } = await sql`DELETE FROM products WHERE id = ${id} RETURNING name`;
