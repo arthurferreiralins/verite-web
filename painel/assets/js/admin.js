@@ -313,8 +313,16 @@
     });
     closeSidebar();
     currentActiveRoute = route;
-    if(window.location.hash !== '#' + route) window.location.hash = route;
-    if(loaders[route]) loaders[route]();
+    // Setting location.hash fires an async 'hashchange', which re-enters here
+    // via navigate() a second time. Only run the loader on whichever pass is
+    // the last one for this navigation (i.e. once the hash already matches) —
+    // otherwise the loader's clear()+async-render races itself and duplicates
+    // everything it rendered (seen live: every dashboard stat card appeared twice).
+    if(window.location.hash !== '#' + route){
+      window.location.hash = route;
+    } else if(loaders[route]){
+      loaders[route]();
+    }
   }
 
   function navigate(route){
