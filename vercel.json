@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/painel", "destination": "/painel/index.html" },
-    { "source": "/clube", "destination": "/clube/index.html" }
+    { "source": "/clube", "destination": "/clube/index.html" },
+    { "source": "/plano-conteudo", "destination": "/plano-conteudo/index.html" }
   ]
 }

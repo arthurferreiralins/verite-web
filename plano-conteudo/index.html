@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário de Conteúdo VERITÉ</title>
+<meta name="description" content="Plano editorial de 30 dias para Instagram e TikTok da VERITÉ — ritmo semanal, séries fixas, identidade visual e calendário dia a dia.">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --bg:#f6f2ea;
+    --surface:#ffffff;
+    --surface-2:#efe6d3;
+    --ink:#1b1712;
+    --ink-muted:#6b6152;
+    --gold:#9c7a3c;
+    --gold-soft:#c9a35a;
+    --line:rgba(27,23,18,0.14);
+    --shadow:0 18px 40px -24px rgba(27,23,18,0.35);
+    --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0c0a08;
+      --surface:#151210;
+      --surface-2:#1e1a15;
+      --ink:#f2ead9;
+      --ink-muted:#b3a68c;
+      --gold:#c9a35a;
+      --gold-soft:#e2c383;
+      --line:rgba(242,234,217,0.14);
+      --shadow:0 18px 44px -20px rgba(0,0,0,0.6);
+    }
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--gold);}
+  ::selection{background:var(--gold-soft);color:#1b1712;}
+
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px 96px;}
+
+  /* ---------- Header ---------- */
+  .masthead{
+    background:linear-gradient(180deg,#161210,#0e0c0a);
+    color:#f2ead9;
+    padding:64px 24px 52px;
+    text-align:center;
+    border-bottom:1px solid var(--gold);
+  }
+  .monogram{
+    width:56px;height:56px;margin:0 auto 22px;
+    border:1px solid var(--gold-soft);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display);
+    font-size:26px;color:var(--gold-soft);
+  }
+  .eyebrow{
+    font-family:var(--font-body);
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold-soft);margin:0 0 10px;
+  }
+  .masthead h1{
+    font-family:var(--font-display);
+    font-weight:400;
+    font-size:clamp(30px,5vw,44px);
+    letter-spacing:.01em;
+    margin:0 0 12px;
+    text-wrap:balance;
+  }
+  .masthead p.sub{
+    font-family:var(--font-body);
+    color:#c9c0ab;
+    max-width:520px;margin:0 auto;
+    font-size:15px;
+  }
+  .masthead .slogan{
+    margin-top:26px;
+    font-family:var(--font-display);
+    font-style:italic;
+    color:var(--gold-soft);
+    font-size:16px;
+  }
+
+  /* ---------- Index ---------- */
+  nav.index{
+    display:flex;flex-wrap:wrap;gap:8px 18px;
+    justify-content:center;
+    padding:18px 24px;
+    background:var(--surface-2);
+    border-bottom:1px solid var(--line);
+    font-size:12.5px;
+  }
+  nav.index a{
+    text-decoration:none;color:var(--ink-muted);
+    letter-spacing:.03em;
+  }
+  nav.index a:hover{color:var(--gold);}
+
+  /* ---------- Sections ---------- */
+  section{padding-top:64px;}
+  .section-label{
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--gold);margin:0 0 8px;
+  }
+  h2{
+    font-family:var(--font-display);font-weight:400;
+    font-size:clamp(24px,3.4vw,30px);
+    margin:0 0 18px;text-wrap:balance;
+  }
+  .lede{
+    color:var(--ink-muted);max-width:66ch;font-size:15.5px;
+  }
+
+  /* ---------- Palette ---------- */
+  .swatches{display:flex;gap:14px;flex-wrap:wrap;margin:28px 0 8px;}
+  .swatch{width:112px;}
+  .swatch .chip{
+    height:72px;border-radius:6px;border:1px solid var(--line);
+    box-shadow:var(--shadow);
+  }
+  .swatch .name{font-size:12px;margin-top:8px;font-weight:600;}
+  .swatch .hex{font-size:11.5px;color:var(--ink-muted);font-variant-numeric:tabular-nums;}
+
+  .type-sample{
+    margin-top:32px;padding:28px;
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    box-shadow:var(--shadow);
+  }
+  .type-sample .disp{font-family:var(--font-display);font-size:26px;margin:0 0 6px;}
+  .type-sample .body-f{font-family:var(--font-body);font-size:14.5px;color:var(--ink-muted);margin:0;}
+  .type-sample .label-f{
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+    margin-top:14px;display:block;
+  }
+
+  .kit-list{
+    margin-top:28px;padding:0;list-style:none;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+  }
+  .kit-list li{
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    padding:14px 16px;font-size:13.5px;color:var(--ink-muted);
+  }
+  .kit-list strong{color:var(--ink);font-weight:600;}
+
+  /* ---------- Weekly rhythm ---------- */
+  .rhythm{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:14px;margin-top:28px;
+  }
+  .rhythm-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:8px;
+    padding:18px 18px 16px;box-shadow:var(--shadow);
+  }
+  .rhythm-card .num{
+    font-family:var(--font-display);color:var(--gold);font-size:15px;
+  }
+  .rhythm-card h3{
+    font-family:var(--font-display);font-weight:400;font-size:19px;margin:6px 0 6px;
+  }
+  .rhythm-card p{margin:0;font-size:13.5px;color:var(--ink-muted);}
+  .rhythm-card .day{
+    display:inline-block;margin-top:10px;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-muted);
+    border-top:1px solid var(--line);padding-top:8px;width:100%;
+  }
+
+  /* ---------- Series ---------- */
+  .series{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:28px;}
+  .series-card{
+    background:linear-gradient(165deg,var(--surface),var(--surface-2));
+    border:1px solid var(--line);border-radius:10px;padding:24px;
+  }
+  .series-card h3{font-family:var(--font-display);font-weight:400;font-size:20px;margin:0 0 10px;color:var(--gold);}
+  .series-card p{margin:0;font-size:13.8px;color:var(--ink-muted);}
+
+  /* ---------- Stories grid ---------- */
+  .story-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;margin-top:24px;
+  }
+  .story-chip{
+    border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+    font-size:13px;background:var(--surface);
+  }
+  .story-chip .t{font-weight:600;display:block;margin-bottom:3px;}
+  .story-chip .d{color:var(--ink-muted);font-size:12.3px;}
+
+  /* ---------- Week groups / days ---------- */
+  .week-group{margin-top:40px;}
+  .week-head{
+    display:flex;align-items:baseline;gap:12px;margin-bottom:14px;
+    border-bottom:1px solid var(--gold);padding-bottom:8px;
+  }
+  .week-head h3{
+    font-family:var(--font-display);font-weight:400;font-size:20px;margin:0;
+  }
+  .week-head span{font-size:12.5px;color:var(--ink-muted);}
+
+  details.day{
+    border:1px solid var(--line);border-radius:8px;margin-bottom:8px;
+    background:var(--surface);overflow:hidden;
+  }
+  details.day summary{
+    list-style:none;cursor:pointer;padding:13px 16px;
+    display:grid;grid-template-columns:96px 1fr 96px 18px;
+    gap:10px;align-items:center;
+  }
+  details.day summary::-webkit-details-marker{display:none;}
+  details.day summary .date{
+    font-size:11.5px;letter-spacing:.08em;color:var(--gold);
+    font-variant-numeric:tabular-nums;text-transform:uppercase;
+  }
+  details.day summary .pillar{font-size:14px;font-weight:600;}
+  details.day summary .format{
+    font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink-muted);text-align:right;
+  }
+  details.day summary .chev{
+    font-size:12px;color:var(--ink-muted);transition:transform .2s ease;
+    justify-self:end;
+  }
+  details.day[open] summary .chev{transform:rotate(180deg);}
+  details.day .body{
+    padding:2px 18px 18px 18px;border-top:1px solid var(--line);
+  }
+  details.day .body p{margin:12px 0 0;font-size:13.8px;}
+  details.day .body p strong{
+    display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:4px;font-weight:600;
+  }
+  details.day .body .caption-text{font-style:italic;color:var(--ink);}
+  details.day .body .tags{color:var(--gold);font-size:13px;letter-spacing:.01em;}
+
+  @media (max-width:520px){
+    details.day summary{grid-template-columns:1fr 18px;grid-template-areas:"date chev" "pillar chev" "format chev";}
+    details.day summary .date{grid-area:date;}
+    details.day summary .pillar{grid-area:pillar;}
+    details.day summary .format{grid-area:format;text-align:left;}
+    details.day summary .chev{grid-area:chev;align-self:start;}
+  }
+
+  .back-link{
+    display:block;text-align:center;padding:14px;font-size:12.5px;
+    background:var(--surface-2);color:var(--ink-muted);text-decoration:none;
+    letter-spacing:.05em;
+  }
+  .back-link:hover{color:var(--gold);}
+
+  footer.note{
+    margin-top:60px;padding:22px 24px;border-top:1px solid var(--line);
+    font-size:12.8px;color:var(--ink-muted);
+  }
+  footer.note strong{color:var(--ink);}
+
+  @media (prefers-reduced-motion: reduce){
+    details.day summary .chev{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<a class="back-link" href="/">&larr; Voltar ao site VERITÉ</a>
+
+<div class="masthead">
+  <div class="monogram">V</div>
+  <p class="eyebrow">Instagram &amp; TikTok</p>
+  <h1>Calendário de Conteúdo VERITÉ</h1>
+  <p class="sub">Estrutura editorial completa — ritmo semanal, três séries fixas, identidade visual e um calendário de 30 dias pronto para produzir com celular.</p>
+  <p class="slogan">"A verdade está na sua essência."</p>
+</div>
+
+<nav class="index">
+  <a href="#posicionamento">Posicionamento</a>
+  <a href="#identidade">Identidade visual</a>
+  <a href="#ritmo">Ritmo semanal</a>
+  <a href="#series">Séries fixas</a>
+  <a href="#stories">Stories</a>
+  <a href="#calendario">Calendário de 30 dias</a>
+</nav>
+
+<div class="wrap">
+
+<section id="posicionamento">
+  <p class="section-label">Posicionamento</p>
+  <h2>Perfumaria, não vitrine de produto</h2>
+  <p class="lede">O perfil precisa se comportar como uma maison — Dior, Byredo, Le Labo — não como uma loja publicando fotos de frasco. Isso significa alternar sistematicamente entre quatro registros: <strong>produto</strong> (desejo), <strong>bastidores</strong> (autenticidade e processo), <strong>educação</strong> (por que este perfume combina com você) e <strong>construção de marca</strong> (rotina, valores, comunidade — Clube Verité). Os cinco pilares do manifesto da marca — <em>presença, memória, identidade, emoção, essência</em> — funcionam como eixo temático recorrente em vez de hashtags soltas: cada domingo de "Identidade Verité" ancora numa dessas palavras.</p>
+</section>
+
+<section id="identidade">
+  <p class="section-label">Identidade visual</p>
+  <h2>Paleta e tom</h2>
+  <p class="lede">Mesma paleta do site e do painel — preto profundo, dourado envelhecido, bege quente como respiro, branco só quando o produto pedir contraste. Luz sempre quente e lateral (nunca flash direto), fundo limpo, uma única fonte de brilho por cena.</p>
+
+  <div class="swatches">
+    <div class="swatch"><div class="chip" style="background:#161210"></div><div class="name">Preto Verité</div><div class="hex">#161210</div></div>
+    <div class="swatch"><div class="chip" style="background:#9c7a3c"></div><div class="name">Dourado</div><div class="hex">#9c7a3c</div></div>
+    <div class="swatch"><div class="chip" style="background:#c9a35a"></div><div class="name">Dourado claro</div><div class="hex">#c9a35a</div></div>
+    <div class="swatch"><div class="chip" style="background:#efe6d3;border:1px solid #d8cbb0"></div><div class="name">Bege</div><div class="hex">#efe6d3</div></div>
+    <div class="swatch"><div class="chip" style="background:#f6f2ea;border:1px solid #d8cbb0"></div><div class="name">Branco quente</div><div class="hex">#f6f2ea</div></div>
+  </div>
+
+  <div class="type-sample">
+    <p class="disp">Uma legenda soa como manifesto, não como anúncio.</p>
+    <p class="body-f">Frases curtas, primeira pessoa do plural, sem excesso de emoji, sem gírias de venda ("imperdível", "corre lá"). Pontuação enxuta — o silêncio entre frases vende mais que adjetivo.</p>
+    <span class="label-f">Legenda tipo · itálico para a frase de efeito, texto reto para o resto</span>
+  </div>
+
+  <ul class="kit-list">
+    <li><strong>Câmera:</strong> celular no modo retrato/macro, sem zoom digital — aproxime o corpo, não a lente.</li>
+    <li><strong>Luz:</strong> janela lateral de manhã/fim de tarde, ou ring light regulada para tom quente (2700–3000K). Nunca luz de teto direta.</li>
+    <li><strong>Fundo:</strong> acrílico preto espelhado (ou vidro + papel preto embaixo), veludo preto, mármore escuro.</li>
+    <li><strong>Props dourados:</strong> corrente fina, bandeja pequena, moldura, talheres antigos, pétalas secas.</li>
+    <li><strong>Fumaça/atmosfera:</strong> vela apagada ainda soltando fumo, incenso fora de quadro, vapor de xícara de café.</li>
+    <li><strong>Tripé:</strong> pilha de livros + fita dupla-face resolve 90% dos casos sem gasto.</li>
+  </ul>
+</section>
+
+<section id="ritmo">
+  <p class="section-label">Ritmo semanal</p>
+  <h2>Sete pilares, sete dias</h2>
+  <p class="lede">A numeração romana segue o mesmo padrão já usado em "Nossa Essência" no site — reforça a mesma linguagem de marca no Instagram.</p>
+
+  <div class="rhythm">
+    <div class="rhythm-card"><span class="num">I</span><h3>Comercial Verité</h3><p>Vídeo cinematográfico de 10–15s: closes de frasco, luz elegante, uma única ideia por vez.</p><span class="day">Segunda · Reel</span></div>
+    <div class="rhythm-card"><span class="num">II</span><h3>Por Trás da Verité</h3><p>Bastidor real: essências, pesagem, maceração, rotulagem, organização do estoque.</p><span class="day">Terça · Reel/Carrossel</span></div>
+    <div class="rhythm-card"><span class="num">III</span><h3>Escolha Sua Essência</h3><p>Comparação interativa entre duas famílias olfativas ou dois momentos de uso.</p><span class="day">Quarta · Carrossel + enquete</span></div>
+    <div class="rhythm-card"><span class="num">IV</span><h3>Pedido Verité</h3><p>Preparo do pedido: embalagem, cartão, sacola, o cuidado antes da entrega.</p><span class="day">Quinta · Reel</span></div>
+    <div class="rhythm-card"><span class="num">V</span><h3>Como Usar</h3><p>Três ocasiões para um perfume, características da fragrância, para quem combina.</p><span class="day">Sexta · Reel</span></div>
+    <div class="rhythm-card"><span class="num">VI</span><h3>A Verité por Dentro</h3><p>Lado humano: rotina, novidades, projetos, bastidor do Clube Verité.</p><span class="day">Sábado · Reel/Vídeo</span></div>
+    <div class="rhythm-card"><span class="num">VII</span><h3>Identidade Verité</h3><p>Foto still premium do produto com uma frase curta do universo Verité.</p><span class="day">Domingo · Foto única</span></div>
+  </div>
+</section>
+
+<section id="series">
+  <p class="section-label">Séries fixas</p>
+  <h2>Três formatos que viram assinatura</h2>
+  <div class="series">
+    <div class="series-card">
+      <h3>Por Trás da Verité</h3>
+      <p>Processo de criação, do rascunho de fórmula ao frasco fechado. É o conteúdo que constrói confiança — mostra que existe ofício, não só marketing.</p>
+    </div>
+    <div class="series-card">
+      <h3>Escolha Sua Essência</h3>
+      <p>Formato de enquete/comparação, sempre com pergunta direta no fim. É o motor de comentários e salvamentos do perfil.</p>
+    </div>
+    <div class="series-card">
+      <h3>Verité em 15 Segundos</h3>
+      <p>Comercial recorrente, curto, sem falas — só imagem, som e uma frase de encerramento. É o cartão de visita do feed.</p>
+    </div>
+  </div>
+</section>
+
+<section id="stories">
+  <p class="section-label">Stories diários</p>
+  <h2>Presença todos os dias, sem produzir um Reel por dia</h2>
+  <p class="lede">Stories têm o padrão mais baixo de produção do plano — celular, sem edição pesada, publicados em minutos. Alterne entre os nove temas abaixo ao longo da semana, sempre com pelo menos um elemento interativo por dia (enquete, caixinha de pergunta, quiz, contagem regressiva).</p>
+  <div class="story-grid">
+    <div class="story-chip"><span class="t">Bastidor rápido</span><span class="d">15s do que está acontecendo agora na produção</span></div>
+    <div class="story-chip"><span class="t">Enquete de aroma</span><span class="d">"Amadeirado ou floral hoje?"</span></div>
+    <div class="story-chip"><span class="t">Caixinha de pergunta</span><span class="d">"Pergunte o que quiser sobre a Verité"</span></div>
+    <div class="story-chip"><span class="t">Teste de fixação</span><span class="d">Spray de manhã, resultado à tarde</span></div>
+    <div class="story-chip"><span class="t">Repost do Reel do dia</span><span class="d">Com um bastidor extra que não entrou no vídeo</span></div>
+    <div class="story-chip"><span class="t">Pedido saindo</span><span class="d">Selo, embrulho, endereço borrado</span></div>
+    <div class="story-chip"><span class="t">Novidade em teste</span><span class="d">Frasco novo, nota nova, sem revelar tudo</span></div>
+    <div class="story-chip"><span class="t">Produto disponível</span><span class="d">Sticker de link, resposta rápida no WhatsApp</span></div>
+    <div class="story-chip"><span class="t">Clube Verité</span><span class="d">Cupom, código, benefício de membro</span></div>
+  </div>
+</section>
+
+<section id="calendario">
+  <p class="section-label">Calendário de 30 dias</p>
+  <h2>17 de agosto — 15 de setembro</h2>
+  <p class="lede">Cada dia tem formato, ideia, roteiro (quando há fala), legenda sugerida, CTA e hashtags. Enquanto o catálogo oficial ainda está sendo fotografado, use frascos-teste, matéria-prima e still de essência nos closes de produto — troque pela foto oficial assim que o produto for publicado no site.</p>
+
+  <!-- WEEK 1 -->
+  <div class="week-group">
+    <div class="week-head"><h3>Semana 1</h3><span>Apresentação — quem é a Verité, sem ainda vender nada</span></div>
+
+    <details class="day">
+      <summary><span class="date">17/08 · Seg</span><span class="pillar">Comercial Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Vídeo de abertura da marca: gota de essência dourada caindo em câmera lenta sobre superfície preta espelhada, corte para o monograma "V" se formando em luz. Sem mostrar frasco ainda — é um teaser de identidade.</p>
+        <p><strong>Roteiro</strong>Sem fala. Texto na tela, aparecendo palavra a palavra: "Existe uma verdade em cada essência." → logo. Trilha instrumental grave, sem letra.</p>
+        <p class="caption-text"><strong>Legenda</strong>"A verdade está na sua essência. Bem-vindo à Verité."</p>
+        <p><strong>CTA</strong>"Siga para acompanhar de perto."</p>
+        <p class="tags"><strong>Hashtags</strong>#verite #veriteperfumes #perfumaria #perfumelovers #perfumariadeautor #luxo #essencia</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">18/08 · Ter</span><span class="pillar">Por Trás da Verité</span><span class="format">Carrossel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>5 fotos: mesa de trabalho, frascos de essência numerados, balança de precisão, caderno de fórmulas (nomes borrados de propósito), mãos manuseando um conta-gotas.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Antes de qualquer frasco fechado, existe uma mesa assim. Cada fórmula nasce aqui, gota a gota."</p>
+        <p><strong>CTA</strong>"Comenta 🖤 se você gosta de saber o que tem por trás do que usa."</p>
+        <p class="tags"><strong>Hashtags</strong>#portrasdaverite #perfumaria #bastidores #processocriativo #perfumeartesanal #veriteperfumes</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">19/08 · Qua</span><span class="pillar">Escolha Sua Essência</span><span class="format">Carrossel + enquete</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Duas famílias olfativas lado a lado, uma por slide: Amadeirado (madeira, âmbar, especiarias) x Floral (jasmim, íris, almíscar branco). Último slide: "Qual te representa mais?"</p>
+        <p class="caption-text"><strong>Legenda</strong>"Amadeirado ou floral? Não existe resposta errada — existe a que é sua."</p>
+        <p><strong>CTA</strong>"Vote na enquete do Story e comenta por quê."</p>
+        <p><strong>Story complementar</strong>Enquete "Amadeirado 🌳 / Floral 🌸" com os mesmos closes em formato vertical.</p>
+        <p class="tags"><strong>Hashtags</strong>#escolhasuaessencia #amadeirado #floral #perfumelovers #fragrancia #veriteperfumes</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">20/08 · Qui</span><span class="pillar">Pedido Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Mãos embrulhando uma caixa em papel preto fosco, selo dourado sendo aplicado, laço, cartão escrito à mão colocado por cima. Câmera fixa, só as mãos entram e saem de quadro.</p>
+        <p><strong>Roteiro</strong>Sem fala. Texto na tela: "Cada pedido Verité é embrulhado como presente. Porque é." Trilha suave, ritmo de ASMR leve (papel amassando, laço deslizando).</p>
+        <p class="caption-text"><strong>Legenda</strong>"O cuidado não termina na fórmula. Termina quando chega na sua mão."</p>
+        <p><strong>CTA</strong>"Quer o seu assim? Fala com a gente no WhatsApp (link na bio)."</p>
+        <p class="tags"><strong>Hashtags</strong>#pedidoverite #unboxing #packaging #perfumariadeluxo #veriteperfumes #cuidadocomodetalhe</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">21/08 · Sex</span><span class="pillar">Como Usar</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>"3 ocasiões para um perfume amadeirado": reunião importante, jantar à luz de vela, uma caminhada de fim de tarde. Três cenas curtas de 3-4s cada, mesmo modelo em looks diferentes.</p>
+        <p><strong>Roteiro</strong>Voz em off (ou legenda falada): "Um amadeirado combina em três momentos: quando você precisa de presença — numa reunião; quando você quer ser lembrado — num jantar; e quando você só quer se sentir você — sozinho, no fim do dia."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Um perfume amadeirado não muda de horário. Ele muda de intenção."</p>
+        <p><strong>CTA</strong>"Salva esse Reel pra lembrar na hora de escolher o seu."</p>
+        <p class="tags"><strong>Hashtags</strong>#comousar #perfumeamadeirado #dicasdeperfume #fragrancia #veriteperfumes #perfumaria</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">22/08 · Sáb</span><span class="pillar">A Verité por Dentro</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>"Um dia construindo a Verité": acordar, abrir o caderno de fórmulas, responder mensagem de cliente, organizar frascos, fechar o dia. Vlog rápido, tom pessoal.</p>
+        <p><strong>Roteiro</strong>Fala direta pra câmera em 1-2 momentos: "Hoje eu queria mostrar um pouco do que é construir uma marca de perfume do zero — sem estúdio, sem equipe grande. Só essência de verdade."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Por trás de cada frasco existe uma rotina bem menos glamourosa — e bem mais honesta — do que parece."</p>
+        <p><strong>CTA</strong>"Comenta uma pergunta sobre os bastidores que eu respondo no próximo Story."</p>
+        <p class="tags"><strong>Hashtags</strong>#veritepordentro #rotina #empreendedorismo #bastidores #veriteperfumes #marcaautoral</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">23/08 · Dom</span><span class="pillar">Identidade Verité</span><span class="format">Foto única</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Still do frasco (ou protótipo) centralizado sobre acrílico preto, um único feixe de luz dourada vindo da lateral, reflexo suave embaixo.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Existem momentos que a gente não fotografa. A gente sente." <br>— tema: <em>momentos</em></p>
+        <p><strong>CTA</strong>"Marca alguém que merece um momento assim."</p>
+        <p class="tags"><strong>Hashtags</strong>#identidadeverite #perfumaria #veriteperfumes #luxo #perfumelovers #frasco</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="week-group">
+    <div class="week-head"><h3>Semana 2</h3><span>Aprofundamento — processo, produção e uso real</span></div>
+
+    <details class="day">
+      <summary><span class="date">24/08 · Seg</span><span class="pillar">Comercial Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Comercial "Presença": mão pulverizando o perfume no ar, corte para alguém entrando numa sala e todos olhando — sugerido só por luz e movimento de cabeças fora de foco, sem rosto em destaque.</p>
+        <p><strong>Roteiro</strong>Sem fala. Texto final: "Presença não se anuncia. Se sente." Trilha com uma nota de tensão que resolve no corte final.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Presença." <em>(tema do dia: presença)</em></p>
+        <p><strong>CTA</strong>"Qual ambiente pede a sua presença essa semana?"</p>
+        <p class="tags"><strong>Hashtags</strong>#verite #presenca #veriteperfumes #perfumariadeluxo #perfumelovers #fragrancia</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">25/08 · Ter</span><span class="pillar">Por Trás da Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Pesagem de essência numa balança de precisão, líquido sendo transferido pra um frasco de maceração, etiqueta manuscrita com data. Closes macro, sem pressa.</p>
+        <p><strong>Roteiro</strong>Sem fala. Texto na tela: "Esse lote agora vai macerar por dias antes de estar pronto. Perfume bom não se apressa."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Um novo lote acaba de começar a macerar. A paciência também é ingrediente."</p>
+        <p><strong>CTA</strong>"Quer saber quando esse lote fica pronto? Ativa o sininho."</p>
+        <p class="tags"><strong>Hashtags</strong>#portrasdaverite #maceracao #producaoartesanal #perfumaria #veriteperfumes</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">26/08 · Qua</span><span class="pillar">Escolha Sua Essência</span><span class="format">Carrossel + enquete</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>"Perfume de dia x perfume de noite" — um lado com luz natural e cores claras, outro com luz baixa e sombra dourada, mesmo frasco em dois cenários.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Seu perfume muda com o dia — ou é o mesmo do início ao fim?"</p>
+        <p><strong>CTA</strong>"Responde na enquete: um perfume só, ou um pra cada hora?"</p>
+        <p><strong>Story complementar</strong>Enquete "Um só ☀️ / Um pra cada hora 🌙".</p>
+        <p class="tags"><strong>Hashtags</strong>#escolhasuaessencia #perfumededia #perfumedenoite #veriteperfumes #fragrancia</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">27/08 · Qui</span><span class="pillar">Pedido Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Close num cartão sendo escrito à mão com caneta dourada — nome do cliente, uma frase curta — seguido do cartão sendo encaixado na embalagem fechada.</p>
+        <p><strong>Roteiro</strong>Sem fala. Texto: "Todo pedido leva uma palavra escrita à mão. Porque cliente Verité tem nome, não número."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Um detalhe pequeno que faz toda a diferença: o cartão é sempre escrito à mão."</p>
+        <p><strong>CTA</strong>"Já pediu com a gente? Marca a Verité no seu story de unboxing."</p>
+        <p class="tags"><strong>Hashtags</strong>#pedidoverite #cartaoescritoamao #atendimentopersonalizado #veriteperfumes #perfumaria</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">28/08 · Sex</span><span class="pillar">Como Usar</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>"Perfume para um primeiro encontro": preparação — aplicação nos pontos de pulso, escolha da roupa em segundo plano, saída de casa. Tom mais intimista, luz de espelho de banheiro.</p>
+        <p><strong>Roteiro</strong>Voz em off: "Nem todo encontro pede o mesmo perfume. Esse é pra quem quer ser lembrado — sem gritar."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Para o encontro que você já está pensando em como vai contar depois."</p>
+        <p><strong>CTA</strong>"Manda esse Reel pra quem tem um encontro chegando."</p>
+        <p class="tags"><strong>Hashtags</strong>#comousar #primeiroencontro #perfumaria #dicasdeperfume #veriteperfumes</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">29/08 · Sáb</span><span class="pillar">A Verité por Dentro</span><span class="format">Reel/Carrossel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Bastidor do Clube Verité: mostrando os cartões de convite, o gerador de código no painel (tela desfocada nos dados sensíveis), a animação de boas-vindas do site.</p>
+        <p><strong>Roteiro</strong>Fala direta: "Isso aqui é o Clube Verité — cada código é único e dá acesso a benefícios exclusivos pra quem faz parte de verdade da nossa história."</p>
+        <p class="caption-text"><strong>Legenda</strong>"O Clube Verité não é só desconto. É fazer parte de perto."</p>
+        <p><strong>CTA</strong>"Comenta 'CLUBE' que te explico como conseguir seu código."</p>
+        <p class="tags"><strong>Hashtags</strong>#clubeverite #veritepordentro #comunidade #veriteperfumes #exclusividade</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">30/08 · Dom</span><span class="pillar">Identidade Verité</span><span class="format">Foto única</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Still do frasco ao lado de um objeto pessoal com valor sentimental (relógio antigo, carta, foto revelada) — sugerindo que perfume também guarda memória.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Tem cheiro que vira lembrança antes mesmo de acabar o frasco." <br>— tema: <em>memória</em></p>
+        <p><strong>CTA</strong>"Qual cheiro te leva de volta a algum lugar? Conta nos comentários."</p>
+        <p class="tags"><strong>Hashtags</strong>#identidadeverite #memoria #veriteperfumes #perfumaria #luxo</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="week-group">
+    <div class="week-head"><h3>Semana 3</h3><span>Conexão emocional — para quem e por quê</span></div>
+
+    <details class="day">
+      <summary><span class="date">31/08 · Seg</span><span class="pillar">Comercial Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Comercial "Memória": mãos folheando fotos antigas, corte pro frasco, corte pra alguém sorrindo ao sentir o cheiro de longe. Três cortes, sem mostrar rosto inteiro em nenhum.</p>
+        <p><strong>Roteiro</strong>Sem fala. Texto: "Alguns perfumes contam sua história antes de você." Trilha em piano simples.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Memória." <em>(tema do dia: memória)</em></p>
+        <p><strong>CTA</strong>"Qual memória você guardaria num frasco?"</p>
+        <p class="tags"><strong>Hashtags</strong>#verite #memoria #veriteperfumes #perfumariadeluxo #fragrancia</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">01/09 · Ter</span><span class="pillar">Por Trás da Verité</span><span class="format">Carrossel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Sequência de rotulagem/embalagem artesanal: aplicação do rótulo, encaixe da tampa, verificação final antes de ir pro estoque.</p>
+        <p class="caption-text"><strong>Legenda</strong>"O frasco só sai daqui depois de passar pelas nossas mãos duas vezes: na fórmula, e na conferência final."</p>
+        <p><strong>CTA</strong>"Comenta qual etapa te surpreendeu mais."</p>
+        <p class="tags"><strong>Hashtags</strong>#portrasdaverite #rotulagem #producaoartesanal #veriteperfumes #perfumaria</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">02/09 · Qua</span><span class="pillar">Escolha Sua Essência</span><span class="format">Carrossel + enquete</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>"Doce e quente x amadeirado seco" — dois closes de essência (mel/âmbar vs. madeira/couro), texto curto descrevendo cada perfil.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Doce e quente, ou seco e amadeirado? Seu perfume conta mais sobre você do que parece."</p>
+        <p><strong>CTA</strong>"Vota na enquete do Story."</p>
+        <p><strong>Story complementar</strong>Enquete "Doce 🍯 / Seco 🌲".</p>
+        <p class="tags"><strong>Hashtags</strong>#escolhasuaessencia #perfumedoce #perfumeamadeirado #veriteperfumes #fragrancia</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">03/09 · Qui</span><span class="pillar">Pedido Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Caixa fechada com laço dourado sendo levantada e virada em câmera lenta, revelando o brasão/monograma gravado na tampa. Encerra com a caixa sendo colocada dentro de uma sacola.</p>
+        <p><strong>Roteiro</strong>Sem fala. Trilha com um "reveal" sonoro no momento em que o laço solta.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Antes de abrir, já dá pra sentir que é Verité."</p>
+        <p><strong>CTA</strong>"Peça o seu — link do WhatsApp na bio."</p>
+        <p class="tags"><strong>Hashtags</strong>#pedidoverite #unboxing #packagingdeluxo #veriteperfumes #perfumaria</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">04/09 · Sex</span><span class="pillar">Como Usar</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>"Perfume para reunião importante": aplicação discreta, roupa social em segundo plano, saída porta afora com passos firmes.</p>
+        <p><strong>Roteiro</strong>Voz em off: "Reunião importante não pede o perfume mais forte. Pede o que te deixa mais seguro."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Confiança também se veste de perfume."</p>
+        <p><strong>CTA</strong>"Salva pra lembrar antes da sua próxima reunião decisiva."</p>
+        <p class="tags"><strong>Hashtags</strong>#comousar #perfumeparatrabalho #dicasdeperfume #veriteperfumes #perfumaria</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">05/09 · Sáb</span><span class="pillar">A Verité por Dentro</span><span class="format">Carrossel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Q&amp;A real: reúna 4-5 perguntas recebidas no Direct/Story da semana e responda em slides — "Vocês têm loja física?", "Quanto tempo dura o perfume?", "Como funciona o Clube?"</p>
+        <p class="caption-text"><strong>Legenda</strong>"Vocês perguntaram, a gente responde. Sempre de verdade, sem enrolação."</p>
+        <p><strong>CTA</strong>"Manda sua pergunta pro próximo Q&amp;A."</p>
+        <p class="tags"><strong>Hashtags</strong>#veritepordentro #perguntaseresposta #veriteperfumes #bastidores</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">06/09 · Dom</span><span class="pillar">Identidade Verité</span><span class="format">Foto única</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Still do frasco refletido num espelho de mão antigo dourado, fundo totalmente preto, uma única luz pontual.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Um perfume não te muda. Ele revela o que já era seu." <br>— tema: <em>personalidade</em></p>
+        <p><strong>CTA</strong>"Como você descreveria sua própria essência em uma palavra?"</p>
+        <p class="tags"><strong>Hashtags</strong>#identidadeverite #personalidade #veriteperfumes #perfumaria #luxo</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- WEEK 4 -->
+  <div class="week-group">
+    <div class="week-head"><h3>Semana 4</h3><span>Comunidade — Clube Verité e prova social</span></div>
+
+    <details class="day">
+      <summary><span class="date">07/09 · Seg</span><span class="pillar">Comercial Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Comercial "Identidade": frasco girando lentamente sobre um pedestal preto, luz varrendo o rótulo, corte para o monograma gravado na tampa em macro extremo.</p>
+        <p><strong>Roteiro</strong>Sem fala. Texto final: "Isso é Verité." Trilha minimalista, só percussão suave.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Identidade." <em>(tema do dia: identidade)</em></p>
+        <p><strong>CTA</strong>"Fala com a gente e descubra qual essência é a sua."</p>
+        <p class="tags"><strong>Hashtags</strong>#verite #identidade #veriteperfumes #perfumariadeluxo #fragrancia</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">08/09 · Ter</span><span class="pillar">Por Trás da Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Teste de fixação ao vivo: spray no pulso pela manhã, corte pra tarde cheirando de novo, corte pra noite. Mesma pessoa, mesma luz de fundo, só muda a hora marcada na tela.</p>
+        <p><strong>Roteiro</strong>Texto na tela em cada corte: "9h", "15h", "21h" — "ainda está lá."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Testamos fixação o dia inteiro antes de aprovar qualquer lote."</p>
+        <p><strong>CTA</strong>"Quanto tempo seu perfume atual costuma durar? Comenta aí."</p>
+        <p class="tags"><strong>Hashtags</strong>#portrasdaverite #testedefixacao #perfumaria #veriteperfumes</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">09/09 · Qua</span><span class="pillar">Escolha Sua Essência</span><span class="format">Carrossel + enquete</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>"Perfume para trabalho x perfume para sair à noite" — dois cenários, mesma pessoa, guarda-roupa e luz mudando de social pra noturno.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Você troca de perfume quando troca de plano — ou tem um que serve pra tudo?"</p>
+        <p><strong>CTA</strong>"Responde na enquete do Story."</p>
+        <p><strong>Story complementar</strong>Enquete "Um pra cada plano 🎭 / Um só, sempre 🖤".</p>
+        <p class="tags"><strong>Hashtags</strong>#escolhasuaessencia #perfumeparatrabalho #perfumeparaanoite #veriteperfumes</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">10/09 · Qui</span><span class="pillar">Pedido Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Bastidor da entrega: pedido sendo conferido pela última vez, colocado na sacola, porta fechando — sugerindo que ele já está a caminho. Se houver depoimento de cliente disponível, sobrepor um print/áudio real (com autorização).</p>
+        <p><strong>Roteiro</strong>Sem fala, ou se houver depoimento: trecho de áudio real do cliente ao fundo.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Mais um pedido saindo daqui direto pra fazer parte da rotina de alguém."</p>
+        <p><strong>CTA</strong>"Marca a gente quando o seu chegar."</p>
+        <p class="tags"><strong>Hashtags</strong>#pedidoverite #entrega #veriteperfumes #perfumaria #clienteveridico</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">11/09 · Sex</span><span class="pillar">Como Usar</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>"Onde aplicar para durar mais": pulsos, atrás da orelha, base do pescoço — sequência prática e rápida, com dica de não esfregar os pulsos.</p>
+        <p><strong>Roteiro</strong>Voz em off: "Aplique nos pontos de pulso, nunca esfregue — isso quebra a molécula do perfume. Menos é mais: dois ou três pontos bastam."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Um detalhe técnico que muda tudo: como aplicar certo."</p>
+        <p><strong>CTA</strong>"Salva esse Reel — você vai usar de novo."</p>
+        <p class="tags"><strong>Hashtags</strong>#comousar #dicasdeperfume #comoaplicarperfume #veriteperfumes #perfumaria</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">12/09 · Sáb</span><span class="pillar">A Verité por Dentro</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Novidade em desenvolvimento: mostrar um frasco/nota nova ainda sem rótulo final, sugerindo lançamento próximo sem revelar tudo.</p>
+        <p><strong>Roteiro</strong>Fala direta: "Isso aqui ainda não tem nome. Mas já sei que vai ser especial. Em breve conto mais."</p>
+        <p class="caption-text"><strong>Legenda</strong>"Tem coisa nova vindo por aí. Fica de olho."</p>
+        <p><strong>CTA</strong>"Quer ser avisado em primeira mão? Entra no Clube Verité."</p>
+        <p class="tags"><strong>Hashtags</strong>#veritepordentro #embreve #novidade #clubeverite #veriteperfumes</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">13/09 · Dom</span><span class="pillar">Identidade Verité</span><span class="format">Foto única</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Still do frasco entre dois panos de veludo preto entreabertos, como uma cortina se abrindo — sugere revelação, exclusividade.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Tem coisa que não precisa aparecer inteira pra ser desejada." <br>— tema: <em>presença</em></p>
+        <p><strong>CTA</strong>"Comenta o emoji que representa sua essência hoje."</p>
+        <p class="tags"><strong>Hashtags</strong>#identidadeverite #presenca #veriteperfumes #perfumaria #luxo</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- WEEK 5 (partial) -->
+  <div class="week-group">
+    <div class="week-head"><h3>Semana 5</h3><span>Retomada do ciclo — dias 29 e 30 encerram o mês e reabrem o pilar I e II</span></div>
+
+    <details class="day">
+      <summary><span class="date">14/09 · Seg</span><span class="pillar">Comercial Verité</span><span class="format">Reel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Comercial "Emoção": alguém sozinho sentindo o perfume no próprio pulso antes de sair, expressão de conforto, corte pro frasco com o brilho da janela refletido.</p>
+        <p><strong>Roteiro</strong>Sem fala. Texto final: "Não é sobre cheirar bem. É sobre se sentir você." Trilha suave, cordas.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Emoção." <em>(tema do dia: emoção)</em></p>
+        <p><strong>CTA</strong>"Qual sensação você quer levar com você hoje?"</p>
+        <p class="tags"><strong>Hashtags</strong>#verite #emocao #veriteperfumes #perfumariadeluxo #fragrancia</p>
+      </div>
+    </details>
+
+    <details class="day">
+      <summary><span class="date">15/09 · Ter</span><span class="pillar">Por Trás da Verité</span><span class="format">Carrossel</span><span class="chev">▾</span></summary>
+      <div class="body">
+        <p><strong>Ideia</strong>Organização do estoque: prateleiras com frascos, itens catalogados, alerta visual de "nível de estoque" mostrado de forma estética (sem expor números sensíveis) — reforça profissionalismo e escala.</p>
+        <p class="caption-text"><strong>Legenda</strong>"Cada frasco no lugar certo, do primeiro ao último. É assim que a Verité cresce sem perder o cuidado do começo."</p>
+        <p><strong>CTA</strong>"Fecha o mês com a gente — comenta o que você quer ver em outubro."</p>
+        <p class="tags"><strong>Hashtags</strong>#portrasdaverite #estoque #organizacao #veriteperfumes #perfumaria</p>
+      </div>
+    </details>
+  </div>
+
+</section>
+
+<footer class="note">
+  <strong>Como manter o ciclo:</strong> a partir do dia 31, repita a estrutura semanal (pilares I–VII) trocando os ângulos e cenários — nunca a mesma ideia duas vezes. Revise mensalmente quais Reels de "Comercial Verité" e "Como Usar" tiveram melhor retenção e priorize esse padrão de corte no mês seguinte. Assim que o catálogo tiver fotos oficiais publicadas no site, substitua os stills de frasco-teste pelas fotos reais dos produtos — o restante do plano (roteiro, legenda, CTA) continua válido.
+</footer>
+
+</div>
+</body>
+</html>
