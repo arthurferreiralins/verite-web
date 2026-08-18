@@ -214,8 +214,13 @@
                   <input id="produto-occasion" maxlength="120"/>
                 </div>
                 <div class="field">
-                  <label for="produto-audience">Público</label>
-                  <input id="produto-audience" maxlength="120"/>
+                  <label for="produto-audience">Gênero</label>
+                  <select id="produto-audience">
+                    <option value="">Não especificado</option>
+                    <option value="feminino">Feminino</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="unissex">Unissex</option>
+                  </select>
                 </div>
                 <div class="field">
                   <label for="produto-intensity">Intensidade</label>
@@ -307,6 +312,12 @@
               </div>
               <div class="field field-checkbox">
                 <label><input id="produto-club-exclusive" type="checkbox"/> Exclusivo do Clube Verité</label>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="produto-bestseller" type="checkbox"/> Mais vendido</label>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="produto-limited-edition" type="checkbox"/> Edição limitada</label>
               </div>
             </div>
 

@@ -418,3 +418,18 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_bottle NUMERIC(10,2) NOT NULL
 ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_cap NUMERIC(10,2) NOT NULL DEFAULT 0;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_label NUMERIC(10,2) NOT NULL DEFAULT 0;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS cost_packaging NUMERIC(10,2) NOT NULL DEFAULT 0;
+
+-- ============================================================
+-- Reformulação e-commerce (2026-08-18): loja pública ganha vitrines,
+-- filtros, busca, favoritos abertos e carrinho (checkout real fica pra
+-- depois). "audience" é reaproveitada como gênero (Feminino/Masculino/
+-- Unissex) no painel — sem migração nova pra isso. bestseller/
+-- limited_edition seguem o mesmo padrão de featured/club_exclusive.
+-- "Presentes" vira categoria própria, ao lado das 4 já existentes.
+-- ============================================================
+ALTER TABLE products ADD COLUMN IF NOT EXISTS bestseller BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS limited_edition BOOLEAN NOT NULL DEFAULT false;
+
+INSERT INTO categories (name, slug, sort_order) VALUES
+  ('Presentes', 'presentes', 5)
+ON CONFLICT (slug) DO NOTHING;

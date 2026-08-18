@@ -159,6 +159,7 @@
   });
 
   function revealSuccessThenDashboard() {
+    if (window.VeriteFavorites) window.VeriteFavorites.mergeGuestFavoritesIntoAccount();
     showGateStep(stepSuccess);
     window.setTimeout(function () {
       gate.style.display = 'none';

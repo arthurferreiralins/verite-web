@@ -45,8 +45,18 @@
     if(window.VeriteProducts && typeof window.VeriteProducts.initCategoryGrids === 'function'){
       window.VeriteProducts.initCategoryGrids();
     }
+    if(window.VeriteProducts && typeof window.VeriteProducts.initShowcases === 'function'){
+      window.VeriteProducts.initShowcases();
+    }
+    if(window.VeriteInitListing) window.VeriteInitListing();
     if(window.VeriteProductDetail && typeof window.VeriteProductDetail.init === 'function'){
       window.VeriteProductDetail.init();
+    }
+    if(window.VeriteQuiz && typeof window.VeriteQuiz.init === 'function'){
+      window.VeriteQuiz.init();
+    }
+    if(window.VeriteFavoritesPage && typeof window.VeriteFavoritesPage.init === 'function'){
+      window.VeriteFavoritesPage.init();
     }
     renderCollectionPreview(products);
   }

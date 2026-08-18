@@ -4,9 +4,9 @@
 <script>document.documentElement.classList.add('js');</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="VERITÉ — Produto."/>
+<meta name="description" content="VERITÉ — Seu carrinho."/>
 <meta name="theme-color" content="#0c0c0d"/>
-<title>Produto — VERITÉ</title>
+<title>Carrinho — VERITÉ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
@@ -17,7 +17,7 @@
 <meta name="robots" content="noindex"/>
 </head>
 <body>
-<a class="skip-link" href="#produto-detail">Pular para conteúdo</a>
+<a class="skip-link" href="#cart-main">Pular para conteúdo</a>
 
 <header>
   <div class="wrap header-top">
@@ -65,7 +65,7 @@
   <div class="wrap nav-inner">
     <nav id="primary-nav" class="links">
       <a href="index.html#inicio">Início</a>
-      <a href="produtos.html?categoria=perfumes" class="is-active">Perfumaria</a>
+      <a href="produtos.html?categoria=perfumes">Perfumaria</a>
       <a href="produtos.html?genero=feminino">Femininos</a>
       <a href="produtos.html?genero=masculino">Masculinos</a>
       <a href="produtos.html?categoria=kits">Kits</a>
@@ -79,62 +79,51 @@
 </header>
 
 <main>
-  <section id="produto-detail" class="section section-light has-ambient">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:300px;height:300px;top:-80px;left:50%;margin-left:-150px; background:radial-gradient(circle, rgba(177,138,79,.22), transparent 72%);"></div>
-    </div>
+  <section id="cart-main" class="section section-light">
     <div class="wrap">
-
-      <div class="product-detail-empty" id="product-not-found">
-        <p class="eyebrow">Produtos</p>
-        <h1>Este produto ainda não está disponível.</h1>
-        <p class="sub">Volte para a página de produtos para conferir as categorias da VERITÉ.</p>
-        <a class="btn" href="produtos.html">Voltar para Produtos</a>
+      <div class="section-head reveal" style="text-align:left; max-width:none;">
+        <p class="eyebrow">Sua Sacola</p>
+        <h1>Carrinho</h1>
       </div>
 
-      <div class="product-detail-content" id="product-content" hidden>
-        <div class="product-detail-grid">
-          <div class="product-gallery">
-            <img class="product-gallery-main" id="product-main-image" alt=""/>
-            <div class="product-thumbs" id="product-thumbs"></div>
-          </div>
-          <div class="product-info">
-            <p class="eyebrow" id="product-category"></p>
-            <div class="product-badges" id="product-badges"></div>
-            <h1 id="product-name"></h1>
-            <p class="product-volume" id="product-volume"></p>
-            <p class="product-price" id="product-price"></p>
-            <p class="product-stock" id="product-stock"></p>
-            <p class="product-description" id="product-description"></p>
-
-            <dl class="product-detail-notes">
-              <div class="product-detail-row" id="product-row-family" hidden><dt>Família olfativa</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-concentration" hidden><dt>Concentração</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-notes-top" hidden><dt>Notas de saída</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-notes-heart" hidden><dt>Notas de coração</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-notes-base" hidden><dt>Notas de fundo</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-occasion" hidden><dt>Ocasiões recomendadas</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-intensity" hidden><dt>Intensidade</dt><dd data-value></dd></div>
-            </dl>
-
-            <div class="product-qty-row">
-              <label for="product-qty">Quantidade</label>
-              <input type="number" id="product-qty" min="1" step="1" value="1"/>
-            </div>
-
-            <div class="product-actions">
-              <button type="button" class="btn btn-block" id="product-add-cart" hidden>Adicionar ao carrinho</button>
-              <a class="btn btn-block btn-ghost" id="product-buy" href="#" hidden>Comprar</a>
-              <button type="button" class="btn-favorite" id="product-favorite" hidden>Favoritar</button>
-            </div>
-          </div>
-        </div>
-        <div class="product-related" id="product-related" hidden>
-          <h2>Você também pode gostar</h2>
-          <div class="product-grid" id="related-grid"></div>
-        </div>
+      <div id="cart-empty" class="cart-empty" hidden>
+        <p class="category-empty-title">Seu carrinho está vazio.</p>
+        <p class="category-empty-sub" style="margin-bottom:2rem;">Explore nossos perfumes e encontre a fragrância que combina com você.</p>
+        <a class="btn" href="produtos.html">Ver perfumes</a>
       </div>
 
+      <div class="cart-layout" id="cart-table-wrap">
+        <div>
+          <div class="cart-header-row">
+            <span>Produto</span><span>Quantidade</span><span>Preço</span><span>Total</span><span></span>
+          </div>
+          <div id="cart-items"></div>
+        </div>
+
+        <aside class="cart-summary">
+          <h3>Resumo</h3>
+          <div class="cart-summary-row"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
+          <div class="cart-summary-row" id="cart-discount-row" hidden><span>Desconto</span><span id="cart-discount"></span></div>
+          <div class="cart-summary-row"><span>Frete</span><span>A calcular no fechamento</span></div>
+          <div class="cart-summary-row is-total"><span>Total</span><span id="cart-total">R$ 0,00</span></div>
+
+          <form id="coupon-form">
+            <label for="coupon-code" class="sr-only">Cupom de desconto</label>
+            <div style="display:flex; gap:.5rem;">
+              <input id="coupon-code" type="text" placeholder="Cupom de desconto" autocomplete="off"/>
+              <button type="submit" class="btn btn-ghost" style="padding:.6rem 1rem; font-size:.62rem;">Aplicar</button>
+            </div>
+            <p class="coupon-message" id="coupon-message"></p>
+          </form>
+
+          <button type="button" class="btn btn-block" id="checkout-btn">Finalizar Compra</button>
+
+          <div class="checkout-panel" id="checkout-panel" hidden>
+            <p><strong>Quase lá.</strong> Ainda não processamos pagamentos direto pelo site — nossa equipe fecha o pedido com você pelo WhatsApp, com todo o cuidado de um atendimento VERITÉ.</p>
+            <a class="btn" id="checkout-whatsapp-btn" href="#" target="_blank" rel="noopener">Fechar pedido pelo WhatsApp</a>
+          </div>
+        </aside>
+      </div>
     </div>
   </section>
 </main>
@@ -198,7 +187,7 @@
     <div class="footer-bottom">
       <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
       <a class="to-top" href="produtos.html">
-        Voltar para Produtos
+        Ver perfumes
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
       </a>
     </div>
@@ -210,8 +199,5 @@
 <script src="assets/js/main.js"></script>
 <script src="assets/js/favorites.js"></script>
 <script src="assets/js/cart.js"></script>
-<script src="assets/js/products.js"></script>
-<script src="assets/js/product-detail.js"></script>
-<script src="assets/js/products-loader.js"></script>
 </body>
 </html>

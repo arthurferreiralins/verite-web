@@ -135,7 +135,7 @@ module.exports = async function handler(req, res) {
            main_image_url, gallery_urls, status, featured, sort_order, sku, stock_quantity,
            track_stock, low_stock_threshold, product_type, concentration, olfactory_family,
            notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience,
-           seo_title, seo_description,
+           seo_title, seo_description, bestseller, limited_edition, club_exclusive,
            cost_essence, cost_base, cost_bottle, cost_cap, cost_label, cost_packaging)
         VALUES
           (${newSlug}, ${newName}, ${src.category}, ${src.short_description}, ${src.description},
@@ -144,6 +144,7 @@ module.exports = async function handler(req, res) {
            ${src.low_stock_threshold}, ${src.product_type}, ${src.concentration}, ${src.olfactory_family},
            ${src.notes_top}, ${src.notes_heart}, ${src.notes_base}, ${src.occasion}, ${src.intensity},
            ${src.longevity}, ${src.sillage}, ${src.audience}, ${src.seo_title}, ${src.seo_description},
+           ${src.bestseller}, ${src.limited_edition}, ${src.club_exclusive},
            ${src.cost_essence}, ${src.cost_base}, ${src.cost_bottle}, ${src.cost_cap}, ${src.cost_label}, ${src.cost_packaging})
         RETURNING *
       `;
@@ -182,7 +183,7 @@ module.exports = async function handler(req, res) {
     const { rows } = await sql`
       INSERT INTO products
         (slug, name, category, short_description, description, price, sale_price, volume, main_image_url, gallery_urls, status, featured, sort_order,
-         sku, stock_quantity, track_stock, low_stock_threshold, club_exclusive,
+         sku, stock_quantity, track_stock, low_stock_threshold, club_exclusive, bestseller, limited_edition,
          product_type, concentration, olfactory_family, notes_top, notes_heart, notes_base, occasion, intensity, longevity, sillage, audience,
          seo_title, seo_description,
          cost_essence, cost_base, cost_bottle, cost_cap, cost_label, cost_packaging)
@@ -193,6 +194,7 @@ module.exports = async function handler(req, res) {
          ${str(body.volume)}, ${str(body.mainImageUrl) || null}, ${gallery},
          ${status}, ${Boolean(body.featured)}, ${Number.isFinite(Number(body.sortOrder)) ? Number(body.sortOrder) : 0},
          ${str(body.sku) || null}, ${stockQty}, ${body.trackStock !== false}, ${lowThreshold}, ${Boolean(body.clubExclusive)},
+         ${Boolean(body.bestseller)}, ${Boolean(body.limitedEdition)},
          ${optionalValues[0]}, ${optionalValues[1]}, ${optionalValues[2]}, ${optionalValues[3]}, ${optionalValues[4]},
          ${optionalValues[5]}, ${optionalValues[6]}, ${optionalValues[7]}, ${optionalValues[8]}, ${optionalValues[9]},
          ${optionalValues[10]}, ${optionalValues[11]}, ${optionalValues[12]},
@@ -275,6 +277,8 @@ module.exports = async function handler(req, res) {
         track_stock = ${body.trackStock !== undefined ? Boolean(body.trackStock) : existing.track_stock},
         low_stock_threshold = ${lowThreshold},
         club_exclusive = ${body.clubExclusive !== undefined ? Boolean(body.clubExclusive) : existing.club_exclusive},
+        bestseller = ${body.bestseller !== undefined ? Boolean(body.bestseller) : existing.bestseller},
+        limited_edition = ${body.limitedEdition !== undefined ? Boolean(body.limitedEdition) : existing.limited_edition},
         product_type = ${optionalValues[0]},
         concentration = ${optionalValues[1]},
         olfactory_family = ${optionalValues[2]},

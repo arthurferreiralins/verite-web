@@ -4,9 +4,9 @@
 <script>document.documentElement.classList.add('js');</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="VERITÉ — Nossos Produtos. Em breve, novas formas de revelar a sua essência: perfumes, óleos corporais, kits e novidades."/>
+<meta name="description" content="VERITÉ — Perfumaria de luxo. Femininos, masculinos, unissex, kits e presentes. Encontre a fragrância que combina com você."/>
 <meta name="theme-color" content="#0c0c0d"/>
-<title>Nossos Produtos — VERITÉ</title>
+<title>Nossos Perfumes — VERITÉ</title>
 <link rel="canonical" href="https://verite-web.vercel.app/produtos.html"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -19,40 +19,75 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="VERITÉ"/>
 <meta property="og:url" content="https://verite-web.vercel.app/produtos.html"/>
-<meta property="og:title" content="Nossos Produtos — VERITÉ"/>
-<meta property="og:description" content="Em breve, novas formas de revelar a sua essência."/>
+<meta property="og:title" content="Nossos Perfumes — VERITÉ"/>
+<meta property="og:description" content="Femininos, masculinos, unissex, kits e presentes — encontre a fragrância que combina com você."/>
 <meta property="og:image" content="https://verite-web.vercel.app/assets/img/og-image.jpg"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:locale" content="pt_BR"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Nossos Produtos — VERITÉ"/>
-<meta name="twitter:description" content="Em breve, novas formas de revelar a sua essência."/>
+<meta name="twitter:title" content="Nossos Perfumes — VERITÉ"/>
+<meta name="twitter:description" content="Femininos, masculinos, unissex, kits e presentes."/>
 <meta name="twitter:image" content="https://verite-web.vercel.app/assets/img/og-image.jpg"/>
 </head>
 <body>
-<a class="skip-link" href="#perfumes">Pular para conteúdo</a>
+<a class="skip-link" href="#listing">Pular para conteúdo</a>
 
 <header>
-  <div class="wrap nav-inner">
+  <div class="wrap header-top">
     <a class="brand-mini" href="index.html#inicio">
       <span class="emblem-mini">
         <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
       </span>
       <span class="word">Verité</span>
     </a>
+    <form class="header-search" action="produtos.html" method="get" role="search">
+      <input type="search" name="busca" placeholder="Qual fragrância você procura?" aria-label="Buscar fragrância" autocomplete="off"/>
+      <button type="submit" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+    </form>
+    <div class="header-actions">
+      <a class="header-icon" href="/clube" aria-label="Minha conta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.4-4.2 5.9-6 8-6s6.6 1.8 8 6"/></svg>
+        <span class="header-icon-label">Conta</span>
+      </a>
+      <a class="header-icon" href="favoritos.html" aria-label="Favoritos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.5-9.3-8.8C1.2 8 2.5 4.7 6 3.9c2-.5 4 .3 6 2.4 2-2.1 4-2.9 6-2.4 3.5.8 4.8 4.1 3.3 7.3C19 15.5 12 20 12 20Z"/></svg>
+        <span class="header-icon-label">Favoritos</span>
+        <span class="header-icon-badge" data-fav-count hidden>0</span>
+      </a>
+      <div class="header-cart">
+        <button type="button" class="header-icon" id="mini-cart-toggle" aria-label="Carrinho" aria-expanded="false" aria-controls="mini-cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12l-1 11H7L6 9Z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/></svg>
+          <span class="header-icon-label">Carrinho</span>
+          <span class="header-icon-badge" data-cart-count hidden>0</span>
+        </button>
+        <div id="mini-cart" role="dialog" aria-label="Carrinho">
+          <div id="mini-cart-items"></div>
+          <div class="mini-cart-footer">
+            <span>Subtotal: <strong id="mini-cart-subtotal">R$ 0,00</strong></span>
+            <a class="btn" href="carrinho.html">Ver carrinho</a>
+          </div>
+        </div>
+      </div>
+    </div>
     <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Abrir menu">
       <span></span>
     </button>
+  </div>
+  <div class="wrap nav-inner">
     <nav id="primary-nav" class="links">
-      <a href="produtos.html" class="is-active">Produtos</a>
-      <a class="nav-clube" href="/clube">Clube</a>
       <a href="index.html#inicio">Início</a>
-      <a href="index.html#a-verite">A VERITÉ</a>
-      <a href="index.html#essencia">Nossa Essência</a>
-      <a href="index.html#manifesto">Manifesto</a>
-      <a href="index.html#faq">FAQ</a>
-      <a href="index.html#contato">Contato</a>
+      <a href="produtos.html?categoria=perfumes" class="is-active">Perfumaria</a>
+      <a href="produtos.html?genero=feminino">Femininos</a>
+      <a href="produtos.html?genero=masculino">Masculinos</a>
+      <a href="produtos.html?categoria=kits">Kits</a>
+      <a href="produtos.html?categoria=presentes">Presentes</a>
+      <a href="produtos.html?colecao=lancamentos">Lançamentos</a>
+      <a href="produtos.html?colecao=mais-vendidos">Mais Vendidos</a>
+      <a href="produtos.html?colecao=ofertas">Ofertas</a>
+      <a class="nav-clube" href="/clube">Clube Verité</a>
     </nav>
   </div>
 </header>
@@ -64,121 +99,70 @@
     <div class="ambient" data-parallax="20" aria-hidden="true">
       <div class="ambient-orb orb-a" style="width:320px;height:320px;top:-70px;right:8%;"></div>
       <div class="ambient-orb orb-b" style="width:260px;height:260px;bottom:-60px;left:6%;"></div>
-      <div class="ambient-shape" style="width:200px;height:200px;top:28%;left:14%;"></div>
-      <div class="ambient-particles" data-count="14"></div>
-      <div class="ambient-cursor"></div>
+      <div class="ambient-particles" data-count="10"></div>
     </div>
     <div class="emblem-wrap">
       <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
     </div>
-    <h1>Nossos Produtos</h1>
-    <p class="slogan">Em breve, novas formas de revelar a sua essência.</p>
+    <h1 id="listing-title">Nossos Perfumes</h1>
     <div class="hairline sweep" aria-hidden="true" style="margin-top:1.8rem;"></div>
-    <nav class="category-nav" aria-label="Categorias de produtos">
-      <a href="#perfumes">Perfumes</a>
-      <a href="#oleos-corporais">Óleos Corporais</a>
-      <a href="#kits">Kits</a>
-      <a href="#novidades">Novidades</a>
-    </nav>
   </section>
 
-  <!-- ============ Perfumes ============ -->
-  <section id="perfumes" class="section section-light category-block has-ambient" data-category="perfumes">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:280px;height:280px;top:-70px;left:10%; background:radial-gradient(circle, rgba(177,138,79,.24), transparent 72%);"></div>
-      <div class="ambient-particles" data-count="6"></div>
-    </div>
+  <!-- ============ Listagem: filtros + ordenação + grade ============ -->
+  <section id="listing" class="section section-light">
     <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Categoria</p>
-        <h2>Perfumes</h2>
+      <div class="listing-toolbar">
+        <button type="button" class="btn btn-ghost listing-filter-toggle" id="listing-filter-toggle" aria-expanded="false" aria-controls="listing-filters">Filtros</button>
+        <p class="listing-count" id="listing-count"></p>
+        <label class="sr-only" for="listing-sort">Ordenar por</label>
+        <select id="listing-sort" class="listing-sort">
+          <option value="relevancia">Relevância</option>
+          <option value="mais-vendidos">Mais vendidos</option>
+          <option value="menor-preco">Menor preço</option>
+          <option value="maior-preco">Maior preço</option>
+          <option value="novidades">Novidades</option>
+        </select>
       </div>
-      <div class="product-grid" data-role="grid" hidden></div>
-      <div class="category-empty reveal" data-role="empty">
-        <span class="icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
-            <path d="M24 6 C24 6 30 16 30 24 C30 29.5 27.3 34 24 34 C20.7 34 18 29.5 18 24 C18 16 24 6 24 6Z"/>
-          </svg>
-        </span>
-        <p class="category-empty-title">Em preparação.</p>
-        <p class="category-empty-sub">Uma nova expressão da VERITÉ está sendo criada.</p>
-      </div>
-    </div>
-  </section>
 
-  <!-- ============ Óleos Corporais ============ -->
-  <section id="oleos-corporais" class="section section-dark category-block has-ambient" data-category="oleos-corporais">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:320px;height:320px;top:-80px;right:6%;"></div>
-      <div class="ambient-particles" data-count="10"></div>
-    </div>
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Categoria</p>
-        <h2>Óleos Corporais</h2>
-      </div>
-      <div class="product-grid" data-role="grid" hidden></div>
-      <div class="category-empty reveal" data-role="empty">
-        <span class="icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
-            <path d="M24 8 C30 8 34 16 26 20 C34 22 32 32 24 32 C16 32 14 22 22 20 C14 16 18 8 24 8Z"/>
-            <path d="M24 32 L24 40"/>
-          </svg>
-        </span>
-        <p class="category-empty-title">Em preparação.</p>
-        <p class="category-empty-sub">Uma nova expressão da VERITÉ está sendo criada.</p>
-      </div>
-    </div>
-  </section>
+      <div class="listing-layout">
+        <aside id="listing-filters">
+          <div class="listing-filter-group">
+            <h4>Gênero</h4>
+            <div id="listing-filter-gender"></div>
+          </div>
+          <div class="listing-filter-group">
+            <h4>Categoria</h4>
+            <div id="listing-filter-category"></div>
+          </div>
+          <div class="listing-filter-group">
+            <h4>Família olfativa</h4>
+            <select id="listing-filter-family" class="listing-filter-select"></select>
+          </div>
+          <div class="listing-filter-group">
+            <h4>Faixa de preço</h4>
+            <div class="listing-filter-price">
+              <input type="number" min="0" step="1" id="listing-filter-price-min" placeholder="Mín."/>
+              <span aria-hidden="true">—</span>
+              <input type="number" min="0" step="1" id="listing-filter-price-max" placeholder="Máx."/>
+            </div>
+          </div>
+          <button type="button" class="listing-clear" id="listing-clear-filters">Limpar filtros</button>
+        </aside>
 
-  <!-- ============ Kits ============ -->
-  <section id="kits" class="section section-beige category-block has-ambient" data-category="kits">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:280px;height:280px;bottom:-70px;right:10%; background:radial-gradient(circle, rgba(177,138,79,.3), transparent 72%);"></div>
-      <div class="ambient-particles" data-count="6"></div>
-    </div>
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Categoria</p>
-        <h2>Kits</h2>
-      </div>
-      <div class="product-grid" data-role="grid" hidden></div>
-      <div class="category-empty reveal" data-role="empty">
-        <span class="icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
-            <rect x="8" y="18" width="32" height="22" rx="1"/>
-            <path d="M8 26 L40 26"/>
-            <path d="M20 18 L20 40"/>
-            <path d="M28 18 L28 40"/>
-            <path d="M16 18 C16 12 20 9 24 9 C28 9 32 12 32 18"/>
-          </svg>
-        </span>
-        <p class="category-empty-title">Em preparação.</p>
-        <p class="category-empty-sub">Uma nova expressão da VERITÉ está sendo criada.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ Novidades ============ -->
-  <section id="novidades" class="section section-light category-block has-ambient" data-category="novidades">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:280px;height:280px;top:-70px;left:50%;margin-left:-140px; background:radial-gradient(circle, rgba(177,138,79,.24), transparent 72%);"></div>
-      <div class="ambient-particles" data-count="6"></div>
-    </div>
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">Categoria</p>
-        <h2>Novidades</h2>
-      </div>
-      <div class="product-grid" data-role="grid" hidden></div>
-      <div class="category-empty reveal" data-role="empty">
-        <span class="icon">
-          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
-            <path d="M24 6 L27.5 20.5 L42 24 L27.5 27.5 L24 42 L20.5 27.5 L6 24 L20.5 20.5 Z"/>
-          </svg>
-        </span>
-        <p class="category-empty-title">Em preparação.</p>
-        <p class="category-empty-sub">Uma nova expressão da VERITÉ está sendo criada.</p>
+        <div>
+          <div class="skeleton-grid" id="listing-skeleton">
+            <div class="skeleton-card"></div><div class="skeleton-card"></div>
+            <div class="skeleton-card"></div><div class="skeleton-card"></div>
+          </div>
+          <div class="product-grid" id="listing-grid" hidden></div>
+          <div class="category-empty" id="listing-empty" hidden>
+            <span class="icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><path d="M24 6 C24 6 30 16 30 24 C30 29.5 27.3 34 24 34 C20.7 34 18 29.5 18 24 C18 16 24 6 24 6Z"/></svg>
+            </span>
+            <p class="category-empty-title">Em preparação.</p>
+            <p class="category-empty-sub">Uma nova expressão da VERITÉ está sendo criada.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -202,11 +186,10 @@
   <!--
     Catálogo alimentado pelo painel /painel: assets/js/products-loader.js
     busca produtos publicados em /api/public/products, popula
-    window.VERITE_PRODUCTS e assets/js/products.js renderiza as grades
-    acima — sem produto publicado, cada categoria mostra "Em breve."
-    Página de produto individual em produto.html (leitura por ?slug=)
-    inclui produtos relacionados e botão de compra (oculto até um
-    buyUrl real existir — carrinho/checkout continuam fora de escopo).
+    window.VERITE_PRODUCTS e assets/js/listing.js filtra/ordena/renderiza
+    a grade acima a partir da querystring (categoria/genero/colecao/busca/
+    familia/precoMin/precoMax/ordenar). Sem produto publicado, mostra
+    "Em preparação." — nunca um produto inventado.
   -->
 
 </main>
@@ -226,24 +209,39 @@
         <p>A verdade está na sua essência.</p>
       </div>
       <div class="footer-col reveal">
-        <h4>Navegar</h4>
+        <h4>Comprar</h4>
         <ul>
-          <li><a href="produtos.html">Produtos</a></li>
-          <li><a href="/clube">Clube</a></li>
-          <li><a href="index.html#inicio">Início</a></li>
-          <li><a href="index.html#a-verite">A VERITÉ</a></li>
-          <li><a href="index.html#essencia">Nossa Essência</a></li>
-          <li><a href="index.html#manifesto">Manifesto</a></li>
-          <li><a href="index.html#faq">FAQ</a></li>
-          <li><a href="index.html#contato">Contato</a></li>
+          <li><a href="produtos.html?categoria=perfumes">Perfumes</a></li>
+          <li><a href="produtos.html?genero=feminino">Femininos</a></li>
+          <li><a href="produtos.html?genero=masculino">Masculinos</a></li>
+          <li><a href="produtos.html?categoria=kits">Kits</a></li>
+          <li><a href="produtos.html?categoria=presentes">Presentes</a></li>
         </ul>
       </div>
       <div class="footer-col reveal">
-        <h4>Contato</h4>
+        <h4>Verité</h4>
         <ul>
-          <li class="disabled-link" title="Canal em preparação">E-mail — canal em preparação</li>
-          <li class="disabled-link" title="Canal em preparação">Instagram — canal em preparação</li>
-          <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="index.html#a-verite">Sobre nós</a></li>
+          <li><a href="/clube">Clube Verité</a></li>
+          <li><a href="produtos.html?colecao=exclusivos">Exclusivos</a></li>
+          <li><a href="produtos.html?colecao=lancamentos">Lançamentos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Ajuda</h4>
+        <ul>
+          <li><a href="index.html#contato">Contato</a></li>
+          <li><a href="entregas.html">Entregas</a></li>
+          <li><a href="pagamentos.html">Pagamentos</a></li>
+          <li><a href="trocas.html">Trocas</a></li>
+          <li><a href="index.html#faq">Perguntas Frequentes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Redes Sociais</h4>
+        <ul>
+          <li class="disabled-link" title="Canal em preparação" data-settings-key="instagram">Instagram — canal em preparação</li>
+          <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
         </ul>
       </div>
     </div>
@@ -265,7 +263,10 @@
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/favorites.js"></script>
+<script src="assets/js/cart.js"></script>
 <script src="assets/js/products.js"></script>
+<script src="assets/js/listing.js"></script>
 <script src="assets/js/products-loader.js"></script>
 </body>
 </html>

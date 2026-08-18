@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /produto.html
+Disallow: /carrinho.html
+Disallow: /favoritos.html
 
 Sitemap: https://verite-web.vercel.app/sitemap.xml

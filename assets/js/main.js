@@ -1,6 +1,24 @@
 (function(){
   'use strict';
 
+  /* Toast de feedback discreto ("Adicionado ao carrinho"/"aos favoritos"),
+     reaproveitado por assets/js/cart.js e assets/js/favorites.js. */
+  var toastTimer = null;
+  window.VeriteToast = function(message){
+    var el = document.querySelector('.verite-toast');
+    if(!el){
+      el = document.createElement('div');
+      el.className = 'verite-toast';
+      el.setAttribute('role', 'status');
+      el.setAttribute('aria-live', 'polite');
+      document.body.appendChild(el);
+    }
+    el.textContent = message;
+    el.classList.add('is-visible');
+    if(toastTimer) window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(function(){ el.classList.remove('is-visible'); }, 2400);
+  };
+
   /* Mobile nav toggle */
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.getElementById('primary-nav');

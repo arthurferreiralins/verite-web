@@ -750,6 +750,8 @@
     document.getElementById('produto-status').value = product ? product.status : 'draft';
     document.getElementById('produto-featured').checked = Boolean(product && product.featured);
     document.getElementById('produto-club-exclusive').checked = Boolean(product && product.club_exclusive);
+    document.getElementById('produto-bestseller').checked = Boolean(product && product.bestseller);
+    document.getElementById('produto-limited-edition').checked = Boolean(product && product.limited_edition);
     document.getElementById('produto-sku').value = product ? (product.sku || '') : '';
     document.getElementById('produto-stock').value = product ? (product.stock_quantity || 0) : 0;
     document.getElementById('produto-track-stock').checked = product ? Boolean(product.track_stock) : true;
@@ -847,6 +849,8 @@
       status: document.getElementById('produto-status').value,
       featured: document.getElementById('produto-featured').checked,
       clubExclusive: document.getElementById('produto-club-exclusive').checked,
+      bestseller: document.getElementById('produto-bestseller').checked,
+      limitedEdition: document.getElementById('produto-limited-edition').checked,
       mainImageUrl: mainUrls[0] || '',
       gallery: produtoImages ? produtoImages.gallery.getUrls() : [],
       concentration: document.getElementById('produto-concentration').value,

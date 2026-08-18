@@ -4,9 +4,10 @@
 <script>document.documentElement.classList.add('js');</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="VERITÉ — Produto."/>
+<meta name="description" content="VERITÉ — Trocas. Como pedir troca ou devolução."/>
 <meta name="theme-color" content="#0c0c0d"/>
-<title>Produto — VERITÉ</title>
+<title>Trocas — VERITÉ</title>
+<link rel="canonical" href="https://verite-web.vercel.app/trocas.html"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
@@ -14,10 +15,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon-256.png"/>
-<meta name="robots" content="noindex"/>
+<meta name="robots" content="index, follow"/>
 </head>
 <body>
-<a class="skip-link" href="#produto-detail">Pular para conteúdo</a>
+<a class="skip-link" href="#conteudo">Pular para conteúdo</a>
 
 <header>
   <div class="wrap header-top">
@@ -65,7 +66,7 @@
   <div class="wrap nav-inner">
     <nav id="primary-nav" class="links">
       <a href="index.html#inicio">Início</a>
-      <a href="produtos.html?categoria=perfumes" class="is-active">Perfumaria</a>
+      <a href="produtos.html?categoria=perfumes">Perfumaria</a>
       <a href="produtos.html?genero=feminino">Femininos</a>
       <a href="produtos.html?genero=masculino">Masculinos</a>
       <a href="produtos.html?categoria=kits">Kits</a>
@@ -79,62 +80,19 @@
 </header>
 
 <main>
-  <section id="produto-detail" class="section section-light has-ambient">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:300px;height:300px;top:-80px;left:50%;margin-left:-150px; background:radial-gradient(circle, rgba(177,138,79,.22), transparent 72%);"></div>
-    </div>
+  <section id="conteudo" class="section section-light legal-page">
     <div class="wrap">
+      <p class="eyebrow reveal">Ajuda</p>
+      <h1 class="reveal">Trocas</h1>
 
-      <div class="product-detail-empty" id="product-not-found">
-        <p class="eyebrow">Produtos</p>
-        <h1>Este produto ainda não está disponível.</h1>
-        <p class="sub">Volte para a página de produtos para conferir as categorias da VERITÉ.</p>
-        <a class="btn" href="produtos.html">Voltar para Produtos</a>
+      <div class="legal-body reveal">
+        <p>Como o fechamento de cada pedido ainda é feito diretamente com a nossa equipe pelo WhatsApp, qualquer troca ou devolução também é combinada por lá — fale com a gente informando o número do pedido e o motivo da troca.</p>
+        <h2>Como pedir uma troca</h2>
+        <p>Entre em contato pelo <a href="https://wa.me/5581981553632" target="_blank" rel="noopener">WhatsApp</a> em até 7 dias após o recebimento do produto, com o pedido lacrado e sem uso. Nossa equipe orienta os próximos passos.</p>
+        <p class="legal-note">Assim que o checkout completo estiver disponível, esta página será atualizada com um processo de troca e devolução mais detalhado.</p>
       </div>
 
-      <div class="product-detail-content" id="product-content" hidden>
-        <div class="product-detail-grid">
-          <div class="product-gallery">
-            <img class="product-gallery-main" id="product-main-image" alt=""/>
-            <div class="product-thumbs" id="product-thumbs"></div>
-          </div>
-          <div class="product-info">
-            <p class="eyebrow" id="product-category"></p>
-            <div class="product-badges" id="product-badges"></div>
-            <h1 id="product-name"></h1>
-            <p class="product-volume" id="product-volume"></p>
-            <p class="product-price" id="product-price"></p>
-            <p class="product-stock" id="product-stock"></p>
-            <p class="product-description" id="product-description"></p>
-
-            <dl class="product-detail-notes">
-              <div class="product-detail-row" id="product-row-family" hidden><dt>Família olfativa</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-concentration" hidden><dt>Concentração</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-notes-top" hidden><dt>Notas de saída</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-notes-heart" hidden><dt>Notas de coração</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-notes-base" hidden><dt>Notas de fundo</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-occasion" hidden><dt>Ocasiões recomendadas</dt><dd data-value></dd></div>
-              <div class="product-detail-row" id="product-row-intensity" hidden><dt>Intensidade</dt><dd data-value></dd></div>
-            </dl>
-
-            <div class="product-qty-row">
-              <label for="product-qty">Quantidade</label>
-              <input type="number" id="product-qty" min="1" step="1" value="1"/>
-            </div>
-
-            <div class="product-actions">
-              <button type="button" class="btn btn-block" id="product-add-cart" hidden>Adicionar ao carrinho</button>
-              <a class="btn btn-block btn-ghost" id="product-buy" href="#" hidden>Comprar</a>
-              <button type="button" class="btn-favorite" id="product-favorite" hidden>Favoritar</button>
-            </div>
-          </div>
-        </div>
-        <div class="product-related" id="product-related" hidden>
-          <h2>Você também pode gostar</h2>
-          <div class="product-grid" id="related-grid"></div>
-        </div>
-      </div>
-
+      <a class="btn" href="produtos.html">Ver perfumes</a>
     </div>
   </section>
 </main>
@@ -178,7 +136,7 @@
           <li><a href="index.html#contato">Contato</a></li>
           <li><a href="entregas.html">Entregas</a></li>
           <li><a href="pagamentos.html">Pagamentos</a></li>
-          <li><a href="trocas.html">Trocas</a></li>
+          <li><a href="trocas.html" class="is-active">Trocas</a></li>
           <li><a href="index.html#faq">Perguntas Frequentes</a></li>
         </ul>
       </div>
@@ -197,8 +155,8 @@
     </div>
     <div class="footer-bottom">
       <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
-      <a class="to-top" href="produtos.html">
-        Voltar para Produtos
+      <a class="to-top" href="index.html#inicio">
+        Voltar ao topo
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
       </a>
     </div>
@@ -210,8 +168,5 @@
 <script src="assets/js/main.js"></script>
 <script src="assets/js/favorites.js"></script>
 <script src="assets/js/cart.js"></script>
-<script src="assets/js/products.js"></script>
-<script src="assets/js/product-detail.js"></script>
-<script src="assets/js/products-loader.js"></script>
 </body>
 </html>
