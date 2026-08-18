@@ -71,6 +71,17 @@
       }
     }
 
+    var installmentsEl = document.getElementById('product-installments');
+    if(installmentsEl){
+      var installmentBase = product.salePrice != null ? product.salePrice : product.price;
+      if(installmentBase != null && installmentBase > 0){
+        installmentsEl.hidden = false;
+        installmentsEl.textContent = 'ou 3x de ' + VP.money(installmentBase / 3, product.currency) + ' sem juros';
+      } else {
+        installmentsEl.hidden = true;
+      }
+    }
+
     var badges = document.getElementById('product-badges');
     if(badges){
       badges.innerHTML = '';
@@ -143,13 +154,29 @@
       }
     }
 
-    var buyBtn = document.getElementById('product-buy');
-    if(buyBtn){
-      if(product.buyUrl){
-        buyBtn.href = product.buyUrl;
-        buyBtn.hidden = false;
+    // "Comprar Agora": adiciona ao carrinho com a quantidade escolhida e vai
+    // direto pro carrinho — não é um checkout de verdade (fora de escopo),
+    // só um atalho pra quem já sabe que quer aquele perfume.
+    var buyNowBtn = document.getElementById('product-buy-now');
+    if(buyNowBtn){
+      if(product.price != null && product.inStock !== false){
+        buyNowBtn.hidden = false;
+        if(!buyNowBtn.dataset.bound){
+          buyNowBtn.dataset.bound = '1';
+          buyNowBtn.addEventListener('click', function(){
+            var current = window.VeriteProducts.find(slug);
+            var qty = qtyInput ? Number(qtyInput.value) : 1;
+            if(window.VeriteCart && current){
+              window.VeriteCart.add({
+                slug: current.slug || current.id, name: current.name, price: current.price,
+                salePrice: current.salePrice, volume: current.volume, images: current.images
+              }, qty);
+            }
+            window.location.href = 'carrinho.html';
+          });
+        }
       } else {
-        buyBtn.hidden = true;
+        buyNowBtn.hidden = true;
       }
     }
 

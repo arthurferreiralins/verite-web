@@ -9,37 +9,6 @@
 (function(){
   'use strict';
 
-  function renderCollectionPreview(products){
-    var grid = document.querySelector('.colecao-grid');
-    if(!grid) return;
-    var featured = products.slice(0, 3);
-    if(!featured.length) return; // keep the existing "Em breve" mystery cards
-
-    var connector = grid.querySelector('.colecao-connector');
-    while(grid.firstChild) grid.removeChild(grid.firstChild);
-    if(connector) grid.appendChild(connector);
-
-    featured.forEach(function(p){
-      var a = document.createElement('a');
-      a.className = 'produto-card produto-card-real reveal';
-      a.href = 'produto.html?slug=' + encodeURIComponent(p.id);
-      if(p.images && p.images[0]){
-        var img = document.createElement('img');
-        img.src = p.images[0];
-        img.alt = p.name || '';
-        img.loading = 'lazy';
-        img.className = 'produto-card-img';
-        a.appendChild(img);
-      }
-      var name = document.createElement('span');
-      name.className = 'produto-tag';
-      name.textContent = p.name || '';
-      a.appendChild(name);
-      grid.appendChild(a);
-    });
-    if(window.VeriteBindReveal) window.VeriteBindReveal(grid);
-  }
-
   function afterLoad(products){
     window.VERITE_PRODUCTS = products;
     if(window.VeriteProducts && typeof window.VeriteProducts.initCategoryGrids === 'function'){
@@ -58,7 +27,7 @@
     if(window.VeriteFavoritesPage && typeof window.VeriteFavoritesPage.init === 'function'){
       window.VeriteFavoritesPage.init();
     }
-    renderCollectionPreview(products);
+    window.dispatchEvent(new Event('verite:products-loaded'));
   }
 
   fetch('/api/public/products')

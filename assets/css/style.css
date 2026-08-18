@@ -1277,11 +1277,29 @@ footer .watermark{
 header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 
 .header-search{
+  position:relative;
   flex:1 1 auto; display:flex; align-items:center; max-width:540px;
   border:1px solid rgba(250,249,246,.22); border-radius:999px;
   padding:.2rem .3rem .2rem 1.3rem; background:rgba(250,249,246,.03);
   transition:border-color .3s ease, background-color .3s ease;
 }
+.search-suggestions{
+  position:absolute; top:calc(100% + 10px); left:0; right:0; z-index:65;
+  background:var(--black-2); border:1px solid rgba(250,249,246,.14); border-radius:4px;
+  padding:.5rem; box-shadow:0 30px 60px -20px rgba(0,0,0,.65);
+  max-height:70vh; overflow-y:auto;
+}
+.search-suggestion{
+  display:flex; align-items:center; gap:.8rem; padding:.6rem .6rem; border-radius:2px;
+  text-decoration:none; color:var(--off-white); transition:background-color .2s ease;
+}
+.search-suggestion:hover, .search-suggestion:focus-visible{background:rgba(177,138,79,.14);}
+.search-suggestion img, .search-suggestion-noimg{
+  width:38px; height:46px; object-fit:cover; border-radius:2px; background:rgba(250,249,246,.06); flex:none; display:block;
+}
+.search-suggestion-info{display:flex; flex-direction:column; gap:.15rem; min-width:0;}
+.search-suggestion-info strong{font-size:.85rem; font-weight:500;}
+.search-suggestion-price{font-size:.76rem; color:var(--gold-light);}
 .header-search:focus-within{border-color:var(--gold); background:rgba(250,249,246,.07);}
 .header-search input{
   flex:1; min-width:0; background:none; border:none; outline:none; color:var(--off-white);
@@ -1501,6 +1519,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 .product-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
 .product-thumb.is-active, .product-thumb:hover{border-color:var(--gold);}
 .product-price-was{color:var(--sec-fg-soft); font-size:1.05rem; margin-right:.5rem; text-decoration:line-through;}
+.product-installments{font-size:.82rem; color:var(--sec-fg-soft); margin:.3rem 0 1rem;}
 .product-stock{font-size:.8rem; color:#c07a7a; margin:0 0 1rem;}
 .product-detail-notes{margin:1.8rem 0;}
 .product-detail-row{display:flex; gap:.8rem; padding:.55rem 0; border-bottom:1px solid var(--sec-line); font-size:.85rem;}
@@ -1513,6 +1532,28 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   background:transparent; color:inherit; border-radius:2px; font-family:inherit;
 }
 .product-actions{display:flex; flex-direction:column; gap:.8rem; align-items:flex-start;}
+
+/* =======================================================================
+   Clube Verité — seção premium na home (não deixar escondido)
+   ======================================================================= */
+.clube-home-wrap{text-align:center;}
+.clube-home-grid{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:2.2rem;
+  max-width:1000px; margin:3.4rem auto 0; text-align:left;
+}
+@media (max-width:900px){ .clube-home-grid{grid-template-columns:1fr 1fr;} }
+@media (max-width:560px){ .clube-home-grid{grid-template-columns:1fr;} }
+.clube-home-item{
+  padding:1.6rem 1.4rem; border:1px solid rgba(250,249,246,.14); border-radius:2px;
+  transition:border-color .35s ease, transform .35s ease;
+}
+.clube-home-item:hover{border-color:var(--gold-deep); transform:translateY(-4px);}
+.clube-home-num{
+  display:block; font-family:var(--font-display); font-size:1.6rem; color:var(--gold);
+  margin-bottom:.8rem;
+}
+.clube-home-item h3{font-family:var(--font-display); font-size:1.1rem; margin-bottom:.5rem; color:var(--off-white);}
+.clube-home-item p{font-size:.86rem; color:#b7b2a8; line-height:1.7; margin:0;}
 
 /* =======================================================================
    Toast de feedback (assets/js/main.js — window.VeriteToast)
