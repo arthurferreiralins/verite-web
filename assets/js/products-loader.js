@@ -11,9 +11,6 @@
 
   function afterLoad(products){
     window.VERITE_PRODUCTS = products;
-    if(window.VeriteProducts && typeof window.VeriteProducts.initCategoryGrids === 'function'){
-      window.VeriteProducts.initCategoryGrids();
-    }
     if(window.VeriteProducts && typeof window.VeriteProducts.initShowcases === 'function'){
       window.VeriteProducts.initShowcases();
     }

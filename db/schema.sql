@@ -92,8 +92,8 @@ CREATE INDEX IF NOT EXISTS idx_submission_attempts_ip_kind_time ON public_submis
 
 -- Seed: real content already live on the site today (nothing invented).
 INSERT INTO content_blocks (key, label, value) VALUES
-  ('slogan', 'Slogan (hero)', 'A verdade está na sua essência.'),
-  ('hero_sub', 'Subtítulo do hero', 'Uma fragrância não é só um aroma — é presença, lembrança e verdade.'),
+  ('slogan', 'Slogan (hero)', 'Sua essência. Sua presença.'),
+  ('hero_sub', 'Subtítulo do hero', 'Perfumes criados para deixar uma assinatura inesquecível.'),
   ('historia_lead', 'Parágrafo de história (A VERITÉ)', 'A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela <em>revela personalidade</em>, <em>desperta lembranças</em> e deixa uma <em>presença</em> que continua mesmo depois que a pessoa vai embora.'),
   ('essencia_1_title', 'Nossa Essência — item 1 (título)', 'Autenticidade'),
   ('essencia_1_desc', 'Nossa Essência — item 1 (descrição)', 'A verdade em cada gesto.'),

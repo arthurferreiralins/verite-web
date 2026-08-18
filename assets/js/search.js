@@ -52,11 +52,13 @@
         a.className = 'search-suggestion';
         a.href = 'produto.html?slug=' + encodeURIComponent(p.slug || p.id);
         var priceText = VP.money(p.salePrice != null ? p.salePrice : p.price, p.currency);
+        var categoryLabel = (VP.CATEGORIES.filter(function(c){ return c.slug === p.category; })[0] || {}).label || '';
         a.innerHTML =
           (p.images && p.images[0] ? '<img src="' + p.images[0] + '" alt="" loading="lazy"/>' : '<span class="search-suggestion-noimg" aria-hidden="true"></span>') +
-          '<span class="search-suggestion-info"><strong></strong><span class="search-suggestion-price"></span></span>';
+          '<span class="search-suggestion-info"><strong></strong><span class="search-suggestion-meta"></span></span>';
         a.querySelector('strong').textContent = p.name || '';
-        a.querySelector('.search-suggestion-price').textContent = priceText;
+        var meta = a.querySelector('.search-suggestion-meta');
+        meta.textContent = [categoryLabel, priceText].filter(Boolean).join(' · ');
         wrap.appendChild(a);
       });
       wrap.hidden = false;

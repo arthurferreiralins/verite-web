@@ -122,7 +122,12 @@
           btn.disabled = false;
           btn.classList.toggle('is-favorited', nowFav);
           btn.setAttribute('aria-pressed', nowFav ? 'true' : 'false');
-          if (window.VeriteToast) window.VeriteToast(nowFav ? 'Adicionado aos favoritos.' : 'Removido dos favoritos.');
+          if (nowFav) {
+            btn.classList.remove('fav-pulse');
+            void btn.offsetWidth; // reinicia a animação mesmo se já tinha rodado
+            btn.classList.add('fav-pulse');
+          }
+          if (window.VeriteToast) window.VeriteToast(nowFav ? 'Adicionado aos seus favoritos Verité.' : 'Removido dos favoritos.');
         }).catch(function () { btn.disabled = false; });
       });
     });

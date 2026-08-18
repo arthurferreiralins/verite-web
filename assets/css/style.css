@@ -1147,7 +1147,8 @@ footer .watermark{
   transition:transform .12s ease-out, border-color .4s ease, box-shadow .4s ease;
 }
 .product-tile:hover .product-tile-media{border-color:var(--gold); box-shadow:0 20px 40px -26px rgba(177,138,79,.4);}
-.product-tile-media img{width:100%; height:100%; object-fit:cover; display:block;}
+.product-tile-media img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .6s ease;}
+.product-tile:hover .product-tile-media img{transform:scale(1.06);}
 .product-tile-body{padding-top:.1rem;}
 .product-tile-category{
   font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-deep); margin:0 0 .3rem;
@@ -1158,6 +1159,7 @@ footer .watermark{
 .product-tile-price{font-size:.92rem; color:var(--gold-deep); margin-top:.3rem;}
 .product-tile-price-was{color:var(--sec-fg-soft); font-weight:400; text-decoration:line-through; margin-right:.45rem;}
 .section-dark .product-tile-price, .section-2 .product-tile-price, .section-3 .product-tile-price{color:var(--gold-light);}
+.product-tile-installments{font-size:.72rem; color:var(--sec-fg-soft); margin-top:.15rem;}
 
 /* ---------- badges + favorito sobre a mídia do card ---------- */
 .product-tile-badges{
@@ -1185,6 +1187,10 @@ footer .watermark{
 }
 .product-tile-fav:hover{transform:scale(1.08); opacity:1;}
 .product-tile-fav.is-favorited{color:var(--gold-light); opacity:1;}
+.fav-pulse{animation:fav-pulse .45s var(--ease);}
+@keyframes fav-pulse{ 0%{transform:scale(1);} 40%{transform:scale(1.35);} 100%{transform:scale(1);} }
+@media (prefers-reduced-motion:reduce){ .fav-pulse{animation:none;} }
+.btn-favorite.fav-pulse{animation:fav-pulse .45s var(--ease);}
 
 .product-tile-actions{
   display:flex; align-items:center; justify-content:space-between; gap:.8rem; margin-top:.9rem;
@@ -1197,6 +1203,14 @@ footer .watermark{
 .product-tile-view:hover{color:var(--gold);}
 .section-dark .product-tile-view, .section-2 .product-tile-view, .section-3 .product-tile-view{color:var(--gold-light);}
 .product-tile-oos{font-size:.7rem; color:#c07a7a; font-style:italic; margin:0;}
+
+/* botão "adicionar ao carrinho" some e reaparece suavemente no hover — só em
+   telas com mouse de verdade; em touch (tablet/celular) fica sempre visível,
+   porque não existe hover pra revelar nada. */
+@media (hover:hover) and (pointer:fine){
+  .product-tile-actions{opacity:0; transform:translateY(6px); transition:opacity .35s ease, transform .35s ease;}
+  .product-tile:hover .product-tile-actions, .product-tile:focus-within .product-tile-actions{opacity:1; transform:translateY(0);}
+}
 
 /* =======================================================================
    Produto (individual) — gallery + info two-column, related grid.
@@ -1299,7 +1313,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 .search-suggestion-info{display:flex; flex-direction:column; gap:.15rem; min-width:0;}
 .search-suggestion-info strong{font-size:.85rem; font-weight:500;}
-.search-suggestion-price{font-size:.76rem; color:var(--gold-light);}
+.search-suggestion-meta{font-size:.76rem; color:var(--gold-light);}
 .header-search:focus-within{border-color:var(--gold); background:rgba(250,249,246,.07);}
 .header-search input{
   flex:1; min-width:0; background:none; border:none; outline:none; color:var(--off-white);
@@ -1440,20 +1454,50 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 @media (prefers-reduced-motion:reduce){ .skeleton-card{animation:none; opacity:.5;} }
 
 /* =======================================================================
-   Quiz "Qual Verité combina com você?"
+   Quiz "Descubra sua Verité" — uma pergunta por tela, transição suave,
+   termina com um único produto real recomendado ("Sua Verité é...").
    ======================================================================= */
-.quiz{max-width:760px; margin:0 auto; text-align:center;}
-.quiz-options{display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:2.2rem;}
+.quiz{max-width:640px; margin:0 auto; text-align:center;}
+.quiz-progress{display:flex; justify-content:center; gap:.5rem; margin:1.4rem 0 2.6rem;}
+.quiz-progress-dot{
+  width:6px; height:6px; border-radius:50%; background:rgba(250,249,246,.22);
+  transition:background-color .3s ease, transform .3s ease;
+}
+.quiz-progress-dot.is-active{background:var(--gold); transform:scale(1.3);}
+.quiz-progress-dot.is-done{background:var(--gold-deep);}
+.quiz-step h2{font-family:var(--font-display); font-size:clamp(1.4rem,2.8vw,1.9rem); margin-bottom:2rem;}
+.quiz-options{display:flex; flex-wrap:wrap; justify-content:center; gap:1rem;}
 .quiz-option{
   padding:.9rem 1.8rem; border:1px solid var(--sec-line); border-radius:999px;
   background:transparent; color:inherit; font-family:var(--font-display); font-size:1.05rem;
   cursor:pointer; transition:border-color .3s ease, background-color .3s ease, transform .25s ease;
 }
 .quiz-option:hover{border-color:var(--gold); transform:translateY(-3px); background:rgba(177,138,79,.1);}
-.quiz-result{margin-top:2.6rem; text-align:left;}
-.quiz-result h3{font-family:var(--font-display); font-size:1.3rem; text-align:center; margin-bottom:2rem;}
+.quiz-back{
+  display:block; margin:2rem auto 0; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--sec-fg-soft); background:none; border:none; cursor:pointer; transition:color .25s ease;
+}
+.quiz-back:hover{color:var(--gold);}
+.quiz-result{margin-top:1rem;}
+.quiz-result h3{font-family:var(--font-display); font-size:1.5rem; text-align:center; margin-bottom:2rem;}
+.quiz-result-product{
+  display:grid; grid-template-columns:180px 1fr; gap:2rem; align-items:center; text-align:left;
+  max-width:560px; margin:0 auto;
+}
+@media (max-width:520px){ .quiz-result-product{grid-template-columns:1fr; text-align:center;} }
+.quiz-result-media{
+  aspect-ratio:4/5; border:1px solid rgba(250,249,246,.16); border-radius:2px; overflow:hidden;
+  background:rgba(250,249,246,.04);
+}
+.quiz-result-media img{width:100%; height:100%; object-fit:cover; display:block;}
+.quiz-result-info h4{font-family:var(--font-display); font-size:1.4rem; margin:.3rem 0 .8rem;}
+.quiz-result-desc{color:var(--sec-fg-soft); line-height:1.7; margin-bottom:.8rem;}
+.quiz-result-price{font-family:var(--font-display); font-size:1.2rem; color:var(--gold-light); margin-bottom:1.4rem;}
+.quiz-result-actions{display:flex; flex-wrap:wrap; gap:.8rem;}
+@media (max-width:520px){ .quiz-result-actions{justify-content:center;} }
+.quiz-empty{color:var(--sec-fg-soft); text-align:center;}
 .quiz-restart{
-  display:block; margin:2.4rem auto 0; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase;
+  display:block; margin:2.6rem auto 0; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase;
   color:var(--gold-deep); background:none; border:none; cursor:pointer;
   text-decoration:underline; text-underline-offset:3px;
 }
@@ -1532,6 +1576,16 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   background:transparent; color:inherit; border-radius:2px; font-family:inherit;
 }
 .product-actions{display:flex; flex-direction:column; gap:.8rem; align-items:flex-start;}
+
+/* =======================================================================
+   A Essência Verité — teaser pequeno da home linkando pra sobre.html
+   (deliberadamente compacto: menos padding que uma seção normal, texto
+   curto, um botão só — não pode competir em tamanho com as vitrines)
+   ======================================================================= */
+#essencia-mini{padding:4.5rem 0;}
+.essencia-mini-wrap{max-width:640px; margin:0 auto; text-align:center;}
+.essencia-mini-wrap h2{font-family:var(--font-display); font-size:clamp(1.7rem,3.2vw,2.3rem); margin-bottom:1.1rem;}
+.essencia-mini-wrap .lead{color:var(--sec-fg-soft); line-height:1.85; margin-bottom:1.8rem;}
 
 /* =======================================================================
    Clube Verité — seção premium na home (não deixar escondido)

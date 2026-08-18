@@ -49,6 +49,31 @@
       if(metaDesc) metaDesc.setAttribute('content', product.seoDescription);
     }
 
+    // Dados estruturados (schema.org/Product) — só quando há produto real.
+    var existingLd = document.getElementById('product-jsonld');
+    if(existingLd) existingLd.remove();
+    var ld = {
+      '@context': 'https://schema.org/',
+      '@type': 'Product',
+      name: product.name,
+      description: product.description || product.shortDescription || undefined,
+      sku: product.sku || undefined,
+      image: (product.images && product.images.length) ? product.images : undefined,
+      brand: { '@type': 'Brand', name: 'Verité' },
+      offers: product.price != null ? {
+        '@type': 'Offer',
+        priceCurrency: product.currency || 'BRL',
+        price: (product.salePrice != null ? product.salePrice : product.price).toFixed(2),
+        availability: product.inStock === false ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+        url: window.location.href
+      } : undefined
+    };
+    var ldScript = document.createElement('script');
+    ldScript.type = 'application/ld+json';
+    ldScript.id = 'product-jsonld';
+    ldScript.textContent = JSON.stringify(ld);
+    document.head.appendChild(ldScript);
+
     var categoryLabel = (VP.CATEGORIES.filter(function(c){ return c.slug === product.category; })[0] || {}).label || '';
     setText('product-category', categoryLabel);
     setText('product-name', product.name);

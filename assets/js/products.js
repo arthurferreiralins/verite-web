@@ -112,7 +112,14 @@
       body.appendChild(el('p', 'product-tile-category', catLabel));
     }
     body.appendChild(el('h3', null, p.name || ''));
-    if(p.volume) body.appendChild(el('p', 'product-tile-volume', p.volume));
+    var metaParts = [];
+    if(p.concentration) metaParts.push(p.concentration);
+    if(p.gender){
+      var genderLabel = (GENDERS.filter(function(g){ return g.slug === p.gender; })[0] || {}).label;
+      if(genderLabel) metaParts.push(genderLabel);
+    }
+    if(p.volume) metaParts.push(p.volume);
+    if(metaParts.length) body.appendChild(el('p', 'product-tile-volume', metaParts.join(' · ')));
 
     var priceWrap = el('p', 'product-tile-price');
     if(p.salePrice != null && p.price != null && p.salePrice < p.price){
@@ -125,6 +132,10 @@
       priceWrap.textContent = 'Sob consulta';
     }
     body.appendChild(priceWrap);
+    var installBase = p.salePrice != null ? p.salePrice : p.price;
+    if(installBase != null && installBase > 0){
+      body.appendChild(el('p', 'product-tile-installments', 'ou 3x de ' + money(installBase / 3, p.currency)));
+    }
     link.appendChild(body);
     card.appendChild(link);
 
@@ -155,29 +166,12 @@
   }
 
   /**
-   * Renderiza qualquer [data-category] com [data-role="grid"]/[data-role="empty"]
-   * (ainda usado pela pré-visualização "Primeira Coleção" da home).
-   */
-  function initCategoryGrids(){
-    document.querySelectorAll('[data-category]').forEach(function(section){
-      var categoryId = section.getAttribute('data-category');
-      var gridEl = section.querySelector('[data-role="grid"]');
-      var emptyEl = section.querySelector('[data-role="empty"]');
-      var items = byCategory(categoryId);
-      if(!items.length){
-        if(gridEl) gridEl.hidden = true;
-        if(emptyEl) emptyEl.hidden = false;
-        return;
-      }
-      if(emptyEl) emptyEl.hidden = true;
-      if(gridEl){ gridEl.hidden = false; renderGrid(gridEl, items); }
-    });
-  }
-
-  /**
    * Renderiza qualquer [data-showcase] da home: destaques, mais vendidos,
-   * lançamentos — cada um com um filtro simples e um limite de itens.
-   * Mostra o empty state elegante já usado no site quando não há produtos.
+   * lançamentos, presentes — cada um com um filtro simples e um limite de
+   * itens. Sem produto correspondente, a seção inteira fica oculta (não
+   * mostra nenhuma caixa "Em preparação") — a loja nunca deve parecer vazia,
+   * só mostra o que existe de verdade. As seções já nascem `hidden` no HTML
+   * por padrão; isto só as revela quando há conteúdo real pra mostrar.
    */
   function initShowcases(){
     document.querySelectorAll('[data-showcase]').forEach(function(section){
@@ -192,15 +186,13 @@
       else items = pool;
       items = items.slice(0, limit);
 
-      var gridEl = section.querySelector('[data-role="grid"]');
-      var emptyEl = section.querySelector('[data-role="empty"]');
       if(!items.length){
-        if(gridEl) gridEl.hidden = true;
-        if(emptyEl) emptyEl.hidden = false;
+        section.hidden = true;
         return;
       }
-      if(emptyEl) emptyEl.hidden = true;
-      if(gridEl){ gridEl.hidden = false; renderGrid(gridEl, items); }
+      section.hidden = false;
+      var gridEl = section.querySelector('[data-role="grid"]');
+      if(gridEl) renderGrid(gridEl, items);
     });
   }
 
@@ -215,6 +207,7 @@
     var n = normalize(q);
     return normalize(p.name).indexOf(n) !== -1 ||
       normalize(p.category).indexOf(n) !== -1 ||
+      normalize(p.gender).indexOf(n) !== -1 ||
       normalize(p.olfactoryFamily).indexOf(n) !== -1 ||
       normalize(p.notesTop).indexOf(n) !== -1 ||
       normalize(p.notesHeart).indexOf(n) !== -1 ||
@@ -275,7 +268,6 @@
     effectivePrice: effectivePrice,
     renderCard: renderProductCard,
     renderGrid: renderGrid,
-    initCategoryGrids: initCategoryGrids,
     initShowcases: initShowcases,
     readFilters: readFilters,
     applyFilters: applyFilters,
@@ -284,6 +276,6 @@
   };
 
   // Não roda sozinho no DOMContentLoaded: assets/js/products-loader.js chama
-  // initCategoryGrids()/initShowcases() (ou a listagem própria de produtos.html)
+  // initShowcases() (ou a listagem própria de produtos.html)
   // assim que window.VERITE_PRODUCTS chega da API.
 })();

@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Conheça a história, a essência e o manifesto da Verité — uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade."/>
+<meta name="theme-color" content="#0c0c0d"/>
+<title>Sobre a Verité | Perfumaria & Fragrâncias</title>
+<link rel="canonical" href="https://verite-web.vercel.app/sobre.html"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
+<link rel="apple-touch-icon" href="assets/img/favicon-256.png"/>
+<meta name="robots" content="index, follow"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="VERITÉ"/>
+<meta property="og:url" content="https://verite-web.vercel.app/sobre.html"/>
+<meta property="og:title" content="Sobre a Verité | Perfumaria & Fragrâncias"/>
+<meta property="og:description" content="Conheça a história, a essência e o manifesto da Verité — uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade."/>
+<meta property="og:image" content="https://verite-web.vercel.app/assets/img/og-image.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:locale" content="pt_BR"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Sobre a Verité | Perfumaria & Fragrâncias"/>
+<meta name="twitter:description" content="Conheça a história, a essência e o manifesto da Verité — uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade."/>
+<meta name="twitter:image" content="https://verite-web.vercel.app/assets/img/og-image.jpg"/>
+</head>
+<body>
+<a class="skip-link" href="#topo">Pular para conteúdo</a>
+
+<header>
+  <div class="wrap header-top">
+    <a class="brand-mini" href="index.html#inicio">
+      <span class="emblem-mini">
+        <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+      </span>
+      <span class="word">Verité</span>
+    </a>
+    <form class="header-search" action="produtos.html" method="get" role="search">
+      <input type="search" name="busca" placeholder="Qual fragrância você procura?" aria-label="Buscar fragrância" autocomplete="off"/>
+      <button type="submit" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+    </form>
+    <div class="header-actions">
+      <a class="header-icon" href="/clube" aria-label="Minha conta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.4-4.2 5.9-6 8-6s6.6 1.8 8 6"/></svg>
+        <span class="header-icon-label">Conta</span>
+      </a>
+      <a class="header-icon" href="favoritos.html" aria-label="Favoritos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.5-9.3-8.8C1.2 8 2.5 4.7 6 3.9c2-.5 4 .3 6 2.4 2-2.1 4-2.9 6-2.4 3.5.8 4.8 4.1 3.3 7.3C19 15.5 12 20 12 20Z"/></svg>
+        <span class="header-icon-label">Favoritos</span>
+        <span class="header-icon-badge" data-fav-count hidden>0</span>
+      </a>
+      <div class="header-cart">
+        <button type="button" class="header-icon" id="mini-cart-toggle" aria-label="Carrinho" aria-expanded="false" aria-controls="mini-cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12l-1 11H7L6 9Z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/></svg>
+          <span class="header-icon-label">Carrinho</span>
+          <span class="header-icon-badge" data-cart-count hidden>0</span>
+        </button>
+        <div id="mini-cart" role="dialog" aria-label="Carrinho">
+          <div id="mini-cart-items"></div>
+          <div class="mini-cart-footer">
+            <span>Subtotal: <strong id="mini-cart-subtotal">R$ 0,00</strong></span>
+            <a class="btn" href="carrinho.html">Ver carrinho</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Abrir menu">
+      <span></span>
+    </button>
+  </div>
+  <div class="wrap nav-inner">
+    <nav id="primary-nav" class="links">
+      <a href="index.html#inicio">Início</a>
+      <a href="produtos.html?categoria=perfumes">Perfumes</a>
+      <a href="produtos.html?genero=feminino">Femininos</a>
+      <a href="produtos.html?genero=masculino">Masculinos</a>
+      <a href="produtos.html?genero=unissex">Unissex</a>
+      <a href="produtos.html?categoria=kits">Kits</a>
+      <a href="produtos.html?categoria=presentes">Presentes</a>
+      <a href="produtos.html?colecao=lancamentos">Lançamentos</a>
+      <a href="produtos.html?colecao=mais-vendidos">Mais Vendidos</a>
+      <a class="nav-clube" href="/clube">Clube Verité</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="topo" class="page-hero has-ambient">
+    <div class="ambient" data-parallax="20" aria-hidden="true">
+      <div class="ambient-orb orb-a" style="width:320px;height:320px;top:-70px;right:8%;"></div>
+      <div class="ambient-orb orb-b" style="width:260px;height:260px;bottom:-60px;left:6%;"></div>
+      <div class="ambient-particles" data-count="10"></div>
+    </div>
+    <div class="emblem-wrap">
+      <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+    </div>
+    <h1>Sobre a Verité</h1>
+    <p class="slogan">A verdade está na sua essência.</p>
+    <div class="hairline sweep" aria-hidden="true" style="margin-top:1.8rem;"></div>
+  </section>
+
+  <!-- ============ Faixa de valores (decorativa) ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Autenticidade</span><span class="dot">•</span>
+      <span>Elegância</span><span class="dot">•</span>
+      <span>Qualidade</span><span class="dot">•</span>
+      <span>Presença</span><span class="dot">•</span>
+      <span>Exclusividade</span><span class="dot">•</span>
+      <span>Autenticidade</span><span class="dot">•</span>
+      <span>Elegância</span><span class="dot">•</span>
+      <span>Qualidade</span><span class="dot">•</span>
+      <span>Presença</span><span class="dot">•</span>
+      <span>Exclusividade</span><span class="dot">•</span>
+    </div>
+  </div>
+
+  <!-- ============ A VERITÉ (história da marca) ============ -->
+  <section id="a-verite" class="section section-light has-ambient">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:320px;height:320px;top:-100px;right:8%; background:radial-gradient(circle, rgba(177,138,79,.22), transparent 72%);"></div>
+    </div>
+    <div class="wrap">
+      <div class="section-head-split reveal">
+        <div>
+          <p class="eyebrow">Nossa História</p>
+          <h2>A VERITÉ</h2>
+          <div class="hairline sweep" style="margin:1.6rem 0 0;"></div>
+        </div>
+        <p class="lead" data-content-key="historia_lead" data-content-html="true">A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela <em>revela personalidade</em>, <em>desperta lembranças</em> e deixa uma <em>presença</em> que continua mesmo depois que a pessoa vai embora.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Nossa Essência (valores) ============ -->
+  <section id="essencia" class="section section-dark has-ambient">
+    <div class="watermark" aria-hidden="true">V</div>
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:360px;height:360px;top:-60px;right:-90px;"></div>
+      <div class="ambient-particles" data-count="8"></div>
+    </div>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">O Que Nos Define</p>
+        <h2>Nossa Essência</h2>
+      </div>
+      <ol class="essencia-list">
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <circle cx="24" cy="20" r="15"/>
+              <circle cx="24" cy="20" r="6"/>
+              <path d="M17 33 L14 44 L24 39 L34 44 L31 33"/>
+            </svg>
+          </span>
+          <span class="body"><h3 data-content-key="essencia_1_title">Autenticidade</h3><p data-content-key="essencia_1_desc">A verdade em cada gesto.</p></span>
+        </li>
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M24 4 L44 20 L24 44 L4 20 Z"/>
+              <path d="M4 20 L44 20"/>
+              <path d="M14 20 L24 4"/>
+              <path d="M34 20 L24 4"/>
+            </svg>
+          </span>
+          <span class="body"><h3 data-content-key="essencia_2_title">Elegância</h3><p data-content-key="essencia_2_desc">Sofisticação em cada detalhe.</p></span>
+        </li>
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <circle cx="24" cy="24" r="19"/>
+              <path d="M15 24.5 L21 30.5 L33 17"/>
+            </svg>
+          </span>
+          <span class="body"><h3 data-content-key="essencia_3_title">Qualidade</h3><p data-content-key="essencia_3_desc">Excelência que se sente.</p></span>
+        </li>
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <circle cx="24" cy="24" r="2.6" fill="currentColor" stroke="none"/>
+              <circle cx="24" cy="24" r="10"/>
+              <circle cx="24" cy="24" r="18" opacity=".55"/>
+            </svg>
+          </span>
+          <span class="body"><h3 data-content-key="essencia_4_title">Presença</h3><p data-content-key="essencia_4_desc">Uma marca que permanece.</p></span>
+        </li>
+        <li class="essencia-item reveal">
+          <span class="num"></span>
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <circle cx="15" cy="24" r="8"/>
+              <path d="M23 24 L42 24"/>
+              <path d="M35 24 L35 31"/>
+              <path d="M42 24 L42 30"/>
+            </svg>
+          </span>
+          <span class="body"><h3 data-content-key="essencia_5_title">Exclusividade</h3><p data-content-key="essencia_5_desc">Único, como você.</p></span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ Mais do que uma fragrância ============ -->
+  <section id="experiencia" class="section section-dark section-2 experiencia has-ambient">
+    <div class="watermark" aria-hidden="true">V</div>
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:340px;height:340px;bottom:-100px;left:6%;"></div>
+      <div class="ambient-orb orb-b" style="width:280px;height:280px;top:-70px;right:8%;"></div>
+      <div class="ambient-particles" data-count="10"></div>
+    </div>
+    <div class="wrap">
+      <div class="section-head reveal-blur">
+        <p class="eyebrow">Nossa Visão</p>
+        <h2 class="experiencia-title">Mais do que<br/>uma fragrância</h2>
+      </div>
+      <div class="statement-lines">
+        <p class="statement-line reveal" style="transition-delay:.05s">A VERITÉ existe para ir além do aroma.</p>
+        <p class="statement-line reveal" style="transition-delay:.25s">Criamos experiências marcantes e produtos pensados em cada detalhe.</p>
+        <p class="statement-line reveal" style="transition-delay:.45s">Uma ligação genuína com quem nos escolhe.</p>
+      </div>
+      <p class="experiencia-tagline reveal" data-content-key="experiencia_tagline" style="transition-delay:.65s">Porque uma verdadeira essência não se usa — se vive.</p>
+      <div class="concept-reveal" aria-hidden="true">
+        <span class="reveal-blur" style="transition-delay:.1s">Presença</span>
+        <span class="reveal-blur" style="transition-delay:.3s">Memória</span>
+        <span class="reveal-blur" style="transition-delay:.5s">Identidade</span>
+        <span class="reveal-blur" style="transition-delay:.7s">Emoção</span>
+        <span class="reveal-blur" style="transition-delay:.9s">Essência</span>
+      </div>
+      <div class="pillars reveal">
+        <div class="pillar">
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M24 6 L27.5 20.5 L42 24 L27.5 27.5 L24 42 L20.5 27.5 L6 24 L20.5 20.5 Z"/>
+            </svg>
+          </span>
+          <span>Experiências</span>
+        </div>
+        <div class="pillar">
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <rect x="10" y="10" width="28" height="28" rx="2"/>
+              <path d="M10 24 L38 24"/>
+              <path d="M24 10 L24 38"/>
+            </svg>
+          </span>
+          <span>Produtos</span>
+        </div>
+        <div class="pillar">
+          <span class="icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+              <circle cx="19" cy="24" r="12"/>
+              <circle cx="29" cy="24" r="12"/>
+            </svg>
+          </span>
+          <span>Conexão</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Manifesto VERITÉ ============ -->
+  <section id="manifesto" class="section section-dark manifesto-section has-ambient">
+    <div class="watermark" aria-hidden="true">V</div>
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:320px;height:320px;top:-80px;left:50%;margin-left:-160px;"></div>
+      <div class="ambient-particles" data-count="8"></div>
+    </div>
+    <div class="wrap">
+      <p class="eyebrow reveal">Manifesto</p>
+      <div class="manifesto-lines">
+        <p class="manifesto-line reveal" style="transition-delay:0s">Não acreditamos que uma fragrância seja apenas algo que se usa.</p>
+        <p class="manifesto-line reveal" style="transition-delay:.15s">Ela acompanha <span class="hl">momentos</span>.</p>
+        <p class="manifesto-line reveal" style="transition-delay:.3s">Desperta <span class="hl">memórias</span>.</p>
+        <p class="manifesto-line reveal" style="transition-delay:.45s">Revela <span class="hl">personalidade</span>.</p>
+        <p class="manifesto-line reveal" style="transition-delay:.6s">Cria <span class="hl">presença</span>.</p>
+        <p class="manifesto-line manifesto-pause reveal" style="transition-delay:.8s">Algumas coisas desaparecem quando você vai embora.</p>
+        <p class="manifesto-line reveal" style="transition-delay:.95s">Outras <span class="hl">permanecem</span>.</p>
+      </div>
+      <div class="manifesto-signature reveal" style="transition-delay:1.2s">
+        <p class="manifesto-brand">VERITÉ</p>
+        <p class="manifesto-slogan">A verdade está na sua essência.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Perguntas Frequentes ============ -->
+  <section id="faq" class="section section-beige">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Perguntas Frequentes</p>
+        <h2>Perguntas frequentes</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <h3>
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-a1" id="faq-q1">
+              <span>O que é a VERITÉ?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-a1" role="region" aria-labelledby="faq-q1" aria-hidden="true">
+            <div class="faq-panel-inner">
+              <p>A VERITÉ é uma casa de perfumaria dedicada a transformar fragrâncias em experiências. Acreditamos que um perfume é mais do que um aroma — é uma forma de expressar quem você é.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <h3>
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-a2" id="faq-q2">
+              <span>Qual é a proposta da VERITÉ?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-a2" role="region" aria-labelledby="faq-q2" aria-hidden="true">
+            <div class="faq-panel-inner">
+              <p>Queremos criar mais do que fragrâncias: experiências, lembranças, identidade e presença. Cada detalhe é pensado para ser autêntico, elegante e exclusivo.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <h3>
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-a3" id="faq-q3">
+              <span>Quando será o lançamento?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-a3" role="region" aria-labelledby="faq-q3" aria-hidden="true">
+            <div class="faq-panel-inner">
+              <p>Ainda não temos uma data definida. As novidades serão anunciadas pelos canais oficiais da VERITÉ.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <h3>
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-a4" id="faq-q4">
+              <span>Como posso acompanhar as novidades?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-a4" role="region" aria-labelledby="faq-q4" aria-hidden="true">
+            <div class="faq-panel-inner">
+              <p>Cadastre-se na nossa <a href="index.html#lancamento">lista de espera</a> para ser um dos primeiros a saber quando a VERITÉ chegar.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <h3>
+            <button class="faq-trigger" aria-expanded="false" aria-controls="faq-a5" id="faq-q5">
+              <span>Como posso entrar em contato?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq-panel" id="faq-a5" role="region" aria-labelledby="faq-q5" aria-hidden="true">
+            <div class="faq-panel-inner">
+              <p>Você pode falar com a gente pela seção de <a href="#contato">Contato</a> logo abaixo, ou pelo WhatsApp já disponível por lá.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Contato ============ -->
+  <section id="contato" class="section section-light">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Fale Com a VERITÉ</p>
+        <h2>Contato</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-intro reveal">
+          <p>Tem uma pergunta, uma parceria em mente ou só quer trocar uma palavra com a VERITÉ? Estamos construindo esta casa com atenção a cada detalhe — inclusive à conversa com quem vai vesti-la.</p>
+          <ul class="contact-list">
+            <li class="disabled-link" title="Canal em preparação" data-settings-key="email">
+              <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="4" y="10" width="40" height="28" rx="2"/><path d="M4 12 L24 28 L44 12"/></svg></span>
+              <span><span class="label">E-mail</span><span class="value">Canal em preparação</span></span>
+            </li>
+            <li class="disabled-link" title="Canal em preparação" data-settings-key="instagram">
+              <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="36" height="36" rx="10"/><circle cx="24" cy="24" r="9"/><circle cx="34" cy="14" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+              <span><span class="label">Instagram</span><span class="value">Canal em preparação</span></span>
+            </li>
+            <li>
+              <a class="contact-link" href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">
+                <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><path d="M24 6a18 18 0 0 0-15.4 27.3L6 42l9-2.5A18 18 0 1 0 24 6Z"/></svg></span>
+                <span><span class="label">WhatsApp</span><span class="value">+55 81 98155-3632</span></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="contact-form reveal" data-form-container>
+          <form class="stack-form" id="contact-form" data-submit-endpoint="/api/public/contact" novalidate>
+            <div class="field">
+              <label for="contact-name">Nome</label>
+              <input id="contact-name" name="name" type="text" autocomplete="name" placeholder="Seu nome" required/>
+              <span class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="contact-email">E-mail</label>
+              <input id="contact-email" name="email" type="email" autocomplete="email" placeholder="Seu melhor e-mail" required/>
+              <span class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="contact-subject">Assunto</label>
+              <input id="contact-subject" name="subject" type="text" placeholder="Sobre o que você quer falar?" required/>
+              <span class="field-error" aria-live="polite"></span>
+            </div>
+            <div class="field">
+              <label for="contact-message">Mensagem</label>
+              <textarea id="contact-message" name="message" rows="4" placeholder="Sua mensagem" required></textarea>
+              <span class="field-error" aria-live="polite"></span>
+            </div>
+            <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+            <button type="submit" class="btn btn-block">
+              <span class="btn-label">Enviar Mensagem</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
+            <p class="form-error-general" role="alert" aria-live="polite" hidden></p>
+          </form>
+          <p class="form-thanks" role="status">Obrigado pela mensagem. Responderemos em breve.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="watermark" aria-hidden="true">V</div>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient-orb" style="width:280px;height:280px;top:-40px;left:50%;margin-left:-140px; animation-duration:26s;"></div>
+  </div>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand reveal">
+        <div class="emblem-wrap">
+          <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+        </div>
+        <span class="word">Verité</span>
+        <p>A verdade está na sua essência.</p>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Comprar</h4>
+        <ul>
+          <li><a href="produtos.html?categoria=perfumes">Perfumes</a></li>
+          <li><a href="produtos.html?genero=feminino">Femininos</a></li>
+          <li><a href="produtos.html?genero=masculino">Masculinos</a></li>
+          <li><a href="produtos.html?genero=unissex">Unissex</a></li>
+          <li><a href="produtos.html?categoria=kits">Kits</a></li>
+          <li><a href="produtos.html?categoria=presentes">Presentes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Verité</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="/clube">Clube Verité</a></li>
+          <li><a href="produtos.html?colecao=exclusivos">Exclusivos</a></li>
+          <li><a href="produtos.html?colecao=lancamentos">Lançamentos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Ajuda</h4>
+        <ul>
+          <li><a href="sobre.html#contato">Contato</a></li>
+          <li><a href="entregas.html">Entregas</a></li>
+          <li><a href="pagamentos.html">Pagamentos</a></li>
+          <li><a href="trocas.html">Trocas</a></li>
+          <li><a href="sobre.html#faq">Perguntas Frequentes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Redes Sociais</h4>
+        <ul>
+          <li class="disabled-link" title="Canal em preparação" data-settings-key="instagram">Instagram — canal em preparação</li>
+          <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-legal reveal">
+      <a href="privacidade.html">Política de Privacidade</a>
+      <span class="footer-legal-dot" aria-hidden="true">·</span>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+    <div class="footer-bottom">
+      <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
+      <a class="to-top" href="#topo">
+        Voltar ao topo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/ambient.js"></script>
+<script src="assets/js/pointer.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/favorites.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/search.js"></script>
+<script src="assets/js/site-data.js"></script>
+</body>
+</html>

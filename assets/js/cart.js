@@ -48,7 +48,7 @@
       });
     }
     writeCart(list);
-    if (window.VeriteToast) window.VeriteToast('Adicionado ao carrinho.');
+    if (window.VeriteToast) window.VeriteToast('Adicionado à sua seleção Verité.');
   }
 
   function setQty(slug, qty) {
