@@ -1207,8 +1207,11 @@ footer .watermark{
 /* botão "adicionar ao carrinho" some e reaparece suavemente no hover — só em
    telas com mouse de verdade; em touch (tablet/celular) fica sempre visível,
    porque não existe hover pra revelar nada. */
+/* discreto, nunca opacity:0 — um botão totalmente invisível fica fora da
+   árvore de acessibilidade em alguns navegadores e pode falhar em cliques
+   rápidos (mouse já clicando antes da transição terminar) */
 @media (hover:hover) and (pointer:fine){
-  .product-tile-actions{opacity:0; transform:translateY(6px); transition:opacity .35s ease, transform .35s ease;}
+  .product-tile-actions{opacity:.55; transform:translateY(4px); transition:opacity .3s ease, transform .3s ease;}
   .product-tile:hover .product-tile-actions, .product-tile:focus-within .product-tile-actions{opacity:1; transform:translateY(0);}
 }
 
