@@ -92,6 +92,17 @@ module.exports = async function handler(req, res) {
 
   await sql`UPDATE club_codes SET customer_id = ${customer.id} WHERE id = ${codeRowId}`;
 
+  // Número de membro é atribuído uma única vez, na primeira ativação —
+  // nunca reatribuído se o cliente já tinha um (reativação/upgrade de conta).
+  if (!customer.member_number) {
+    const { rows: numbered } = await sql`
+      UPDATE customers SET member_number = 'VRT-' || LPAD(id::text, 6, '0')
+      WHERE id = ${customer.id} AND member_number IS NULL
+      RETURNING member_number
+    `;
+    if (numbered.length) customer.member_number = numbered[0].member_number;
+  }
+
   await sql`
     INSERT INTO customer_coupons (customer_id, coupon_id)
     SELECT ${customer.id}, id FROM coupons WHERE auto_grant = true AND active = true

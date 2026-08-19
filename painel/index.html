@@ -629,52 +629,524 @@
       </section>
 
       <section id="section-clube" class="admin-section" data-section="clube" hidden>
-        <div id="clube-list-view">
-          <div class="section-toolbar">
-            <div>
-              <h1>Clube Verité</h1>
-              <p class="section-sub">Códigos de convite, membros e cupons do programa de fidelidade.</p>
-            </div>
-            <button id="clube-gerar-btn" class="btn-primary" type="button">+ Gerar código</button>
+        <div class="section-toolbar">
+          <div>
+            <h1>Clube Verité</h1>
+            <p class="section-sub">Membros, níveis, pontos, benefícios, cupons, presentes e novidades do programa de fidelidade.</p>
           </div>
-          <div class="toolbar-actions">
-            <input id="clube-search" type="search" placeholder="Buscar por código, cliente ou e-mail"/>
-            <select id="clube-status-filter">
-              <option value="">Todos os status</option>
-              <option value="ativo">Ativo</option>
-              <option value="utilizado">Utilizado</option>
-              <option value="bloqueado">Bloqueado</option>
-            </select>
-          </div>
-          <div id="clube-table-wrap" class="table-wrap"></div>
         </div>
-        <div id="clube-gerar-view" hidden>
-          <div class="section-toolbar">
-            <div><h1>Gerar códigos</h1></div>
-            <button id="clube-gerar-back-btn" class="btn-ghost" type="button">Voltar</button>
+        <div class="tabs" id="clube-subtabs">
+          <button type="button" class="tab-btn is-active" data-clube-tab="membros">Membros</button>
+          <button type="button" class="tab-btn" data-clube-tab="codigos">Códigos</button>
+          <button type="button" class="tab-btn" data-clube-tab="niveis">Níveis</button>
+          <button type="button" class="tab-btn" data-clube-tab="beneficios">Benefícios</button>
+          <button type="button" class="tab-btn" data-clube-tab="pontos">Pontos</button>
+          <button type="button" class="tab-btn" data-clube-tab="cupons">Cupons</button>
+          <button type="button" class="tab-btn" data-clube-tab="presentes">Presentes</button>
+          <button type="button" class="tab-btn" data-clube-tab="novidades">Novidades</button>
+        </div>
+
+        <!-- ===== Membros ===== -->
+        <div data-clube-panel="membros">
+          <div id="clube-membros-list-view">
+            <div class="toolbar-actions">
+              <input id="clube-membros-search" type="search" placeholder="Buscar por nome, e-mail ou número de membro"/>
+            </div>
+            <div id="clube-membros-table-wrap" class="table-wrap"></div>
           </div>
-          <form id="clube-gerar-form" class="admin-form" novalidate>
-            <div class="form-grid">
-              <div class="field">
-                <label for="clube-gerar-count">Quantidade</label>
-                <input id="clube-gerar-count" type="number" min="1" max="100" step="1" value="1"/>
-              </div>
-              <div class="field">
-                <label for="clube-gerar-label">Identificação (opcional)</label>
-                <input id="clube-gerar-label" maxlength="120" placeholder="ex: Lote cartões agosto/2026"/>
-              </div>
+          <div id="clube-membros-detail-view" hidden>
+            <div class="section-toolbar">
+              <div><h1 id="clube-membro-detail-name">Membro</h1></div>
+              <button id="clube-membro-back-btn" class="btn-ghost" type="button">Voltar</button>
             </div>
-            <div class="form-actions">
-              <div class="form-actions-right">
-                <button type="button" id="clube-gerar-cancel-btn" class="btn-ghost">Cancelar</button>
-                <button type="submit" class="btn-primary">
-                  <span class="btn-label">Gerar</span>
-                  <span class="spinner" aria-hidden="true" hidden></span>
-                </button>
-              </div>
+            <div id="clube-membro-detail-body"></div>
+          </div>
+        </div>
+
+        <!-- ===== Códigos (já existente) ===== -->
+        <div data-clube-panel="codigos" hidden>
+          <div id="clube-list-view">
+            <div class="section-toolbar">
+              <div><p class="section-sub">Códigos de convite dos cartões físicos.</p></div>
+              <button id="clube-gerar-btn" class="btn-primary" type="button">+ Gerar código</button>
             </div>
-          </form>
-          <div id="clube-gerar-result" class="table-wrap" hidden></div>
+            <div class="toolbar-actions">
+              <input id="clube-search" type="search" placeholder="Buscar por código, cliente ou e-mail"/>
+              <select id="clube-status-filter">
+                <option value="">Todos os status</option>
+                <option value="ativo">Ativo</option>
+                <option value="utilizado">Utilizado</option>
+                <option value="bloqueado">Bloqueado</option>
+              </select>
+            </div>
+            <div id="clube-table-wrap" class="table-wrap"></div>
+          </div>
+          <div id="clube-gerar-view" hidden>
+            <div class="section-toolbar">
+              <div><h1>Gerar códigos</h1></div>
+              <button id="clube-gerar-back-btn" class="btn-ghost" type="button">Voltar</button>
+            </div>
+            <form id="clube-gerar-form" class="admin-form" novalidate>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-gerar-count">Quantidade</label>
+                  <input id="clube-gerar-count" type="number" min="1" max="100" step="1" value="1"/>
+                </div>
+                <div class="field">
+                  <label for="clube-gerar-label">Identificação (opcional)</label>
+                  <input id="clube-gerar-label" maxlength="120" placeholder="ex: Lote cartões agosto/2026"/>
+                </div>
+              </div>
+              <div class="form-actions">
+                <div class="form-actions-right">
+                  <button type="button" id="clube-gerar-cancel-btn" class="btn-ghost">Cancelar</button>
+                  <button type="submit" class="btn-primary">
+                    <span class="btn-label">Gerar</span>
+                    <span class="spinner" aria-hidden="true" hidden></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div id="clube-gerar-result" class="table-wrap" hidden></div>
+          </div>
+        </div>
+
+        <!-- ===== Níveis ===== -->
+        <div data-clube-panel="niveis" hidden>
+          <div id="clube-niveis-list-view">
+            <div class="section-toolbar">
+              <div><p class="section-sub">Progressão do Clube — calculada automaticamente pelo total gasto do cliente.</p></div>
+              <button id="clube-nivel-new-btn" class="btn-primary" type="button">+ Novo nível</button>
+            </div>
+            <div id="clube-niveis-table-wrap" class="table-wrap"></div>
+          </div>
+          <div id="clube-nivel-form-view" hidden>
+            <div class="section-toolbar">
+              <div><h1 id="clube-nivel-form-title">Novo nível</h1></div>
+              <button id="clube-nivel-back-btn" class="btn-ghost" type="button">Voltar</button>
+            </div>
+            <form id="clube-nivel-form" class="admin-form" novalidate>
+              <input type="hidden" id="clube-nivel-id"/>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-nivel-name">Nome do nível</label>
+                  <input id="clube-nivel-name" required maxlength="80" placeholder="ex: Verité Noir"/>
+                </div>
+                <div class="field">
+                  <label for="clube-nivel-min-spent">Compras mínimas (R$)</label>
+                  <input id="clube-nivel-min-spent" type="number" min="0" step="0.01" value="0" required/>
+                </div>
+                <div class="field">
+                  <label for="clube-nivel-sort">Ordem</label>
+                  <input id="clube-nivel-sort" type="number" min="0" step="1" value="0"/>
+                </div>
+              </div>
+              <div class="field">
+                <label for="clube-nivel-description">Descrição (opcional)</label>
+                <textarea id="clube-nivel-description" rows="2" maxlength="400"></textarea>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="clube-nivel-active" type="checkbox" checked/> Nível ativo</label>
+              </div>
+              <div class="form-actions">
+                <div class="form-actions-right">
+                  <button type="button" id="clube-nivel-cancel-btn" class="btn-ghost">Cancelar</button>
+                  <button type="submit" class="btn-primary">
+                    <span class="btn-label">Salvar</span>
+                    <span class="spinner" aria-hidden="true" hidden></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ===== Benefícios ===== -->
+        <div data-clube-panel="beneficios" hidden>
+          <div id="clube-beneficios-list-view">
+            <div class="section-toolbar">
+              <div><p class="section-sub">Benefícios disponíveis para os membros, conforme o nível.</p></div>
+              <button id="clube-beneficio-new-btn" class="btn-primary" type="button">+ Novo benefício</button>
+            </div>
+            <div id="clube-beneficios-table-wrap" class="table-wrap"></div>
+          </div>
+          <div id="clube-beneficio-form-view" hidden>
+            <div class="section-toolbar">
+              <div><h1 id="clube-beneficio-form-title">Novo benefício</h1></div>
+              <button id="clube-beneficio-back-btn" class="btn-ghost" type="button">Voltar</button>
+            </div>
+            <form id="clube-beneficio-form" class="admin-form" novalidate>
+              <input type="hidden" id="clube-beneficio-id"/>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-beneficio-name">Nome</label>
+                  <input id="clube-beneficio-name" required maxlength="120"/>
+                </div>
+                <div class="field">
+                  <label for="clube-beneficio-tier">Nível necessário</label>
+                  <select id="clube-beneficio-tier"><option value="">Todos os níveis</option></select>
+                </div>
+                <div class="field">
+                  <label for="clube-beneficio-sort">Ordem</label>
+                  <input id="clube-beneficio-sort" type="number" min="0" step="1" value="0"/>
+                </div>
+              </div>
+              <div class="field">
+                <label for="clube-beneficio-description">Descrição</label>
+                <textarea id="clube-beneficio-description" rows="2" maxlength="400"></textarea>
+              </div>
+              <div class="field">
+                <label for="clube-beneficio-validity">Nota de validade (opcional)</label>
+                <input id="clube-beneficio-validity" maxlength="160" placeholder="ex: Válido uma vez por ano"/>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="clube-beneficio-active" type="checkbox" checked/> Benefício ativo</label>
+              </div>
+              <div class="form-actions">
+                <button type="button" id="clube-beneficio-delete-btn" class="btn-danger-ghost" hidden>Excluir benefício</button>
+                <div class="form-actions-right">
+                  <button type="button" id="clube-beneficio-cancel-btn" class="btn-ghost">Cancelar</button>
+                  <button type="submit" class="btn-primary">
+                    <span class="btn-label">Salvar</span>
+                    <span class="spinner" aria-hidden="true" hidden></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ===== Pontos ===== -->
+        <div data-clube-panel="pontos" hidden>
+          <div class="tabs" id="clube-pontos-subtabs">
+            <button type="button" class="tab-btn is-active" data-clube-pontos-tab="regras">Regras de Pontos</button>
+            <button type="button" class="tab-btn" data-clube-pontos-tab="recompensas">Recompensas</button>
+            <button type="button" class="tab-btn" data-clube-pontos-tab="ajuste">Ajuste Manual</button>
+          </div>
+
+          <div data-clube-pontos-panel="regras">
+            <div id="clube-regras-list-view">
+              <div class="section-toolbar">
+                <div><p class="section-sub">Como os membros ganham pontos.</p></div>
+                <button id="clube-regra-new-btn" class="btn-primary" type="button">+ Nova regra</button>
+              </div>
+              <div id="clube-regras-table-wrap" class="table-wrap"></div>
+            </div>
+            <div id="clube-regra-form-view" hidden>
+              <div class="section-toolbar">
+                <div><h1 id="clube-regra-form-title">Nova regra</h1></div>
+                <button id="clube-regra-back-btn" class="btn-ghost" type="button">Voltar</button>
+              </div>
+              <form id="clube-regra-form" class="admin-form" novalidate>
+                <input type="hidden" id="clube-regra-id"/>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="clube-regra-label">Descrição curta</label>
+                    <input id="clube-regra-label" required maxlength="160" placeholder="ex: A cada R$1 em compras"/>
+                  </div>
+                  <div class="field">
+                    <label for="clube-regra-points">Pontos</label>
+                    <input id="clube-regra-points" type="number" step="1" value="1" required/>
+                  </div>
+                  <div class="field">
+                    <label for="clube-regra-sort">Ordem</label>
+                    <input id="clube-regra-sort" type="number" min="0" step="1" value="0"/>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="clube-regra-description">Detalhes (opcional)</label>
+                  <textarea id="clube-regra-description" rows="2" maxlength="400"></textarea>
+                </div>
+                <div class="field field-checkbox">
+                  <label><input id="clube-regra-active" type="checkbox" checked/> Regra ativa</label>
+                </div>
+                <div class="form-actions">
+                  <button type="button" id="clube-regra-delete-btn" class="btn-danger-ghost" hidden>Excluir regra</button>
+                  <div class="form-actions-right">
+                    <button type="button" id="clube-regra-cancel-btn" class="btn-ghost">Cancelar</button>
+                    <button type="submit" class="btn-primary">
+                      <span class="btn-label">Salvar</span>
+                      <span class="spinner" aria-hidden="true" hidden></span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div data-clube-pontos-panel="recompensas" hidden>
+            <div id="clube-recompensas-list-view">
+              <div class="section-toolbar">
+                <div><p class="section-sub">Itens que os membros podem trocar por pontos.</p></div>
+                <button id="clube-recompensa-new-btn" class="btn-primary" type="button">+ Nova recompensa</button>
+              </div>
+              <div id="clube-recompensas-table-wrap" class="table-wrap"></div>
+            </div>
+            <div id="clube-recompensa-form-view" hidden>
+              <div class="section-toolbar">
+                <div><h1 id="clube-recompensa-form-title">Nova recompensa</h1></div>
+                <button id="clube-recompensa-back-btn" class="btn-ghost" type="button">Voltar</button>
+              </div>
+              <form id="clube-recompensa-form" class="admin-form" novalidate>
+                <input type="hidden" id="clube-recompensa-id"/>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="clube-recompensa-name">Nome</label>
+                    <input id="clube-recompensa-name" required maxlength="120"/>
+                  </div>
+                  <div class="field">
+                    <label for="clube-recompensa-cost">Custo em pontos</label>
+                    <input id="clube-recompensa-cost" type="number" min="1" step="1" required/>
+                  </div>
+                  <div class="field">
+                    <label for="clube-recompensa-sort">Ordem</label>
+                    <input id="clube-recompensa-sort" type="number" min="0" step="1" value="0"/>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="clube-recompensa-description">Descrição</label>
+                  <textarea id="clube-recompensa-description" rows="2" maxlength="400"></textarea>
+                </div>
+                <div class="field field-checkbox">
+                  <label><input id="clube-recompensa-active" type="checkbox" checked/> Recompensa ativa</label>
+                </div>
+                <div class="form-actions">
+                  <button type="button" id="clube-recompensa-delete-btn" class="btn-danger-ghost" hidden>Excluir recompensa</button>
+                  <div class="form-actions-right">
+                    <button type="button" id="clube-recompensa-cancel-btn" class="btn-ghost">Cancelar</button>
+                    <button type="submit" class="btn-primary">
+                      <span class="btn-label">Salvar</span>
+                      <span class="spinner" aria-hidden="true" hidden></span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div data-clube-pontos-panel="ajuste" hidden>
+            <p class="section-sub">Ajuste manual de pontos de um membro — sempre com motivo registrado no histórico do cliente.</p>
+            <form id="clube-ajuste-form" class="admin-form" novalidate>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-ajuste-membro">Membro</label>
+                  <select id="clube-ajuste-membro" required><option value="">Selecionar membro…</option></select>
+                </div>
+                <div class="field">
+                  <label for="clube-ajuste-delta">Pontos (use negativo para debitar)</label>
+                  <input id="clube-ajuste-delta" type="number" step="1" required placeholder="ex: 150 ou -500"/>
+                </div>
+              </div>
+              <div class="field">
+                <label for="clube-ajuste-reason">Motivo</label>
+                <input id="clube-ajuste-reason" required maxlength="200" placeholder="ex: Compra confirmada #VRT-0001"/>
+              </div>
+              <div class="form-actions">
+                <div class="form-actions-right">
+                  <button type="submit" class="btn-primary">
+                    <span class="btn-label">Aplicar ajuste</span>
+                    <span class="spinner" aria-hidden="true" hidden></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ===== Cupons ===== -->
+        <div data-clube-panel="cupons" hidden>
+          <div id="clube-cupons-list-view">
+            <div class="section-toolbar">
+              <div><p class="section-sub">Cupons de desconto do Clube.</p></div>
+              <button id="clube-cupom-new-btn" class="btn-primary" type="button">+ Novo cupom</button>
+            </div>
+            <div id="clube-cupons-table-wrap" class="table-wrap"></div>
+          </div>
+          <div id="clube-cupom-form-view" hidden>
+            <div class="section-toolbar">
+              <div><h1 id="clube-cupom-form-title">Novo cupom</h1></div>
+              <button id="clube-cupom-back-btn" class="btn-ghost" type="button">Voltar</button>
+            </div>
+            <form id="clube-cupom-form" class="admin-form" novalidate>
+              <input type="hidden" id="clube-cupom-id"/>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-cupom-name">Nome</label>
+                  <input id="clube-cupom-name" required maxlength="120"/>
+                </div>
+                <div class="field">
+                  <label for="clube-cupom-code">Código</label>
+                  <input id="clube-cupom-code" required maxlength="40" placeholder="ex: VERITE10" style="text-transform:uppercase;"/>
+                </div>
+                <div class="field">
+                  <label for="clube-cupom-discount">Texto do desconto</label>
+                  <input id="clube-cupom-discount" required maxlength="60" placeholder="ex: 10% OFF"/>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-cupom-valid-until">Válido até (opcional)</label>
+                  <input id="clube-cupom-valid-until" type="date"/>
+                </div>
+                <div class="field field-checkbox">
+                  <label><input id="clube-cupom-auto-grant" type="checkbox"/> Conceder automaticamente a novos membros</label>
+                </div>
+              </div>
+              <div class="field">
+                <label for="clube-cupom-description">Descrição</label>
+                <textarea id="clube-cupom-description" rows="2" maxlength="400"></textarea>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="clube-cupom-active" type="checkbox" checked/> Cupom ativo</label>
+              </div>
+              <div class="form-actions">
+                <button type="button" id="clube-cupom-delete-btn" class="btn-danger-ghost" hidden>Excluir cupom</button>
+                <div class="form-actions-right">
+                  <button type="button" id="clube-cupom-cancel-btn" class="btn-ghost">Cancelar</button>
+                  <button type="submit" class="btn-primary">
+                    <span class="btn-label">Salvar</span>
+                    <span class="spinner" aria-hidden="true" hidden></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ===== Presentes ===== -->
+        <div data-clube-panel="presentes" hidden>
+          <div id="clube-presentes-list-view">
+            <div class="section-toolbar">
+              <div><p class="section-sub">Presentes automáticos (aniversário, nível, aniversário de clube) ou manuais.</p></div>
+              <button id="clube-presente-new-btn" class="btn-primary" type="button">+ Novo presente</button>
+            </div>
+            <div id="clube-presentes-table-wrap" class="table-wrap"></div>
+          </div>
+          <div id="clube-presente-form-view" hidden>
+            <div class="section-toolbar">
+              <div><h1 id="clube-presente-form-title">Novo presente</h1></div>
+              <button id="clube-presente-back-btn" class="btn-ghost" type="button">Voltar</button>
+            </div>
+            <form id="clube-presente-form" class="admin-form" novalidate>
+              <input type="hidden" id="clube-presente-id"/>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-presente-name">Nome</label>
+                  <input id="clube-presente-name" required maxlength="120"/>
+                </div>
+                <div class="field">
+                  <label for="clube-presente-trigger">Gatilho</label>
+                  <select id="clube-presente-trigger" required>
+                    <option value="aniversario_cliente">Aniversário do cliente</option>
+                    <option value="aniversario_membro">Aniversário de membro (Clube)</option>
+                    <option value="manual">Concessão manual pelo admin</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-presente-reward-type">Tipo de recompensa</label>
+                  <select id="clube-presente-reward-type" required>
+                    <option value="cupom">Cupom</option>
+                    <option value="pontos">Pontos</option>
+                    <option value="frete">Frete grátis</option>
+                    <option value="presente">Presente físico</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="clube-presente-reward-value">Valor da recompensa</label>
+                  <input id="clube-presente-reward-value" maxlength="120" placeholder="ex: código do cupom, quantidade de pontos…"/>
+                </div>
+              </div>
+              <div class="field">
+                <label for="clube-presente-description">Descrição</label>
+                <textarea id="clube-presente-description" rows="2" maxlength="400"></textarea>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="clube-presente-active" type="checkbox" checked/> Presente ativo</label>
+              </div>
+              <div class="form-actions">
+                <button type="button" id="clube-presente-delete-btn" class="btn-danger-ghost" hidden>Excluir presente</button>
+                <div class="form-actions-right">
+                  <button type="button" id="clube-presente-cancel-btn" class="btn-ghost">Cancelar</button>
+                  <button type="submit" class="btn-primary">
+                    <span class="btn-label">Salvar</span>
+                    <span class="spinner" aria-hidden="true" hidden></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+            <div id="clube-presente-grant-box" hidden>
+              <h2>Conceder manualmente a um membro</h2>
+              <form id="clube-presente-grant-form" class="admin-form" novalidate>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="clube-presente-grant-membro">Membro</label>
+                    <select id="clube-presente-grant-membro" required><option value="">Selecionar membro…</option></select>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <div class="form-actions-right">
+                    <button type="submit" class="btn-primary">
+                      <span class="btn-label">Conceder presente</span>
+                      <span class="spinner" aria-hidden="true" hidden></span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Novidades ===== -->
+        <div data-clube-panel="novidades" hidden>
+          <div id="clube-novidades-list-view">
+            <div class="section-toolbar">
+              <div><p class="section-sub">Novidades exibidas para os membros do Clube.</p></div>
+              <button id="clube-novidade-new-btn" class="btn-primary" type="button">+ Nova novidade</button>
+            </div>
+            <div id="clube-novidades-table-wrap" class="table-wrap"></div>
+          </div>
+          <div id="clube-novidade-form-view" hidden>
+            <div class="section-toolbar">
+              <div><h1 id="clube-novidade-form-title">Nova novidade</h1></div>
+              <button id="clube-novidade-back-btn" class="btn-ghost" type="button">Voltar</button>
+            </div>
+            <form id="clube-novidade-form" class="admin-form" novalidate>
+              <input type="hidden" id="clube-novidade-id"/>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="clube-novidade-title">Título</label>
+                  <input id="clube-novidade-title" required maxlength="160"/>
+                </div>
+                <div class="field">
+                  <label for="clube-novidade-published-at">Data de publicação</label>
+                  <input id="clube-novidade-published-at" type="date"/>
+                </div>
+              </div>
+              <div class="field">
+                <label for="clube-novidade-description">Descrição</label>
+                <textarea id="clube-novidade-description" rows="3" maxlength="600"></textarea>
+              </div>
+              <div class="field">
+                <label>Imagem (opcional)</label>
+                <div id="clube-novidade-image" class="image-uploader"></div>
+              </div>
+              <div class="field field-checkbox">
+                <label><input id="clube-novidade-active" type="checkbox" checked/> Publicada</label>
+              </div>
+              <div class="form-actions">
+                <button type="button" id="clube-novidade-delete-btn" class="btn-danger-ghost" hidden>Excluir novidade</button>
+                <div class="form-actions-right">
+                  <button type="button" id="clube-novidade-cancel-btn" class="btn-ghost">Cancelar</button>
+                  <button type="submit" class="btn-primary">
+                    <span class="btn-label">Salvar</span>
+                    <span class="spinner" aria-hidden="true" hidden></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </section>
 

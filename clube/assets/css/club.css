@@ -129,7 +129,7 @@
 }
 .club-header-inner{
   max-width:1240px; margin:0 auto; padding:0 1.5rem; height:68px;
-  display:flex; align-items:center; gap:1.5rem;
+  display:flex; align-items:center; gap:1rem;
 }
 .club-brand{display:flex; align-items:center; gap:.6rem; text-decoration:none; flex-shrink:0;}
 .club-brand-emblem{width:26px; height:26px; object-fit:contain;}
@@ -139,18 +139,18 @@
 }
 .club-brand-sep{color:var(--gold-light); margin:0 .15em; font-weight:300;}
 
-.club-nav{display:flex; align-items:center; gap:1.5rem; flex:1; overflow-x:auto;}
+.club-nav{display:flex; align-items:center; gap:1.05rem; flex:1; overflow-x:auto; min-width:0;}
 .club-nav a{
-  color:#b7b2a8; text-decoration:none; font-size:.82rem; letter-spacing:.04em; white-space:nowrap;
+  color:#b7b2a8; text-decoration:none; font-size:.76rem; letter-spacing:.02em; white-space:nowrap;
   padding:.4rem 0; border-bottom:1px solid transparent; transition:color .2s ease;
 }
 .club-nav a:hover{color:var(--white);}
 .club-nav a.is-active{color:var(--gold-light); border-bottom-color:var(--gold-light);}
 
-.club-header-actions{display:flex; align-items:center; gap:1rem; flex-shrink:0;}
+.club-header-actions{display:flex; align-items:center; gap:.7rem; flex-shrink:0;}
 .club-back-store{
-  color:#a39c8e; font-size:.78rem; text-decoration:none; letter-spacing:.03em; border:1px solid rgba(177,138,79,.3);
-  padding:.45rem .8rem; border-radius:2px; transition:color .2s ease, border-color .2s ease;
+  color:#a39c8e; font-size:.72rem; text-decoration:none; letter-spacing:.02em; border:1px solid rgba(177,138,79,.3);
+  padding:.4rem .65rem; border-radius:2px; transition:color .2s ease, border-color .2s ease; white-space:nowrap;
 }
 .club-back-store:hover{color:var(--gold-light); border-color:var(--gold-light);}
 .club-logout{
@@ -266,6 +266,117 @@
 .club-password-details[open] .club-field{margin-bottom:1rem;}
 .club-field input:disabled{opacity:.55;}
 
+/* ============================ Nível / progresso ============================ */
+.club-tier-progress{margin-bottom:2rem;}
+.club-tier-progress-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; margin-bottom:.6rem; flex-wrap:wrap;}
+.club-tier-name{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.3rem; color:var(--gold-light);}
+.club-tier-remaining{font-size:.8rem; color:#a39c8e;}
+.club-tier-bar{height:4px; border-radius:99px; background:rgba(177,138,79,.18); overflow:hidden;}
+.club-tier-bar-fill{height:100%; background:linear-gradient(90deg,var(--gold-deep),var(--gold-light)); transition:width .6s ease;}
+
+.club-summary-grid-5{grid-template-columns:repeat(5,1fr);}
+.club-card-cta-row{margin-bottom:2.6rem;}
+.club-btn-sm{padding:.55rem 1rem; font-size:.68rem;}
+
+.club-home-block{margin-top:2.8rem;}
+.club-home-block-head{display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-bottom:1.2rem;}
+.club-home-block-head h2{font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500; font-size:1.25rem; color:var(--white); margin:0;}
+.club-home-block-head a{font-size:.76rem; color:var(--gold-light); text-decoration:underline; text-underline-offset:3px;}
+
+/* ============================ Cartão digital ============================ */
+.club-digital-card-wrap{display:flex; justify-content:center; padding:1rem 0;}
+.digital-card{
+  width:min(400px, 100%); min-height:230px; border-radius:14px; padding:1.8rem 2rem;
+  background:
+    radial-gradient(ellipse 90% 70% at 20% 0%, rgba(217,189,133,.14), transparent 60%),
+    linear-gradient(155deg, #17140f, #050505 70%);
+  border:1px solid rgba(217,189,133,.4);
+  box-shadow:0 30px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.02) inset;
+  display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:visible;
+}
+.digital-card::after{
+  content:''; position:absolute; inset:0; pointer-events:none; border-radius:inherit;
+  background:linear-gradient(115deg, transparent 40%, rgba(217,189,133,.08) 50%, transparent 60%);
+}
+.digital-card-brand{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.5rem; letter-spacing:.1em; color:var(--gold-light); margin:0;}
+.digital-card-club{font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; color:#a39c8e; margin:.2rem 0 0;}
+.digital-card-name{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.3rem; color:var(--white); margin:1.4rem 0 0;}
+.digital-card-meta{display:flex; gap:2.2rem; margin-top:.8rem;}
+.digital-card-meta-item{display:flex; flex-direction:column; gap:.15rem;}
+.digital-card-meta-label{font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; color:#8a8378;}
+.digital-card-meta-value{font-size:.85rem; color:var(--gold-light);}
+.digital-card-number-row{display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin-top:1.2rem;}
+.digital-card-number{font-family:monospace; letter-spacing:.12em; font-size:1rem; color:var(--white);}
+.digital-card-qr{width:56px; height:56px; border-radius:4px; background:var(--off-white); padding:3px;}
+@media (max-width:520px){
+  .digital-card{padding:1.5rem 1.4rem;}
+  .digital-card-meta{gap:1.4rem;}
+}
+
+/* ============================ Benefícios ============================ */
+.benefit-tier-req{font-size:.74rem; color:var(--gold-deep); margin:.5rem 0 0;}
+.benefit-validity{font-size:.72rem; color:#8a8378; margin:.3rem 0 0;}
+.benefit-actions{margin-top:1rem;}
+.benefit-status{font-size:.72rem; letter-spacing:.04em; text-transform:uppercase;}
+.benefit-status.is-used{color:#8a8378;}
+.benefit-status.is-locked{color:#a9866a;}
+
+.club-empty-title{font-family:var(--font-display,'Cormorant Garamond',serif); font-style:italic; font-size:1.1rem; color:var(--gold-light); margin:0;}
+.club-empty-sub{font-size:.82rem; color:#8a8378; margin:.5rem 0 0;}
+
+/* ============================ Pontos ============================ */
+.club-points-columns{display:grid; grid-template-columns:1.4fr 1fr; gap:2.4rem; align-items:start;}
+@media (max-width:860px){ .club-points-columns{grid-template-columns:1fr;} }
+.club-subsection-title{font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500; font-size:1.15rem; color:var(--white); margin:0 0 1.1rem;}
+.club-rules-list{display:flex; flex-direction:column; gap:.9rem;}
+.club-rule-item{display:flex; align-items:flex-start; gap:.9rem; border:1px solid rgba(177,138,79,.22); border-radius:3px; padding:.9rem 1rem;}
+.club-rule-points{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.1rem; color:var(--gold-light); flex:none;}
+.club-rule-label{font-size:.86rem; color:var(--white); margin:0;}
+.club-rule-desc{font-size:.76rem; color:#8a8378; margin:.25rem 0 0;}
+.reward-card{display:flex; flex-direction:column; gap:.5rem;}
+.reward-cost{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.1rem; color:var(--gold-light); margin:.3rem 0;}
+.points-delta{font-family:monospace; font-weight:600;}
+.points-delta.is-positive{color:#a9d2a9;}
+.points-delta.is-negative{color:#e6a793;}
+
+/* ============================ Presentes ============================ */
+.gift-card{display:flex; flex-direction:column; gap:.5rem;}
+.gift-status{font-size:.7rem; letter-spacing:.04em;}
+.gift-status-disponivel{color:#a9d2a9;}
+.gift-status-bloqueado{color:#8a8378;}
+.gift-status-resgatado{color:var(--gold-light);}
+.gift-hint{font-size:.72rem; color:#a9866a; font-style:italic; margin:0;}
+
+/* ============================ Novidades ============================ */
+.club-news-list{display:flex; flex-direction:column; gap:1.2rem;}
+.news-card{display:flex; gap:1.3rem; align-items:flex-start;}
+.news-card-img{width:120px; height:120px; object-fit:cover; border-radius:3px; flex:none;}
+.news-card-body{flex:1; min-width:0;}
+.news-card-date{font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--gold-deep); margin:0 0 .3rem;}
+.news-card-desc{font-size:.85rem; color:#a39c8e; line-height:1.6; margin:.6rem 0 0;}
+@media (max-width:560px){ .news-card{flex-direction:column;} .news-card-img{width:100%; height:160px;} }
+
+/* ============================ Notificações ============================ */
+.club-notif-wrap{position:relative;}
+.club-notif-btn{
+  position:relative; background:none; border:none; font-size:1.1rem; cursor:pointer; color:var(--gold-light);
+  padding:.3rem .5rem; line-height:1;
+}
+.club-notif-badge{
+  position:absolute; top:-2px; right:-2px; min-width:15px; height:15px; padding:0 3px; border-radius:99px;
+  background:#c0554a; color:#fff; font-size:.6rem; font-weight:700; display:flex; align-items:center; justify-content:center;
+}
+.club-notif-panel{
+  position:absolute; top:calc(100% + 10px); right:0; width:300px; max-width:88vw; max-height:70vh; overflow-y:auto;
+  background:var(--black-2); border:1px solid rgba(177,138,79,.35); border-radius:4px; padding:.6rem;
+  box-shadow:0 30px 60px rgba(0,0,0,.5); z-index:600;
+}
+.club-notif-item{padding:.7rem .6rem; border-bottom:1px solid rgba(177,138,79,.12);}
+.club-notif-item:last-child{border-bottom:none;}
+.club-notif-item p{margin:0; font-size:.82rem; color:#c9c4b8;}
+.club-notif-item.is-unread p:first-child{color:var(--white);}
+.club-notif-date{font-size:.68rem; color:#8a8378; margin-top:.25rem;}
+
 /* ============================ Responsive ============================ */
 @media (max-width: 860px){
   .club-nav{
@@ -278,8 +389,18 @@
   .club-menu-toggle{display:block;}
   .club-header-actions .club-back-store{display:none;}
   .club-summary-grid{grid-template-columns:1fr 1fr;}
+  .club-header-inner{gap:.6rem; padding:0 1rem;}
+  .club-brand-word{font-size:.78rem;}
+  .club-header-actions{gap:.5rem;}
+  .club-logout{font-size:.72rem; white-space:nowrap;}
+  .club-notif-panel{right:-1rem;}
 }
 @media (max-width: 520px){
   .club-summary-grid{grid-template-columns:1fr;}
   .club-gate-card{padding:2rem 1.4rem;}
+}
+@media (max-width: 360px){
+  .club-brand-word{font-size:.68rem;}
+  .club-header-inner{gap:.4rem;}
+  .digital-card-meta{gap:1rem;}
 }

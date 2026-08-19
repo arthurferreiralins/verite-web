@@ -40,16 +40,16 @@
 
       <!-- passo 1: código -->
       <div id="gate-step-code" class="gate-step">
-        <p class="club-eyebrow">Clube Verité</p>
-        <h1 class="club-title">Bem-vindo ao Clube Verité</h1>
-        <p class="club-lead">Digite o código exclusivo que veio no seu cartão para liberar seu acesso.</p>
+        <p class="club-eyebrow">Seu Convite Para o Clube Verité</p>
+        <h1 class="club-title">Nem todo mundo tem acesso a isso.</h1>
+        <p class="club-lead">Insira o código exclusivo presente no seu cartão Verité.</p>
         <form id="code-form" class="club-form" novalidate>
           <div class="field club-field">
-            <label for="code-input" class="sr-only">Código de acesso</label>
+            <label for="code-input">Código de acesso</label>
             <input id="code-input" class="club-code-input" placeholder="VRT-XXXX-XXXX" autocomplete="off" autocapitalize="characters" maxlength="14" required/>
           </div>
           <button type="submit" class="club-btn-primary">
-            <span class="btn-label">Desbloquear acesso</span>
+            <span class="btn-label">Validar Convite</span>
             <span class="club-spinner" aria-hidden="true" hidden></span>
           </button>
         </form>
@@ -114,9 +114,9 @@
       <!-- estado de sucesso -->
       <div id="gate-step-success" class="gate-step gate-success" hidden>
         <div class="success-glow" aria-hidden="true"></div>
-        <p class="club-eyebrow">Acesso liberado</p>
-        <h1 class="club-title">Acesso liberado.</h1>
-        <p class="club-lead">Bem-vindo ao Clube Verité.</p>
+        <p class="club-eyebrow">Acesso Liberado</p>
+        <h1 class="club-title">Bem-vindo ao Clube Verité</h1>
+        <p class="club-lead">Você agora faz parte da Verité.</p>
       </div>
     </div>
   </section>
@@ -135,15 +135,23 @@
         <nav id="club-nav" class="club-nav">
           <a href="#inicio" data-club-route="inicio">Início</a>
           <a href="#beneficios" data-club-route="beneficios">Benefícios</a>
+          <a href="#pontos" data-club-route="pontos">Pontos</a>
           <a href="#cupons" data-club-route="cupons">Cupons</a>
+          <a href="#exclusivos" data-club-route="exclusivos">Exclusivos</a>
+          <a href="#presentes" data-club-route="presentes">Presentes</a>
           <a href="#compras" data-club-route="compras">Compras</a>
           <a href="#favoritos" data-club-route="favoritos">Favoritos</a>
-          <a href="#exclusivos" data-club-route="exclusivos">Exclusivos</a>
           <a href="#novidades" data-club-route="novidades">Novidades</a>
           <a href="#minha-conta" data-club-route="minha-conta">Minha Conta</a>
         </nav>
         <div class="club-header-actions">
-          <a class="club-back-store" href="/index.html">Voltar à loja</a>
+          <div class="club-notif-wrap">
+            <button type="button" id="club-notif-toggle" class="club-notif-btn" aria-label="Notificações" aria-expanded="false">
+              🔔<span id="club-notif-badge" class="club-notif-badge" hidden>0</span>
+            </button>
+            <div id="club-notif-panel" class="club-notif-panel" hidden></div>
+          </div>
+          <a class="club-back-store" href="/index.html">← Voltar para a Verité</a>
           <button type="button" id="club-logout-btn" class="club-logout">Sair</button>
         </div>
       </div>
@@ -153,13 +161,22 @@
     <main class="club-main">
 
       <section class="club-section" data-club-section="inicio">
-        <p class="club-tagline">Mais do que uma compra. Uma experiência Verité.</p>
-        <h1 class="club-hello">Olá, <span id="home-name">—</span></h1>
-        <div class="club-summary-grid">
+        <p class="club-tagline">Você faz parte da Verité.</p>
+        <h1 class="club-hello">Bem-vindo, <span id="home-name">—</span></h1>
+        <p class="club-lead" style="margin:-1.4rem 0 2rem;">Seu espaço exclusivo dentro da Verité.</p>
+
+        <div class="club-tier-progress" id="home-tier-progress">
+          <div class="club-tier-progress-head">
+            <span id="home-tier-name" class="club-tier-name">—</span>
+            <span id="home-tier-remaining" class="club-tier-remaining"></span>
+          </div>
+          <div class="club-tier-bar"><div class="club-tier-bar-fill" id="home-tier-bar-fill" style="width:0%"></div></div>
+        </div>
+
+        <div class="club-summary-grid club-summary-grid-5">
           <div class="club-card club-summary-card">
-            <p class="club-card-label">Status</p>
-            <p class="club-card-value">Membro do Clube</p>
-            <p class="club-card-sub" id="home-since">—</p>
+            <p class="club-card-label">Nível atual</p>
+            <p class="club-card-value club-card-value-sm" id="home-tier-value">—</p>
           </div>
           <div class="club-card club-summary-card">
             <p class="club-card-label">Compras</p>
@@ -167,19 +184,59 @@
             <p class="club-card-sub">pedidos realizados</p>
           </div>
           <div class="club-card club-summary-card">
-            <p class="club-card-label">Cupons ativos</p>
-            <p class="club-card-value" id="home-coupons-count">0</p>
-            <p class="club-card-sub">disponíveis para uso</p>
+            <p class="club-card-label">Benefícios disponíveis</p>
+            <p class="club-card-value" id="home-benefits-count">0</p>
           </div>
           <div class="club-card club-summary-card">
-            <p class="club-card-label">Último pedido</p>
-            <p class="club-card-value club-card-value-sm" id="home-last-order">—</p>
+            <p class="club-card-label">Cupons ativos</p>
+            <p class="club-card-value" id="home-coupons-count">0</p>
+          </div>
+          <div class="club-card club-summary-card">
+            <p class="club-card-label">Pontos Verité</p>
+            <p class="club-card-value" id="home-points-count">0</p>
           </div>
         </div>
-        <div class="club-thanks">
-          <p>Obrigado por fazer parte do Clube Verité.</p>
+
+        <div class="club-card-cta-row">
+          <button type="button" class="club-btn-primary" data-club-route="cartao">Ver Meu Cartão</button>
         </div>
-        <div id="home-novidades" class="club-mini-grid"></div>
+
+        <div class="club-home-block">
+          <div class="club-home-block-head">
+            <h2>Seus Benefícios</h2>
+            <a href="#beneficios" data-club-route="beneficios">Ver todos</a>
+          </div>
+          <div id="home-beneficios" class="club-card-grid"></div>
+        </div>
+
+        <div class="club-home-block">
+          <div class="club-home-block-head">
+            <h2>Exclusivos para Você</h2>
+            <a href="#exclusivos" data-club-route="exclusivos">Ver todos</a>
+          </div>
+          <div id="home-exclusivos" class="product-grid"></div>
+        </div>
+
+        <div class="club-home-block">
+          <div class="club-home-block-head">
+            <h2>Novidades do Clube</h2>
+            <a href="#novidades" data-club-route="novidades">Ver todas</a>
+          </div>
+          <div id="home-novidades" class="club-mini-grid"></div>
+        </div>
+
+        <div class="club-home-block">
+          <div class="club-home-block-head">
+            <h2>Recomendados para Você</h2>
+          </div>
+          <div id="home-recomendados" class="product-grid"></div>
+        </div>
+      </section>
+
+      <section class="club-section" data-club-section="cartao" hidden>
+        <p class="club-eyebrow">Seu Cartão Verité</p>
+        <h1 class="club-section-title">Cartão Digital</h1>
+        <div id="card-wrap" class="club-digital-card-wrap"></div>
       </section>
 
       <section class="club-section" data-club-section="beneficios" hidden>
@@ -188,10 +245,39 @@
         <div id="beneficios-grid" class="club-card-grid"></div>
       </section>
 
+      <section class="club-section" data-club-section="pontos" hidden>
+        <p class="club-eyebrow">Pontos Verité</p>
+        <h1 class="club-section-title">Você possui <span id="pontos-saldo">0</span> pontos</h1>
+        <div class="club-points-columns">
+          <div>
+            <h2 class="club-subsection-title">Histórico</h2>
+            <div id="pontos-historico" class="club-table-wrap"></div>
+          </div>
+          <div>
+            <h2 class="club-subsection-title">Como Ganhar Pontos</h2>
+            <div id="pontos-regras" class="club-rules-list"></div>
+          </div>
+        </div>
+        <h2 class="club-subsection-title" style="margin-top:2.4rem;">Troque Seus Pontos</h2>
+        <div id="pontos-recompensas" class="club-card-grid"></div>
+      </section>
+
       <section class="club-section" data-club-section="cupons" hidden>
         <p class="club-eyebrow">Você faz parte de algo exclusivo.</p>
         <h1 class="club-section-title">Cupons</h1>
         <div id="cupons-grid" class="club-card-grid"></div>
+      </section>
+
+      <section class="club-section" data-club-section="exclusivos" hidden>
+        <p class="club-eyebrow">Só para membros.</p>
+        <h1 class="club-section-title">Exclusivos Verité</h1>
+        <div id="exclusivos-grid" class="product-grid"></div>
+      </section>
+
+      <section class="club-section" data-club-section="presentes" hidden>
+        <p class="club-eyebrow">Momentos que a Verité celebra com você.</p>
+        <h1 class="club-section-title">Presentes Verité</h1>
+        <div id="presentes-grid" class="club-card-grid"></div>
       </section>
 
       <section class="club-section" data-club-section="compras" hidden>
@@ -202,19 +288,13 @@
       <section class="club-section" data-club-section="favoritos" hidden>
         <h1 class="club-section-title">Favoritos</h1>
         <p class="club-lead">Salve os perfumes que você mais ama — sincronizado com a loja.</p>
-        <div id="favoritos-grid" class="club-card-grid"></div>
-      </section>
-
-      <section class="club-section" data-club-section="exclusivos" hidden>
-        <p class="club-eyebrow">Só para membros.</p>
-        <h1 class="club-section-title">Exclusivos do Clube</h1>
-        <div id="exclusivos-grid" class="club-card-grid"></div>
+        <div id="favoritos-grid" class="product-grid"></div>
       </section>
 
       <section class="club-section" data-club-section="novidades" hidden>
-        <h1 class="club-section-title">Novidades</h1>
+        <h1 class="club-section-title">Novidades para Membros</h1>
         <p class="club-lead">O que está chegando na VERITÉ.</p>
-        <div id="novidades-grid" class="club-card-grid"></div>
+        <div id="novidades-lista" class="club-news-list"></div>
       </section>
 
       <section class="club-section" data-club-section="minha-conta" hidden>
@@ -232,9 +312,18 @@
             <label for="acc-phone">Telefone</label>
             <input id="acc-phone" maxlength="30"/>
           </div>
+          <div class="field club-field">
+            <label for="acc-birthday">Aniversário <span class="optional-tag">(opcional)</span></label>
+            <input id="acc-birthday" type="date"/>
+          </div>
+          <div class="field club-field">
+            <label for="acc-address">Endereço <span class="optional-tag">(opcional)</span></label>
+            <input id="acc-address" maxlength="240" placeholder="Rua, número, bairro, cidade"/>
+          </div>
           <div class="club-account-meta">
             <p><span>Membro desde</span> <span id="acc-since">—</span></p>
-            <p><span>Código utilizado</span> <span id="acc-code">—</span></p>
+            <p><span>Número de membro</span> <span id="acc-member-number">—</span></p>
+            <p><span>Nível atual</span> <span id="acc-tier">—</span></p>
           </div>
           <details class="club-password-details">
             <summary>Alterar senha</summary>
@@ -266,7 +355,10 @@
 
 </div>
 
+<script src="/assets/js/main.js"></script>
 <script src="/assets/js/favorites.js"></script>
+<script src="/assets/js/cart.js"></script>
+<script src="/assets/js/products.js"></script>
 <script src="/clube/assets/js/club.js"></script>
 </body>
 </html>

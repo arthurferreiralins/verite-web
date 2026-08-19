@@ -207,7 +207,7 @@
   });
   navScrim.addEventListener('click', closeNav);
 
-  var CLUB_ROUTES = ['inicio', 'beneficios', 'cupons', 'compras', 'favoritos', 'exclusivos', 'novidades', 'minha-conta'];
+  var CLUB_ROUTES = ['inicio', 'cartao', 'beneficios', 'pontos', 'cupons', 'exclusivos', 'presentes', 'compras', 'favoritos', 'novidades', 'minha-conta'];
   var routeLoaders = {};
 
   function currentClubRoute() {
@@ -236,51 +236,53 @@
   });
   window.addEventListener('hashchange', function () { navigateClub(currentClubRoute()); });
 
-  var favoriteSlugs = [];
-
-  function productMiniCard(p, opts) {
-    opts = opts || {};
-    var card = document.createElement(opts.asLink === false ? 'div' : 'a');
-    card.className = 'product-mini-card';
-    if (opts.asLink !== false) card.href = '/produto.html?slug=' + encodeURIComponent(p.slug);
-    var media = el('div', 'product-mini-media');
-    if (p.main_image_url) {
-      var img = document.createElement('img');
-      img.src = p.main_image_url; img.alt = p.name;
-      media.appendChild(img);
-    } else {
-      media.appendChild(el('span', 'product-mini-media-empty', 'V'));
+  /** Grade premium (foto/badges/favorito/carrinho/ver perfume) — a mesma
+   *  usada na loja principal. Some inteira (empty state elegante) quando
+   *  não há produto nenhum, nunca inventa item. */
+  function renderProductGrid(containerId, items, emptyTitle, emptySub) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    var wrap = container.closest('.club-home-block');
+    if (!items.length) {
+      if (wrap) { wrap.hidden = true; return; }
+      container.innerHTML = '';
+      var empty = el('div', 'club-empty');
+      empty.appendChild(el('p', 'club-empty-title', emptyTitle || 'Em preparação.'));
+      if (emptySub) empty.appendChild(el('p', 'club-empty-sub', emptySub));
+      container.appendChild(empty);
+      return;
     }
-    card.appendChild(media);
-    var body = el('div', 'product-mini-body');
-    body.appendChild(el('p', 'product-mini-name', p.name));
-    var price = p.sale_price != null ? p.sale_price : p.price;
-    body.appendChild(el('p', 'product-mini-price', price != null ? formatMoney(price) : 'Em breve'));
-    card.appendChild(body);
-    if (opts.removeFavorite) {
-      var rm = document.createElement('button');
-      rm.type = 'button'; rm.className = 'product-mini-fav-remove'; rm.textContent = 'Remover dos favoritos';
-      rm.addEventListener('click', function (e) {
-        e.preventDefault(); e.stopPropagation();
-        api('/api/club/favorites?slug=' + encodeURIComponent(p.slug), { method: 'DELETE' }).then(function () {
-          loadFavoritos();
-        });
-      });
-      card.appendChild(rm);
-    }
-    return card;
+    if (wrap) wrap.hidden = false;
+    if (window.VeriteProducts) window.VeriteProducts.renderGrid(container, items);
   }
 
   /* ---- Início ---- */
   function loadInicio() {
     document.getElementById('home-name').textContent = currentCustomer.name || '';
-    document.getElementById('home-since').textContent = currentCustomer.club_joined_at
-      ? 'Desde ' + formatDate(currentCustomer.club_joined_at) : '';
+
+    api('/api/club/tier').then(function (data) {
+      renderTierProgress('home-tier-progress', 'home-tier-name', 'home-tier-remaining', 'home-tier-bar-fill', data);
+      document.getElementById('home-tier-value').textContent = data.currentTier ? data.currentTier.name : '—';
+    }).catch(function () {});
 
     api('/api/club/orders').then(function (data) {
       document.getElementById('home-orders-count').textContent = String(data.items.length);
-      document.getElementById('home-last-order').textContent = data.items.length
-        ? formatDate(data.items[0].created_at) : 'Nenhum ainda';
+    }).catch(function () {});
+
+    api('/api/club/points').then(function (data) {
+      document.getElementById('home-points-count').textContent = String(data.balance);
+    }).catch(function () {});
+
+    api('/api/club/benefits').then(function (data) {
+      var available = data.items.filter(function (b) { return b.status === 'disponivel'; });
+      document.getElementById('home-benefits-count').textContent = String(available.length);
+      var grid = document.getElementById('home-beneficios');
+      clear(grid);
+      var wrap = grid.closest('.club-home-block');
+      var preview = data.items.filter(function (b) { return b.status !== 'bloqueado'; }).slice(0, 3);
+      if (!preview.length) { if (wrap) wrap.hidden = true; return; }
+      if (wrap) wrap.hidden = false;
+      preview.forEach(function (b) { grid.appendChild(benefitCard(b)); });
     }).catch(function () {});
 
     api('/api/club/coupons').then(function (data) {
@@ -288,40 +290,241 @@
       document.getElementById('home-coupons-count').textContent = String(active.length);
     }).catch(function () {});
 
+    api('/api/club/products?kind=exclusivos').then(function (data) {
+      renderProductGrid('home-exclusivos', data.items.slice(0, 4));
+    }).catch(function () {});
+
+    api('/api/club/products?kind=destaques').then(function (data) {
+      renderProductGrid('home-recomendados', data.items.slice(0, 4));
+    }).catch(function () {});
+
     var grid = document.getElementById('home-novidades');
     clear(grid);
-    api('/api/club/products?kind=novidades').then(function (data) {
-      data.items.slice(0, 4).forEach(function (p) { grid.appendChild(productMiniCard(p)); });
+    var newsWrap = grid.closest('.club-home-block');
+    api('/api/club/news').then(function (data) {
+      if (!data.items.length) { if (newsWrap) newsWrap.hidden = true; return; }
+      if (newsWrap) newsWrap.hidden = false;
+      data.items.slice(0, 4).forEach(function (n) { grid.appendChild(newsMiniCard(n)); });
     }).catch(function () {});
   }
   routeLoaders.inicio = loadInicio;
 
+  function newsMiniCard(n) {
+    var card = el('div', 'product-mini-card');
+    var media = el('div', 'product-mini-media');
+    if (n.image_url) {
+      var img = document.createElement('img');
+      img.src = n.image_url; img.alt = n.title;
+      media.appendChild(img);
+    } else {
+      media.appendChild(el('span', 'product-mini-media-empty', 'V'));
+    }
+    card.appendChild(media);
+    var body = el('div', 'product-mini-body');
+    body.appendChild(el('p', 'product-mini-name', n.title));
+    body.appendChild(el('p', 'product-mini-price', formatDate(n.published_at)));
+    card.appendChild(body);
+    return card;
+  }
+
+  function renderTierProgress(wrapId, nameId, remainingId, fillId, data) {
+    var wrap = document.getElementById(wrapId);
+    if (!wrap) return;
+    document.getElementById(nameId).textContent = data.currentTier ? data.currentTier.name : '—';
+    var remainingEl = document.getElementById(remainingId);
+    var fillEl = document.getElementById(fillId);
+    if (data.nextTier) {
+      remainingEl.textContent = formatMoney(data.remainingToNextTier) + ' em compras para ' + data.nextTier.name;
+      var span = Number(data.nextTier.min_spent) - Number(data.currentTier.min_spent);
+      var progressed = span > 0 ? (data.totalSpent - Number(data.currentTier.min_spent)) / span : 1;
+      fillEl.style.width = Math.max(0, Math.min(100, progressed * 100)) + '%';
+    } else {
+      remainingEl.textContent = 'Nível máximo alcançado.';
+      fillEl.style.width = '100%';
+    }
+  }
+
+  /* ---- Cartão digital ---- */
+  function loadCartao() {
+    var wrap = document.getElementById('card-wrap');
+    clear(wrap);
+    api('/api/club/card').then(function (data) {
+      var c = data.card;
+      var card = el('div', 'digital-card');
+      card.appendChild(el('p', 'digital-card-brand', 'VERITÉ'));
+      card.appendChild(el('p', 'digital-card-club', 'CLUBE VERITÉ'));
+      card.appendChild(el('p', 'digital-card-name', c.name));
+      var meta = el('div', 'digital-card-meta');
+      var tierBox = el('div', 'digital-card-meta-item');
+      tierBox.appendChild(el('span', 'digital-card-meta-label', 'Nível'));
+      tierBox.appendChild(el('span', 'digital-card-meta-value', c.tierName || '—'));
+      meta.appendChild(tierBox);
+      var sinceBox = el('div', 'digital-card-meta-item');
+      sinceBox.appendChild(el('span', 'digital-card-meta-label', 'Membro desde'));
+      sinceBox.appendChild(el('span', 'digital-card-meta-value', c.memberSince ? String(c.memberSince) : '—'));
+      meta.appendChild(sinceBox);
+      card.appendChild(meta);
+      var numberRow = el('div', 'digital-card-number-row');
+      numberRow.appendChild(el('span', 'digital-card-number', c.memberNumber || '—'));
+      if (c.qrDataUrl) {
+        var qrImg = document.createElement('img');
+        qrImg.className = 'digital-card-qr'; qrImg.src = c.qrDataUrl; qrImg.alt = 'QR code do cartão';
+        numberRow.appendChild(qrImg);
+      }
+      card.appendChild(numberRow);
+      wrap.appendChild(card);
+    }).catch(function (err) {
+      wrap.appendChild(el('div', 'club-empty', err.message));
+    });
+  }
+  routeLoaders.cartao = loadCartao;
+
   /* ---- Benefícios ---- */
-  var STATIC_BENEFITS = [
-    { title: 'Ofertas exclusivas', desc: 'Condições especiais reservadas para membros do Clube.' },
-    { title: 'Acesso antecipado', desc: 'Conheça lançamentos e coleções antes de todo mundo.' },
-    { title: 'Brinde em próxima compra', desc: 'Uma surpresa Verité te espera no seu próximo pedido.' },
-    { title: 'Frete grátis', desc: 'Em condições selecionadas para membros do Clube.' }
-  ];
+  function benefitCard(b) {
+    var card = el('div', 'club-card benefit-card');
+    card.appendChild(el('h3', null, b.name));
+    if (b.description) card.appendChild(el('p', null, b.description));
+    if (b.tier_name) card.appendChild(el('p', 'benefit-tier-req', 'Nível necessário: ' + b.tier_name));
+    if (b.validity_note) card.appendChild(el('p', 'benefit-validity', b.validity_note));
+    var actionRow = el('div', 'benefit-actions');
+    if (b.status === 'usado') {
+      actionRow.appendChild(el('span', 'benefit-status is-used', 'Utilizado'));
+    } else if (b.status === 'bloqueado') {
+      actionRow.appendChild(el('span', 'benefit-status is-locked', 'Desbloqueia no nível ' + (b.tier_name || '')));
+    } else {
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'club-btn-primary club-btn-sm'; btn.textContent = 'Usar Benefício';
+      btn.addEventListener('click', function () {
+        btn.disabled = true;
+        api('/api/club/benefits', { method: 'POST', body: { benefitId: b.id } }).then(function () {
+          loadBeneficios();
+        }).catch(function (err) { btn.disabled = false; alert(err.message); });
+      });
+      actionRow.appendChild(btn);
+    }
+    card.appendChild(actionRow);
+    return card;
+  }
   function loadBeneficios() {
     var grid = document.getElementById('beneficios-grid');
     clear(grid);
-    api('/api/club/coupons').then(function (data) {
-      data.items.filter(function (c) { return c.status === 'ativo'; }).forEach(function (c) {
-        var card = el('div', 'club-card benefit-card');
-        card.appendChild(el('h3', null, c.discount_label));
-        card.appendChild(el('p', null, c.description || c.name));
-        grid.appendChild(card);
-      });
-      STATIC_BENEFITS.forEach(function (b) {
-        var card = el('div', 'club-card benefit-card');
-        card.appendChild(el('h3', null, b.title));
-        card.appendChild(el('p', null, b.desc));
+    api('/api/club/benefits').then(function (data) {
+      if (!data.items.length) {
+        grid.appendChild(emptyState('Seus próximos benefícios estão a caminho.', 'Continue aproveitando a Verité para desbloquear novas experiências.'));
+        return;
+      }
+      data.items.forEach(function (b) { grid.appendChild(benefitCard(b)); });
+    }).catch(function () {});
+  }
+  routeLoaders.beneficios = loadBeneficios;
+
+  function emptyState(title, sub) {
+    var box = el('div', 'club-empty');
+    box.appendChild(el('p', 'club-empty-title', title));
+    if (sub) box.appendChild(el('p', 'club-empty-sub', sub));
+    return box;
+  }
+
+  /* ---- Pontos ---- */
+  function loadPontos() {
+    var histWrap = document.getElementById('pontos-historico');
+    var rulesWrap = document.getElementById('pontos-regras');
+    var rewardsWrap = document.getElementById('pontos-recompensas');
+    clear(histWrap); clear(rulesWrap); clear(rewardsWrap);
+
+    api('/api/club/points').then(function (data) {
+      document.getElementById('pontos-saldo').textContent = String(data.balance);
+
+      if (!data.history.length) {
+        histWrap.appendChild(emptyState('Nenhuma movimentação ainda.', 'Suas compras e benefícios vão aparecer aqui.'));
+      } else {
+        var table = document.createElement('table');
+        table.className = 'club-table';
+        table.innerHTML = '<thead><tr><th>Data</th><th>Motivo</th><th>Pontos</th></tr></thead>';
+        var tbody = document.createElement('tbody');
+        data.history.forEach(function (h) {
+          var tr = document.createElement('tr');
+          tr.appendChild(el('td', null, formatDate(h.created_at)));
+          tr.appendChild(el('td', null, h.reason));
+          tr.appendChild(el('td', 'points-delta ' + (h.delta > 0 ? 'is-positive' : 'is-negative'), (h.delta > 0 ? '+' : '') + h.delta));
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        histWrap.appendChild(table);
+      }
+
+      if (!data.rules.length) {
+        rulesWrap.appendChild(emptyState('Em breve, novas formas de ganhar pontos.'));
+      } else {
+        data.rules.forEach(function (r) {
+          var row = el('div', 'club-rule-item');
+          row.appendChild(el('span', 'club-rule-points', '+' + r.points_value));
+          var textWrap = el('div', null);
+          textWrap.appendChild(el('p', 'club-rule-label', r.label));
+          if (r.description) textWrap.appendChild(el('p', 'club-rule-desc', r.description));
+          row.appendChild(textWrap);
+          rulesWrap.appendChild(row);
+        });
+      }
+
+      if (!data.rewards.length) {
+        rewardsWrap.appendChild(emptyState('Novas recompensas estão a caminho.'));
+      } else {
+        data.rewards.forEach(function (r) {
+          var card = el('div', 'club-card reward-card');
+          card.appendChild(el('h3', null, r.name));
+          if (r.description) card.appendChild(el('p', null, r.description));
+          card.appendChild(el('p', 'reward-cost', r.points_cost + ' pontos'));
+          var btn = document.createElement('button');
+          btn.type = 'button'; btn.className = 'club-btn-primary club-btn-sm';
+          btn.textContent = r.affordable ? 'Trocar' : 'Pontos insuficientes';
+          btn.disabled = !r.affordable;
+          btn.addEventListener('click', function () {
+            btn.disabled = true;
+            api('/api/club/points', { method: 'POST', body: { rewardId: r.id } }).then(function () {
+              loadPontos();
+            }).catch(function (err) { btn.disabled = false; alert(err.message); });
+          });
+          card.appendChild(btn);
+          rewardsWrap.appendChild(card);
+        });
+      }
+    }).catch(function () {});
+  }
+  routeLoaders.pontos = loadPontos;
+
+  /* ---- Presentes ---- */
+  var GIFT_STATUS_LABEL = { disponivel: '🎁 Disponível', bloqueado: '🔒 Ainda não desbloqueado', resgatado: '✓ Resgatado' };
+  function loadPresentes() {
+    var grid = document.getElementById('presentes-grid');
+    clear(grid);
+    api('/api/club/gifts').then(function (data) {
+      if (!data.items.length) {
+        grid.appendChild(emptyState('Nenhum presente configurado no momento.', 'Fique de olho — a Verité prepara surpresas ao longo do ano.'));
+        return;
+      }
+      data.items.forEach(function (g) {
+        var card = el('div', 'club-card gift-card');
+        card.appendChild(el('span', 'gift-status gift-status-' + g.status, GIFT_STATUS_LABEL[g.status] || g.status));
+        card.appendChild(el('h3', null, g.name));
+        if (g.description) card.appendChild(el('p', null, g.description));
+        if (g.needsBirthday) card.appendChild(el('p', 'gift-hint', 'Informe sua data de aniversário em Minha Conta para desbloquear este presente.'));
+        if (g.status === 'disponivel') {
+          var btn = document.createElement('button');
+          btn.type = 'button'; btn.className = 'club-btn-primary club-btn-sm'; btn.textContent = 'Resgatar Presente';
+          btn.addEventListener('click', function () {
+            btn.disabled = true;
+            api('/api/club/gifts', { method: 'POST', body: { giftId: g.id } }).then(function () {
+              loadPresentes();
+            }).catch(function (err) { btn.disabled = false; alert(err.message); });
+          });
+          card.appendChild(btn);
+        }
         grid.appendChild(card);
       });
     }).catch(function () {});
   }
-  routeLoaders.beneficios = loadBeneficios;
+  routeLoaders.presentes = loadPresentes;
 
   /* ---- Cupons ---- */
   function loadCupons() {
@@ -329,25 +532,26 @@
     clear(grid);
     api('/api/club/coupons').then(function (data) {
       if (!data.items.length) {
-        grid.appendChild(el('div', 'club-empty', 'Você ainda não tem cupons.'));
+        grid.appendChild(emptyState('Seus próximos cupons estão a caminho.', 'Continue aproveitando a Verité para desbloquear novos descontos.'));
         return;
       }
       data.items.forEach(function (c) {
         var card = el('div', 'club-card coupon-card');
-        var statusLabel = c.status === 'ativo' ? 'Ativo' : c.status === 'usado' ? 'Usado' : 'Expirado';
+        var statusLabel = c.status === 'ativo' ? 'Disponível' : c.status === 'usado' ? 'Utilizado' : 'Expirado';
         var status = el('span', 'coupon-status' + (c.status === 'ativo' ? ' is-active' : ''), statusLabel);
         card.appendChild(status);
         card.appendChild(el('p', 'coupon-discount', c.discount_label));
         card.appendChild(el('p', 'coupon-name', c.name));
         if (c.description) card.appendChild(el('p', 'coupon-desc', c.description));
+        if (c.valid_until) card.appendChild(el('p', 'coupon-validity', 'Válido até ' + formatDate(c.valid_until)));
         var row = el('div', 'coupon-code-row');
         row.appendChild(el('span', 'coupon-code', c.code));
         var copyBtn = document.createElement('button');
-        copyBtn.type = 'button'; copyBtn.className = 'coupon-copy-btn'; copyBtn.textContent = 'Copiar cupom';
+        copyBtn.type = 'button'; copyBtn.className = 'coupon-copy-btn'; copyBtn.textContent = 'Copiar Código';
         copyBtn.addEventListener('click', function () {
           navigator.clipboard.writeText(c.code).then(function () {
             copyBtn.textContent = 'Copiado!';
-            window.setTimeout(function () { copyBtn.textContent = 'Copiar cupom'; }, 1800);
+            window.setTimeout(function () { copyBtn.textContent = 'Copiar Código'; }, 1800);
           }).catch(function () {});
         });
         row.appendChild(copyBtn);
@@ -364,12 +568,12 @@
     clear(wrap);
     api('/api/club/orders').then(function (data) {
       if (!data.items.length) {
-        wrap.appendChild(el('div', 'club-empty', 'Você ainda não tem pedidos por aqui.'));
+        wrap.appendChild(emptyState('Suas próximas compras vão aparecer aqui.', 'Explore a loja e encontre sua próxima fragrância Verité.'));
         return;
       }
       var table = el('table', 'club-table');
       var thead = document.createElement('thead');
-      thead.innerHTML = '<tr><th>Número</th><th>Data</th><th>Total</th><th>Status</th></tr>';
+      thead.innerHTML = '<tr><th>Número</th><th>Data</th><th>Total</th><th>Pagamento</th><th>Status</th><th></th></tr>';
       table.appendChild(thead);
       var tbody = document.createElement('tbody');
       data.items.forEach(function (o) {
@@ -377,7 +581,17 @@
         tr.appendChild(el('td', null, o.order_number));
         tr.appendChild(el('td', null, formatDate(o.created_at)));
         tr.appendChild(el('td', null, formatMoney(o.total)));
+        tr.appendChild(el('td', null, o.payment_method || '—'));
         tr.appendChild(el('td', null, ORDER_STATUS_LABELS[o.status] || o.status));
+        var actionsTd = document.createElement('td');
+        if (o.tracking_code) {
+          var track = document.createElement('a');
+          track.className = 'club-link-btn'; track.style.margin = '0'; track.textContent = 'Rastrear Pedido';
+          track.href = 'https://rastreamento.correios.com.br/app/index.php?codigo=' + encodeURIComponent(o.tracking_code);
+          track.target = '_blank'; track.rel = 'noopener';
+          actionsTd.appendChild(track);
+        }
+        tr.appendChild(actionsTd);
         tbody.appendChild(tr);
       });
       table.appendChild(tbody);
@@ -388,43 +602,53 @@
 
   /* ---- Favoritos ---- */
   function loadFavoritos() {
-    var grid = document.getElementById('favoritos-grid');
-    clear(grid);
     api('/api/club/favorites').then(function (data) {
-      favoriteSlugs = data.items.map(function (p) { return p.slug; });
-      if (!data.items.length) {
-        grid.appendChild(el('div', 'club-empty', 'Nenhum favorito ainda. Explore a loja e salve seus perfumes preferidos.'));
-        return;
-      }
-      data.items.forEach(function (p) { grid.appendChild(productMiniCard(p, { removeFavorite: true })); });
+      renderProductGrid('favoritos-grid', data.items, 'Nenhum favorito ainda.', 'Explore a loja e salve os perfumes que você mais ama.');
     }).catch(function () {});
   }
   routeLoaders.favoritos = loadFavoritos;
 
   /* ---- Exclusivos ---- */
   function loadExclusivos() {
-    var grid = document.getElementById('exclusivos-grid');
-    clear(grid);
     api('/api/club/products?kind=exclusivos').then(function (data) {
-      if (!data.items.length) {
-        grid.appendChild(el('div', 'club-empty', 'Em preparação. Novos exclusivos do Clube chegam em breve.'));
-        return;
-      }
-      data.items.forEach(function (p) { grid.appendChild(productMiniCard(p)); });
+      renderProductGrid('exclusivos-grid', data.items, 'Novos exclusivos estão a caminho.', 'Fique de olho — a Verité está preparando fragrâncias só para membros.');
     }).catch(function () {});
   }
   routeLoaders.exclusivos = loadExclusivos;
 
   /* ---- Novidades ---- */
   function loadNovidades() {
-    var grid = document.getElementById('novidades-grid');
-    clear(grid);
-    api('/api/club/products?kind=novidades').then(function (data) {
+    var wrap = document.getElementById('novidades-lista');
+    clear(wrap);
+    api('/api/club/news').then(function (data) {
       if (!data.items.length) {
-        grid.appendChild(el('div', 'club-empty', 'Em preparação. Novidades da VERITÉ chegam em breve.'));
+        wrap.appendChild(emptyState('Novidades a caminho.', 'Assim que houver algo novo na Verité, você vê primeiro aqui.'));
         return;
       }
-      data.items.forEach(function (p) { grid.appendChild(productMiniCard(p)); });
+      data.items.forEach(function (n) {
+        var card = el('div', 'club-card news-card');
+        if (n.image_url) {
+          var img = document.createElement('img');
+          img.className = 'news-card-img'; img.src = n.image_url; img.alt = n.title;
+          card.appendChild(img);
+        }
+        var body = el('div', 'news-card-body');
+        body.appendChild(el('p', 'news-card-date', formatDate(n.published_at)));
+        body.appendChild(el('h3', null, n.title));
+        var desc = el('p', 'news-card-desc', n.description);
+        desc.hidden = true;
+        var moreBtn = document.createElement('button');
+        moreBtn.type = 'button'; moreBtn.className = 'club-link-btn'; moreBtn.style.margin = '.6rem 0 0'; moreBtn.textContent = 'Saiba Mais';
+        moreBtn.addEventListener('click', function () {
+          var open = desc.hidden === false;
+          desc.hidden = open;
+          moreBtn.textContent = open ? 'Saiba Mais' : 'Ver Menos';
+        });
+        body.appendChild(desc);
+        body.appendChild(moreBtn);
+        card.appendChild(body);
+        wrap.appendChild(card);
+      });
     }).catch(function () {});
   }
   routeLoaders.novidades = loadNovidades;
@@ -434,8 +658,13 @@
     document.getElementById('acc-name').value = currentCustomer.name || '';
     document.getElementById('acc-email').value = currentCustomer.email || '';
     document.getElementById('acc-phone').value = currentCustomer.phone || '';
+    document.getElementById('acc-birthday').value = currentCustomer.birthday ? String(currentCustomer.birthday).slice(0, 10) : '';
+    document.getElementById('acc-address').value = currentCustomer.address || '';
     document.getElementById('acc-since').textContent = formatDate(currentCustomer.club_joined_at);
-    document.getElementById('acc-code').textContent = currentCustomer.club_code_used || '—';
+    document.getElementById('acc-member-number').textContent = currentCustomer.member_number || '—';
+    api('/api/club/tier').then(function (data) {
+      document.getElementById('acc-tier').textContent = data.currentTier ? data.currentTier.name : '—';
+    }).catch(function () {});
   }
   routeLoaders['minha-conta'] = loadMinhaConta;
 
@@ -445,7 +674,9 @@
     hideMessage('account-message');
     var body = {
       name: document.getElementById('acc-name').value.trim(),
-      phone: document.getElementById('acc-phone').value.trim()
+      phone: document.getElementById('acc-phone').value.trim(),
+      birthday: document.getElementById('acc-birthday').value,
+      address: document.getElementById('acc-address').value.trim()
     };
     var currentPassword = document.getElementById('acc-current-password').value;
     var newPassword = document.getElementById('acc-new-password').value;
@@ -468,9 +699,49 @@
       });
   });
 
+  /* ---- Notificações ---- */
+  var notifToggle = document.getElementById('club-notif-toggle');
+  var notifPanel = document.getElementById('club-notif-panel');
+  var notifBadge = document.getElementById('club-notif-badge');
+
+  function loadNotifications() {
+    api('/api/club/notifications').then(function (data) {
+      notifBadge.hidden = data.unread === 0;
+      notifBadge.textContent = String(data.unread);
+      clear(notifPanel);
+      if (!data.items.length) {
+        notifPanel.appendChild(emptyState('Nenhuma notificação por aqui.'));
+        return;
+      }
+      data.items.forEach(function (n) {
+        var item = el('div', 'club-notif-item' + (n.read_at ? '' : ' is-unread'));
+        item.appendChild(el('p', null, n.message));
+        item.appendChild(el('p', 'club-notif-date', formatDate(n.created_at)));
+        notifPanel.appendChild(item);
+      });
+    }).catch(function () {});
+  }
+  if (notifToggle) {
+    notifToggle.addEventListener('click', function () {
+      var open = notifPanel.hidden;
+      notifPanel.hidden = !open;
+      notifToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        api('/api/club/notifications', { method: 'PUT', body: {} }).then(function () { loadNotifications(); }).catch(function () {});
+      }
+    });
+    document.addEventListener('click', function (e) {
+      if (!notifPanel.hidden && !notifPanel.contains(e.target) && e.target !== notifToggle) {
+        notifPanel.hidden = true;
+        notifToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
   function initDashboard() {
     if (dashboardInited) { navigateClub(currentClubRoute()); return; }
     dashboardInited = true;
     navigateClub(currentClubRoute());
+    loadNotifications();
   }
 }());

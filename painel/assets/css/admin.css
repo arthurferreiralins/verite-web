@@ -259,6 +259,12 @@ table.admin-table tr:hover td{background:#faf7ee;}
 .empty-state{padding:2.6rem 1.4rem; text-align:center; color:#8a8378;}
 .empty-state .empty-title{font-family:var(--font-display); font-size:1.2rem; color:var(--black); margin-bottom:.4rem;}
 .empty-state p + p{margin-top:.3rem;}
+.empty-state-mini{padding:.6rem 0 1.4rem; color:#8a8378; font-size:.85rem;}
+
+/* ---------- Clube Verité (painel) ---------- */
+#clube-membro-detail-body h2{font-family:var(--font-display); font-size:1.05rem; margin:1.8rem 0 .8rem; color:var(--black);}
+#clube-membro-detail-body .form-grid .field p{margin:0; font-weight:600; color:var(--black);}
+#clube-presente-grant-box{margin-top:1.6rem; padding-top:1.4rem; border-top:1px solid var(--line-light);}
 
 .badge{display:inline-block; padding:.2rem .55rem; border-radius:999px; font-size:.72rem; font-weight:700; letter-spacing:.02em; white-space:nowrap;}
 .badge-draft{background:#eee7d6; color:#8a6a37;}

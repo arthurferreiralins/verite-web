@@ -30,6 +30,15 @@ const clubCodes = require('../_handlers/admin/clubCodes');
 const inventory = require('../_handlers/admin/inventory');
 const production = require('../_handlers/admin/production');
 const stockMovements = require('../_handlers/admin/stockMovements');
+const clubMembers = require('../_handlers/admin/clubMembers');
+const clubTiers = require('../_handlers/admin/clubTiers');
+const clubBenefits = require('../_handlers/admin/clubBenefits');
+const clubPointsRules = require('../_handlers/admin/clubPointsRules');
+const clubPointsAdjust = require('../_handlers/admin/clubPointsAdjust');
+const clubRewards = require('../_handlers/admin/clubRewards');
+const clubGifts = require('../_handlers/admin/clubGifts');
+const clubNews = require('../_handlers/admin/clubNews');
+const clubCoupons = require('../_handlers/admin/clubCoupons');
 
 const routes = {
   login, logout, me, dashboard, products, upload, leads, messages, content, faq, settings, seo,
@@ -37,6 +46,15 @@ const routes = {
   'club-codes': clubCodes,
   inventory, production,
   'stock-movements': stockMovements,
+  'club-members': clubMembers,
+  'club-tiers': clubTiers,
+  'club-benefits': clubBenefits,
+  'club-points-rules': clubPointsRules,
+  'club-points-adjust': clubPointsAdjust,
+  'club-rewards': clubRewards,
+  'club-gifts': clubGifts,
+  'club-news': clubNews,
+  'club-coupons': clubCoupons,
 };
 
 module.exports = async function handler(req, res) {

@@ -17,6 +17,18 @@ module.exports = async function handler(req, res) {
   const body = await readJsonBody(req);
   const name = body.name != null ? str(body.name) : customer.name;
   const phone = body.phone != null ? str(body.phone) : customer.phone;
+  const address = body.address != null ? str(body.address) : customer.address;
+  let birthday = customer.birthday;
+  if (body.birthday !== undefined) {
+    if (body.birthday === '' || body.birthday === null) {
+      birthday = null;
+    } else if (/^\d{4}-\d{2}-\d{2}$/.test(str(body.birthday))) {
+      birthday = str(body.birthday);
+    } else {
+      res.status(400).json({ ok: false, error: 'Data de aniversário inválida.' });
+      return;
+    }
+  }
 
   if (!isNonEmptyString(name, 120)) {
     res.status(400).json({ ok: false, error: 'Nome é obrigatório.' });
@@ -36,7 +48,7 @@ module.exports = async function handler(req, res) {
     }
     const newHash = hashPassword(body.newPassword);
     const { rows: updated } = await sql`
-      UPDATE customers SET name = ${name}, phone = ${phone || null}, password_hash = ${newHash},
+      UPDATE customers SET name = ${name}, phone = ${phone || null}, birthday = ${birthday}, address = ${address || null}, password_hash = ${newHash},
         session_version = session_version + 1
       WHERE id = ${customer.id}
       RETURNING *
@@ -48,7 +60,7 @@ module.exports = async function handler(req, res) {
   }
 
   const { rows: updated } = await sql`
-    UPDATE customers SET name = ${name}, phone = ${phone || null}
+    UPDATE customers SET name = ${name}, phone = ${phone || null}, birthday = ${birthday}, address = ${address || null}
     WHERE id = ${customer.id}
     RETURNING *
   `;

@@ -1690,6 +1690,183 @@
   /* ============================ Clube Verité ============================ */
   var CLUB_STATUS_LABELS = { ativo: 'Ativo', utilizado: 'Utilizado', bloqueado: 'Bloqueado' };
   var CLUB_STATUS_BADGES = { ativo: 'badge-published', utilizado: 'badge-neutral', bloqueado: 'badge-novo' };
+
+  /* ---- Sub-abas principais ---- */
+  document.querySelectorAll('#clube-subtabs .tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#clube-subtabs .tab-btn').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      var tab = btn.getAttribute('data-clube-tab');
+      document.querySelectorAll('[data-clube-panel]').forEach(function(p){
+        p.hidden = p.getAttribute('data-clube-panel') !== tab;
+      });
+      if (tab === 'membros') loadClubeMembros();
+      else if (tab === 'codigos') loadClube();
+      else if (tab === 'niveis') loadClubeNiveis();
+      else if (tab === 'beneficios') { populateClubeTierSelect(document.getElementById('clube-beneficio-tier')); loadClubeBeneficios(); }
+      else if (tab === 'pontos') { loadClubeRegras(); loadClubeRecompensas(); populateClubeMemberSelect(document.getElementById('clube-ajuste-membro')); }
+      else if (tab === 'cupons') loadClubeCupons();
+      else if (tab === 'presentes') loadClubePresentes();
+      else if (tab === 'novidades') loadClubeNovidades();
+    });
+  });
+
+  /* ---- Sub-abas de Pontos ---- */
+  document.querySelectorAll('#clube-pontos-subtabs .tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#clube-pontos-subtabs .tab-btn').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      var tab = btn.getAttribute('data-clube-pontos-tab');
+      document.querySelectorAll('[data-clube-pontos-panel]').forEach(function(p){
+        p.hidden = p.getAttribute('data-clube-pontos-panel') !== tab;
+      });
+    });
+  });
+
+  function clubeBadge(active){
+    return textEl('span', active ? 'Ativo' : 'Inativo', 'badge ' + (active ? 'badge-published' : 'badge-draft'));
+  }
+
+  var clubeTierCache = [];
+  function populateClubeTierSelect(select){
+    if (!select) return Promise.resolve();
+    return api('/api/admin/club-tiers').then(function(data){
+      clubeTierCache = data.items;
+      var current = select.value;
+      clear(select);
+      select.appendChild(new Option('Todos os níveis', ''));
+      data.items.forEach(function(t){ select.appendChild(new Option(t.name, t.id)); });
+      if (current) select.value = current;
+    }).catch(function(){});
+  }
+
+  var clubeMemberCache = [];
+  function populateClubeMemberSelect(select){
+    if (!select) return Promise.resolve();
+    return api('/api/admin/club-members').then(function(data){
+      clubeMemberCache = data.items;
+      var current = select.value;
+      clear(select);
+      select.appendChild(new Option('Selecionar membro…', ''));
+      data.items.forEach(function(m){ select.appendChild(new Option(m.name + ' — ' + m.email, m.id)); });
+      if (current) select.value = current;
+    }).catch(function(){});
+  }
+
+  /* ---- Membros ---- */
+  var clubeMembrosListView = document.getElementById('clube-membros-list-view');
+  var clubeMembrosDetailView = document.getElementById('clube-membros-detail-view');
+  var clubeMembrosSearchTimer = null;
+
+  function loadClubeMembros(){
+    var wrap = document.getElementById('clube-membros-table-wrap');
+    clear(wrap);
+    var search = document.getElementById('clube-membros-search').value.trim();
+    api('/api/admin/club-members?search=' + encodeURIComponent(search)).then(function(data){
+      if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhum membro encontrado.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Nome</th><th>Número</th><th>E-mail</th><th>Nível</th><th>Pontos</th><th>Compras</th><th>Entrada</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(m){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', m.name));
+        tr.appendChild(textEl('td', m.member_number || '—'));
+        tr.appendChild(textEl('td', m.email));
+        tr.appendChild(textEl('td', m.tierName || '—'));
+        tr.appendChild(textEl('td', String(m.pointsBalance)));
+        tr.appendChild(textEl('td', String(m.orders_count || 0)));
+        tr.appendChild(textEl('td', m.club_joined_at ? formatDate(m.club_joined_at) : '—'));
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var viewBtn = document.createElement('button'); viewBtn.type = 'button'; viewBtn.textContent = 'Ver perfil';
+        viewBtn.addEventListener('click', function(){ showClubeMembroDetail(m.id); });
+        actionsTd.appendChild(viewBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  document.getElementById('clube-membros-search').addEventListener('input', function(){
+    window.clearTimeout(clubeMembrosSearchTimer);
+    clubeMembrosSearchTimer = window.setTimeout(loadClubeMembros, 300);
+  });
+
+  function clubeMiniTable(headers, rows){
+    if (!rows.length) return textEl('p', 'Nenhum registro ainda.', 'empty-state-mini');
+    var table = document.createElement('table');
+    table.className = 'admin-table';
+    var thead = document.createElement('tr');
+    headers.forEach(function(h){ thead.appendChild(textEl('th', h)); });
+    var theadWrap = document.createElement('thead'); theadWrap.appendChild(thead);
+    table.appendChild(theadWrap);
+    var tbody = document.createElement('tbody');
+    rows.forEach(function(cells){
+      var tr = document.createElement('tr');
+      cells.forEach(function(c){ tr.appendChild(textEl('td', c)); });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    return table;
+  }
+
+  function showClubeMembroDetail(id){
+    clubeMembrosListView.hidden = true; clubeMembrosDetailView.hidden = false;
+    var body = document.getElementById('clube-membro-detail-body');
+    clear(body);
+    body.appendChild(textEl('p', 'Carregando…', 'empty-state'));
+    api('/api/admin/club-members?id=' + id).then(function(data){
+      clear(body);
+      var m = data.member;
+      document.getElementById('clube-membro-detail-name').textContent = m.name;
+
+      var infoGrid = document.createElement('div');
+      infoGrid.className = 'form-grid';
+      [
+        ['E-mail', m.email], ['Telefone', m.phone || '—'], ['Número de membro', m.member_number || '—'],
+        ['Nível atual', data.tier ? data.tier.name : '—'], ['Pontos', String(data.points.balance)],
+        ['Compras realizadas', String(m.orders_count || 0)], ['Total gasto', formatMoney(m.total_spent)],
+        ['Membro desde', m.club_joined_at ? formatDate(m.club_joined_at) : '—'],
+        ['Aniversário', m.birthday ? formatDate(m.birthday) : '—'],
+      ].forEach(function(pair){
+        var f = document.createElement('div'); f.className = 'field';
+        f.appendChild(textEl('label', pair[0]));
+        f.appendChild(textEl('p', pair[1]));
+        infoGrid.appendChild(f);
+      });
+      body.appendChild(infoGrid);
+
+      body.appendChild(textEl('h2', 'Histórico de pontos'));
+      body.appendChild(clubeMiniTable(['Data', 'Motivo', 'Pontos'], data.points.history.slice(0, 20).map(function(h){
+        return [formatDate(h.created_at), h.reason, (h.delta > 0 ? '+' : '') + h.delta];
+      })));
+
+      body.appendChild(textEl('h2', 'Compras'));
+      body.appendChild(clubeMiniTable(['Número', 'Total', 'Status', 'Data'], data.orders.map(function(o){
+        return [o.order_number, formatMoney(o.total), o.status, formatDate(o.created_at)];
+      })));
+
+      body.appendChild(textEl('h2', 'Cupons'));
+      body.appendChild(clubeMiniTable(['Código', 'Nome', 'Status'], data.coupons.map(function(c){
+        return [c.code, c.name, c.status];
+      })));
+
+      body.appendChild(textEl('h2', 'Benefícios utilizados'));
+      body.appendChild(clubeMiniTable(['Benefício', 'Data'], data.benefitRedemptions.map(function(b){
+        return [b.name, formatDate(b.redeemed_at)];
+      })));
+
+      body.appendChild(textEl('h2', 'Presentes resgatados'));
+      body.appendChild(clubeMiniTable(['Presente', 'Data'], data.giftRedemptions.map(function(g){
+        return [g.name, formatDate(g.redeemed_at)];
+      })));
+    }).catch(function(err){ clear(body); showToast(err.message, true); });
+  }
+  document.getElementById('clube-membro-back-btn').addEventListener('click', function(){
+    clubeMembrosDetailView.hidden = true; clubeMembrosListView.hidden = false;
+  });
+
   var clubeState = { search: '', status: '' };
   var clubeListView = document.getElementById('clube-list-view');
   var clubeGerarView = document.getElementById('clube-gerar-view');
@@ -1790,12 +1967,628 @@
     }).catch(function(err){ setLoading(btn, false); showToast(err.message, true); });
   });
 
+  /* ---- Níveis ---- */
+  var clubeNiveisListView = document.getElementById('clube-niveis-list-view');
+  var clubeNivelFormView = document.getElementById('clube-nivel-form-view');
+  var clubeNivelForm = document.getElementById('clube-nivel-form');
+
+  function loadClubeNiveis(){
+    var wrap = document.getElementById('clube-niveis-table-wrap');
+    clear(wrap);
+    api('/api/admin/club-tiers').then(function(data){
+      clubeTierCache = data.items;
+      if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhum nível cadastrado.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Nome</th><th>Compras mínimas</th><th>Status</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(t){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', t.name));
+        tr.appendChild(textEl('td', formatMoney(t.min_spent)));
+        var statusTd = document.createElement('td'); statusTd.appendChild(clubeBadge(t.active)); tr.appendChild(statusTd);
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function(){ showClubeNivelForm(t); });
+        actionsTd.appendChild(editBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  function showClubeNivelForm(tier){
+    clubeNiveisListView.hidden = true; clubeNivelFormView.hidden = false;
+    clubeNivelForm.reset();
+    document.getElementById('clube-nivel-form-title').textContent = tier ? 'Editar nível' : 'Novo nível';
+    document.getElementById('clube-nivel-id').value = tier ? tier.id : '';
+    document.getElementById('clube-nivel-name').value = tier ? tier.name : '';
+    document.getElementById('clube-nivel-min-spent').value = tier ? tier.min_spent : 0;
+    document.getElementById('clube-nivel-sort').value = tier ? tier.sort_order : 0;
+    document.getElementById('clube-nivel-description').value = tier ? (tier.description || '') : '';
+    document.getElementById('clube-nivel-active').checked = tier ? Boolean(tier.active) : true;
+    watchDirty(clubeNivelForm);
+  }
+  document.getElementById('clube-nivel-new-btn').addEventListener('click', function(){ showClubeNivelForm(null); });
+  document.getElementById('clube-nivel-back-btn').addEventListener('click', function(){ clubeNivelFormView.hidden = true; clubeNiveisListView.hidden = false; clearDirty(); });
+  document.getElementById('clube-nivel-cancel-btn').addEventListener('click', function(){ document.getElementById('clube-nivel-back-btn').click(); });
+  clubeNivelForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('clube-nivel-id').value;
+    var body = {
+      name: document.getElementById('clube-nivel-name').value.trim(),
+      minSpent: Number(document.getElementById('clube-nivel-min-spent').value),
+      sortOrder: Number(document.getElementById('clube-nivel-sort').value) || 0,
+      description: document.getElementById('clube-nivel-description').value.trim(),
+      active: document.getElementById('clube-nivel-active').checked,
+    };
+    var btn = clubeNivelForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    var req = id ? api('/api/admin/club-tiers?id=' + id, { method: 'PUT', body: body })
+                 : api('/api/admin/club-tiers', { method: 'POST', body: body });
+    req.then(function(){
+      clearDirty();
+      showToast(id ? 'Nível atualizado.' : 'Nível criado.');
+      clubeNivelFormView.hidden = true; clubeNiveisListView.hidden = false;
+      loadClubeNiveis();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+
+  /* ---- Benefícios ---- */
+  var clubeBeneficiosListView = document.getElementById('clube-beneficios-list-view');
+  var clubeBeneficioFormView = document.getElementById('clube-beneficio-form-view');
+  var clubeBeneficioForm = document.getElementById('clube-beneficio-form');
+
+  function loadClubeBeneficios(){
+    var wrap = document.getElementById('clube-beneficios-table-wrap');
+    clear(wrap);
+    api('/api/admin/club-benefits').then(function(data){
+      if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhum benefício cadastrado.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Nome</th><th>Nível necessário</th><th>Status</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(b){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', b.name));
+        tr.appendChild(textEl('td', b.tier_name || 'Todos os níveis'));
+        var statusTd = document.createElement('td'); statusTd.appendChild(clubeBadge(b.active)); tr.appendChild(statusTd);
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function(){ showClubeBeneficioForm(b); });
+        actionsTd.appendChild(editBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  function showClubeBeneficioForm(b){
+    clubeBeneficiosListView.hidden = true; clubeBeneficioFormView.hidden = false;
+    clubeBeneficioForm.reset();
+    populateClubeTierSelect(document.getElementById('clube-beneficio-tier')).then(function(){
+      document.getElementById('clube-beneficio-tier').value = b && b.tier_id ? b.tier_id : '';
+    });
+    document.getElementById('clube-beneficio-delete-btn').hidden = !b;
+    document.getElementById('clube-beneficio-form-title').textContent = b ? 'Editar benefício' : 'Novo benefício';
+    document.getElementById('clube-beneficio-id').value = b ? b.id : '';
+    document.getElementById('clube-beneficio-name').value = b ? b.name : '';
+    document.getElementById('clube-beneficio-sort').value = b ? b.sort_order : 0;
+    document.getElementById('clube-beneficio-description').value = b ? (b.description || '') : '';
+    document.getElementById('clube-beneficio-validity').value = b ? (b.validity_note || '') : '';
+    document.getElementById('clube-beneficio-active').checked = b ? Boolean(b.active) : true;
+    watchDirty(clubeBeneficioForm);
+  }
+  document.getElementById('clube-beneficio-new-btn').addEventListener('click', function(){ showClubeBeneficioForm(null); });
+  document.getElementById('clube-beneficio-back-btn').addEventListener('click', function(){ clubeBeneficioFormView.hidden = true; clubeBeneficiosListView.hidden = false; clearDirty(); });
+  document.getElementById('clube-beneficio-cancel-btn').addEventListener('click', function(){ document.getElementById('clube-beneficio-back-btn').click(); });
+  document.getElementById('clube-beneficio-delete-btn').addEventListener('click', function(){
+    var id = document.getElementById('clube-beneficio-id').value;
+    if (!id) return;
+    confirmDialog('Tem certeza que deseja excluir este benefício?').then(function(ok){
+      if (!ok) return;
+      api('/api/admin/club-benefits?id=' + id, { method: 'DELETE' }).then(function(){
+        clearDirty(); showToast('Benefício excluído.');
+        clubeBeneficioFormView.hidden = true; clubeBeneficiosListView.hidden = false;
+        loadClubeBeneficios();
+      }).catch(function(err){ showToast(err.message, true); });
+    });
+  });
+  clubeBeneficioForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('clube-beneficio-id').value;
+    var body = {
+      name: document.getElementById('clube-beneficio-name').value.trim(),
+      tierId: document.getElementById('clube-beneficio-tier').value || null,
+      sortOrder: Number(document.getElementById('clube-beneficio-sort').value) || 0,
+      description: document.getElementById('clube-beneficio-description').value.trim(),
+      validityNote: document.getElementById('clube-beneficio-validity').value.trim(),
+      active: document.getElementById('clube-beneficio-active').checked,
+    };
+    var btn = clubeBeneficioForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    var req = id ? api('/api/admin/club-benefits?id=' + id, { method: 'PUT', body: body })
+                 : api('/api/admin/club-benefits', { method: 'POST', body: body });
+    req.then(function(){
+      clearDirty();
+      showToast(id ? 'Benefício atualizado.' : 'Benefício criado.');
+      clubeBeneficioFormView.hidden = true; clubeBeneficiosListView.hidden = false;
+      loadClubeBeneficios();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+
+  /* ---- Pontos: regras ---- */
+  var clubeRegrasListView = document.getElementById('clube-regras-list-view');
+  var clubeRegraFormView = document.getElementById('clube-regra-form-view');
+  var clubeRegraForm = document.getElementById('clube-regra-form');
+
+  function loadClubeRegras(){
+    var wrap = document.getElementById('clube-regras-table-wrap');
+    clear(wrap);
+    api('/api/admin/club-points-rules').then(function(data){
+      if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhuma regra cadastrada.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Regra</th><th>Pontos</th><th>Status</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(r){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', r.label));
+        tr.appendChild(textEl('td', (r.points_value > 0 ? '+' : '') + r.points_value));
+        var statusTd = document.createElement('td'); statusTd.appendChild(clubeBadge(r.active)); tr.appendChild(statusTd);
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function(){ showClubeRegraForm(r); });
+        actionsTd.appendChild(editBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  function showClubeRegraForm(r){
+    clubeRegrasListView.hidden = true; clubeRegraFormView.hidden = false;
+    clubeRegraForm.reset();
+    document.getElementById('clube-regra-delete-btn').hidden = !r;
+    document.getElementById('clube-regra-form-title').textContent = r ? 'Editar regra' : 'Nova regra';
+    document.getElementById('clube-regra-id').value = r ? r.id : '';
+    document.getElementById('clube-regra-label').value = r ? r.label : '';
+    document.getElementById('clube-regra-points').value = r ? r.points_value : 1;
+    document.getElementById('clube-regra-sort').value = r ? r.sort_order : 0;
+    document.getElementById('clube-regra-description').value = r ? (r.description || '') : '';
+    document.getElementById('clube-regra-active').checked = r ? Boolean(r.active) : true;
+    watchDirty(clubeRegraForm);
+  }
+  document.getElementById('clube-regra-new-btn').addEventListener('click', function(){ showClubeRegraForm(null); });
+  document.getElementById('clube-regra-back-btn').addEventListener('click', function(){ clubeRegraFormView.hidden = true; clubeRegrasListView.hidden = false; clearDirty(); });
+  document.getElementById('clube-regra-cancel-btn').addEventListener('click', function(){ document.getElementById('clube-regra-back-btn').click(); });
+  document.getElementById('clube-regra-delete-btn').addEventListener('click', function(){
+    var id = document.getElementById('clube-regra-id').value;
+    if (!id) return;
+    confirmDialog('Tem certeza que deseja excluir esta regra?').then(function(ok){
+      if (!ok) return;
+      api('/api/admin/club-points-rules?id=' + id, { method: 'DELETE' }).then(function(){
+        clearDirty(); showToast('Regra excluída.');
+        clubeRegraFormView.hidden = true; clubeRegrasListView.hidden = false;
+        loadClubeRegras();
+      }).catch(function(err){ showToast(err.message, true); });
+    });
+  });
+  clubeRegraForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('clube-regra-id').value;
+    var body = {
+      label: document.getElementById('clube-regra-label').value.trim(),
+      pointsValue: Number(document.getElementById('clube-regra-points').value),
+      sortOrder: Number(document.getElementById('clube-regra-sort').value) || 0,
+      description: document.getElementById('clube-regra-description').value.trim(),
+      active: document.getElementById('clube-regra-active').checked,
+    };
+    var btn = clubeRegraForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    var req = id ? api('/api/admin/club-points-rules?id=' + id, { method: 'PUT', body: body })
+                 : api('/api/admin/club-points-rules', { method: 'POST', body: body });
+    req.then(function(){
+      clearDirty();
+      showToast(id ? 'Regra atualizada.' : 'Regra criada.');
+      clubeRegraFormView.hidden = true; clubeRegrasListView.hidden = false;
+      loadClubeRegras();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+
+  /* ---- Pontos: recompensas ---- */
+  var clubeRecompensasListView = document.getElementById('clube-recompensas-list-view');
+  var clubeRecompensaFormView = document.getElementById('clube-recompensa-form-view');
+  var clubeRecompensaForm = document.getElementById('clube-recompensa-form');
+
+  function loadClubeRecompensas(){
+    var wrap = document.getElementById('clube-recompensas-table-wrap');
+    clear(wrap);
+    api('/api/admin/club-rewards').then(function(data){
+      if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhuma recompensa cadastrada.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Nome</th><th>Custo</th><th>Status</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(r){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', r.name));
+        tr.appendChild(textEl('td', r.points_cost + ' pontos'));
+        var statusTd = document.createElement('td'); statusTd.appendChild(clubeBadge(r.active)); tr.appendChild(statusTd);
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function(){ showClubeRecompensaForm(r); });
+        actionsTd.appendChild(editBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  function showClubeRecompensaForm(r){
+    clubeRecompensasListView.hidden = true; clubeRecompensaFormView.hidden = false;
+    clubeRecompensaForm.reset();
+    document.getElementById('clube-recompensa-delete-btn').hidden = !r;
+    document.getElementById('clube-recompensa-form-title').textContent = r ? 'Editar recompensa' : 'Nova recompensa';
+    document.getElementById('clube-recompensa-id').value = r ? r.id : '';
+    document.getElementById('clube-recompensa-name').value = r ? r.name : '';
+    document.getElementById('clube-recompensa-cost').value = r ? r.points_cost : 100;
+    document.getElementById('clube-recompensa-sort').value = r ? r.sort_order : 0;
+    document.getElementById('clube-recompensa-description').value = r ? (r.description || '') : '';
+    document.getElementById('clube-recompensa-active').checked = r ? Boolean(r.active) : true;
+    watchDirty(clubeRecompensaForm);
+  }
+  document.getElementById('clube-recompensa-new-btn').addEventListener('click', function(){ showClubeRecompensaForm(null); });
+  document.getElementById('clube-recompensa-back-btn').addEventListener('click', function(){ clubeRecompensaFormView.hidden = true; clubeRecompensasListView.hidden = false; clearDirty(); });
+  document.getElementById('clube-recompensa-cancel-btn').addEventListener('click', function(){ document.getElementById('clube-recompensa-back-btn').click(); });
+  document.getElementById('clube-recompensa-delete-btn').addEventListener('click', function(){
+    var id = document.getElementById('clube-recompensa-id').value;
+    if (!id) return;
+    confirmDialog('Tem certeza que deseja excluir esta recompensa?').then(function(ok){
+      if (!ok) return;
+      api('/api/admin/club-rewards?id=' + id, { method: 'DELETE' }).then(function(){
+        clearDirty(); showToast('Recompensa excluída.');
+        clubeRecompensaFormView.hidden = true; clubeRecompensasListView.hidden = false;
+        loadClubeRecompensas();
+      }).catch(function(err){ showToast(err.message, true); });
+    });
+  });
+  clubeRecompensaForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('clube-recompensa-id').value;
+    var body = {
+      name: document.getElementById('clube-recompensa-name').value.trim(),
+      pointsCost: Number(document.getElementById('clube-recompensa-cost').value),
+      sortOrder: Number(document.getElementById('clube-recompensa-sort').value) || 0,
+      description: document.getElementById('clube-recompensa-description').value.trim(),
+      active: document.getElementById('clube-recompensa-active').checked,
+    };
+    var btn = clubeRecompensaForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    var req = id ? api('/api/admin/club-rewards?id=' + id, { method: 'PUT', body: body })
+                 : api('/api/admin/club-rewards', { method: 'POST', body: body });
+    req.then(function(){
+      clearDirty();
+      showToast(id ? 'Recompensa atualizada.' : 'Recompensa criada.');
+      clubeRecompensaFormView.hidden = true; clubeRecompensasListView.hidden = false;
+      loadClubeRecompensas();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+
+  /* ---- Pontos: ajuste manual ---- */
+  document.getElementById('clube-ajuste-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var customerId = document.getElementById('clube-ajuste-membro').value;
+    var delta = Number(document.getElementById('clube-ajuste-delta').value);
+    var reason = document.getElementById('clube-ajuste-reason').value.trim();
+    if (!customerId) { showToast('Selecione um membro.', true); return; }
+    var btn = e.target.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    api('/api/admin/club-points-adjust', { method: 'POST', body: { customerId: customerId, delta: delta, reason: reason } }).then(function(data){
+      showToast('Ajuste aplicado. Novo saldo: ' + data.balance + ' pontos.');
+      e.target.reset();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+
+  /* ---- Cupons ---- */
+  var CLUBE_COUPON_STATUS_BADGE = function(active){ return active ? 'badge-published' : 'badge-draft'; };
+  var clubeCuponsListView = document.getElementById('clube-cupons-list-view');
+  var clubeCupomFormView = document.getElementById('clube-cupom-form-view');
+  var clubeCupomForm = document.getElementById('clube-cupom-form');
+
+  function loadClubeCupons(){
+    var wrap = document.getElementById('clube-cupons-table-wrap');
+    clear(wrap);
+    api('/api/admin/club-coupons').then(function(data){
+      if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhum cupom cadastrado.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Código</th><th>Nome</th><th>Desconto</th><th>Com membros</th><th>Status</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(c){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', c.code));
+        tr.appendChild(textEl('td', c.name));
+        tr.appendChild(textEl('td', c.discount_label));
+        tr.appendChild(textEl('td', String(c.holders)));
+        var statusTd = document.createElement('td'); statusTd.appendChild(clubeBadge(c.active)); tr.appendChild(statusTd);
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function(){ showClubeCupomForm(c); });
+        actionsTd.appendChild(editBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  function showClubeCupomForm(c){
+    clubeCuponsListView.hidden = true; clubeCupomFormView.hidden = false;
+    clubeCupomForm.reset();
+    document.getElementById('clube-cupom-delete-btn').hidden = !c;
+    document.getElementById('clube-cupom-form-title').textContent = c ? 'Editar cupom' : 'Novo cupom';
+    document.getElementById('clube-cupom-id').value = c ? c.id : '';
+    document.getElementById('clube-cupom-name').value = c ? c.name : '';
+    document.getElementById('clube-cupom-code').value = c ? c.code : '';
+    document.getElementById('clube-cupom-discount').value = c ? c.discount_label : '';
+    document.getElementById('clube-cupom-valid-until').value = c && c.valid_until ? String(c.valid_until).slice(0, 10) : '';
+    document.getElementById('clube-cupom-auto-grant').checked = c ? Boolean(c.auto_grant) : false;
+    document.getElementById('clube-cupom-description').value = c ? (c.description || '') : '';
+    document.getElementById('clube-cupom-active').checked = c ? Boolean(c.active) : true;
+    watchDirty(clubeCupomForm);
+  }
+  document.getElementById('clube-cupom-new-btn').addEventListener('click', function(){ showClubeCupomForm(null); });
+  document.getElementById('clube-cupom-back-btn').addEventListener('click', function(){ clubeCupomFormView.hidden = true; clubeCuponsListView.hidden = false; clearDirty(); });
+  document.getElementById('clube-cupom-cancel-btn').addEventListener('click', function(){ document.getElementById('clube-cupom-back-btn').click(); });
+  document.getElementById('clube-cupom-delete-btn').addEventListener('click', function(){
+    var id = document.getElementById('clube-cupom-id').value;
+    if (!id) return;
+    confirmDialog('Tem certeza que deseja excluir este cupom?').then(function(ok){
+      if (!ok) return;
+      api('/api/admin/club-coupons?id=' + id, { method: 'DELETE' }).then(function(){
+        clearDirty(); showToast('Cupom excluído.');
+        clubeCupomFormView.hidden = true; clubeCuponsListView.hidden = false;
+        loadClubeCupons();
+      }).catch(function(err){ showToast(err.message, true); });
+    });
+  });
+  clubeCupomForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('clube-cupom-id').value;
+    var body = {
+      name: document.getElementById('clube-cupom-name').value.trim(),
+      code: document.getElementById('clube-cupom-code').value.trim().toUpperCase(),
+      discountLabel: document.getElementById('clube-cupom-discount').value.trim(),
+      validUntil: document.getElementById('clube-cupom-valid-until').value || null,
+      autoGrant: document.getElementById('clube-cupom-auto-grant').checked,
+      description: document.getElementById('clube-cupom-description').value.trim(),
+      active: document.getElementById('clube-cupom-active').checked,
+    };
+    var btn = clubeCupomForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    var req = id ? api('/api/admin/club-coupons?id=' + id, { method: 'PUT', body: body })
+                 : api('/api/admin/club-coupons', { method: 'POST', body: body });
+    req.then(function(){
+      clearDirty();
+      showToast(id ? 'Cupom atualizado.' : 'Cupom criado.');
+      clubeCupomFormView.hidden = true; clubeCuponsListView.hidden = false;
+      loadClubeCupons();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+
+  /* ---- Presentes ---- */
+  var CLUBE_GIFT_TRIGGER_LABELS = { aniversario_cliente: 'Aniversário do cliente', aniversario_membro: 'Aniversário de membro', manual: 'Concessão manual' };
+  var clubePresentesListView = document.getElementById('clube-presentes-list-view');
+  var clubePresenteFormView = document.getElementById('clube-presente-form-view');
+  var clubePresenteForm = document.getElementById('clube-presente-form');
+  var clubePresenteGrantBox = document.getElementById('clube-presente-grant-box');
+
+  function loadClubePresentes(){
+    var wrap = document.getElementById('clube-presentes-table-wrap');
+    clear(wrap);
+    api('/api/admin/club-gifts').then(function(data){
+      if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhum presente cadastrado.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Nome</th><th>Gatilho</th><th>Status</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(g){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', g.name));
+        tr.appendChild(textEl('td', CLUBE_GIFT_TRIGGER_LABELS[g.trigger_type] || g.trigger_type));
+        var statusTd = document.createElement('td'); statusTd.appendChild(clubeBadge(g.active)); tr.appendChild(statusTd);
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function(){ showClubePresenteForm(g); });
+        actionsTd.appendChild(editBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  function showClubePresenteForm(g){
+    clubePresentesListView.hidden = true; clubePresenteFormView.hidden = false;
+    clubePresenteForm.reset();
+    document.getElementById('clube-presente-delete-btn').hidden = !g;
+    document.getElementById('clube-presente-form-title').textContent = g ? 'Editar presente' : 'Novo presente';
+    document.getElementById('clube-presente-id').value = g ? g.id : '';
+    document.getElementById('clube-presente-name').value = g ? g.name : '';
+    document.getElementById('clube-presente-trigger').value = g ? g.trigger_type : 'manual';
+    document.getElementById('clube-presente-reward-type').value = g ? g.reward_type : 'cupom';
+    document.getElementById('clube-presente-reward-value').value = g ? (g.reward_value || '') : '';
+    document.getElementById('clube-presente-description').value = g ? (g.description || '') : '';
+    document.getElementById('clube-presente-active').checked = g ? Boolean(g.active) : true;
+    clubePresenteGrantBox.hidden = !(g && g.trigger_type === 'manual');
+    if (g && g.trigger_type === 'manual') populateClubeMemberSelect(document.getElementById('clube-presente-grant-membro'));
+    watchDirty(clubePresenteForm);
+  }
+  document.getElementById('clube-presente-trigger').addEventListener('change', function(e){
+    var id = document.getElementById('clube-presente-id').value;
+    clubePresenteGrantBox.hidden = !(id && e.target.value === 'manual');
+  });
+  document.getElementById('clube-presente-new-btn').addEventListener('click', function(){ showClubePresenteForm(null); });
+  document.getElementById('clube-presente-back-btn').addEventListener('click', function(){ clubePresenteFormView.hidden = true; clubePresentesListView.hidden = false; clearDirty(); });
+  document.getElementById('clube-presente-cancel-btn').addEventListener('click', function(){ document.getElementById('clube-presente-back-btn').click(); });
+  document.getElementById('clube-presente-delete-btn').addEventListener('click', function(){
+    var id = document.getElementById('clube-presente-id').value;
+    if (!id) return;
+    confirmDialog('Tem certeza que deseja excluir este presente?').then(function(ok){
+      if (!ok) return;
+      api('/api/admin/club-gifts?id=' + id, { method: 'DELETE' }).then(function(){
+        clearDirty(); showToast('Presente excluído.');
+        clubePresenteFormView.hidden = true; clubePresentesListView.hidden = false;
+        loadClubePresentes();
+      }).catch(function(err){ showToast(err.message, true); });
+    });
+  });
+  clubePresenteForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('clube-presente-id').value;
+    var body = {
+      name: document.getElementById('clube-presente-name').value.trim(),
+      triggerType: document.getElementById('clube-presente-trigger').value,
+      rewardType: document.getElementById('clube-presente-reward-type').value,
+      rewardValue: document.getElementById('clube-presente-reward-value').value.trim(),
+      description: document.getElementById('clube-presente-description').value.trim(),
+      active: document.getElementById('clube-presente-active').checked,
+    };
+    var btn = clubePresenteForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    var req = id ? api('/api/admin/club-gifts?id=' + id, { method: 'PUT', body: body })
+                 : api('/api/admin/club-gifts', { method: 'POST', body: body });
+    req.then(function(){
+      clearDirty();
+      showToast(id ? 'Presente atualizado.' : 'Presente criado.');
+      clubePresenteFormView.hidden = true; clubePresentesListView.hidden = false;
+      loadClubePresentes();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+  document.getElementById('clube-presente-grant-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var giftId = document.getElementById('clube-presente-id').value;
+    var customerId = document.getElementById('clube-presente-grant-membro').value;
+    if (!customerId) { showToast('Selecione um membro.', true); return; }
+    var btn = e.target.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    api('/api/admin/club-gifts?id=' + giftId + '&action=grant', { method: 'POST', body: { customerId: customerId } }).then(function(){
+      showToast('Presente concedido ao membro.');
+      e.target.reset();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+
+  /* ---- Novidades ---- */
+  var clubeNovidadesListView = document.getElementById('clube-novidades-list-view');
+  var clubeNovidadeFormView = document.getElementById('clube-novidade-form-view');
+  var clubeNovidadeForm = document.getElementById('clube-novidade-form');
+  var clubeNovidadeImageUploader = null;
+
+  function loadClubeNovidades(){
+    var wrap = document.getElementById('clube-novidades-table-wrap');
+    clear(wrap);
+    api('/api/admin/club-news').then(function(data){
+      if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhuma novidade cadastrada.', 'empty-state')); return; }
+      var table = document.createElement('table');
+      table.className = 'admin-table';
+      table.innerHTML = '<thead><tr><th>Título</th><th>Publicação</th><th>Status</th><th></th></tr></thead>';
+      var tbody = document.createElement('tbody');
+      data.items.forEach(function(n){
+        var tr = document.createElement('tr');
+        tr.appendChild(textEl('td', n.title));
+        tr.appendChild(textEl('td', formatDate(n.published_at)));
+        var statusTd = document.createElement('td'); statusTd.appendChild(clubeBadge(n.active)); tr.appendChild(statusTd);
+        var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
+        var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
+        editBtn.addEventListener('click', function(){ showClubeNovidadeForm(n); });
+        actionsTd.appendChild(editBtn);
+        tr.appendChild(actionsTd);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }).catch(function(err){ showToast(err.message, true); });
+  }
+  function showClubeNovidadeForm(n){
+    clubeNovidadesListView.hidden = true; clubeNovidadeFormView.hidden = false;
+    clubeNovidadeForm.reset();
+    document.getElementById('clube-novidade-delete-btn').hidden = !n;
+    document.getElementById('clube-novidade-form-title').textContent = n ? 'Editar novidade' : 'Nova novidade';
+    document.getElementById('clube-novidade-id').value = n ? n.id : '';
+    document.getElementById('clube-novidade-title').value = n ? n.title : '';
+    document.getElementById('clube-novidade-published-at').value = n && n.published_at ? String(n.published_at).slice(0, 10) : '';
+    document.getElementById('clube-novidade-description').value = n ? (n.description || '') : '';
+    document.getElementById('clube-novidade-active').checked = n ? Boolean(n.active) : true;
+    var wrap = document.getElementById('clube-novidade-image');
+    clubeNovidadeImageUploader = createImageUploader(wrap, {
+      urls: n && n.image_url ? [n.image_url] : [], multiple: false, folder: 'club-news', onChange: function(){}
+    });
+    watchDirty(clubeNovidadeForm);
+  }
+  document.getElementById('clube-novidade-new-btn').addEventListener('click', function(){ showClubeNovidadeForm(null); });
+  document.getElementById('clube-novidade-back-btn').addEventListener('click', function(){ clubeNovidadeFormView.hidden = true; clubeNovidadesListView.hidden = false; clearDirty(); });
+  document.getElementById('clube-novidade-cancel-btn').addEventListener('click', function(){ document.getElementById('clube-novidade-back-btn').click(); });
+  document.getElementById('clube-novidade-delete-btn').addEventListener('click', function(){
+    var id = document.getElementById('clube-novidade-id').value;
+    if (!id) return;
+    confirmDialog('Tem certeza que deseja excluir esta novidade?').then(function(ok){
+      if (!ok) return;
+      api('/api/admin/club-news?id=' + id, { method: 'DELETE' }).then(function(){
+        clearDirty(); showToast('Novidade excluída.');
+        clubeNovidadeFormView.hidden = true; clubeNovidadesListView.hidden = false;
+        loadClubeNovidades();
+      }).catch(function(err){ showToast(err.message, true); });
+    });
+  });
+  clubeNovidadeForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var id = document.getElementById('clube-novidade-id').value;
+    var urls = clubeNovidadeImageUploader ? clubeNovidadeImageUploader.getUrls() : [];
+    var body = {
+      title: document.getElementById('clube-novidade-title').value.trim(),
+      publishedAt: document.getElementById('clube-novidade-published-at').value || null,
+      description: document.getElementById('clube-novidade-description').value.trim(),
+      imageUrl: urls[0] || '',
+      active: document.getElementById('clube-novidade-active').checked,
+    };
+    var btn = clubeNovidadeForm.querySelector('button[type="submit"]');
+    setLoading(btn, true);
+    var req = id ? api('/api/admin/club-news?id=' + id, { method: 'PUT', body: body })
+                 : api('/api/admin/club-news', { method: 'POST', body: body });
+    req.then(function(){
+      clearDirty();
+      showToast(id ? 'Novidade atualizada.' : 'Novidade criada.');
+      clubeNovidadeFormView.hidden = true; clubeNovidadesListView.hidden = false;
+      loadClubeNovidades();
+    }).catch(function(err){ showToast(err.message, true); }).finally(function(){ setLoading(btn, false); });
+  });
+
   loaders.clube = function(){
+    document.querySelectorAll('#clube-subtabs .tab-btn').forEach(function(b){ b.classList.toggle('is-active', b.getAttribute('data-clube-tab') === 'membros'); });
+    document.querySelectorAll('[data-clube-panel]').forEach(function(p){ p.hidden = p.getAttribute('data-clube-panel') !== 'membros'; });
+    document.getElementById('clube-membros-search').value = '';
+    clubeMembrosDetailView.hidden = true; clubeMembrosListView.hidden = false;
+    loadClubeMembros();
+
     clubeState = { search: '', status: '' };
     document.getElementById('clube-search').value = '';
     document.getElementById('clube-status-filter').value = '';
     clubeGerarView.hidden = true; clubeListView.hidden = false;
-    loadClube();
+
+    clubeNiveisListView.hidden = false; clubeNivelFormView.hidden = true;
+    clubeBeneficiosListView.hidden = false; clubeBeneficioFormView.hidden = true;
+    clubeRegrasListView.hidden = false; clubeRegraFormView.hidden = true;
+    clubeRecompensasListView.hidden = false; clubeRecompensaFormView.hidden = true;
+    clubeCuponsListView.hidden = false; clubeCupomFormView.hidden = true;
+    clubePresentesListView.hidden = false; clubePresenteFormView.hidden = true;
+    clubeNovidadesListView.hidden = false; clubeNovidadeFormView.hidden = true;
+    document.querySelectorAll('#clube-pontos-subtabs .tab-btn').forEach(function(b){ b.classList.toggle('is-active', b.getAttribute('data-clube-pontos-tab') === 'regras'); });
+    document.querySelectorAll('[data-clube-pontos-panel]').forEach(function(p){ p.hidden = p.getAttribute('data-clube-pontos-panel') !== 'regras'; });
   };
 
   /* ============================ Leads ============================ */

@@ -433,3 +433,142 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS limited_edition BOOLEAN NOT NULL D
 INSERT INTO categories (name, slug, sort_order) VALUES
   ('Presentes', 'presentes', 5)
 ON CONFLICT (slug) DO NOTHING;
+
+-- ============================================================
+-- Clube Verité VIP (2026-08-19): níveis, pontos, benefícios, recompensas,
+-- presentes e novidades reais — tudo administrável pelo painel existente,
+-- nada de valor fixo no frontend. Nenhum saldo é uma coluna mutável: pontos
+-- sempre somam club_points_transactions (ledger, só o backend escreve),
+-- nível sempre é calculado comparando customers.total_spent com
+-- club_tiers.min_spent. O cliente nunca tem uma rota que altere seus
+-- próprios pontos/nível/benefícios.
+-- ============================================================
+
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS birthday DATE;
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS address TEXT;
+ALTER TABLE customers ADD COLUMN IF NOT EXISTS member_number TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_customers_member_number ON customers (member_number) WHERE member_number IS NOT NULL;
+
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS tracking_code TEXT;
+
+CREATE TABLE IF NOT EXISTS club_tiers (
+  id SERIAL PRIMARY KEY,
+  slug TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  min_spent NUMERIC(10,2) NOT NULL DEFAULT 0,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  description TEXT NOT NULL DEFAULT '',
+  active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+INSERT INTO club_tiers (slug, name, min_spent, sort_order, description) VALUES
+  ('essentiel', 'Verité Essentiel', 0, 1, 'Acesso ao Clube, cupons exclusivos e novidades antecipadas.'),
+  ('noir', 'Verité Noir', 500, 2, 'Ofertas especiais, acesso antecipado a lançamentos e presentes selecionados.'),
+  ('prive', 'Verité Privé', 1500, 3, 'Lançamentos exclusivos, experiências Verité e prioridade em edições limitadas.')
+ON CONFLICT (slug) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS club_benefits (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  tier_id INTEGER REFERENCES club_tiers(id) ON DELETE SET NULL,
+  validity_note TEXT NOT NULL DEFAULT '',
+  active BOOLEAN NOT NULL DEFAULT true,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS customer_benefit_redemptions (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  benefit_id INTEGER NOT NULL REFERENCES club_benefits(id) ON DELETE CASCADE,
+  redeemed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (customer_id, benefit_id)
+);
+
+CREATE TABLE IF NOT EXISTS club_points_rules (
+  id SERIAL PRIMARY KEY,
+  label TEXT NOT NULL,
+  points_value INTEGER NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  active BOOLEAN NOT NULL DEFAULT true,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS club_points_transactions (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  delta INTEGER NOT NULL,
+  reason TEXT NOT NULL,
+  admin_email TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_points_tx_customer ON club_points_transactions (customer_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS club_rewards (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  points_cost INTEGER NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  active BOOLEAN NOT NULL DEFAULT true,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS customer_reward_redemptions (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  reward_id INTEGER NOT NULL REFERENCES club_rewards(id) ON DELETE CASCADE,
+  points_tx_id INTEGER REFERENCES club_points_transactions(id) ON DELETE SET NULL,
+  redeemed_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS club_gifts (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  trigger_type TEXT NOT NULL CHECK (trigger_type IN ('aniversario_cliente','aniversario_membro','manual')),
+  trigger_config JSONB NOT NULL DEFAULT '{}',
+  reward_type TEXT NOT NULL CHECK (reward_type IN ('cupom','pontos','frete','presente')),
+  reward_value TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
+  active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS customer_gift_redemptions (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  gift_id INTEGER NOT NULL REFERENCES club_gifts(id) ON DELETE CASCADE,
+  period_key TEXT NOT NULL,
+  redeemed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (customer_id, gift_id, period_key)
+);
+-- Presentes "manual" (surpresa/pontual) não têm regra automática — o admin
+-- concede pra um cliente específico, o que os libera (deixa "disponível");
+-- sem essa linha, um presente "manual" nunca aparece pra ninguém.
+CREATE TABLE IF NOT EXISTS customer_gift_grants (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  gift_id INTEGER NOT NULL REFERENCES club_gifts(id) ON DELETE CASCADE,
+  granted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  admin_email TEXT,
+  UNIQUE (customer_id, gift_id)
+);
+
+CREATE TABLE IF NOT EXISTS club_news (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  image_url TEXT,
+  published_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  active BOOLEAN NOT NULL DEFAULT true
+);
+
+CREATE TABLE IF NOT EXISTS club_notifications (
+  id SERIAL PRIMARY KEY,
+  customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  message TEXT NOT NULL,
+  read_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_club_notifications_customer ON club_notifications (customer_id, created_at DESC);
+
+-- coupons.code já existe (VRT10 etc.); admin ganha CRUD completo em cima da
+-- tabela já existente (era só seed manual até aqui) — sem coluna nova.
