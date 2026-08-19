@@ -175,7 +175,9 @@
 .club-hello{
   font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500;
   font-size:clamp(1.8rem,4.4vw,2.6rem); margin:0 0 2rem; color:var(--white);
+  overflow-wrap:anywhere;
 }
+.digital-card-name{overflow-wrap:anywhere;}
 .club-section-title{
   font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500;
   font-size:clamp(1.5rem,3.6vw,2rem); margin:0 0 1.6rem; color:var(--white);
