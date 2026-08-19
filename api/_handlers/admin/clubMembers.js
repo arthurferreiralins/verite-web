@@ -19,13 +19,18 @@ module.exports = async function handler(req, res) {
   const id = req.query.id ? Number(req.query.id) : null;
 
   if (id) {
-    const { rows } = await sql`SELECT * FROM customers WHERE id = ${id} AND club_member = true`;
+    const { rows } = await sql`SELECT * FROM customers WHERE id = ${id} AND password_hash IS NOT NULL`;
     if (!rows.length) {
       res.status(404).json({ ok: false, error: 'Membro não encontrado.' });
       return;
     }
     const customer = rows[0];
     delete customer.password_hash;
+    let codeInfo = null;
+    if (customer.club_code_used) {
+      const { rows: codeRows } = await sql`SELECT code, activated_at FROM club_codes WHERE code = ${customer.club_code_used}`;
+      if (codeRows.length) codeInfo = codeRows[0];
+    }
     const { current } = await getTierForSpent(Number(customer.total_spent) || 0);
     const [balance, history, coupons, orders, benefitRedemptions, giftRedemptions] = await Promise.all([
       getBalance(id),
@@ -38,6 +43,8 @@ module.exports = async function handler(req, res) {
     res.status(200).json({
       ok: true,
       member: customer,
+      membershipType: customer.club_member ? 'membro_verite' : 'iniciante',
+      code: codeInfo,
       tier: current,
       points: { balance, history },
       coupons: coupons.rows,
@@ -52,7 +59,7 @@ module.exports = async function handler(req, res) {
   const like = `%${search}%`;
   const { rows } = await sql`
     SELECT * FROM customers
-    WHERE club_member = true AND (${search} = '' OR name ILIKE ${like} OR email ILIKE ${like} OR member_number ILIKE ${like})
+    WHERE password_hash IS NOT NULL AND (${search} = '' OR name ILIKE ${like} OR email ILIKE ${like} OR member_number ILIKE ${like})
     ORDER BY club_joined_at DESC
   `;
   const tiers = await sql`SELECT * FROM club_tiers WHERE active = true ORDER BY min_spent ASC`;
@@ -63,7 +70,7 @@ module.exports = async function handler(req, res) {
     let tier = tiers.rows[0] || null;
     tiers.rows.forEach((t) => { if (spent >= Number(t.min_spent)) tier = t; });
     const balance = await getBalance(c.id);
-    return { ...c, tierName: tier ? tier.name : null, pointsBalance: balance };
+    return { ...c, membershipType: c.club_member ? 'membro_verite' : 'iniciante', tierName: tier ? tier.name : null, pointsBalance: balance };
   }));
 
   res.status(200).json({ ok: true, items });

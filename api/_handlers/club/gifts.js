@@ -64,6 +64,18 @@ module.exports = async function handler(req, res) {
   const customer = await requireClubSession(req, res);
   if (!customer) return;
 
+  // Presentes são um privilégio de Membro Verité — Iniciante nunca fica
+  // elegível (validado aqui, não só escondido no frontend).
+  if (!customer.club_member) {
+    if (req.method === 'GET') {
+      const { rows: giftsList } = await sql`SELECT id, name, description, trigger_type, reward_type FROM club_gifts WHERE active = true ORDER BY id ASC`;
+      res.status(200).json({ ok: true, items: giftsList.map((g) => ({ ...g, status: 'bloqueado', needsBirthday: false })) });
+      return;
+    }
+    res.status(403).json({ ok: false, error: 'Disponível apenas para Membro Verité. Ative um código Verité para desbloquear.' });
+    return;
+  }
+
   const { rows: gifts } = await sql`SELECT * FROM club_gifts WHERE active = true ORDER BY id ASC`;
   const { rows: redemptions } = await sql`SELECT gift_id, period_key FROM customer_gift_redemptions WHERE customer_id = ${customer.id}`;
   const { rows: grants } = await sql`SELECT gift_id FROM customer_gift_grants WHERE customer_id = ${customer.id}`;

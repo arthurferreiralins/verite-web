@@ -104,11 +104,14 @@ function getSessionToken(req) {
 }
 
 /**
- * Gates an /api/club/* route that requires a logged-in member. Returns the
- * full customer row (never the password_hash — stripped before returning)
- * on success, or writes a 401 and returns null. Every customer row carries
- * its own session_version (bumped on password change) so changing your
- * password logs out every other device — same mechanism as the admin panel.
+ * Gates an /api/club/* route that requires a logged-in account — Iniciante
+ * (sem código) ou Membro Verité (com código), ambos têm sessão de Clube.
+ * Rotas que são exclusivas de Membro Verité verificam customer.club_member
+ * elas mesmas. Retorna a linha completa do cliente (nunca password_hash —
+ * removido antes de retornar) ou escreve 401 e retorna null. Toda linha de
+ * cliente carrega seu próprio session_version (incrementado ao trocar de
+ * senha), então trocar a senha derruba a sessão em outros dispositivos —
+ * mesmo mecanismo do painel admin.
  */
 async function requireClubSession(req, res) {
   const session = getSessionToken(req);
@@ -116,7 +119,7 @@ async function requireClubSession(req, res) {
     res.status(401).json({ ok: false, error: 'Não autenticado.' });
     return null;
   }
-  const { rows } = await sql`SELECT * FROM customers WHERE id = ${session.cid} AND club_member = true`;
+  const { rows } = await sql`SELECT * FROM customers WHERE id = ${session.cid} AND password_hash IS NOT NULL`;
   const customer = rows[0];
   if (!customer) {
     res.status(401).json({ ok: false, error: 'Conta não encontrada.' });

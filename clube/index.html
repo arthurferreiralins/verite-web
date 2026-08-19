@@ -38,8 +38,31 @@
         <img src="/assets/img/verite-emblem.webp" alt="" />
       </div>
 
+      <!-- passo 0: escolha de entrada -->
+      <div id="gate-step-choice" class="gate-step">
+        <p class="club-eyebrow">Clube Verité</p>
+        <h1 class="club-title">Escolha como deseja entrar.</h1>
+        <div class="gate-choice-list">
+          <button type="button" class="gate-choice-btn" id="choice-login-btn">
+            <span class="gate-choice-title">Já sou membro</span>
+            <span class="gate-choice-sub">Entre com seu e-mail e senha.</span>
+            <span class="gate-choice-cta">ENTRAR</span>
+          </button>
+          <button type="button" class="gate-choice-btn is-premium" id="choice-code-btn">
+            <span class="gate-choice-title">Tenho um código Verité</span>
+            <span class="gate-choice-sub">Recebeu um cartão Verité? Ative seu código para se tornar Membro Verité.</span>
+            <span class="gate-choice-cta">ATIVAR CÓDIGO</span>
+          </button>
+          <button type="button" class="gate-choice-btn" id="choice-basic-btn">
+            <span class="gate-choice-title">Ainda não tenho código</span>
+            <span class="gate-choice-sub">Crie sua conta e comece como Iniciante.</span>
+            <span class="gate-choice-cta">CRIAR CONTA</span>
+          </button>
+        </div>
+      </div>
+
       <!-- passo 1: código -->
-      <div id="gate-step-code" class="gate-step">
+      <div id="gate-step-code" class="gate-step" hidden>
         <p class="club-eyebrow">Seu Convite Para o Clube Verité</p>
         <h1 class="club-title">Nem todo mundo tem acesso a isso.</h1>
         <p class="club-lead">Insira o código exclusivo presente no seu cartão Verité.</p>
@@ -55,13 +78,14 @@
         </form>
         <p id="code-message" class="club-message" role="alert" aria-live="polite" hidden></p>
         <button type="button" id="show-login-btn" class="club-link-btn">Já sou membro. Entrar.</button>
+        <button type="button" id="code-back-btn" class="club-link-btn">← Voltar</button>
       </div>
 
       <!-- passo 2: cadastro (após código válido) -->
       <div id="gate-step-register" class="gate-step" hidden>
         <p class="club-eyebrow">Código validado</p>
         <h1 class="club-title">Complete seu cadastro</h1>
-        <p class="club-lead">Só mais um passo para liberar o seu acesso ao Clube.</p>
+        <p class="club-lead">Só mais um passo para liberar o seu acesso ao Clube como Membro Verité.</p>
         <form id="register-form" class="club-form" novalidate>
           <div class="field club-field">
             <label for="reg-name">Nome</label>
@@ -88,7 +112,38 @@
         <button type="button" id="register-back-btn" class="club-link-btn">Voltar</button>
       </div>
 
-      <!-- login (membro existente) -->
+      <!-- passo 3: cadastro sem código (Iniciante) -->
+      <div id="gate-step-basic-register" class="gate-step" hidden>
+        <p class="club-eyebrow">Ainda não tenho código</p>
+        <h1 class="club-title">Crie sua conta</h1>
+        <p class="club-lead">Comece como Iniciante — sem precisar de código.</p>
+        <form id="basic-register-form" class="club-form" novalidate>
+          <div class="field club-field">
+            <label for="basic-reg-name">Nome</label>
+            <input id="basic-reg-name" required maxlength="120" autocomplete="name"/>
+          </div>
+          <div class="field club-field">
+            <label for="basic-reg-email">E-mail</label>
+            <input id="basic-reg-email" type="email" required maxlength="254" autocomplete="email"/>
+          </div>
+          <div class="field club-field">
+            <label for="basic-reg-password">Senha</label>
+            <input id="basic-reg-password" type="password" required minlength="6" autocomplete="new-password"/>
+          </div>
+          <div class="field club-field">
+            <label for="basic-reg-password-confirm">Confirmar senha</label>
+            <input id="basic-reg-password-confirm" type="password" required minlength="6" autocomplete="new-password"/>
+          </div>
+          <button type="submit" class="club-btn-primary">
+            <span class="btn-label">Criar Conta</span>
+            <span class="club-spinner" aria-hidden="true" hidden></span>
+          </button>
+        </form>
+        <p id="basic-register-message" class="club-message" role="alert" aria-live="polite" hidden></p>
+        <button type="button" id="basic-register-back-btn" class="club-link-btn">← Voltar</button>
+      </div>
+
+      <!-- login (membro existente ou iniciante) -->
       <div id="gate-step-login" class="gate-step" hidden>
         <p class="club-eyebrow">Área de membros</p>
         <h1 class="club-title">Entrar no Clube</h1>
@@ -109,14 +164,15 @@
         </form>
         <p id="login-message" class="club-message" role="alert" aria-live="polite" hidden></p>
         <button type="button" id="show-code-btn" class="club-link-btn">Tenho um código de convite.</button>
+        <button type="button" id="login-back-btn" class="club-link-btn">← Voltar</button>
       </div>
 
       <!-- estado de sucesso -->
       <div id="gate-step-success" class="gate-step gate-success" hidden>
         <div class="success-glow" aria-hidden="true"></div>
         <p class="club-eyebrow">Acesso Liberado</p>
-        <h1 class="club-title">Bem-vindo ao Clube Verité</h1>
-        <p class="club-lead">Você agora faz parte da Verité.</p>
+        <h1 id="gate-success-title" class="club-title">Bem-vindo ao Clube Verité</h1>
+        <p id="gate-success-lead" class="club-lead">Você agora faz parte da Verité.</p>
       </div>
     </div>
   </section>
@@ -163,7 +219,12 @@
       <section class="club-section" data-club-section="inicio">
         <p class="club-tagline">Você faz parte da Verité.</p>
         <h1 class="club-hello">Bem-vindo, <span id="home-name">—</span></h1>
-        <p class="club-lead" style="margin:-1.4rem 0 2rem;">Seu espaço exclusivo dentro da Verité.</p>
+
+        <div class="membership-badge" id="home-membership-badge">
+          <span class="membership-badge-tag" id="home-membership-tag">—</span>
+          <p class="membership-badge-msg" id="home-membership-msg"></p>
+          <button type="button" class="club-link-btn membership-badge-cta" id="home-activate-code-btn" hidden data-club-route="minha-conta">Ativar Meu Código Verité</button>
+        </div>
 
         <div class="club-tier-progress" id="home-tier-progress">
           <div class="club-tier-progress-head">
@@ -321,9 +382,10 @@
             <input id="acc-address" maxlength="240" placeholder="Rua, número, bairro, cidade"/>
           </div>
           <div class="club-account-meta">
+            <p><span>Tipo de conta</span> <span id="acc-membership-type">—</span></p>
             <p><span>Membro desde</span> <span id="acc-since">—</span></p>
-            <p><span>Número de membro</span> <span id="acc-member-number">—</span></p>
-            <p><span>Nível atual</span> <span id="acc-tier">—</span></p>
+            <p id="acc-member-number-row"><span>Número de membro</span> <span id="acc-member-number">—</span></p>
+            <p id="acc-tier-row"><span>Nível atual</span> <span id="acc-tier">—</span></p>
           </div>
           <details class="club-password-details">
             <summary>Alterar senha</summary>
@@ -342,6 +404,22 @@
           </button>
         </form>
         <p id="account-message" class="club-message" role="alert" aria-live="polite" hidden></p>
+
+        <div id="acc-activate-code-box" class="club-card activate-code-box" hidden>
+          <h2>Ativar Meu Código Verité</h2>
+          <p class="club-lead" style="margin:.4rem 0 1.2rem;">Recebeu um cartão Verité? Ative seu código para se tornar Membro Verité — sua conta, favoritos e histórico continuam os mesmos.</p>
+          <form id="activate-code-form" class="club-form" novalidate>
+            <div class="field club-field">
+              <label for="activate-code-input">Código de acesso</label>
+              <input id="activate-code-input" class="club-code-input" placeholder="VRT-XXXX-XXXX" autocomplete="off" autocapitalize="characters" maxlength="14" required/>
+            </div>
+            <button type="submit" class="club-btn-primary">
+              <span class="btn-label">Ativar Código</span>
+              <span class="club-spinner" aria-hidden="true" hidden></span>
+            </button>
+          </form>
+          <p id="activate-code-message" class="club-message" role="alert" aria-live="polite" hidden></p>
+        </div>
       </section>
 
     </main>

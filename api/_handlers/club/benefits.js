@@ -11,6 +11,22 @@ module.exports = async function handler(req, res) {
   const customer = await requireClubSession(req, res);
   if (!customer) return;
 
+  // Benefícios são um privilégio de Membro Verité — Iniciante nunca vê nada
+  // como "disponível" aqui, nem no GET nem no POST (validado no backend,
+  // não só escondido no frontend).
+  if (!customer.club_member) {
+    if (req.method === 'GET') {
+      const { rows: benefits } = await sql`
+        SELECT b.*, t.name AS tier_name FROM club_benefits b LEFT JOIN club_tiers t ON t.id = b.tier_id
+        WHERE b.active = true ORDER BY b.sort_order ASC
+      `;
+      res.status(200).json({ ok: true, items: benefits.map((b) => ({ ...b, status: 'bloqueado' })), currentTier: null });
+      return;
+    }
+    res.status(403).json({ ok: false, error: 'Disponível apenas para Membro Verité. Ative um código Verité para desbloquear.' });
+    return;
+  }
+
   const { current } = await getTierForSpent(Number(customer.total_spent) || 0);
   const currentMinSpent = current ? Number(current.min_spent) : 0;
 

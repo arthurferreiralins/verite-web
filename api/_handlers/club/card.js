@@ -13,6 +13,11 @@ module.exports = async function handler(req, res) {
   const customer = await requireClubSession(req, res);
   if (!customer) return;
 
+  if (!customer.club_member) {
+    res.status(200).json({ ok: true, card: null, membershipType: 'iniciante' });
+    return;
+  }
+
   const { current } = await getTierForSpent(Number(customer.total_spent) || 0);
   const memberSince = customer.club_joined_at ? new Date(customer.club_joined_at).getFullYear() : null;
 

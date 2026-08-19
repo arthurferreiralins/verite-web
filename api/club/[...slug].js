@@ -5,6 +5,8 @@
  */
 const redeem = require('../_handlers/club/redeem');
 const register = require('../_handlers/club/register');
+const registerBasic = require('../_handlers/club/register-basic');
+const activateCode = require('../_handlers/club/activate-code');
 const login = require('../_handlers/club/login');
 const logout = require('../_handlers/club/logout');
 const me = require('../_handlers/club/me');
@@ -22,7 +24,8 @@ const notifications = require('../_handlers/club/notifications');
 const card = require('../_handlers/club/card');
 
 const routes = {
-  redeem, register, login, logout, me, account, coupons, favorites, orders, products,
+  redeem, register, 'register-basic': registerBasic, 'activate-code': activateCode,
+  login, logout, me, account, coupons, favorites, orders, products,
   tier, points, benefits, gifts, news, notifications, card,
 };
 

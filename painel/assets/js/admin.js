@@ -1766,14 +1766,17 @@
       if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhum membro encontrado.', 'empty-state')); return; }
       var table = document.createElement('table');
       table.className = 'admin-table';
-      table.innerHTML = '<thead><tr><th>Nome</th><th>Número</th><th>E-mail</th><th>Nível</th><th>Pontos</th><th>Compras</th><th>Entrada</th><th></th></tr></thead>';
+      table.innerHTML = '<thead><tr><th>Nome</th><th>Tipo de usuário</th><th>Número</th><th>E-mail</th><th>Nível</th><th>Pontos</th><th>Compras</th><th>Entrada</th><th></th></tr></thead>';
       var tbody = document.createElement('tbody');
       data.items.forEach(function(m){
         var tr = document.createElement('tr');
         tr.appendChild(textEl('td', m.name));
+        var typeTd = document.createElement('td');
+        typeTd.appendChild(textEl('span', m.membershipType === 'membro_verite' ? 'Membro Verité' : 'Iniciante', 'badge ' + (m.membershipType === 'membro_verite' ? 'badge-published' : 'badge-neutral')));
+        tr.appendChild(typeTd);
         tr.appendChild(textEl('td', m.member_number || '—'));
         tr.appendChild(textEl('td', m.email));
-        tr.appendChild(textEl('td', m.tierName || '—'));
+        tr.appendChild(textEl('td', m.membershipType === 'membro_verite' ? (m.tierName || '—') : '—'));
         tr.appendChild(textEl('td', String(m.pointsBalance)));
         tr.appendChild(textEl('td', String(m.orders_count || 0)));
         tr.appendChild(textEl('td', m.club_joined_at ? formatDate(m.club_joined_at) : '—'));
@@ -1823,9 +1826,14 @@
 
       var infoGrid = document.createElement('div');
       infoGrid.className = 'form-grid';
+      var isMembro = data.membershipType === 'membro_verite';
       [
+        ['Tipo de usuário', isMembro ? 'Membro Verité' : 'Iniciante'],
         ['E-mail', m.email], ['Telefone', m.phone || '—'], ['Número de membro', m.member_number || '—'],
-        ['Nível atual', data.tier ? data.tier.name : '—'], ['Pontos', String(data.points.balance)],
+        ['Código Verité', data.code ? data.code.code : '—'],
+        ['Ativado em', data.code && data.code.activated_at ? formatDate(data.code.activated_at) : '—'],
+        ['Nível atual', isMembro ? (data.tier ? data.tier.name : '—') : '— (ainda não é Membro Verité)'],
+        ['Pontos', String(data.points.balance)],
         ['Compras realizadas', String(m.orders_count || 0)], ['Total gasto', formatMoney(m.total_spent)],
         ['Membro desde', m.club_joined_at ? formatDate(m.club_joined_at) : '—'],
         ['Aniversário', m.birthday ? formatDate(m.birthday) : '—'],

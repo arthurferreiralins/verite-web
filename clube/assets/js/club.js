@@ -44,10 +44,13 @@
   var gate = document.getElementById('club-gate');
   var dashboard = document.getElementById('club-dashboard');
 
+  var stepChoice = document.getElementById('gate-step-choice');
   var stepCode = document.getElementById('gate-step-code');
   var stepRegister = document.getElementById('gate-step-register');
+  var stepBasicRegister = document.getElementById('gate-step-basic-register');
   var stepLogin = document.getElementById('gate-step-login');
   var stepSuccess = document.getElementById('gate-step-success');
+  var ALL_GATE_STEPS = [stepChoice, stepCode, stepRegister, stepBasicRegister, stepLogin, stepSuccess];
 
   var pendingCode = '';
   var currentCustomer = null;
@@ -55,7 +58,7 @@
   function hideLoading() { loading.classList.add('is-hidden'); }
 
   function showGateStep(step) {
-    [stepCode, stepRegister, stepLogin, stepSuccess].forEach(function (s) { s.hidden = (s !== step); });
+    ALL_GATE_STEPS.forEach(function (s) { s.hidden = (s !== step); });
   }
 
   function showMessage(elId, message, isError) {
@@ -74,6 +77,14 @@
     btn.disabled = isLoading;
     spinner.hidden = !isLoading;
   }
+
+  /* ============================ Gate: escolha de entrada ============================ */
+  document.getElementById('choice-login-btn').addEventListener('click', function () { showGateStep(stepLogin); });
+  document.getElementById('choice-code-btn').addEventListener('click', function () { showGateStep(stepCode); });
+  document.getElementById('choice-basic-btn').addEventListener('click', function () { showGateStep(stepBasicRegister); });
+  document.getElementById('code-back-btn').addEventListener('click', function () { hideMessage('code-message'); showGateStep(stepChoice); });
+  document.getElementById('basic-register-back-btn').addEventListener('click', function () { hideMessage('basic-register-message'); showGateStep(stepChoice); });
+  document.getElementById('login-back-btn').addEventListener('click', function () { hideMessage('login-message'); showGateStep(stepChoice); });
 
   /* ============================ Gate: código ============================ */
   document.getElementById('code-form').addEventListener('submit', function (e) {
@@ -109,7 +120,7 @@
     showGateStep(stepCode);
   });
 
-  /* ============================ Gate: cadastro ============================ */
+  /* ============================ Gate: cadastro (código -> Membro Verité) ============================ */
   document.getElementById('register-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var form = e.target;
@@ -133,6 +144,35 @@
       .catch(function (err) {
         setBtnLoading(form, false);
         showMessage('register-message', err.message, true);
+      });
+  });
+
+  /* ============================ Gate: cadastro sem código (Iniciante) ============================ */
+  document.getElementById('basic-register-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = e.target;
+    hideMessage('basic-register-message');
+    var password = document.getElementById('basic-reg-password').value;
+    var passwordConfirm = document.getElementById('basic-reg-password-confirm').value;
+    var body = {
+      name: document.getElementById('basic-reg-name').value.trim(),
+      email: document.getElementById('basic-reg-email').value.trim(),
+      password: password,
+      passwordConfirm: passwordConfirm
+    };
+    if (!body.name) { showMessage('basic-register-message', 'Informe seu nome.', true); return; }
+    if (password.length < 6) { showMessage('basic-register-message', 'A senha precisa ter pelo menos 6 caracteres.', true); return; }
+    if (password !== passwordConfirm) { showMessage('basic-register-message', 'As senhas não coincidem.', true); return; }
+    setBtnLoading(form, true);
+    api('/api/club/register-basic', { method: 'POST', body: body })
+      .then(function (data) {
+        setBtnLoading(form, false);
+        currentCustomer = data.customer;
+        revealSuccessThenDashboard();
+      })
+      .catch(function (err) {
+        setBtnLoading(form, false);
+        showMessage('basic-register-message', err.message, true);
       });
   });
 
@@ -160,6 +200,9 @@
 
   function revealSuccessThenDashboard() {
     if (window.VeriteFavorites) window.VeriteFavorites.mergeGuestFavoritesIntoAccount();
+    var isMembro = Boolean(currentCustomer && currentCustomer.club_member);
+    document.getElementById('gate-success-title').textContent = isMembro ? 'Bem-vindo ao Clube Verité' : 'Bem-vindo à Verité';
+    document.getElementById('gate-success-lead').textContent = isMembro ? 'Você agora faz parte do Clube Verité.' : 'Você começou sua jornada Verité como Iniciante.';
     showGateStep(stepSuccess);
     window.setTimeout(function () {
       gate.style.display = 'none';
@@ -256,42 +299,82 @@
     if (window.VeriteProducts) window.VeriteProducts.renderGrid(container, items);
   }
 
+  /* ---- Tipo de conta (Iniciante / Membro Verité) ---- */
+  function isMembroVerite() { return Boolean(currentCustomer && currentCustomer.club_member); }
+
+  function renderMembershipBadge(tagId, msgId, ctaId) {
+    var tag = document.getElementById(tagId);
+    var msg = document.getElementById(msgId);
+    var cta = ctaId ? document.getElementById(ctaId) : null;
+    var membro = isMembroVerite();
+    tag.textContent = membro ? 'Membro Verité' : 'Iniciante';
+    tag.className = 'membership-badge-tag' + (membro ? ' is-membro' : '');
+    msg.textContent = membro ? 'Você faz parte do Clube Verité.' : 'Comece sua jornada Verité.';
+    if (cta) cta.hidden = membro;
+  }
+
+  function lockedState(title, sub) {
+    var box = el('div', 'club-locked-state');
+    box.appendChild(el('span', 'club-locked-icon', '🔒'));
+    box.appendChild(el('p', 'club-locked-title', title || 'EXCLUSIVO PARA MEMBROS VERITÉ'));
+    box.appendChild(el('p', 'club-locked-sub', sub || 'Ative um código Verité para liberar benefícios de membro.'));
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'club-link-btn'; btn.textContent = 'Ativar Meu Código Verité';
+    btn.addEventListener('click', function () { navigateClub('minha-conta'); });
+    box.appendChild(btn);
+    return box;
+  }
+
   /* ---- Início ---- */
   function loadInicio() {
     document.getElementById('home-name').textContent = currentCustomer.name || '';
+    renderMembershipBadge('home-membership-tag', 'home-membership-msg', 'home-activate-code-btn');
 
-    api('/api/club/tier').then(function (data) {
-      renderTierProgress('home-tier-progress', 'home-tier-name', 'home-tier-remaining', 'home-tier-bar-fill', data);
-      document.getElementById('home-tier-value').textContent = data.currentTier ? data.currentTier.name : '—';
-    }).catch(function () {});
+    var beneficiosBlock = document.getElementById('home-beneficios').closest('.club-home-block');
+    var exclusivosBlock = document.getElementById('home-exclusivos').closest('.club-home-block');
+
+    if (!isMembroVerite()) {
+      document.getElementById('home-tier-progress').hidden = true;
+      document.getElementById('home-tier-value').textContent = 'Iniciante';
+      document.getElementById('home-benefits-count').textContent = '0';
+      document.getElementById('home-coupons-count').textContent = '0';
+      document.getElementById('home-points-count').textContent = '0';
+      if (beneficiosBlock) beneficiosBlock.hidden = true;
+      if (exclusivosBlock) exclusivosBlock.hidden = true;
+    } else {
+      document.getElementById('home-tier-progress').hidden = false;
+      api('/api/club/tier').then(function (data) {
+        renderTierProgress('home-tier-progress', 'home-tier-name', 'home-tier-remaining', 'home-tier-bar-fill', data);
+        document.getElementById('home-tier-value').textContent = data.currentTier ? data.currentTier.name : '—';
+      }).catch(function () {});
+
+      api('/api/club/points').then(function (data) {
+        document.getElementById('home-points-count').textContent = String(data.balance);
+      }).catch(function () {});
+
+      api('/api/club/benefits').then(function (data) {
+        var available = data.items.filter(function (b) { return b.status === 'disponivel'; });
+        document.getElementById('home-benefits-count').textContent = String(available.length);
+        var grid = document.getElementById('home-beneficios');
+        clear(grid);
+        var preview = data.items.filter(function (b) { return b.status !== 'bloqueado'; }).slice(0, 3);
+        if (!preview.length) { if (beneficiosBlock) beneficiosBlock.hidden = true; return; }
+        if (beneficiosBlock) beneficiosBlock.hidden = false;
+        preview.forEach(function (b) { grid.appendChild(benefitCard(b)); });
+      }).catch(function () {});
+
+      api('/api/club/coupons').then(function (data) {
+        var active = data.items.filter(function (c) { return c.status === 'ativo'; });
+        document.getElementById('home-coupons-count').textContent = String(active.length);
+      }).catch(function () {});
+
+      api('/api/club/products?kind=exclusivos').then(function (data) {
+        renderProductGrid('home-exclusivos', data.items.slice(0, 4));
+      }).catch(function () {});
+    }
 
     api('/api/club/orders').then(function (data) {
       document.getElementById('home-orders-count').textContent = String(data.items.length);
-    }).catch(function () {});
-
-    api('/api/club/points').then(function (data) {
-      document.getElementById('home-points-count').textContent = String(data.balance);
-    }).catch(function () {});
-
-    api('/api/club/benefits').then(function (data) {
-      var available = data.items.filter(function (b) { return b.status === 'disponivel'; });
-      document.getElementById('home-benefits-count').textContent = String(available.length);
-      var grid = document.getElementById('home-beneficios');
-      clear(grid);
-      var wrap = grid.closest('.club-home-block');
-      var preview = data.items.filter(function (b) { return b.status !== 'bloqueado'; }).slice(0, 3);
-      if (!preview.length) { if (wrap) wrap.hidden = true; return; }
-      if (wrap) wrap.hidden = false;
-      preview.forEach(function (b) { grid.appendChild(benefitCard(b)); });
-    }).catch(function () {});
-
-    api('/api/club/coupons').then(function (data) {
-      var active = data.items.filter(function (c) { return c.status === 'ativo'; });
-      document.getElementById('home-coupons-count').textContent = String(active.length);
-    }).catch(function () {});
-
-    api('/api/club/products?kind=exclusivos').then(function (data) {
-      renderProductGrid('home-exclusivos', data.items.slice(0, 4));
     }).catch(function () {});
 
     api('/api/club/products?kind=destaques').then(function (data) {
@@ -349,6 +432,10 @@
     var wrap = document.getElementById('card-wrap');
     clear(wrap);
     api('/api/club/card').then(function (data) {
+      if (!data.card) {
+        wrap.appendChild(lockedState('CARTÃO EXCLUSIVO PARA MEMBROS VERITÉ', 'Ative um código Verité para receber seu cartão digital com QR code e número de membro.'));
+        return;
+      }
       var c = data.card;
       var card = el('div', 'digital-card');
       card.appendChild(el('p', 'digital-card-brand', 'VERITÉ'));
@@ -408,6 +495,7 @@
   function loadBeneficios() {
     var grid = document.getElementById('beneficios-grid');
     clear(grid);
+    if (!isMembroVerite()) { grid.appendChild(lockedState()); return; }
     api('/api/club/benefits').then(function (data) {
       if (!data.items.length) {
         grid.appendChild(emptyState('Seus próximos benefícios estão a caminho.', 'Continue aproveitando a Verité para desbloquear novas experiências.'));
@@ -431,6 +519,11 @@
     var rulesWrap = document.getElementById('pontos-regras');
     var rewardsWrap = document.getElementById('pontos-recompensas');
     clear(histWrap); clear(rulesWrap); clear(rewardsWrap);
+    if (!isMembroVerite()) {
+      document.getElementById('pontos-saldo').textContent = '0';
+      histWrap.appendChild(lockedState('PONTOS EXCLUSIVOS PARA MEMBROS VERITÉ'));
+      return;
+    }
 
     api('/api/club/points').then(function (data) {
       document.getElementById('pontos-saldo').textContent = String(data.balance);
@@ -498,6 +591,7 @@
   function loadPresentes() {
     var grid = document.getElementById('presentes-grid');
     clear(grid);
+    if (!isMembroVerite()) { grid.appendChild(lockedState('PRESENTES EXCLUSIVOS PARA MEMBROS VERITÉ')); return; }
     api('/api/club/gifts').then(function (data) {
       if (!data.items.length) {
         grid.appendChild(emptyState('Nenhum presente configurado no momento.', 'Fique de olho — a Verité prepara surpresas ao longo do ano.'));
@@ -530,6 +624,7 @@
   function loadCupons() {
     var grid = document.getElementById('cupons-grid');
     clear(grid);
+    if (!isMembroVerite()) { grid.appendChild(lockedState('CUPONS EXCLUSIVOS PARA MEMBROS VERITÉ')); return; }
     api('/api/club/coupons').then(function (data) {
       if (!data.items.length) {
         grid.appendChild(emptyState('Seus próximos cupons estão a caminho.', 'Continue aproveitando a Verité para desbloquear novos descontos.'));
@@ -610,6 +705,8 @@
 
   /* ---- Exclusivos ---- */
   function loadExclusivos() {
+    var grid = document.getElementById('exclusivos-grid');
+    if (!isMembroVerite()) { clear(grid); grid.appendChild(lockedState('EXCLUSIVO PARA MEMBROS VERITÉ', 'Ative um código Verité para liberar acesso antecipado e fragrâncias exclusivas.')); return; }
     api('/api/club/products?kind=exclusivos').then(function (data) {
       renderProductGrid('exclusivos-grid', data.items, 'Novos exclusivos estão a caminho.', 'Fique de olho — a Verité está preparando fragrâncias só para membros.');
     }).catch(function () {});
@@ -661,12 +758,39 @@
     document.getElementById('acc-birthday').value = currentCustomer.birthday ? String(currentCustomer.birthday).slice(0, 10) : '';
     document.getElementById('acc-address').value = currentCustomer.address || '';
     document.getElementById('acc-since').textContent = formatDate(currentCustomer.club_joined_at);
+    var membro = isMembroVerite();
+    document.getElementById('acc-membership-type').textContent = membro ? 'Membro Verité' : 'Iniciante';
+    document.getElementById('acc-member-number-row').hidden = !membro;
+    document.getElementById('acc-tier-row').hidden = !membro;
     document.getElementById('acc-member-number').textContent = currentCustomer.member_number || '—';
-    api('/api/club/tier').then(function (data) {
-      document.getElementById('acc-tier').textContent = data.currentTier ? data.currentTier.name : '—';
-    }).catch(function () {});
+    document.getElementById('acc-activate-code-box').hidden = membro;
+    if (membro) {
+      api('/api/club/tier').then(function (data) {
+        document.getElementById('acc-tier').textContent = data.currentTier ? data.currentTier.name : '—';
+      }).catch(function () {});
+    }
   }
   routeLoaders['minha-conta'] = loadMinhaConta;
+
+  document.getElementById('activate-code-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = e.target;
+    hideMessage('activate-code-message');
+    var code = document.getElementById('activate-code-input').value.trim().toUpperCase();
+    if (!code) { showMessage('activate-code-message', 'Digite o código do seu cartão.', true); return; }
+    setBtnLoading(form, true);
+    api('/api/club/activate-code', { method: 'POST', body: { code: code } })
+      .then(function (data) {
+        setBtnLoading(form, false);
+        currentCustomer = data.customer;
+        showMessage('activate-code-message', 'Código ativado! Você agora é Membro Verité.', false);
+        window.setTimeout(function () { loadMinhaConta(); loadNotifications(); }, 1200);
+      })
+      .catch(function (err) {
+        setBtnLoading(form, false);
+        showMessage('activate-code-message', err.message, true);
+      });
+  });
 
   document.getElementById('account-form').addEventListener('submit', function (e) {
     e.preventDefault();

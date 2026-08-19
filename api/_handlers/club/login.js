@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
     // segue sem bloquear
   }
 
-  const { rows } = await sql`SELECT * FROM customers WHERE email = ${email} AND club_member = true`;
+  const { rows } = await sql`SELECT * FROM customers WHERE email = ${email} AND password_hash IS NOT NULL`;
   const customer = rows[0];
   const ok = Boolean(customer) && verifyPassword(password, customer.password_hash);
 

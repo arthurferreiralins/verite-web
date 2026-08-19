@@ -12,6 +12,17 @@ module.exports = async function handler(req, res) {
   const customer = await requireClubSession(req, res);
   if (!customer) return;
 
+  // Pontos são um privilégio de Membro Verité — Iniciante nunca acumula nem
+  // resgata pontos (validado aqui, não só escondido no frontend).
+  if (!customer.club_member) {
+    if (req.method === 'GET') {
+      res.status(200).json({ ok: true, balance: 0, history: [], rules: [], rewards: [] });
+      return;
+    }
+    res.status(403).json({ ok: false, error: 'Disponível apenas para Membro Verité. Ative um código Verité para desbloquear.' });
+    return;
+  }
+
   if (req.method === 'GET') {
     const [balance, history, rulesRows, rewardsRows] = await Promise.all([
       getBalance(customer.id),
