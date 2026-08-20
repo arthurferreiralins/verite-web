@@ -63,16 +63,182 @@
     </button>
   </div>
   <div class="wrap nav-inner">
-    <nav id="primary-nav" class="links">
+    <nav id="primary-nav" class="links mega-nav">
       <a href="index.html#inicio">Início</a>
-      <a href="produtos.html?categoria=perfumes">Perfumes</a>
-      <a href="produtos.html?genero=feminino">Femininos</a>
-      <a href="produtos.html?genero=masculino">Masculinos</a>
-      <a href="produtos.html?genero=unissex">Unissex</a>
-      <a href="produtos.html?categoria=kits">Kits</a>
-      <a href="produtos.html?categoria=presentes">Presentes</a>
-      <a href="produtos.html?colecao=lancamentos">Lançamentos</a>
-      <a href="produtos.html?colecao=mais-vendidos">Mais Vendidos</a>
+    <div class="nav-item" data-mega="perfumes">
+      <button type="button" class="nav-trigger" id="mega-trigger-perfumes" aria-expanded="false" aria-controls="mega-panel-perfumes">
+        Perfumes
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-perfumes" aria-labelledby="mega-trigger-perfumes">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Por gênero</p>
+        <a href="produtos.html?categoria=perfumes&amp;genero=feminino">Femininos</a>
+        <a href="produtos.html?categoria=perfumes&amp;genero=masculino">Masculinos</a>
+        <a href="produtos.html?categoria=perfumes&amp;genero=unissex">Unissex</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Descubra</p>
+        <a href="produtos.html?categoria=perfumes&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?categoria=perfumes&amp;colecao=mais-vendidos">Mais Vendidos</a>
+        <a href="produtos.html?categoria=presentes">Presentes</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?categoria=perfumes">Ver todos os Perfumes <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="femininos">
+      <button type="button" class="nav-trigger" id="mega-trigger-femininos" aria-expanded="false" aria-controls="mega-panel-femininos">
+        Femininos
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-femininos" aria-labelledby="mega-trigger-femininos">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Perfumes Femininos</p>
+        <a href="produtos.html?genero=feminino&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=feminino&amp;colecao=mais-vendidos">Mais Vendidos</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?genero=feminino&amp;categoria=kits">Kits Femininos</a>
+        <a href="produtos.html?genero=feminino&amp;categoria=presentes">Presentes para Elas</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?genero=feminino">Ver todos os Femininos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="masculinos">
+      <button type="button" class="nav-trigger" id="mega-trigger-masculinos" aria-expanded="false" aria-controls="mega-panel-masculinos">
+        Masculinos
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-masculinos" aria-labelledby="mega-trigger-masculinos">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Perfumes Masculinos</p>
+        <a href="produtos.html?genero=masculino&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=masculino&amp;colecao=mais-vendidos">Mais Vendidos</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?genero=masculino&amp;categoria=kits">Kits Masculinos</a>
+        <a href="produtos.html?genero=masculino&amp;categoria=presentes">Presentes para Eles</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?genero=masculino">Ver todos os Masculinos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="unissex">
+      <button type="button" class="nav-trigger" id="mega-trigger-unissex" aria-expanded="false" aria-controls="mega-panel-unissex">
+        Unissex
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-unissex" aria-labelledby="mega-trigger-unissex">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Perfumes Unissex</p>
+        <a href="produtos.html?genero=unissex&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=unissex&amp;colecao=mais-vendidos">Mais Vendidos</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?genero=unissex&amp;categoria=kits">Kits Unissex</a>
+        <a href="produtos.html?genero=unissex&amp;categoria=presentes">Presentes Unissex</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?genero=unissex">Ver todos os Unissex <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="kits">
+      <button type="button" class="nav-trigger" id="mega-trigger-kits" aria-expanded="false" aria-controls="mega-panel-kits">
+        Kits
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-kits" aria-labelledby="mega-trigger-kits">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Kits por gênero</p>
+        <a href="produtos.html?categoria=kits&amp;genero=feminino">Femininos</a>
+        <a href="produtos.html?categoria=kits&amp;genero=masculino">Masculinos</a>
+        <a href="produtos.html?categoria=kits&amp;genero=unissex">Unissex</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Ideal para</p>
+        <a href="produtos.html?categoria=presentes">Presentear</a>
+        <a href="produtos.html?categoria=kits&amp;colecao=lancamentos">Lançamentos</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?categoria=kits">Ver todos os Kits <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="presentes">
+      <button type="button" class="nav-trigger" id="mega-trigger-presentes" aria-expanded="false" aria-controls="mega-panel-presentes">
+        Presentes
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-presentes" aria-labelledby="mega-trigger-presentes">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Presentear</p>
+        <a href="produtos.html?categoria=presentes&amp;genero=feminino">Para Elas</a>
+        <a href="produtos.html?categoria=presentes&amp;genero=masculino">Para Eles</a>
+        <a href="produtos.html?categoria=kits">Kits para Presentear</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Ideias</p>
+        <a href="produtos.html?categoria=presentes&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?categoria=presentes&amp;colecao=mais-vendidos">Mais Vendidos</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?categoria=presentes">Ver todos os Presentes <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="lancamentos">
+      <button type="button" class="nav-trigger" id="mega-trigger-lancamentos" aria-expanded="false" aria-controls="mega-panel-lancamentos">
+        Lançamentos
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-lancamentos" aria-labelledby="mega-trigger-lancamentos">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Por gênero</p>
+        <a href="produtos.html?colecao=lancamentos&amp;genero=feminino">Femininos</a>
+        <a href="produtos.html?colecao=lancamentos&amp;genero=masculino">Masculinos</a>
+        <a href="produtos.html?colecao=lancamentos&amp;genero=unissex">Unissex</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?colecao=lancamentos&amp;categoria=kits">Kits</a>
+        <a href="produtos.html?colecao=lancamentos&amp;categoria=presentes">Presentes</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?colecao=lancamentos">Ver todos os Lançamentos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="mais-vendidos">
+      <button type="button" class="nav-trigger" id="mega-trigger-mais-vendidos" aria-expanded="false" aria-controls="mega-panel-mais-vendidos">
+        Mais Vendidos
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-mais-vendidos" aria-labelledby="mega-trigger-mais-vendidos">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Por gênero</p>
+        <a href="produtos.html?colecao=mais-vendidos&amp;genero=feminino">Femininos</a>
+        <a href="produtos.html?colecao=mais-vendidos&amp;genero=masculino">Masculinos</a>
+        <a href="produtos.html?colecao=mais-vendidos&amp;genero=unissex">Unissex</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?colecao=mais-vendidos&amp;categoria=kits">Kits</a>
+        <a href="produtos.html?colecao=mais-vendidos&amp;categoria=presentes">Presentes</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?colecao=mais-vendidos">Ver todos os Mais Vendidos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
       <a class="nav-clube" href="/clube">Clube Verité</a>
     </nav>
   </div>

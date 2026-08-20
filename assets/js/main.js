@@ -35,6 +35,116 @@
     });
   }
 
+  /* Mega menu (Perfumes/Femininos/Masculinos/Unissex/Kits/Presentes/
+     Lançamentos/Mais Vendidos). Desktop: hovering a trigger previews the
+     panel; clicking it pins the panel open until the user clicks it again,
+     clicks outside, or follows a link inside it. A pinned panel ignores
+     hover on other triggers on purpose — otherwise moving the mouse across
+     the bar would silently swap away a menu the user deliberately fixed
+     open. Mobile (<=860px, no hover): tap just toggles the panel as a
+     plain accordion inside the existing flyout. Only one panel is ever
+     open at a time in either mode. */
+  var megaItems = nav ? Array.prototype.slice.call(nav.querySelectorAll('.nav-item[data-mega]')) : [];
+  if(megaItems.length){
+    var desktopQuery = window.matchMedia('(min-width:861px)');
+    var openTimer = null, closeTimer = null;
+    var openKey = null, openMode = null; // openMode: 'hover' | 'pin'
+
+    var entries = megaItems.map(function(item){
+      return {
+        key: item.getAttribute('data-mega'),
+        item: item,
+        trigger: item.querySelector('.nav-trigger'),
+        panel: item.querySelector('.mega-panel')
+      };
+    });
+
+    function isDesktop(){ return desktopQuery.matches; }
+
+    function setEntryOpen(entry, open){
+      entry.trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      entry.panel.classList.toggle('is-open', open);
+      entry.panel.classList.remove('align-right');
+      entry.panel.querySelectorAll('a').forEach(function(a){
+        if(open) a.removeAttribute('tabindex'); else a.setAttribute('tabindex', '-1');
+      });
+      if(open && isDesktop()){
+        var rect = entry.panel.getBoundingClientRect();
+        if(rect.right > window.innerWidth - 12) entry.panel.classList.add('align-right');
+      }
+    }
+
+    function closeAll(){
+      entries.forEach(function(entry){ setEntryOpen(entry, false); });
+      openKey = null;
+      openMode = null;
+    }
+
+    function openEntry(entry, mode){
+      entries.forEach(function(other){
+        if(other !== entry) setEntryOpen(other, false);
+      });
+      setEntryOpen(entry, true);
+      openKey = entry.key;
+      openMode = mode;
+    }
+
+    entries.forEach(function(entry){
+      entry.item.addEventListener('mouseenter', function(){
+        if(!isDesktop()) return;
+        window.clearTimeout(closeTimer);
+        window.clearTimeout(openTimer);
+        if(openMode === 'pin') return; // a pinned panel never opens/closes from hover
+        openTimer = window.setTimeout(function(){
+          openEntry(entry, 'hover');
+        }, 70);
+      });
+      entry.item.addEventListener('mouseleave', function(){
+        if(!isDesktop()) return;
+        window.clearTimeout(openTimer);
+        if(openMode !== 'hover' || openKey !== entry.key) return;
+        closeTimer = window.setTimeout(function(){
+          if(openMode === 'hover' && openKey === entry.key) closeAll();
+        }, 150);
+      });
+      entry.trigger.addEventListener('click', function(){
+        window.clearTimeout(openTimer);
+        window.clearTimeout(closeTimer);
+        if(!isDesktop()){
+          if(openKey === entry.key) closeAll();
+          else openEntry(entry, 'pin');
+          return;
+        }
+        if(openKey === entry.key && openMode === 'pin') closeAll();
+        else openEntry(entry, 'pin');
+      });
+      entry.panel.querySelectorAll('a').forEach(function(a){
+        a.setAttribute('tabindex', '-1');
+        a.addEventListener('click', function(){ closeAll(); });
+      });
+    });
+
+    document.addEventListener('click', function(e){
+      if(openKey === null) return;
+      var openEntryRef = entries.filter(function(entry){ return entry.key === openKey; })[0];
+      if(openEntryRef && openEntryRef.item.contains(e.target)) return;
+      closeAll();
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key !== 'Escape' || openKey === null) return;
+      var openEntryRef = entries.filter(function(entry){ return entry.key === openKey; })[0];
+      closeAll();
+      if(openEntryRef) openEntryRef.trigger.focus();
+    });
+
+    window.addEventListener('resize', function(){
+      window.clearTimeout(openTimer);
+      window.clearTimeout(closeTimer);
+      closeAll();
+    });
+  }
+
   /* Header gains a denser look once the hero has scrolled past */
   var header = document.querySelector('header');
   if(header){

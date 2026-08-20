@@ -411,7 +411,8 @@ nav.links a.nav-clube:hover{
     display:flex; flex-direction:column; align-items:flex-start; gap:0;
     position:absolute; top:100%; left:0; right:0;
     background:var(--black); border-bottom:1px solid rgba(250,249,246,.14);
-    overflow:hidden; padding:.5rem 2rem 1.6rem;
+    overflow-x:hidden; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    padding:.5rem 2rem 1.6rem;
     transition:max-height .35s ease, padding .35s ease;
   }
   :where(html.js) nav.links{max-height:0; padding:0 2rem;}
@@ -435,6 +436,83 @@ nav.links a.nav-clube:hover{
 }
 @media (max-width:860px) and (prefers-reduced-motion:reduce){
   :where(html.js) nav.links a{opacity:1; transform:none; transition:none;}
+}
+
+/* ---------- Mega menu (Perfumes/Femininos/.../Mais Vendidos) ----------
+   Trigger is a <button>, never an <a>, so a click can never navigate by
+   accident — only the sub-links and the "Ver todos" CTA inside the panel
+   do. Desktop: hover previews, click pins open (assets/js/main.js keeps
+   the two from fighting). Mobile (<=860px): the panel becomes a plain
+   accordion inline in the flyout, no hover involved. */
+.nav-item{position:relative; display:flex;}
+.nav-trigger{
+  display:inline-flex; align-items:center; gap:.4rem;
+  appearance:none; background:none; border:none; padding:0 0 .3rem; margin:0;
+  font-family:inherit; text-decoration:none; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+  color:#b7b2a8; position:relative; cursor:pointer; transition:color .25s ease;
+}
+.nav-trigger::after{
+  content:""; position:absolute; left:0; right:100%; bottom:0; height:1px;
+  background:var(--gold); transition:right .3s ease;
+}
+.nav-trigger:hover{color:var(--off-white);}
+.nav-trigger:hover::after, .nav-trigger.is-active::after, .nav-trigger[aria-expanded="true"]::after{right:0;}
+.nav-trigger.is-active{color:var(--gold-light);}
+.nav-trigger:focus-visible{outline:1px solid var(--gold); outline-offset:4px;}
+.nav-caret{flex:none; transition:transform .25s ease; opacity:.75;}
+.nav-trigger[aria-expanded="true"] .nav-caret{transform:rotate(180deg); opacity:1;}
+
+.mega-panel{
+  position:absolute; top:calc(100% + 18px); left:0; min-width:340px; max-width:min(560px, 92vw);
+  background:var(--black-2); border:1px solid rgba(250,249,246,.14); border-radius:4px;
+  padding:1.5rem 1.7rem 1.3rem; box-shadow:0 30px 60px -20px rgba(0,0,0,.65);
+  opacity:0; visibility:hidden; transform:translateY(-8px); pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease, visibility .2s;
+  z-index:60;
+}
+.mega-panel.align-right{left:auto; right:0;}
+.mega-panel.is-open{opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto;}
+.mega-panel-inner{display:flex; gap:2.4rem; flex-wrap:wrap;}
+.mega-col{display:flex; flex-direction:column; gap:.05rem; min-width:150px;}
+.mega-col-title{
+  margin:0 0 .6rem; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-light);
+}
+.mega-col a{
+  text-decoration:none; color:#b7b2a8; font-size:.82rem; padding:.4rem 0;
+  transition:color .2s ease, transform .2s ease;
+}
+.mega-col a:hover, .mega-col a:focus-visible{color:var(--off-white); transform:translateX(3px);}
+.mega-col a:focus-visible{outline:1px solid var(--gold); outline-offset:2px;}
+.mega-cta{
+  display:inline-flex; align-items:center; gap:.5rem; margin-top:1.2rem; padding-top:1.1rem;
+  border-top:1px solid rgba(250,249,246,.12); width:100%;
+  text-decoration:none; color:var(--gold-light); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase;
+  transition:color .2s ease, gap .2s ease;
+}
+.mega-cta span{transition:transform .2s ease;}
+.mega-cta:hover{color:var(--off-white); gap:.7rem;}
+.mega-cta:hover span{transform:translateX(3px);}
+.mega-cta:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
+
+@media (max-width:860px){
+  .nav-item{width:100%; flex-direction:column; align-items:stretch;}
+  .nav-trigger{
+    width:100%; justify-content:space-between; padding:1rem 0; border-bottom:1px solid rgba(250,249,246,.1);
+    font-size:.8rem;
+  }
+  .nav-trigger::after{display:none;}
+  .mega-panel{
+    position:static; opacity:1; visibility:visible; transform:none; pointer-events:auto;
+    background:none; border:none; box-shadow:none; padding:0; margin:0; max-width:none; min-width:0;
+    max-height:0; overflow:hidden; transition:max-height .35s ease;
+  }
+  .mega-panel.is-open{max-height:600px; padding-bottom:.6rem;}
+  .mega-panel-inner{gap:0 1.6rem; padding-top:.4rem;}
+  .mega-col{min-width:130px;}
+  .mega-cta{margin-top:.4rem;}
+}
+@media (max-width:860px) and (prefers-reduced-motion:reduce){
+  .mega-panel{transition:none;}
 }
 
 /* =======================================================================
