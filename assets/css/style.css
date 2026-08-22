@@ -295,8 +295,8 @@ html.has-custom-cursor input, html.has-custom-cursor textarea{cursor:none;}
   pointer-events:none; opacity:0; transition:opacity .3s ease;
 }
 .cursor-dot{
-  width:7px; height:7px; background:var(--gold-light);
-  box-shadow:0 0 10px rgba(217,189,133,.7);
+  width:16px; height:16px; background:var(--gold-light);
+  box-shadow:0 0 14px rgba(217,189,133,.7);
 }
 .cursor-dot.is-visible{opacity:1;}
 .cursor-ring{
