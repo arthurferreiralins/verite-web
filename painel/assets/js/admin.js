@@ -1988,12 +1988,13 @@
       if (!data.items.length) { wrap.appendChild(textEl('div', 'Nenhum nível cadastrado.', 'empty-state')); return; }
       var table = document.createElement('table');
       table.className = 'admin-table';
-      table.innerHTML = '<thead><tr><th>Nome</th><th>Compras mínimas</th><th>Status</th><th></th></tr></thead>';
+      table.innerHTML = '<thead><tr><th>Nome</th><th>Compras mínimas</th><th>Pedidos mínimos</th><th>Status</th><th></th></tr></thead>';
       var tbody = document.createElement('tbody');
       data.items.forEach(function(t){
         var tr = document.createElement('tr');
         tr.appendChild(textEl('td', t.name));
         tr.appendChild(textEl('td', formatMoney(t.min_spent)));
+        tr.appendChild(textEl('td', String(t.min_orders || 0)));
         var statusTd = document.createElement('td'); statusTd.appendChild(clubeBadge(t.active)); tr.appendChild(statusTd);
         var actionsTd = document.createElement('td'); actionsTd.className = 'table-actions';
         var editBtn = document.createElement('button'); editBtn.type = 'button'; editBtn.textContent = 'Editar';
@@ -2013,6 +2014,7 @@
     document.getElementById('clube-nivel-id').value = tier ? tier.id : '';
     document.getElementById('clube-nivel-name').value = tier ? tier.name : '';
     document.getElementById('clube-nivel-min-spent').value = tier ? tier.min_spent : 0;
+    document.getElementById('clube-nivel-min-orders').value = tier ? (tier.min_orders || 0) : 0;
     document.getElementById('clube-nivel-sort').value = tier ? tier.sort_order : 0;
     document.getElementById('clube-nivel-description').value = tier ? (tier.description || '') : '';
     document.getElementById('clube-nivel-active').checked = tier ? Boolean(tier.active) : true;
@@ -2027,6 +2029,7 @@
     var body = {
       name: document.getElementById('clube-nivel-name').value.trim(),
       minSpent: Number(document.getElementById('clube-nivel-min-spent').value),
+      minOrders: Number(document.getElementById('clube-nivel-min-orders').value) || 0,
       sortOrder: Number(document.getElementById('clube-nivel-sort').value) || 0,
       description: document.getElementById('clube-nivel-description').value.trim(),
       active: document.getElementById('clube-nivel-active').checked,

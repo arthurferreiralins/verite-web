@@ -18,7 +18,7 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const { current } = await getTierForSpent(Number(customer.total_spent) || 0);
+  const { current } = await getTierForSpent(Number(customer.total_spent) || 0, Number(customer.orders_count) || 0);
   const memberSince = customer.club_joined_at ? new Date(customer.club_joined_at).getFullYear() : null;
 
   let qrDataUrl = null;

@@ -572,3 +572,33 @@ CREATE INDEX IF NOT EXISTS idx_club_notifications_customer ON club_notifications
 
 -- coupons.code já existe (VRT10 etc.); admin ganha CRUD completo em cima da
 -- tabela já existente (era só seed manual até aqui) — sem coluna nova.
+
+-- ============================================================
+-- Clube Verité: 5 níveis oficiais (2026-08-22) — Start/Basic/Plus/Pro/Master.
+-- Substitui a progressão anterior (Essentiel/Noir/Privé). Um nível passa a
+-- exigir DUAS condições, não só valor: min_spent (R$ acumulados) E
+-- min_orders (nº de pedidos). Isso é o que torna "Basic" possível — ele
+-- libera na 1ª compra (min_orders=1) independente do valor, algo que
+-- min_spent sozinho não conseguia expressar (ficaria empatado com Start,
+-- que também é min_spent=0). O nível de um cliente continua 100% calculado
+-- (nunca gravado): vale pra qualquer cliente logado, com ou sem código de
+-- convite ativado — o código de convite é um selo à parte, não um portão
+-- pra progressão de nível. Idempotente: reaplicar não duplica nem perde dado.
+-- ============================================================
+ALTER TABLE club_tiers ADD COLUMN IF NOT EXISTS min_orders INTEGER NOT NULL DEFAULT 0;
+
+-- Aposenta a progressão anterior (mesmo padrão de "sem DELETE" do resto do
+-- arquivo) — não quebra clientes que já tivessem redimido algo nesses níveis.
+UPDATE club_tiers SET active = false WHERE slug IN ('essentiel', 'noir', 'prive');
+
+INSERT INTO club_tiers (slug, name, min_spent, min_orders, sort_order, description) VALUES
+  ('start', 'Verité Start', 0, 0, 1, 'Cadastro e login no Clube Verité.
+Acesso a novidades e ofertas exclusivas.'),
+  ('basic', 'Verité Basic', 0, 1, 2, 'Você entra neste nível após sua primeira compra.
+Começa a acumular benefícios.'),
+  ('plus', 'Verité Plus', 50, 1, 3, 'Descontos exclusivos para membros.'),
+  ('pro', 'Verité Pro', 150, 1, 4, 'Benefícios ampliados.
+Atendimento prioritário.'),
+  ('master', 'Verité Master', 300, 1, 5, 'Vantagens premium.
+Acesso antecipado a lançamentos.')
+ON CONFLICT (slug) DO NOTHING;

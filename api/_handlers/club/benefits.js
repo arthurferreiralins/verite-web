@@ -7,42 +7,36 @@ const { notify } = require('../../_lib/clubNotify');
 // GET: cada benefício com status real (disponível/utilizado/bloqueado até
 // nível X) calculado no backend a partir do nível do cliente — nunca um
 // texto estático. POST {benefitId}: marca como utilizado, só se elegível.
+//
+// Elegibilidade é por RANK de nível (posição na progressão), não por
+// min_spent isolado — dois níveis podem empatar em min_spent (ex: Start e
+// Basic, que se diferenciam por min_orders) e comparar só o valor deixaria
+// os dois elegíveis um pro outro por engano. O nível vale pra qualquer
+// cliente logado, com ou sem código de convite ativado.
 module.exports = async function handler(req, res) {
   const customer = await requireClubSession(req, res);
   if (!customer) return;
 
-  // Benefícios são um privilégio de Membro Verité — Iniciante nunca vê nada
-  // como "disponível" aqui, nem no GET nem no POST (validado no backend,
-  // não só escondido no frontend).
-  if (!customer.club_member) {
-    if (req.method === 'GET') {
-      const { rows: benefits } = await sql`
-        SELECT b.*, t.name AS tier_name FROM club_benefits b LEFT JOIN club_tiers t ON t.id = b.tier_id
-        WHERE b.active = true ORDER BY b.sort_order ASC
-      `;
-      res.status(200).json({ ok: true, items: benefits.map((b) => ({ ...b, status: 'bloqueado' })), currentTier: null });
-      return;
-    }
-    res.status(403).json({ ok: false, error: 'Disponível apenas para Membro Verité. Ative um código Verité para desbloquear.' });
-    return;
-  }
-
-  const { current } = await getTierForSpent(Number(customer.total_spent) || 0);
-  const currentMinSpent = current ? Number(current.min_spent) : 0;
+  const totalSpent = Number(customer.total_spent) || 0;
+  const ordersCount = Number(customer.orders_count) || 0;
+  const { tiers, current } = await getTierForSpent(totalSpent, ordersCount);
+  const rank = {};
+  tiers.forEach((t, i) => { rank[t.id] = i; });
+  const currentRank = current ? rank[current.id] : -1;
 
   if (req.method === 'GET') {
     const { rows: benefits } = await sql`
       SELECT b.*, t.name AS tier_name, t.min_spent AS tier_min_spent
       FROM club_benefits b LEFT JOIN club_tiers t ON t.id = b.tier_id
-      WHERE b.active = true ORDER BY COALESCE(t.min_spent,0) ASC, b.sort_order ASC
+      WHERE b.active = true ORDER BY COALESCE(t.min_spent,0) ASC, COALESCE(t.min_orders,0) ASC, b.sort_order ASC
     `;
     const { rows: redemptions } = await sql`SELECT benefit_id, redeemed_at FROM customer_benefit_redemptions WHERE customer_id = ${customer.id}`;
     const redeemedMap = {};
     redemptions.forEach((r) => { redeemedMap[r.benefit_id] = r.redeemed_at; });
 
     const items = benefits.map((b) => {
-      const requiredMinSpent = b.tier_min_spent != null ? Number(b.tier_min_spent) : 0;
-      const eligible = currentMinSpent >= requiredMinSpent;
+      const requiredRank = b.tier_id != null && rank[b.tier_id] != null ? rank[b.tier_id] : 0;
+      const eligible = currentRank >= requiredRank;
       let status = 'bloqueado';
       if (eligible) status = redeemedMap[b.id] ? 'usado' : 'disponivel';
       return { ...b, status, redeemedAt: redeemedMap[b.id] || null };
@@ -59,7 +53,7 @@ module.exports = async function handler(req, res) {
       return;
     }
     const { rows } = await sql`
-      SELECT b.*, t.min_spent AS tier_min_spent, t.name AS tier_name
+      SELECT b.*, t.name AS tier_name
       FROM club_benefits b LEFT JOIN club_tiers t ON t.id = b.tier_id
       WHERE b.id = ${benefitId} AND b.active = true
     `;
@@ -68,8 +62,8 @@ module.exports = async function handler(req, res) {
       return;
     }
     const benefit = rows[0];
-    const requiredMinSpent = benefit.tier_min_spent != null ? Number(benefit.tier_min_spent) : 0;
-    if (currentMinSpent < requiredMinSpent) {
+    const requiredRank = benefit.tier_id != null && rank[benefit.tier_id] != null ? rank[benefit.tier_id] : 0;
+    if (currentRank < requiredRank) {
       res.status(403).json({ ok: false, error: `Disponível a partir do nível ${benefit.tier_name || ''}.` });
       return;
     }

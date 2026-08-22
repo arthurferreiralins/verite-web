@@ -13,7 +13,7 @@ module.exports = async function handler(req, res) {
   const id = req.query.id ? Number(req.query.id) : null;
 
   if (req.method === 'GET') {
-    const { rows } = await sql`SELECT * FROM club_tiers ORDER BY min_spent ASC`;
+    const { rows } = await sql`SELECT * FROM club_tiers ORDER BY min_spent ASC, min_orders ASC, sort_order ASC`;
     res.status(200).json({ ok: true, items: rows });
     return;
   }
@@ -32,9 +32,14 @@ module.exports = async function handler(req, res) {
       res.status(400).json({ ok: false, error: 'Valor mínimo de compras inválido.' });
       return;
     }
+    const minOrders = Number(body.minOrders) || 0;
+    if (!Number.isFinite(minOrders) || minOrders < 0) {
+      res.status(400).json({ ok: false, error: 'Número mínimo de pedidos inválido.' });
+      return;
+    }
     const { rows } = await sql`
-      INSERT INTO club_tiers (slug, name, min_spent, description, sort_order, active)
-      VALUES (${slug}, ${name}, ${minSpent}, ${str(body.description)}, ${Number(body.sortOrder) || 0}, ${body.active !== false})
+      INSERT INTO club_tiers (slug, name, min_spent, min_orders, description, sort_order, active)
+      VALUES (${slug}, ${name}, ${minSpent}, ${minOrders}, ${str(body.description)}, ${Number(body.sortOrder) || 0}, ${body.active !== false})
       RETURNING *
     `;
     await logActivity({ action: 'created', entityType: 'club_tier', entityId: rows[0].id, description: `Nível "${name}" criado`, adminEmail: session.email });
@@ -52,10 +57,13 @@ module.exports = async function handler(req, res) {
     if (!isNonEmptyString(name, 80)) { res.status(400).json({ ok: false, error: 'Nome é obrigatório.' }); return; }
     const minSpent = body.minSpent !== undefined ? Number(body.minSpent) : Number(existing.min_spent);
     if (!Number.isFinite(minSpent) || minSpent < 0) { res.status(400).json({ ok: false, error: 'Valor mínimo inválido.' }); return; }
+    const minOrders = body.minOrders !== undefined ? Number(body.minOrders) || 0 : Number(existing.min_orders) || 0;
+    if (!Number.isFinite(minOrders) || minOrders < 0) { res.status(400).json({ ok: false, error: 'Número mínimo de pedidos inválido.' }); return; }
     const { rows } = await sql`
       UPDATE club_tiers SET
         name = ${name},
         min_spent = ${minSpent},
+        min_orders = ${minOrders},
         description = ${body.description != null ? str(body.description) : existing.description},
         sort_order = ${body.sortOrder !== undefined ? Number(body.sortOrder) || 0 : existing.sort_order},
         active = ${body.active !== undefined ? Boolean(body.active) : existing.active}

@@ -1,6 +1,6 @@
 const { sql } = require('../../_lib/db');
 const { requireAdminSession } = require('../../_lib/auth');
-const { getTierForSpent } = require('../../_lib/clubTiers');
+const { getTierForSpent, tierUnlocked } = require('../../_lib/clubTiers');
 const { getBalance, getHistory } = require('../../_lib/clubPoints');
 
 // Gestão de membros — só leitura de dados reais (nome, número, e-mail,
@@ -31,7 +31,7 @@ module.exports = async function handler(req, res) {
       const { rows: codeRows } = await sql`SELECT code, activated_at FROM club_codes WHERE code = ${customer.club_code_used}`;
       if (codeRows.length) codeInfo = codeRows[0];
     }
-    const { current } = await getTierForSpent(Number(customer.total_spent) || 0);
+    const { current } = await getTierForSpent(Number(customer.total_spent) || 0, Number(customer.orders_count) || 0);
     const [balance, history, coupons, orders, benefitRedemptions, giftRedemptions] = await Promise.all([
       getBalance(id),
       getHistory(id, 100),
@@ -62,13 +62,14 @@ module.exports = async function handler(req, res) {
     WHERE password_hash IS NOT NULL AND (${search} = '' OR name ILIKE ${like} OR email ILIKE ${like} OR member_number ILIKE ${like})
     ORDER BY club_joined_at DESC
   `;
-  const tiers = await sql`SELECT * FROM club_tiers WHERE active = true ORDER BY min_spent ASC`;
+  const tiers = await sql`SELECT * FROM club_tiers WHERE active = true ORDER BY min_spent ASC, min_orders ASC, sort_order ASC`;
 
   const items = await Promise.all(rows.map(async (c) => {
     delete c.password_hash;
     const spent = Number(c.total_spent) || 0;
+    const orders = Number(c.orders_count) || 0;
     let tier = tiers.rows[0] || null;
-    tiers.rows.forEach((t) => { if (spent >= Number(t.min_spent)) tier = t; });
+    tiers.rows.forEach((t) => { if (tierUnlocked(t, spent, orders)) tier = t; });
     const balance = await getBalance(c.id);
     return { ...c, membershipType: c.club_member ? 'membro_verite' : 'iniciante', tierName: tier ? tier.name : null, pointsBalance: balance };
   }));

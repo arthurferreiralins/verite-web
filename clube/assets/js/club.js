@@ -333,34 +333,30 @@
     var beneficiosBlock = document.getElementById('home-beneficios').closest('.club-home-block');
     var exclusivosBlock = document.getElementById('home-exclusivos').closest('.club-home-block');
 
-    if (!isMembroVerite()) {
-      document.getElementById('home-tier-progress').hidden = true;
-      document.getElementById('home-tier-value').textContent = 'Iniciante';
-      document.getElementById('home-benefits-count').textContent = '0';
-      document.getElementById('home-coupons-count').textContent = '0';
-      document.getElementById('home-points-count').textContent = '0';
-      if (beneficiosBlock) beneficiosBlock.hidden = true;
-      if (exclusivosBlock) exclusivosBlock.hidden = true;
-    } else {
-      document.getElementById('home-tier-progress').hidden = false;
-      api('/api/club/tier').then(function (data) {
-        renderTierProgress('home-tier-progress', 'home-tier-name', 'home-tier-remaining', 'home-tier-bar-fill', data);
-        document.getElementById('home-tier-value').textContent = data.currentTier ? data.currentTier.name : '—';
-      }).catch(function () {});
+    // Nível do Clube (Start/Basic/Plus/Pro/Master) vale pra qualquer cliente
+    // logado — Iniciante ou Membro Verité — o código de convite não é um
+    // portão pra progressão de nível, só um selo à parte.
+    document.getElementById('home-tier-progress').hidden = false;
+    api('/api/club/tier').then(function (data) {
+      renderTierProgress('home-tier-progress', 'home-tier-name', 'home-tier-remaining', 'home-tier-bar-fill', data);
+      document.getElementById('home-tier-value').textContent = data.currentTier ? data.currentTier.name : '—';
+      renderTierBoard('home-tier-board', data);
+    }).catch(function () {});
 
+    api('/api/club/benefits').then(function (data) {
+      var available = data.items.filter(function (b) { return b.status === 'disponivel'; });
+      document.getElementById('home-benefits-count').textContent = String(available.length);
+      var grid = document.getElementById('home-beneficios');
+      clear(grid);
+      var preview = data.items.filter(function (b) { return b.status !== 'bloqueado'; }).slice(0, 3);
+      if (!preview.length) { if (beneficiosBlock) beneficiosBlock.hidden = true; return; }
+      if (beneficiosBlock) beneficiosBlock.hidden = false;
+      preview.forEach(function (b) { grid.appendChild(benefitCard(b)); });
+    }).catch(function () {});
+
+    if (isMembroVerite()) {
       api('/api/club/points').then(function (data) {
         document.getElementById('home-points-count').textContent = String(data.balance);
-      }).catch(function () {});
-
-      api('/api/club/benefits').then(function (data) {
-        var available = data.items.filter(function (b) { return b.status === 'disponivel'; });
-        document.getElementById('home-benefits-count').textContent = String(available.length);
-        var grid = document.getElementById('home-beneficios');
-        clear(grid);
-        var preview = data.items.filter(function (b) { return b.status !== 'bloqueado'; }).slice(0, 3);
-        if (!preview.length) { if (beneficiosBlock) beneficiosBlock.hidden = true; return; }
-        if (beneficiosBlock) beneficiosBlock.hidden = false;
-        preview.forEach(function (b) { grid.appendChild(benefitCard(b)); });
       }).catch(function () {});
 
       api('/api/club/coupons').then(function (data) {
@@ -371,6 +367,10 @@
       api('/api/club/products?kind=exclusivos').then(function (data) {
         renderProductGrid('home-exclusivos', data.items.slice(0, 4));
       }).catch(function () {});
+    } else {
+      document.getElementById('home-coupons-count').textContent = '0';
+      document.getElementById('home-points-count').textContent = '0';
+      if (exclusivosBlock) exclusivosBlock.hidden = true;
     }
 
     api('/api/club/orders').then(function (data) {
@@ -416,15 +416,77 @@
     document.getElementById(nameId).textContent = data.currentTier ? data.currentTier.name : '—';
     var remainingEl = document.getElementById(remainingId);
     var fillEl = document.getElementById(fillId);
+    var spentEl = document.getElementById('home-tier-spent');
+    if (spentEl) spentEl.textContent = 'Você já acumulou ' + formatMoney(data.totalSpent) + ' em compras.';
     if (data.nextTier) {
-      remainingEl.textContent = formatMoney(data.remainingToNextTier) + ' em compras para ' + data.nextTier.name;
-      var span = Number(data.nextTier.min_spent) - Number(data.currentTier.min_spent);
-      var progressed = span > 0 ? (data.totalSpent - Number(data.currentTier.min_spent)) / span : 1;
+      var needsFirstPurchase = Number(data.remainingOrdersToNextTier) > 0;
+      if (needsFirstPurchase) {
+        remainingEl.textContent = 'Falta sua primeira compra para alcançar ' + data.nextTier.name;
+      } else {
+        remainingEl.textContent = formatMoney(data.remainingToNextTier) + ' em compras para ' + data.nextTier.name;
+      }
+      var target = Number(data.nextTier.min_spent) || 0;
+      var progressed = needsFirstPurchase ? 0 : (target > 0 ? (Number(data.totalSpent) / target) : 1);
       fillEl.style.width = Math.max(0, Math.min(100, progressed * 100)) + '%';
     } else {
       remainingEl.textContent = 'Nível máximo alcançado.';
       fillEl.style.width = '100%';
     }
+  }
+
+  /** Cartões de progressão do Clube — todos os níveis lado a lado, com
+   *  destaque no atual, marcação dos já alcançados e bloqueio visual dos
+   *  ainda não atingidos. Requisito e benefícios de cada nível vêm sempre
+   *  do backend (club_tiers), nunca hardcoded aqui. */
+  function tierRequirementLabel(tier) {
+    var minSpent = Number(tier.min_spent) || 0;
+    var minOrders = Number(tier.min_orders) || 0;
+    if (minOrders > 0 && minSpent === 0) return 'Após a 1ª compra';
+    if (minSpent === 0) return 'Cadastro gratuito';
+    return formatMoney(minSpent) + ' acumulados';
+  }
+
+  function renderTierBoard(containerId, data) {
+    var wrap = document.getElementById(containerId);
+    if (!wrap) return;
+    clear(wrap);
+    var tiers = data.tiers || [];
+    if (!tiers.length) return;
+
+    var currentId = data.currentTier ? data.currentTier.id : null;
+    var currentIdx = tiers.findIndex(function (t) { return t.id === currentId; });
+    var nextId = data.nextTier ? data.nextTier.id : null;
+
+    var grid = el('div', 'tier-board-grid');
+    tiers.forEach(function (tier, idx) {
+      var state = currentIdx === -1 ? 'locked' : (idx < currentIdx ? 'achieved' : idx === currentIdx ? 'current' : 'locked');
+      var card = el('div', 'tier-card is-' + state);
+
+      var badge = el('span', 'tier-card-badge',
+        state === 'current' ? 'Nível Atual' : state === 'achieved' ? 'Alcançado' : 'Bloqueado');
+      card.appendChild(badge);
+
+      card.appendChild(el('h3', 'tier-card-name', tier.name));
+      card.appendChild(el('p', 'tier-card-requirement', tierRequirementLabel(tier)));
+
+      var lines = String(tier.description || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+      if (lines.length) {
+        var ul = document.createElement('ul');
+        ul.className = 'tier-card-benefits';
+        lines.forEach(function (line) { ul.appendChild(el('li', null, line)); });
+        card.appendChild(ul);
+      }
+
+      if (tier.id === nextId) {
+        var hintText = Number(data.remainingOrdersToNextTier) > 0
+          ? 'Falta sua primeira compra.'
+          : 'Faltam ' + formatMoney(data.remainingToNextTier) + '.';
+        card.appendChild(el('p', 'tier-card-hint', hintText));
+      }
+
+      grid.appendChild(card);
+    });
+    wrap.appendChild(grid);
   }
 
   /* ---- Cartão digital ---- */
@@ -483,9 +545,10 @@
       btn.type = 'button'; btn.className = 'club-btn-primary club-btn-sm'; btn.textContent = 'Usar Benefício';
       btn.addEventListener('click', function () {
         btn.disabled = true;
+        hideMessage('beneficios-message');
         api('/api/club/benefits', { method: 'POST', body: { benefitId: b.id } }).then(function () {
           loadBeneficios();
-        }).catch(function (err) { btn.disabled = false; alert(err.message); });
+        }).catch(function (err) { btn.disabled = false; showMessage('beneficios-message', err.message, true); });
       });
       actionRow.appendChild(btn);
     }
@@ -495,7 +558,6 @@
   function loadBeneficios() {
     var grid = document.getElementById('beneficios-grid');
     clear(grid);
-    if (!isMembroVerite()) { grid.appendChild(lockedState()); return; }
     api('/api/club/benefits').then(function (data) {
       if (!data.items.length) {
         grid.appendChild(emptyState('Seus próximos benefícios estão a caminho.', 'Continue aproveitando a Verité para desbloquear novas experiências.'));
@@ -574,9 +636,10 @@
           btn.disabled = !r.affordable;
           btn.addEventListener('click', function () {
             btn.disabled = true;
+            hideMessage('recompensas-message');
             api('/api/club/points', { method: 'POST', body: { rewardId: r.id } }).then(function () {
               loadPontos();
-            }).catch(function (err) { btn.disabled = false; alert(err.message); });
+            }).catch(function (err) { btn.disabled = false; showMessage('recompensas-message', err.message, true); });
           });
           card.appendChild(btn);
           rewardsWrap.appendChild(card);
@@ -608,9 +671,10 @@
           btn.type = 'button'; btn.className = 'club-btn-primary club-btn-sm'; btn.textContent = 'Resgatar Presente';
           btn.addEventListener('click', function () {
             btn.disabled = true;
+            hideMessage('presentes-message');
             api('/api/club/gifts', { method: 'POST', body: { giftId: g.id } }).then(function () {
               loadPresentes();
-            }).catch(function (err) { btn.disabled = false; alert(err.message); });
+            }).catch(function (err) { btn.disabled = false; showMessage('presentes-message', err.message, true); });
           });
           card.appendChild(btn);
         }
@@ -761,14 +825,12 @@
     var membro = isMembroVerite();
     document.getElementById('acc-membership-type').textContent = membro ? 'Membro Verité' : 'Iniciante';
     document.getElementById('acc-member-number-row').hidden = !membro;
-    document.getElementById('acc-tier-row').hidden = !membro;
+    document.getElementById('acc-tier-row').hidden = false;
     document.getElementById('acc-member-number').textContent = currentCustomer.member_number || '—';
     document.getElementById('acc-activate-code-box').hidden = membro;
-    if (membro) {
-      api('/api/club/tier').then(function (data) {
-        document.getElementById('acc-tier').textContent = data.currentTier ? data.currentTier.name : '—';
-      }).catch(function () {});
-    }
+    api('/api/club/tier').then(function (data) {
+      document.getElementById('acc-tier').textContent = data.currentTier ? data.currentTier.name : '—';
+    }).catch(function () {});
   }
   routeLoaders['minha-conta'] = loadMinhaConta;
 

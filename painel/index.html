@@ -715,7 +715,7 @@
         <div data-clube-panel="niveis" hidden>
           <div id="clube-niveis-list-view">
             <div class="section-toolbar">
-              <div><p class="section-sub">Progressão do Clube — calculada automaticamente pelo total gasto do cliente.</p></div>
+              <div><p class="section-sub">Progressão do Clube — calculada automaticamente pelo total gasto e nº de pedidos do cliente. Vale pra qualquer cliente logado, com ou sem código de convite.</p></div>
               <button id="clube-nivel-new-btn" class="btn-primary" type="button">+ Novo nível</button>
             </div>
             <div id="clube-niveis-table-wrap" class="table-wrap"></div>
@@ -733,8 +733,13 @@
                   <input id="clube-nivel-name" required maxlength="80" placeholder="ex: Verité Noir"/>
                 </div>
                 <div class="field">
-                  <label for="clube-nivel-min-spent">Compras mínimas (R$)</label>
+                  <label for="clube-nivel-min-spent">Compras acumuladas mínimas (R$)</label>
                   <input id="clube-nivel-min-spent" type="number" min="0" step="0.01" value="0" required/>
+                </div>
+                <div class="field">
+                  <label for="clube-nivel-min-orders">Pedidos mínimos (nº)</label>
+                  <input id="clube-nivel-min-orders" type="number" min="0" step="1" value="0"/>
+                  <p class="field-hint">Use 1 aqui pra um nível liberado já na 1ª compra (ex: Basic), independente do valor.</p>
                 </div>
                 <div class="field">
                   <label for="clube-nivel-sort">Ordem</label>
@@ -742,8 +747,8 @@
                 </div>
               </div>
               <div class="field">
-                <label for="clube-nivel-description">Descrição (opcional)</label>
-                <textarea id="clube-nivel-description" rows="2" maxlength="400"></textarea>
+                <label for="clube-nivel-description">Descrição (opcional — uma linha por item, aparece como lista de benefícios no cartão do nível)</label>
+                <textarea id="clube-nivel-description" rows="3" maxlength="400"></textarea>
               </div>
               <div class="field field-checkbox">
                 <label><input id="clube-nivel-active" type="checkbox" checked/> Nível ativo</label>

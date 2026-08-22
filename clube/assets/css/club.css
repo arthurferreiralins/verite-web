@@ -78,7 +78,7 @@
   color:var(--white); padding:.75rem .85rem; font-size:.95rem; font-family:inherit;
   transition:border-color .2s ease, background .2s ease;
 }
-.club-field input:focus{outline:none; border-color:var(--gold-light); background:rgba(255,255,255,.05);}
+.club-field input:focus{outline:1px solid var(--gold); outline-offset:3px; border-color:var(--gold-light); background:rgba(255,255,255,.05);}
 .club-code-input{text-align:center; letter-spacing:.14em; font-size:1.1rem; text-transform:uppercase;}
 
 .club-btn-primary{
@@ -90,6 +90,7 @@
   transition:transform .18s ease, box-shadow .18s ease;
 }
 .club-btn-primary:hover{transform:translateY(-1px); box-shadow:0 14px 30px rgba(177,138,79,.36);}
+.club-btn-primary:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
 .club-btn-primary:disabled{opacity:.65; cursor:default; transform:none;}
 .club-spinner{
   width:14px; height:14px; border-radius:50%; border:2px solid rgba(12,12,13,.35); border-top-color:var(--black);
@@ -102,6 +103,7 @@
   cursor:pointer; margin-top:1.3rem; text-decoration:underline; text-underline-offset:3px; opacity:.85;
 }
 .club-link-btn:hover{opacity:1;}
+.club-link-btn:focus-visible{outline:1px solid var(--gold); outline-offset:2px;}
 
 .club-message{
   margin-top:1rem; font-size:.85rem; padding:.7rem .9rem; border-radius:2px; text-align:left;
@@ -117,6 +119,7 @@
   padding:1.1rem 1.2rem; cursor:pointer; transition:border-color .2s ease, background .2s ease, transform .18s ease;
 }
 .gate-choice-btn:hover{border-color:var(--gold-light); background:rgba(255,255,255,.045); transform:translateY(-1px);}
+.gate-choice-btn:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
 .gate-choice-btn.is-premium{border-color:rgba(217,189,133,.55); background:linear-gradient(155deg, rgba(217,189,133,.1), rgba(177,138,79,.03));}
 .gate-choice-title{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.15rem; color:var(--white);}
 .gate-choice-sub{font-size:.8rem; color:#a39c8e; line-height:1.5;}
@@ -187,6 +190,7 @@
   padding:.4rem 0; border-bottom:1px solid transparent; transition:color .2s ease;
 }
 .club-nav a:hover{color:var(--white);}
+.club-nav a:focus-visible{outline:1px solid var(--gold); outline-offset:-3px;}
 .club-nav a.is-active{color:var(--gold-light); border-bottom-color:var(--gold-light);}
 
 .club-header-actions{display:flex; align-items:center; gap:.7rem; flex-shrink:0;}
@@ -261,12 +265,14 @@
 .coupon-discount{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.7rem; color:var(--gold-light); margin:0 0 .3rem;}
 .coupon-name{font-size:.9rem; color:var(--white); margin:0 0 .6rem;}
 .coupon-desc{font-size:.8rem; color:#a39c8e; margin:0 0 .9rem; line-height:1.5;}
+.coupon-validity{font-size:.72rem; letter-spacing:.02em; color:var(--gold-light); opacity:.75; margin:0 0 .8rem;}
 .coupon-code-row{display:flex; align-items:center; justify-content:space-between; gap:.6rem; border-top:1px dashed rgba(177,138,79,.3); padding-top:.8rem;}
 .coupon-code{font-family:monospace; letter-spacing:.08em; color:var(--gold-light); font-size:.9rem;}
 .coupon-copy-btn{
   background:none; border:1px solid rgba(177,138,79,.4); color:var(--gold-light); font-size:.72rem;
   letter-spacing:.04em; text-transform:uppercase; padding:.35rem .6rem; border-radius:2px; cursor:pointer;
 }
+.coupon-copy-btn:focus-visible{outline:1px solid var(--gold); outline-offset:2px;}
 .coupon-copy-btn:hover{border-color:var(--gold-light); background:rgba(177,138,79,.1);}
 .coupon-status{position:absolute; top:1rem; right:1rem; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color:#8a8378;}
 .coupon-status.is-active{color:#a9d2a9;}
@@ -311,15 +317,68 @@
 .club-field input:disabled{opacity:.55;}
 
 /* ============================ Nível / progresso ============================ */
-.club-tier-progress{margin-bottom:2rem;}
+.club-tier-progress{margin-bottom:1.6rem;}
 .club-tier-progress-head{display:flex; justify-content:space-between; align-items:baseline; gap:1rem; margin-bottom:.6rem; flex-wrap:wrap;}
 .club-tier-name{font-family:var(--font-display,'Cormorant Garamond',serif); font-size:1.3rem; color:var(--gold-light);}
 .club-tier-remaining{font-size:.8rem; color:#a39c8e;}
 .club-tier-bar{height:4px; border-radius:99px; background:rgba(177,138,79,.18); overflow:hidden;}
 .club-tier-bar-fill{height:100%; background:linear-gradient(90deg,var(--gold-deep),var(--gold-light)); transition:width .6s ease;}
+.club-tier-spent{font-size:.78rem; color:#8a8378; margin:.6rem 0 0;}
+
+/* ---- Quadro de níveis (5 cartões lado a lado) ---- */
+.tier-board{margin-bottom:2.6rem;}
+.tier-board-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:1rem; align-items:stretch;}
+.tier-card{
+  position:relative; display:flex; flex-direction:column; gap:.55rem;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+  border:1px solid rgba(177,138,79,.28); border-radius:4px; padding:1.3rem 1.15rem 1.4rem;
+  transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.tier-card-badge{
+  align-self:flex-start; font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+  padding:.3rem .6rem; border-radius:99px; border:1px solid rgba(177,138,79,.4); color:#a39c8e;
+}
+.tier-card-name{font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500; font-size:1.2rem; color:var(--white); margin:.2rem 0 0;}
+.tier-card-requirement{font-size:.76rem; letter-spacing:.03em; color:var(--gold-light); margin:0;}
+.tier-card-benefits{list-style:none; margin:.3rem 0 0; padding:0; display:flex; flex-direction:column; gap:.45rem;}
+.tier-card-benefits li{
+  font-size:.8rem; line-height:1.45; color:#b7b2a8; padding-left:1.1rem; position:relative;
+}
+.tier-card-benefits li::before{content:'—'; position:absolute; left:0; color:var(--gold-deep);}
+.tier-card-hint{margin:.7rem 0 0; padding-top:.7rem; border-top:1px dashed rgba(177,138,79,.3); font-size:.76rem; color:var(--gold-light); font-style:italic;}
+
+/* alcançado: já passou por esse nível — selo dourado discreto, sem ser o destaque */
+.tier-card.is-achieved{border-color:rgba(217,189,133,.5);}
+.tier-card.is-achieved .tier-card-badge{color:var(--gold-light); border-color:rgba(217,189,133,.5);}
+.tier-card.is-achieved .tier-card-name::after{content:' ✓'; color:var(--gold-light); font-family:var(--font-sans);}
+
+/* atual: o destaque especial pedido — elevado, brilho dourado, borda cheia */
+.tier-card.is-current{
+  border-color:var(--gold-light);
+  background:linear-gradient(165deg, rgba(217,189,133,.14), rgba(177,138,79,.03) 65%);
+  box-shadow:0 22px 46px rgba(177,138,79,.22), 0 0 0 1px rgba(217,189,133,.15) inset;
+  transform:translateY(-6px);
+}
+.tier-card.is-current .tier-card-badge{
+  color:var(--black); border-color:transparent;
+  background:linear-gradient(155deg,var(--gold-light),var(--gold) 60%,var(--gold-deep));
+}
+
+/* bloqueado: visualmente contido, cadeado, sem sumir do layout */
+.tier-card.is-locked{opacity:.62; filter:grayscale(.35);}
+.tier-card.is-locked .tier-card-name{color:#c9c4b8;}
+.tier-card.is-locked::after{
+  content:'🔒'; position:absolute; top:1.1rem; right:1.1rem; font-size:.85rem; opacity:.8;
+}
 
 .club-summary-grid-5{grid-template-columns:repeat(5,1fr);}
 .club-card-cta-row{margin-bottom:2.6rem;}
+
+.club-section-subtitle{
+  font-family:var(--font-display,'Cormorant Garamond',serif); font-weight:500;
+  font-size:1.35rem; color:var(--white); margin:0 0 1.4rem;
+  padding-top:1.6rem; border-top:1px solid rgba(177,138,79,.18);
+}
 .club-btn-sm{padding:.55rem 1rem; font-size:.68rem;}
 
 .club-home-block{margin-top:2.8rem;}
@@ -422,6 +481,11 @@
 .club-notif-date{font-size:.68rem; color:#8a8378; margin-top:.25rem;}
 
 /* ============================ Responsive ============================ */
+@media (max-width: 980px){
+  .club-summary-grid-5{grid-template-columns:repeat(3,1fr);}
+  .tier-board-grid{grid-template-columns:repeat(3,1fr);}
+  .tier-card.is-current{transform:none;}
+}
 @media (max-width: 860px){
   .club-nav{
     position:fixed; top:68px; left:0; right:0; bottom:0; z-index:495;
@@ -439,9 +503,13 @@
   .club-logout{font-size:.72rem; white-space:nowrap;}
   .club-notif-panel{right:-1rem;}
 }
+@media (max-width: 620px){
+  .tier-board-grid{grid-template-columns:1fr 1fr;}
+}
 @media (max-width: 520px){
   .club-summary-grid{grid-template-columns:1fr;}
   .club-gate-card{padding:2rem 1.4rem;}
+  .tier-board-grid{grid-template-columns:1fr;}
 }
 @media (max-width: 360px){
   .club-brand-word{font-size:.68rem;}

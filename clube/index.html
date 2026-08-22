@@ -190,14 +190,11 @@
         </button>
         <nav id="club-nav" class="club-nav">
           <a href="#inicio" data-club-route="inicio">Início</a>
+          <a href="#cartao" data-club-route="cartao">Meu Cartão</a>
+          <a href="#pontos" data-club-route="pontos">Meus Pontos</a>
           <a href="#beneficios" data-club-route="beneficios">Benefícios</a>
-          <a href="#pontos" data-club-route="pontos">Pontos</a>
-          <a href="#cupons" data-club-route="cupons">Cupons</a>
-          <a href="#exclusivos" data-club-route="exclusivos">Exclusivos</a>
-          <a href="#presentes" data-club-route="presentes">Presentes</a>
-          <a href="#compras" data-club-route="compras">Compras</a>
-          <a href="#favoritos" data-club-route="favoritos">Favoritos</a>
           <a href="#novidades" data-club-route="novidades">Novidades</a>
+          <a href="#resgatar" data-club-route="resgatar">Resgatar</a>
           <a href="#minha-conta" data-club-route="minha-conta">Minha Conta</a>
         </nav>
         <div class="club-header-actions">
@@ -227,12 +224,16 @@
         </div>
 
         <div class="club-tier-progress" id="home-tier-progress">
+          <p class="club-eyebrow" style="margin-bottom:.3rem;">Sua Jornada Verité</p>
           <div class="club-tier-progress-head">
             <span id="home-tier-name" class="club-tier-name">—</span>
             <span id="home-tier-remaining" class="club-tier-remaining"></span>
           </div>
           <div class="club-tier-bar"><div class="club-tier-bar-fill" id="home-tier-bar-fill" style="width:0%"></div></div>
+          <p id="home-tier-spent" class="club-tier-spent"></p>
         </div>
+
+        <div class="tier-board" id="home-tier-board" aria-label="Níveis do Clube Verité"></div>
 
         <div class="club-summary-grid club-summary-grid-5">
           <div class="club-card club-summary-card">
