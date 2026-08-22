@@ -20,6 +20,37 @@
   --font-display:'Cormorant Garamond','Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,ui-serif,serif;
   --font-sans:'Futura','Century Gothic',Optima,Candara,'Segoe UI',ui-sans-serif,system-ui,-apple-system,sans-serif;
   --ease:cubic-bezier(.2,.8,.2,1);
+
+  /* spacing scale — matches values already in real use across the file
+     (button padding, section-head margin, section padding) rather than
+     an arbitrary new scale */
+  --space-1:.4rem;
+  --space-2:.8rem;
+  --space-3:1.2rem;
+  --space-4:1.6rem;
+  --space-5:2.4rem;
+  --space-6:3.6rem;
+  --space-7:5.5rem;
+  --space-8:7.5rem;
+
+  /* border-radius — matches the four values already used ad hoc
+     throughout (buttons/inputs/cards, product-mystery card, mega-panel/
+     mini-cart/thumbs, pills) */
+  --radius-sm:2px;
+  --radius-md:3px;
+  --radius-lg:4px;
+  --radius-pill:999px;
+
+  /* the one recurring "lifted panel" shadow (mega-menu, mini-cart,
+     search suggestions) */
+  --shadow-lift:0 30px 60px -20px rgba(0,0,0,.65);
+
+  /* status tones, available for reuse (e.g. clube/assets/css/club.css)
+     — error matches the dark-context error tone already used across the
+     file (#c07a7a family); success has no existing equivalent yet, kept
+     muted/sage to stay in the same desaturated, premium register */
+  --success:#7a9a6a;
+  --error:#c07a7a;
 }
 
 /* Garante que o atributo `hidden` sempre esconda o elemento, mesmo quando
@@ -464,8 +495,8 @@ nav.links a.nav-clube:hover{
 
 .mega-panel{
   position:absolute; top:calc(100% + 18px); left:0; min-width:340px; max-width:min(560px, 92vw);
-  background:var(--black-2); border:1px solid rgba(250,249,246,.14); border-radius:4px;
-  padding:1.5rem 1.7rem 1.3rem; box-shadow:0 30px 60px -20px rgba(0,0,0,.65);
+  background:var(--black-2); border:1px solid rgba(250,249,246,.14); border-radius:var(--radius-lg);
+  padding:1.5rem 1.7rem 1.3rem; box-shadow:var(--shadow-lift);
   opacity:0; visibility:hidden; transform:translateY(-8px); pointer-events:none;
   transition:opacity .2s ease, transform .2s ease, visibility .2s;
   z-index:60;
@@ -555,8 +586,8 @@ nav.links a.nav-clube:hover{
 }
 .btn-favorite:hover{color:var(--gold);}
 .btn-favorite.is-favorited{color:var(--gold); text-decoration:none;}
-.btn-favorite.is-favorited::before{content:"♥ "; }
-.btn-favorite:not(.is-favorited)::before{content:"♡ "; }
+.btn-favorite-icon{width:16px; height:16px; flex:none; display:block;}
+.btn-favorite-icon path{fill:currentColor; transition:fill .2s ease;}
 
 /* =======================================================================
    Hero
@@ -1235,7 +1266,8 @@ footer .watermark{
 .product-tile h3{font-family:var(--font-display); font-size:1.15rem; margin-bottom:.3rem;}
 .product-tile-volume{font-size:.78rem; color:var(--sec-fg-soft);}
 .product-tile-price{font-size:.92rem; color:var(--gold-deep); margin-top:.3rem;}
-.product-tile-price-was{color:var(--sec-fg-soft); font-weight:400; text-decoration:line-through; margin-right:.45rem;}
+.price-was, .product-tile-price-was, .product-price-was{color:var(--sec-fg-soft); font-weight:400; text-decoration:line-through;}
+.product-tile-price-was{margin-right:.45rem;}
 .section-dark .product-tile-price, .section-2 .product-tile-price, .section-3 .product-tile-price{color:var(--gold-light);}
 .product-tile-installments{font-size:.72rem; color:var(--sec-fg-soft); margin-top:.15rem;}
 
@@ -1280,7 +1312,7 @@ footer .watermark{
 }
 .product-tile-view:hover{color:var(--gold);}
 .section-dark .product-tile-view, .section-2 .product-tile-view, .section-3 .product-tile-view{color:var(--gold-light);}
-.product-tile-oos{font-size:.7rem; color:#c07a7a; font-style:italic; margin:0;}
+.product-tile-oos{font-size:.7rem; color:var(--error); font-style:italic; margin:0;}
 
 /* botão "adicionar ao carrinho" some e reaparece suavemente no hover — só em
    telas com mouse de verdade; em touch (tablet/celular) fica sempre visível,
@@ -1380,8 +1412,8 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 .search-suggestions{
   position:absolute; top:calc(100% + 10px); left:0; right:0; z-index:65;
-  background:var(--black-2); border:1px solid rgba(250,249,246,.14); border-radius:4px;
-  padding:.5rem; box-shadow:0 30px 60px -20px rgba(0,0,0,.65);
+  background:var(--black-2); border:1px solid rgba(250,249,246,.14); border-radius:var(--radius-lg);
+  padding:.5rem; box-shadow:var(--shadow-lift);
   max-height:70vh; overflow-y:auto;
 }
 .search-suggestion{
@@ -1429,8 +1461,8 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 
 #mini-cart{
   position:absolute; top:calc(100% + 12px); right:0; width:320px; max-width:88vw;
-  background:var(--black-2); border:1px solid rgba(250,249,246,.14); border-radius:4px;
-  padding:1.2rem; box-shadow:0 30px 60px -20px rgba(0,0,0,.65);
+  background:var(--black-2); border:1px solid rgba(250,249,246,.14); border-radius:var(--radius-lg);
+  padding:1.2rem; box-shadow:var(--shadow-lift);
   opacity:0; visibility:hidden; transform:translateY(-8px); pointer-events:none;
   transition:opacity .25s ease, transform .25s ease, visibility .25s;
   z-index:70;
@@ -1484,6 +1516,18 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   display:block; font-family:var(--font-sans); font-size:.6rem; letter-spacing:.16em;
   text-transform:uppercase; color:var(--gold-light); margin-top:.4rem;
 }
+/* per-category gradient tints — each card gets a faint, distinct hue
+   (warm/cool/olive/wine/green/violet) fading into --black, so the grid
+   reads as one family while still telling categories apart at a glance.
+   Kept as their own hex values (not composed from --black-2/3 or --gold)
+   because the whole point is a subtle per-card hue shift that the shared
+   neutrals can't express; centralised here instead of inline on the <a>. */
+.category-card-feminino{background:linear-gradient(160deg,#241a12,var(--black));}
+.category-card-masculino{background:linear-gradient(160deg,#141c22,var(--black));}
+.category-card-unissex{background:linear-gradient(160deg,#1c1a12,var(--black));}
+.category-card-kits{background:linear-gradient(160deg,#221619,var(--black));}
+.category-card-presentes{background:linear-gradient(160deg,#161f1a,var(--black));}
+.category-card-lancamentos{background:linear-gradient(160deg,#1a1620,var(--black));}
 
 /* =======================================================================
    Listagem de produtos (produtos.html) — filtros + ordenação + grade
@@ -1524,6 +1568,24 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #listing-filters{display:none;}
   #listing-filters.is-open{display:block; margin-bottom:2.2rem;}
 }
+
+/* filtro de coleção ativo (chegada via mega-menu/home com ?colecao=...) —
+   sem isto o filtro ficava aplicado "invisivelmente" na grade */
+.listing-active-filters{display:flex; flex-wrap:wrap; gap:.6rem; margin:-1.2rem 0 2rem;}
+.listing-active-filters:empty{display:none; margin:0;}
+.listing-filter-chip{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.4rem .5rem .4rem .9rem; border-radius:999px;
+  border:1px solid var(--gold-deep); background:rgba(177,138,79,.08);
+  color:var(--gold-deep); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+}
+.listing-filter-chip button{
+  display:flex; align-items:center; justify-content:center;
+  width:18px; height:18px; border-radius:50%; border:none; background:rgba(177,138,79,.18);
+  color:inherit; cursor:pointer; font-size:.85rem; line-height:1; padding:0;
+  transition:background-color .2s ease, color .2s ease;
+}
+.listing-filter-chip button:hover{background:var(--gold-deep); color:var(--white);}
 
 .skeleton-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:2rem;}
 .skeleton-card{
@@ -1605,7 +1667,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   color:inherit; border-radius:2px; text-align:center; font-family:inherit;
 }
 .cart-row-remove{background:none; border:none; color:var(--sec-fg-soft); cursor:pointer; font-size:1rem; transition:color .25s ease;}
-.cart-row-remove:hover{color:#c07a7a;}
+.cart-row-remove:hover{color:var(--error);}
 @media (max-width:700px){
   .cart-header-row{display:none;}
   .cart-row{grid-template-columns:1fr; text-align:left; position:relative; padding-right:2.2rem;}
@@ -1622,7 +1684,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 .coupon-form input{flex:1; padding:.6rem .8rem; border:1px solid var(--sec-line); background:transparent; color:inherit; border-radius:2px; font-family:inherit;}
 .coupon-message{font-size:.75rem; margin-top:.5rem;}
 .coupon-message.is-ok{color:var(--gold-deep);}
-.coupon-message.is-error{color:#c07a7a;}
+.coupon-message.is-error{color:var(--error);}
 .checkout-panel{
   margin-top:1.4rem; padding:1.2rem; border:1px solid var(--gold-deep); border-radius:2px;
   background:rgba(177,138,79,.08); font-size:.82rem; line-height:1.7;
@@ -1643,9 +1705,9 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 .product-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
 .product-thumb.is-active, .product-thumb:hover{border-color:var(--gold);}
-.product-price-was{color:var(--sec-fg-soft); font-size:1.05rem; margin-right:.5rem; text-decoration:line-through;}
+.product-price-was{font-size:1.05rem; margin-right:.5rem;}
 .product-installments{font-size:.82rem; color:var(--sec-fg-soft); margin:.3rem 0 1rem;}
-.product-stock{font-size:.8rem; color:#c07a7a; margin:0 0 1rem;}
+.product-stock{font-size:.8rem; color:var(--error); margin:0 0 1rem;}
 .product-detail-notes{margin:1.8rem 0;}
 .product-detail-row{display:flex; gap:.8rem; padding:.55rem 0; border-bottom:1px solid var(--sec-line); font-size:.85rem;}
 .product-detail-row dt{color:var(--sec-fg-soft); min-width:9.5rem; font-weight:500; margin:0;}

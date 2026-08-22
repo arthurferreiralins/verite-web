@@ -104,9 +104,32 @@
       });
     }
 
+    function renderActiveFilters(){
+      var wrap = document.getElementById('listing-active-filters');
+      if(!wrap) return;
+      wrap.innerHTML = '';
+      if(filters.colecao && TITLES.colecao[filters.colecao]){
+        var chip = document.createElement('span');
+        chip.className = 'listing-filter-chip';
+        chip.appendChild(document.createTextNode(TITLES.colecao[filters.colecao]));
+        var clearChipBtn = document.createElement('button');
+        clearChipBtn.type = 'button';
+        clearChipBtn.setAttribute('aria-label', 'Remover filtro ' + TITLES.colecao[filters.colecao]);
+        clearChipBtn.textContent = '×';
+        clearChipBtn.addEventListener('click', function(){
+          filters.colecao = '';
+          renderAll();
+        });
+        chip.appendChild(clearChipBtn);
+        wrap.appendChild(chip);
+      }
+      wrap.hidden = !wrap.children.length;
+    }
+
     function renderAll(){
       updateUrl(filters);
       if(titleEl) titleEl.textContent = buildTitle(filters);
+      renderActiveFilters();
 
       var filtered = VP.applySort(VP.applyFilters(catalog, filters), filters.ordenar);
 
