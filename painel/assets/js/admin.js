@@ -611,7 +611,7 @@
         actionsTd.className = 'table-actions';
 
         var viewBtn = document.createElement('a');
-        viewBtn.href = 'https://verite-web.vercel.app/produto.html?slug=' + encodeURIComponent(p.slug);
+        viewBtn.href = 'https://veriteperfumes.com.br/produto.html?slug=' + encodeURIComponent(p.slug);
         viewBtn.target = '_blank'; viewBtn.rel = 'noopener'; viewBtn.textContent = 'Visualizar';
         actionsTd.appendChild(viewBtn);
 

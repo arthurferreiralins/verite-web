@@ -132,7 +132,7 @@ VALUES (1, NULL, '5581981553632', NULL)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO seo_settings (id, site_title, meta_description, share_image_url)
-VALUES (1, 'VERITÉ — A verdade está na sua essência', 'Uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade.', 'https://verite-web.vercel.app/assets/img/og-image.jpg')
+VALUES (1, 'VERITÉ — A verdade está na sua essência', 'Uma casa de perfumaria dedicada à autenticidade, elegância e exclusividade.', 'https://veriteperfumes.com.br/assets/img/og-image.jpg')
 ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================

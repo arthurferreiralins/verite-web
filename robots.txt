@@ -4,4 +4,4 @@ Disallow: /produto.html
 Disallow: /carrinho.html
 Disallow: /favoritos.html
 
-Sitemap: https://verite-web.vercel.app/sitemap.xml
+Sitemap: https://veriteperfumes.com.br/sitemap.xml
