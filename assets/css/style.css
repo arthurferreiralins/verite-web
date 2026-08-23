@@ -1721,6 +1721,21 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 .product-actions{display:flex; flex-direction:column; gap:.8rem; align-items:flex-start;}
 
 /* =======================================================================
+   Selo de confiança — bloco honesto de garantias reais (sem depoimento
+   fabricado), usado perto de pontos de decisão de compra: produto e
+   carrinho/checkout.
+   ======================================================================= */
+.trust-bar{display:flex; flex-direction:column; gap:1rem; margin-top:1.6rem; padding-top:1.6rem; border-top:1px solid var(--sec-line);}
+.trust-bar-item{display:flex; align-items:flex-start; gap:.8rem;}
+.trust-bar-icon{flex:none; width:20px; height:20px; margin-top:.1rem; color:var(--gold);}
+.trust-bar-item strong{display:block; font-family:var(--font-sans); font-size:.72rem; letter-spacing:.03em; text-transform:uppercase; color:var(--sec-fg); margin-bottom:.2rem;}
+.trust-bar-item span{display:block; font-size:.8rem; line-height:1.55; color:var(--sec-fg-soft);}
+@media (min-width:640px){
+  .trust-bar.is-row{flex-direction:row; flex-wrap:wrap; gap:1.6rem 2.2rem;}
+  .trust-bar.is-row .trust-bar-item{flex:1 1 220px;}
+}
+
+/* =======================================================================
    A Essência Verité — teaser pequeno da home linkando pra sobre.html
    (deliberadamente compacto: menos padding que uma seção normal, texto
    curto, um botão só — não pode competir em tamanho com as vitrines)
