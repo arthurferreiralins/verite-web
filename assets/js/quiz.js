@@ -60,6 +60,16 @@
 
     var answers = {};
     var current = 0;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* fade-out da pergunta atual antes de trocar — transição suave */
+    function transitionOut(done){
+      var el = stepsWrap.firstElementChild;
+      if(!el || reduceMotion){ done(); return; }
+      el.classList.remove('is-in');
+      el.classList.add('is-out');
+      window.setTimeout(done, 210);
+    }
 
     function buildProgress(){
       progressWrap.innerHTML = '';
@@ -74,7 +84,7 @@
       stepsWrap.innerHTML = '';
       var q = QUESTIONS[current];
       var step = document.createElement('div');
-      step.className = 'quiz-step reveal-blur in';
+      step.className = 'quiz-step';
       var h2 = document.createElement('h2');
       h2.textContent = q.title;
       step.appendChild(h2);
@@ -87,13 +97,15 @@
         btn.textContent = opt.label;
         btn.addEventListener('click', function(){
           answers[q.key] = opt;
-          if(current < QUESTIONS.length - 1){
-            current += 1;
-            buildProgress();
-            buildStep();
-          } else {
-            showResult();
-          }
+          transitionOut(function(){
+            if(current < QUESTIONS.length - 1){
+              current += 1;
+              buildProgress();
+              buildStep();
+            } else {
+              showResult();
+            }
+          });
         });
         opts.appendChild(btn);
       });
@@ -104,13 +116,16 @@
         back.className = 'quiz-back';
         back.textContent = '← Voltar';
         back.addEventListener('click', function(){
-          current -= 1;
-          buildProgress();
-          buildStep();
+          transitionOut(function(){
+            current -= 1;
+            buildProgress();
+            buildStep();
+          });
         });
         step.appendChild(back);
       }
       stepsWrap.appendChild(step);
+      window.requestAnimationFrame(function(){ step.classList.add('is-in'); });
     }
 
     function scoreProduct(p){
@@ -142,13 +157,39 @@
       resultWrap.hidden = false;
       resultCard.innerHTML = '';
 
+      var h3 = resultWrap.querySelector('h3');
+
       if(!best){
-        var empty = document.createElement('p');
-        empty.className = 'quiz-empty';
-        empty.textContent = 'Em breve, novas essências Verité para o seu perfil.';
-        resultCard.appendChild(empty);
+        /* ainda não há perfume compatível no catálogo — cartão de perfil
+           elegante montado só com as respostas do usuário (nada inventado) */
+        if(h3) h3.textContent = 'Seu perfil Verité';
+
+        var prof = document.createElement('div');
+        prof.className = 'quiz-profile';
+
+        var tags = document.createElement('div');
+        tags.className = 'quiz-profile-tags';
+        QUESTIONS.forEach(function(q){
+          var a = answers[q.key];
+          if(a) tags.appendChild(elText('span', 'quiz-profile-tag', a.label));
+        });
+        prof.appendChild(tags);
+
+        prof.appendChild(elText('p', 'quiz-profile-text',
+          'Esse é o seu perfil olfativo. As fragrâncias Verité que traduzem essa presença estão a caminho — enquanto isso, explore a coleção.'));
+
+        var toCollection = document.createElement('a');
+        toCollection.className = 'btn btn-ghost';
+        toCollection.href = 'produtos.html' +
+          (answers.familia ? '?familia=' + encodeURIComponent(answers.familia.label) : '');
+        toCollection.textContent = 'Ver a coleção';
+        prof.appendChild(toCollection);
+
+        resultCard.appendChild(prof);
         return;
       }
+
+      if(h3) h3.textContent = 'Sua Verité é...';
 
       var card = document.createElement('div');
       card.className = 'quiz-result-product';
