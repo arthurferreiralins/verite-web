@@ -1984,9 +1984,9 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #inicio .hb-bottle-frame{ position:relative; width:clamp(210px, 30vw, 344px); }
 #inicio .hb-bottle{
   display:block; width:100%; height:auto;
-  /* o frasco real (foto sobre fundo quase preto) funde no preto do banner;
-     a sombra + a aura por trás dão o "descolamento". A imagem nunca é
-     mascarada/recortada — frasco, tampa, rótulo e proporções intactos. */
+  /* frasco recortado (PNG com fundo transparente) — só o perfume, sem
+     o fundo escuro da foto original. A sombra + a aura por trás dão o
+     "descolamento". Frasco, tampa, rótulo e proporções intactos. */
   filter:drop-shadow(0 44px 66px rgba(0,0,0,.6));
 }
 #inicio .hb-sweep{
