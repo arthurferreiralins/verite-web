@@ -163,6 +163,17 @@ p{margin:0;}
 .section-beige{--sec-bg:var(--beige); --sec-fg:var(--ink-on-beige); --sec-fg-soft:#6b5f4c; --sec-line:rgba(44,38,32,.16);
   background:var(--sec-bg); color:var(--sec-fg);}
 
+/* "Navegue por Categoria" emenda direto no banner: sem hairline nem
+   corte no topo, e o mesmo halo dourado do hero descendo pra dentro —
+   a rolagem lê como uma superfície só, preto e dourado. */
+#fragrancias{
+  background:
+    radial-gradient(64% 60% at 50% -6%, rgba(177,138,79,.11), transparent 62%),
+    var(--black);
+}
+#fragrancias::before,
+#fragrancias::after{ display:none; }
+
 /* ghost watermark used behind a couple of sections for editorial depth —
    the V drifts extremely slowly, never enough to distract from text */
 .watermark{
@@ -2024,15 +2035,22 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 @keyframes hb-glow-in{ from{opacity:0;} to{opacity:1;} }
 @keyframes hb-aura-breathe{ 0%,100%{opacity:.6;} 50%{opacity:.9;} }
 @keyframes hb-glow-breathe{ 0%,100%{opacity:.82;} 50%{opacity:1;} }
-@keyframes hb-float{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+@keyframes hb-float{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
 @keyframes hb-floor-pulse{
   0%,100%{ opacity:1; transform:translateX(-50%) scale(1); }
-  50%{ opacity:.72; transform:translateX(-50%) scale(.92); }
+  50%{ opacity:.7; transform:translateX(-50%) scale(.9); }
 }
 @keyframes hb-sweep-move{
   0%{ transform:translateX(-260%) skewX(-12deg); opacity:0; }
   5%{ opacity:1; }
   22%{ transform:translateX(320%) skewX(-12deg); opacity:0; }
+  100%{ transform:translateX(320%) skewX(-12deg); opacity:0; }
+}
+/* passada de luz rápida disparada ao pegar no frasco */
+@keyframes hb-sweep-once{
+  0%{ transform:translateX(-260%) skewX(-12deg); opacity:0; }
+  12%{ opacity:1; }
+  60%{ transform:translateX(320%) skewX(-12deg); opacity:0; }
   100%{ transform:translateX(320%) skewX(-12deg); opacity:0; }
 }
 
@@ -2064,19 +2082,20 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio.hero.hb-ready .hb-line-1{ animation:hb-slide-l 1s var(--ease) .9s backwards; }
   #inicio.hero.hb-ready .hb-line-2{ animation:hb-slide-l 1s var(--ease) 1.04s backwards; }
   /* 5) frasco entra pela direita + 6) desaceleração natural ao assentar */
-  #inicio.hero.hb-ready .hb-bottle-enter{ animation:hb-bottle-in 1.8s cubic-bezier(.16,.78,.3,1) 1.15s both; }
-  #inicio.hero.hb-ready .hb-glow{ animation:hb-glow-in 1.4s ease 1.1s both, hb-glow-breathe 8s ease-in-out 3.6s infinite; }
-  #inicio.hero.hb-ready .hb-aura{ animation:hb-glow-in 1.4s ease 1.2s both, hb-aura-breathe 8s ease-in-out 3.6s infinite; }
+  #inicio.hero.hb-ready .hb-bottle-enter{ animation:hb-bottle-in 1.35s cubic-bezier(.18,.82,.28,1) 1s both; }
+  #inicio.hero.hb-ready .hb-glow{ animation:hb-glow-in 1.2s ease .95s both, hb-glow-breathe 7s ease-in-out 3s infinite; }
+  #inicio.hero.hb-ready .hb-aura{ animation:hb-glow-in 1.2s ease 1.05s both, hb-aura-breathe 7s ease-in-out 3s infinite; }
   /* frase de apoio */
-  #inicio.hero.hb-ready .hb-lede{ animation:hb-fade-up 1s var(--ease) 1.65s backwards; }
+  #inicio.hero.hb-ready .hb-lede{ animation:hb-fade-up .9s var(--ease) 1.35s backwards; }
   /* 7) uma luz dourada percorre o vidro (logo depois de assentar) */
-  #inicio.hero.hb-ready .hb-sweep::before{ animation:hb-sweep-move 12s cubic-bezier(.45,0,.25,1) 2.6s infinite; }
+  #inicio.hero.hb-ready .hb-sweep::before{ animation:hb-sweep-move 9s cubic-bezier(.45,0,.25,1) 2.1s infinite; }
+  #inicio.hero.hb-ready .hb-sweep.is-sweeping::before{ animation:hb-sweep-once .8s cubic-bezier(.4,0,.2,1); }
   /* 8) botão por último */
-  #inicio.hero.hb-ready .hb-cta{ animation:hb-fade-up 1s var(--ease) 3s backwards; }
+  #inicio.hero.hb-ready .hb-cta{ animation:hb-fade-up .9s var(--ease) 2.2s backwards; }
 
   /* movimento contínuo: frasco flutuando + sombra de contato respondendo */
-  #inicio.hero.hb-ready .hb-bottle-frame{ animation:hb-float 6.5s ease-in-out 3.4s infinite; }
-  #inicio.hero.hb-ready .hb-floor{ animation:hb-floor-pulse 6.5s ease-in-out 3.4s infinite; }
+  #inicio.hero.hb-ready .hb-bottle-frame{ animation:hb-float 5s ease-in-out 2.8s infinite; }
+  #inicio.hero.hb-ready .hb-floor{ animation:hb-floor-pulse 5s ease-in-out 2.8s infinite; }
 }
 
 /* --- estado final imóvel quando o usuário pede menos movimento --- */
@@ -2113,7 +2132,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-bottle-frame{ width:clamp(172px, 56vw, 240px); }
   #inicio .hb-media{ min-height:clamp(270px, 38vh, 360px); }
   #inicio .hb-floor{ bottom:-2.5%; }
-  #inicio.hero.hb-ready .hb-bottle-frame{ animation-duration:7.5s; }
+  #inicio.hero.hb-ready .hb-bottle-frame{ animation-duration:6s; }
 }
 @media (max-width:360px){
   #inicio .hb-title{ font-size:clamp(2.15rem, 10.5vw, 2.55rem); }

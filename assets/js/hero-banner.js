@@ -157,118 +157,170 @@
   }
 
   /* ---------------------------------------------------------------------
-     Interação com o frasco.
-     Desktop (ponteiro fino): o frasco inclina em 3D acompanhando o
-     cursor; clicar e arrastar "gira" o frasco (rotateY limitado) e ele
-     volta sozinho ao soltar; um brilho especular acompanha o ponteiro e
-     uma luz de recorte quente acende enquanto se segura. Tudo com lerp,
-     só transform/opacity.
-     Celular (ponteiro grosso): tocar no frasco dá um balanço curto e
-     elegante (keyframe CSS). Nada depende de giroscópio.
-     Desliga inteiro em prefers-reduced-motion (go() nem é chamado).
+     Interação com o frasco — responsiva, não lenta.
+     Ponteiro fino (desktop): o frasco inclina em 3D acompanhando o
+     cursor; hover dá um leve "avanço" (scale) + luz de recorte quente;
+     clicar e arrastar gira o frasco 1:1 e, ao soltar, ele sai com
+     inércia (flick) e assenta; clique seco dá um impulso rápido de giro.
+     Um brilho especular acompanha o ponteiro. Passada de luz no vidro
+     ao pegar.
+     Ponteiro grosso (celular): arrastar o dedo gira o frasco (com
+     inércia ao soltar); um toque seco dá um balanço curto (keyframe CSS).
+     Nada depende de giroscópio. Tudo transform/opacity, um rAF com lerp.
+     Desliga em prefers-reduced-motion (go() nem é chamado).
      --------------------------------------------------------------------- */
   function initBottleInteract(){
     var tilt  = hero.querySelector('.hb-bottle-tilt');
     var media = hero.querySelector('.hb-media');
     var frame = hero.querySelector('.hb-bottle-frame');
     var shine = hero.querySelector('.hb-shine');
+    var sweep = hero.querySelector('.hb-sweep');
     if(!tilt || !frame) return;
 
     var fine = !window.matchMedia || window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-    /* ---- toque: balanço curto ---- */
-    if(!fine){
-      tilt.addEventListener('click', function(){
-        tilt.classList.remove('is-tap');
-        void tilt.offsetWidth;               /* reflow p/ reiniciar a animação */
-        tilt.classList.add('is-tap');
-        if(media) media.classList.add('is-bottle-live');
-        window.setTimeout(function(){ if(media) media.classList.remove('is-bottle-live'); }, 900);
-      });
-      tilt.addEventListener('animationend', function(){ tilt.classList.remove('is-tap'); });
-      return;
-    }
-
-    /* ---- desktop: tilt 3D + arrasto ---- */
-    var rx = 0, ry = 0, trx = 0, tryy = 0;   /* rotX/rotY atual e alvo */
-    var sx = 0, tsx = 0, sOp = 0;            /* brilho: posição (%) e opacidade */
+    var rx = 0, ry = 0, sc = 1;        // atuais
+    var trx = 0, tryy = 0, tsc = 1;    // alvos
+    var sx = 0, tsx = 0, sOp = 0;      // brilho: posição (%) / opacidade
+    var vry = 0;                        // velocidade angular (inércia)
     var raf = 0;
-    var inside = false, dragging = false, dragId = null, dragStartX = 0, dragBaseRy = 0;
+    var inside = false, dragging = false, dragId = null, lastX = 0, moved = 0;
 
     function schedule(){ if(!raf) raf = window.requestAnimationFrame(loop); }
-
-    function aim(clientX, clientY){
-      var r = frame.getBoundingClientRect();
-      var nx = (clientX - (r.left + r.width  / 2)) / (r.width  / 2);
-      var ny = (clientY - (r.top  + r.height / 2)) / (r.height / 2);
-      nx = nx < -1.4 ? -1.4 : nx > 1.4 ? 1.4 : nx;
-      ny = ny < -1.4 ? -1.4 : ny > 1.4 ? 1.4 : ny;
-      if(!dragging){ trx = -ny * 7; tryy = nx * 12; }
-      tsx = nx * 26;
+    function setLive(on){
+      if(!media) return;
+      if(on) media.classList.add('is-bottle-live');
+      else if(!inside && !dragging) media.classList.remove('is-bottle-live');
+    }
+    function flashSweep(){
+      if(!sweep) return;
+      sweep.classList.remove('is-sweeping');
+      void sweep.offsetWidth;
+      sweep.classList.add('is-sweeping');
+    }
+    if(sweep){
+      sweep.addEventListener('animationend', function(){ sweep.classList.remove('is-sweeping'); });
     }
 
-    hero.addEventListener('pointermove', function(e){
-      if(e.pointerType === 'touch') return;
-      aim(e.clientX, e.clientY);
-      if(dragging){
-        var dx = e.clientX - dragStartX;
-        tryy = Math.max(-24, Math.min(24, dragBaseRy + dx * 0.28));
-        trx = 0;
-      }
+    function aimHover(x, y){
+      var r = frame.getBoundingClientRect();
+      var nx = (x - (r.left + r.width  / 2)) / (r.width  / 2);
+      var ny = (y - (r.top  + r.height / 2)) / (r.height / 2);
+      nx = nx < -1.5 ? -1.5 : nx > 1.5 ? 1.5 : nx;
+      ny = ny < -1.5 ? -1.5 : ny > 1.5 ? 1.5 : ny;
+      trx = -ny * 10;
+      tryy = nx * 17;
+      tsx = nx * 34;
+    }
+
+    /* hover (só ponteiro fino) */
+    if(fine){
+      hero.addEventListener('pointermove', function(e){
+        if(e.pointerType === 'touch' || dragging) return;
+        aimHover(e.clientX, e.clientY);
+        schedule();
+      }, {passive:true});
+      hero.addEventListener('pointerleave', function(){
+        if(dragging) return;
+        trx = 0; tryy = 0; tsx = 0; schedule();
+      });
+      tilt.addEventListener('pointerenter', function(){
+        inside = true; tsc = 1.035; setLive(true); schedule();
+      });
+      tilt.addEventListener('pointerleave', function(){
+        inside = false; tsc = 1; setLive(false); schedule();
+      });
+    }
+
+    /* arrasto — fino e grosso */
+    tilt.addEventListener('pointerdown', function(e){
+      dragging = true; dragId = e.pointerId; lastX = e.clientX; moved = 0; vry = 0;
+      tilt.classList.add('is-grabbing');
+      setLive(true); flashSweep();
+      try { tilt.setPointerCapture(e.pointerId); } catch(_){}
+      if(fine){ tsc = 1.05; schedule(); }   /* no touch, só agenda quando arrasta de fato */
+    });
+    tilt.addEventListener('pointermove', function(e){
+      if(!dragging) return;
+      var dx = e.clientX - lastX; lastX = e.clientX; moved += Math.abs(dx);
+      tryy = Math.max(-38, Math.min(38, tryy + dx * (fine ? 0.42 : 0.5)));
+      vry  = dx * (fine ? 0.9 : 1.05);
+      trx  = 0;
+      tsx  = Math.max(-38, Math.min(38, tryy));
       schedule();
     }, {passive:true});
-
-    hero.addEventListener('pointerleave', function(){
-      trx = 0; tryy = 0; tsx = 0; schedule();
-    });
-
-    tilt.addEventListener('pointerenter', function(){
-      inside = true;
-      if(media) media.classList.add('is-bottle-live');
-      schedule();
-    });
-    tilt.addEventListener('pointerleave', function(){
-      inside = false;
-      if(!dragging && media) media.classList.remove('is-bottle-live');
-      schedule();
-    });
-
-    tilt.addEventListener('pointerdown', function(e){
-      if(e.pointerType === 'touch') return;
-      dragging = true; dragId = e.pointerId;
-      dragStartX = e.clientX; dragBaseRy = tryy;
-      tilt.classList.add('is-grabbing');
-      try { tilt.setPointerCapture(e.pointerId); } catch(_){}
-    });
-    function endDrag(){
+    function endDrag(e){
       if(!dragging) return;
       dragging = false;
       tilt.classList.remove('is-grabbing');
       try { tilt.releasePointerCapture(dragId); } catch(_){}
-      if(!inside && media) media.classList.remove('is-bottle-live');
+
+      if(moved < 6){
+        if(fine){
+          /* clique seco: impulso rápido de giro (feedback via JS) */
+          var r = frame.getBoundingClientRect();
+          var side = (e && typeof e.clientX === 'number')
+            ? ((e.clientX - (r.left + r.width / 2)) >= 0 ? 1 : -1) : 1;
+          vry += side * 11;
+        } else {
+          /* toque seco no celular: balanço curto via CSS, sem transform inline */
+          tilt.style.transform = '';
+          rx = ry = sx = 0; sc = 1; vry = 0;
+          trx = tryy = tsx = 0; tsc = 1;
+          tilt.classList.remove('is-tap');
+          void tilt.offsetWidth;
+          tilt.classList.add('is-tap');
+          setLive(false);
+          return;
+        }
+      }
+      trx = 0; tryy = 0; tsx = 0;
+      tsc = inside ? 1.035 : 1;
+      setLive(false);
       schedule();
     }
     tilt.addEventListener('pointerup', endDrag);
     tilt.addEventListener('pointercancel', endDrag);
+    tilt.addEventListener('animationend', function(){ tilt.classList.remove('is-tap'); });
 
     function loop(){
       raf = 0;
-      rx  += (trx  - rx)  * 0.12;
-      ry  += (tryy - ry)  * 0.12;
-      sx  += (tsx  - sx)  * 0.12;
+
+      if(dragging){
+        ry = tryy;                                   // segue o cursor/dedo 1:1
+      } else if(Math.abs(vry) > 0.06){
+        ry += vry;                                   // inércia
+        vry *= 0.85;
+        ry += (tryy - ry) * 0.10;                    // + puxa de volta ao alvo
+      } else {
+        vry = 0;
+        ry += (tryy - ry) * 0.26;                    // assenta rápido
+      }
+      ry = Math.max(-46, Math.min(46, ry));
+
+      rx += (trx - rx) * 0.26;
+      sc += (tsc - sc) * 0.22;
+      sx += (tsx - sx) * 0.26;
+
       tilt.style.transform =
-        'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+        'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) +
+        'deg) scale(' + sc.toFixed(3) + ')';
+
       if(shine){
-        var tOp = (inside || dragging) ? 0.9 : 0;
-        sOp += (tOp - sOp) * 0.12;
+        var tOp = (inside || dragging || Math.abs(vry) > 0.5) ? 0.92 : 0;
+        sOp += (tOp - sOp) * 0.26;
         shine.style.opacity = sOp.toFixed(3);
         shine.style.transform = 'translateX(calc(-50% + ' + sx.toFixed(1) + '%))';
       }
-      var settling =
-        Math.abs(trx - rx) > 0.01 || Math.abs(tryy - ry) > 0.01 ||
-        Math.abs(tsx - sx) > 0.05 ||
-        (shine && Math.abs(((inside || dragging) ? 0.9 : 0) - sOp) > 0.01);
-      if(settling || dragging || inside) schedule();
+
+      var busy = dragging || inside ||
+        Math.abs(trx - rx) > 0.02 || Math.abs(tryy - ry) > 0.02 ||
+        Math.abs(tsc - sc) > 0.003 || Math.abs(vry) > 0.06 ||
+        Math.abs(tsx - sx) > 0.1 || sOp > 0.02;
+      if(busy){ schedule(); }
+      else if(Math.abs(ry) < 0.05 && Math.abs(rx) < 0.05 && Math.abs(sc - 1) < 0.004){
+        tilt.style.transform = '';   /* em repouso, o CSS volta a mandar sozinho */
+      }
     }
   }
 })();
