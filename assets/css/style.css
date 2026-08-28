@@ -2049,6 +2049,35 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 @media (max-height:640px){ #inicio .scroll-cue{ display:none; } }
 
+/* --- VÉRIX: mascote no canto inferior esquerdo do banner --- */
+#inicio .hb-verix-layer{
+  position:absolute; left:clamp(.25rem, 2vw, 2.5rem); bottom:0; z-index:2;
+  width:clamp(128px, 15vw, 236px);
+  pointer-events:none; will-change:transform;
+}
+#inicio .hb-verix-layer::after{      /* leve sombra de contato dourada */
+  content:""; position:absolute; left:50%; bottom:-4%; width:88%; height:13%;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse at 50% 50%, rgba(177,138,79,.16), transparent 70%);
+  filter:blur(9px);
+}
+#inicio .hb-verix{
+  display:block; width:100%; height:auto;
+  filter:drop-shadow(0 24px 30px rgba(0,0,0,.55));
+  opacity:0; transform-origin:bottom center; user-select:none;
+}
+@keyframes hb-verix-in{
+  0%{ opacity:0; transform:translateY(28px) rotate(-4deg) scale(.96); }
+  100%{ opacity:1; transform:translateY(0) rotate(0) scale(1); }
+}
+@keyframes hb-verix-bob{
+  0%,100%{ transform:translateY(0) rotate(0); }
+  50%{ transform:translateY(-7px) rotate(1.4deg); }
+}
+@media (max-width:900px){
+  #inicio .hb-verix-layer{ width:clamp(96px, 22vw, 148px); left:.25rem; }
+}
+
 /* --- keyframes do banner --- */
 @keyframes hb-ghost-in{ from{opacity:0; transform:scale(1.08);} to{opacity:.072; transform:scale(1);} }
 @keyframes hb-slide-l{ from{opacity:0; transform:translateX(-46px);} to{opacity:1; transform:translateX(0);} }
@@ -2119,6 +2148,11 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio.hero.hb-ready .hb-sweep.is-sweeping::before{ animation:hb-sweep-once .8s cubic-bezier(.4,0,.2,1); }
   /* 8) botão por último */
   #inicio.hero.hb-ready .hb-cta{ animation:hb-fade-up .9s var(--ease) 2.2s backwards; }
+  /* 9) VÉRIX entra por último, do canto, e fica com um bob leve */
+  #inicio.hero.hb-ready .hb-verix{
+    animation:hb-verix-in 1.05s cubic-bezier(.18,.8,.28,1) 2.5s both,
+              hb-verix-bob 4.2s ease-in-out 3.7s infinite;
+  }
 
   /* movimento contínuo: frasco flutuando + sombra de contato respondendo */
   #inicio.hero.hb-ready .hb-bottle-frame{ animation:hb-float 5s ease-in-out 2.8s infinite; }
@@ -2140,6 +2174,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-glass{ transform:rotate(7deg); }
   #inicio .hb-shine{ transform:translateX(-50%); }
   #inicio .hb-sweep{ transform:none; }
+  #inicio .hb-verix{ opacity:1; }
 }
 
 /* --- responsivo --- */
