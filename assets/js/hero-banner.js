@@ -6,11 +6,9 @@
  *
  * A seção #inicio.hero-home nasce "parada" (textos em opacity:0, grade e
  * partículas em opacity:0). A classe .hb-ready — adicionada aqui — dispara
- * a entrada encadeada, que é toda descrita em CSS. O disparo espera a
- * animação de abertura (.verite-intro) terminar, para que os textos não
- * entrem atrás da cortina preta; há um fallback por tempo caso o evento
- * não chegue. Tudo desliga em prefers-reduced-motion, e o parallax +
- * as partículas também desligam em ponteiro grosso (touch).
+ * a entrada encadeada, que é toda descrita em CSS, logo no carregamento.
+ * Tudo desliga em prefers-reduced-motion, e o parallax + as partículas
+ * também desligam em ponteiro grosso (touch).
  */
 (function(){
   'use strict';
@@ -36,17 +34,8 @@
     initParticles();
   }
 
-  var intro = document.querySelector('.verite-intro');
-  if(intro){
-    // revela assim que a cortina de abertura termina de sair
-    intro.addEventListener('animationend', function(e){
-      if(e.animationName === 'verite-intro-exit') go();
-    });
-    // fallback: se o animationend não vier (aba em segundo plano, etc.)
-    window.setTimeout(go, 3600);
-  } else {
-    window.requestAnimationFrame(function(){ window.setTimeout(go, 60); });
-  }
+  // revela o banner logo após o primeiro frame
+  window.requestAnimationFrame(function(){ window.setTimeout(go, 60); });
 
   /* ---------------------------------------------------------------------
      Parallax de mouse — desktop, ponteiro fino apenas. Cada camada com
