@@ -208,8 +208,8 @@
       var ny = (y - (r.top  + r.height / 2)) / (r.height / 2);
       nx = nx < -1.5 ? -1.5 : nx > 1.5 ? 1.5 : nx;
       ny = ny < -1.5 ? -1.5 : ny > 1.5 ? 1.5 : ny;
-      trx = -ny * 11;
-      tryy = nx * 21;
+      trx = -ny * 13;
+      tryy = nx * 27;
       tsx = nx * 34;
     }
 
@@ -243,10 +243,10 @@
     tilt.addEventListener('pointermove', function(e){
       if(!dragging) return;
       var dx = e.clientX - lastX; lastX = e.clientX; moved += Math.abs(dx);
-      tryy = Math.max(-38, Math.min(38, tryy + dx * (fine ? 0.42 : 0.5)));
-      vry  = dx * (fine ? 0.9 : 1.05);
+      tryy = Math.max(-52, Math.min(52, tryy + dx * (fine ? 0.5 : 0.6)));
+      vry  = dx * (fine ? 1.05 : 1.2);
       trx  = 0;
-      tsx  = Math.max(-38, Math.min(38, tryy));
+      tsx  = Math.max(-40, Math.min(40, tryy));
       schedule();
     }, {passive:true});
     function endDrag(e){
@@ -296,7 +296,7 @@
         vry = 0;
         ry += (tryy - ry) * 0.26;                    // assenta rápido
       }
-      ry = Math.max(-46, Math.min(46, ry));
+      ry = Math.max(-58, Math.min(58, ry));
 
       rx += (trx - rx) * 0.26;
       sc += (tsc - sc) * 0.22;

@@ -1938,33 +1938,45 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   background:radial-gradient(circle, rgba(246,227,189,.045), transparent 64%);
 }
 #inicio .hb-media-inner{ position:relative; z-index:2; will-change:transform; }
-#inicio .hb-bottle-enter{ opacity:0; transform:translateX(12%); perspective:1100px; }
+#inicio .hb-bottle-enter{ opacity:0; transform:translateX(12%); perspective:820px; }
 #inicio .hb-bottle-frame{
   position:relative; width:clamp(210px, 30vw, 344px);
   will-change:transform; transform-style:preserve-3d;
 }
-/* ---- VÉRIX ocupa o lugar do produto interativo ----
-   parede da frente (o mascote) + uma silhueta escura logo atrás
-   (translateZ negativo): ao inclinar/girar, a silhueta se separa e dá
-   volume — profundidade sem billboard. --d = meia-profundidade. */
+/* ---- VÉRIX ocupa o lugar do produto interativo, como objeto 3D ----
+   Extrusão real: a frente (mascote colorido) + fatias escuras
+   escalonadas em Z (.hb-mascot-slab) formam um corpo com espessura;
+   ao girar/inclinar você vê a lateral da extrusão. Um leve giro
+   automático em repouso (hb-mascot-yaw) já entrega o volume. */
 #inicio .hb-mascot-frame{ width:clamp(240px, 34vw, 400px); }
 #inicio .hb-mascot-3d{
   position:relative; transform-style:preserve-3d;
-  --d:clamp(12px, 2.8vw, 26px);
+  --d:clamp(11px, 2.6vw, 22px);
 }
 #inicio .hb-mascot{
-  position:relative; z-index:2;
+  position:relative; z-index:3;
   display:block; width:100%; height:auto;
-  transform:translateZ(var(--d));
+  transform:translateZ(calc(var(--d) * 1.6));
   filter:drop-shadow(0 28px 40px rgba(0,0,0,.55)) drop-shadow(0 8px 16px rgba(0,0,0,.35));
   transition:filter .45s ease;
 }
+/* fatias da extrusão — sombra própria do objeto, dão espessura ao girar */
+#inicio .hb-mascot-slab{
+  position:absolute; left:0; top:0; width:100%; height:auto;
+  pointer-events:none;
+}
+#inicio .hb-mascot-slab--1{ z-index:2; transform:translateZ(calc(var(--d) * 0.6));  filter:brightness(.16) blur(.3px); }
+#inicio .hb-mascot-slab--2{ z-index:1; transform:translateZ(calc(var(--d) * -0.6)); filter:brightness(.08) blur(.5px); }
 #inicio .hb-mascot-shadow{
   position:absolute; left:0; top:0; z-index:0;
   width:100%; height:auto;
-  transform:translateZ(calc(var(--d) * -1));
-  filter:brightness(0) blur(6px);
-  opacity:.42; pointer-events:none;
+  transform:translateZ(calc(var(--d) * -2));
+  filter:brightness(0) blur(8px);
+  opacity:.4; pointer-events:none;
+}
+@keyframes hb-mascot-yaw{
+  0%,100%{ transform:rotateY(-5deg); }
+  50%{ transform:rotateY(5.5deg); }
 }
 /* sombra de contato escura — aterra o mascote na cena */
 #inicio .hb-floor{
@@ -2101,9 +2113,13 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   /* 8) botão por último */
   #inicio.hero.hb-ready .hb-cta{ animation:hb-fade-up .9s var(--ease) 2.2s backwards; }
 
-  /* movimento contínuo: mascote flutuando + sombra de contato respondendo */
+  /* movimento contínuo: mascote flutuando + giro automático leve (dá o
+     volume 3D em repouso) + sombra de contato respondendo */
   #inicio.hero.hb-ready .hb-bottle-frame{ animation:hb-float 5s ease-in-out 2.8s infinite; }
+  #inicio.hero.hb-ready .hb-mascot-3d{ animation:hb-mascot-yaw 8s ease-in-out 3.2s infinite; }
   #inicio.hero.hb-ready .hb-floor{ animation:hb-floor-pulse 5s ease-in-out 2.8s infinite; }
+  /* ao pegar no mascote, o giro automático para — você assume o controle */
+  #inicio .hb-media.is-bottle-live .hb-mascot-3d{ animation-play-state:paused; }
 }
 
 /* --- estado final imóvel quando o usuário pede menos movimento --- */
@@ -2115,9 +2131,9 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-aura{ opacity:.8; }
   #inicio .hb-bottle-tilt{ cursor:default; }
   /* sem movimento: achata o objeto 3D pra uma imagem única e limpa */
-  #inicio .hb-mascot-3d{ transform-style:flat; }
+  #inicio .hb-mascot-3d{ transform-style:flat; animation:none; }
   #inicio .hb-mascot{ transform:none; }
-  #inicio .hb-mascot-shadow{ display:none; }
+  #inicio .hb-mascot-shadow, #inicio .hb-mascot-slab{ display:none; }
   #inicio .hb-shine{ transform:translateX(-50%); }
   #inicio .hb-sweep{ transform:none; }
 }
