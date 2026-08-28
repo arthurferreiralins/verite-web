@@ -273,26 +273,45 @@
 
 <main>
 
-  <!-- ============ Início / Hero ============ -->
-  <section id="inicio" class="section section-dark hero has-ambient">
-    <div class="ambient" data-parallax="22" aria-hidden="true">
-      <div class="ambient-orb orb-a" style="width:380px;height:380px;top:-90px;left:6%;"></div>
-      <div class="ambient-orb orb-b" style="width:300px;height:300px;bottom:-70px;right:4%;"></div>
-      <div class="ambient-shape" style="width:240px;height:240px;top:14%;right:12%;"></div>
-      <div class="ambient-particles" data-count="18"></div>
-      <div class="ambient-cursor"></div>
+  <!-- ============ Início / Hero — Banner principal ============
+       "Descubra Sua Essência". Estrutura: coluna de texto à esquerda,
+       frasco real (assets/img/hero-frasco.png) protagonista à direita,
+       "VERITÉ" gigante de fundo em baixa opacidade, grade geométrica
+       quase invisível, aura/névoa/partículas douradas. Entrada encadeada
+       (.hb-ready via assets/js/hero-banner.js) + parallax de mouse sutil.
+       Escopo de estilo estrito em #inicio.hero-home — ver style.css. -->
+  <section id="inicio" class="section section-dark hero hero-home has-ambient" aria-label="VERITÉ — Descubra sua essência">
+    <div class="hb-bg" data-hb-depth="0.03" aria-hidden="true"></div>
+    <div class="hb-grid" data-hb-depth="0.05" aria-hidden="true"></div>
+    <canvas class="hb-particles" aria-hidden="true"></canvas>
+    <div class="hb-ghost" data-hb-depth="0.09" aria-hidden="true"><span>VERIT&Eacute;</span></div>
+
+    <div class="hb-inner">
+      <div class="hb-text" data-hb-depth="0.04">
+        <p class="hb-eyebrow">&mdash; A Ess&ecirc;ncia da Eleg&acirc;ncia</p>
+        <h1 class="hb-title">
+          <span class="hb-line hb-line-1">Descubra</span>
+          <span class="hb-line hb-line-2">Sua Ess&ecirc;ncia</span>
+        </h1>
+        <p class="hb-lede">&ldquo;Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.&rdquo;</p>
+        <a class="btn hb-cta" href="produtos.html">Conhe&ccedil;a a Cole&ccedil;&atilde;o <span class="hb-arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+
+      <div class="hb-media">
+        <div class="hb-aura" data-hb-depth="0.2" aria-hidden="true"></div>
+        <div class="hb-mist" aria-hidden="true"><i></i><i></i></div>
+        <div class="hb-media-inner" data-hb-depth="0.26">
+          <div class="hb-bottle-enter">
+            <div class="hb-bottle-frame">
+              <img class="hb-bottle" src="assets/img/hero-frasco.png" alt="Perfume VERIT&Eacute; Eau de Parfum 40 ml" width="300" height="528" fetchpriority="high" decoding="async"/>
+              <span class="hb-sweep" aria-hidden="true"></span>
+              <span class="hb-reflection" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="emblem-wrap emblem-wrap-full">
-      <img data-logo="full" src="assets/img/verite-logo-full.webp" alt="VERITÉ Perfumes"/>
-    </div>
-    <h1 class="sr-only">VERITÉ</h1>
-    <p class="slogan" data-content-key="slogan">Sua essência. Sua presença.</p>
-    <p class="sub" data-content-key="hero_sub">Perfumes criados para deixar uma assinatura inesquecível.</p>
-    <div class="hairline sweep" aria-hidden="true" style="margin-top:2rem;"></div>
-    <div class="hero-cta">
-      <a class="btn" href="produtos.html">Conhecer Perfumes</a>
-      <a class="btn btn-ghost" href="produtos.html?colecao=lancamentos">Ver Lançamentos</a>
-    </div>
+
     <div class="scroll-cue" aria-hidden="true"></div>
   </section>
 
@@ -411,28 +430,28 @@
       <div class="section-head reveal">
         <p class="eyebrow">Área Exclusiva</p>
         <h2>Clube Verité</h2>
-        <p class="sub">Um espaço reservado para quem escolheu fazer parte da nossa história.</p>
+        <p class="sub">Um espaço para quem decidiu fazer parte da nossa história.</p>
       </div>
       <div class="clube-home-grid reveal">
         <div class="clube-home-item">
           <span class="clube-home-num">01</span>
           <h3>Pontos a cada compra</h3>
-          <p>Acumule pontos e troque por benefícios reais dentro do Clube.</p>
+          <p>Acumule pontos e troque por benefícios reais no Clube.</p>
         </div>
         <div class="clube-home-item">
           <span class="clube-home-num">02</span>
           <h3>Cupons exclusivos</h3>
-          <p>Descontos liberados só para quem faz parte, como o de boas-vindas.</p>
+          <p>Cupons liberados só para quem faz parte — incluindo um de boas-vindas.</p>
         </div>
         <div class="clube-home-item">
           <span class="clube-home-num">03</span>
           <h3>Produtos exclusivos</h3>
-          <p>Fragrâncias e edições reservadas apenas para membros do Clube.</p>
+          <p>Fragrâncias e edições reservadas para membros do Clube.</p>
         </div>
         <div class="clube-home-item">
           <span class="clube-home-num">04</span>
           <h3>Acesso antecipado</h3>
-          <p>Conheça lançamentos e novidades antes de todo mundo.</p>
+          <p>Fique por dentro dos lançamentos antes de todo mundo.</p>
         </div>
       </div>
       <div class="hero-cta reveal" style="justify-content:center; margin-top:3rem;">
@@ -446,7 +465,7 @@
     <div class="wrap essencia-mini-wrap">
       <p class="eyebrow reveal">A Marca</p>
       <h2 class="reveal">A Essência Verité</h2>
-      <p class="lead reveal">Fragrâncias criadas para transformar presença em memória. Cada frasco carrega autenticidade, elegância e uma exclusividade que não se copia — se sente.</p>
+      <p class="lead reveal">Fragrâncias pensadas para virar memória, não só perfume. Cada frasco carrega autenticidade e elegância que dá pra sentir, não pra copiar.</p>
       <a class="btn reveal" href="sobre.html">Conhecer a Verité</a>
     </div>
   </section>
@@ -462,7 +481,7 @@
     <div class="wrap">
       <p class="eyebrow reveal">Acesso Antecipado</p>
       <h2 class="reveal" data-content-key="lancamento_title">Seja um dos primeiros a conhecer as próximas criações da VERITÉ.</h2>
-      <p class="sub reveal" data-content-key="lancamento_sub">Um convite discreto para conhecer a VERITÉ antes de todos.</p>
+      <p class="sub reveal" data-content-key="lancamento_sub">Um convite discreto, antes de todo mundo.</p>
       <div data-form-container>
         <form class="stack-form reveal" id="launch-form" data-submit-endpoint="/api/public/waitlist" novalidate>
           <div class="field">
@@ -573,6 +592,7 @@
 
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
+<script src="assets/js/hero-banner.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/favorites.js"></script>
 <script src="assets/js/cart.js"></script>
