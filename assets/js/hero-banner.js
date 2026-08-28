@@ -37,6 +37,7 @@
     ready();
     initParallax();
     initParticles();
+    initBottleInteract();
   }
 
   // revela o banner logo após o primeiro frame
@@ -153,5 +154,121 @@
     size();
     window.addEventListener('resize', size, {passive:true});
     window.requestAnimationFrame(tick);
+  }
+
+  /* ---------------------------------------------------------------------
+     Interação com o frasco.
+     Desktop (ponteiro fino): o frasco inclina em 3D acompanhando o
+     cursor; clicar e arrastar "gira" o frasco (rotateY limitado) e ele
+     volta sozinho ao soltar; um brilho especular acompanha o ponteiro e
+     uma luz de recorte quente acende enquanto se segura. Tudo com lerp,
+     só transform/opacity.
+     Celular (ponteiro grosso): tocar no frasco dá um balanço curto e
+     elegante (keyframe CSS). Nada depende de giroscópio.
+     Desliga inteiro em prefers-reduced-motion (go() nem é chamado).
+     --------------------------------------------------------------------- */
+  function initBottleInteract(){
+    var tilt  = hero.querySelector('.hb-bottle-tilt');
+    var media = hero.querySelector('.hb-media');
+    var frame = hero.querySelector('.hb-bottle-frame');
+    var shine = hero.querySelector('.hb-shine');
+    if(!tilt || !frame) return;
+
+    var fine = !window.matchMedia || window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    /* ---- toque: balanço curto ---- */
+    if(!fine){
+      tilt.addEventListener('click', function(){
+        tilt.classList.remove('is-tap');
+        void tilt.offsetWidth;               /* reflow p/ reiniciar a animação */
+        tilt.classList.add('is-tap');
+        if(media) media.classList.add('is-bottle-live');
+        window.setTimeout(function(){ if(media) media.classList.remove('is-bottle-live'); }, 900);
+      });
+      tilt.addEventListener('animationend', function(){ tilt.classList.remove('is-tap'); });
+      return;
+    }
+
+    /* ---- desktop: tilt 3D + arrasto ---- */
+    var rx = 0, ry = 0, trx = 0, tryy = 0;   /* rotX/rotY atual e alvo */
+    var sx = 0, tsx = 0, sOp = 0;            /* brilho: posição (%) e opacidade */
+    var raf = 0;
+    var inside = false, dragging = false, dragId = null, dragStartX = 0, dragBaseRy = 0;
+
+    function schedule(){ if(!raf) raf = window.requestAnimationFrame(loop); }
+
+    function aim(clientX, clientY){
+      var r = frame.getBoundingClientRect();
+      var nx = (clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+      var ny = (clientY - (r.top  + r.height / 2)) / (r.height / 2);
+      nx = nx < -1.4 ? -1.4 : nx > 1.4 ? 1.4 : nx;
+      ny = ny < -1.4 ? -1.4 : ny > 1.4 ? 1.4 : ny;
+      if(!dragging){ trx = -ny * 7; tryy = nx * 12; }
+      tsx = nx * 26;
+    }
+
+    hero.addEventListener('pointermove', function(e){
+      if(e.pointerType === 'touch') return;
+      aim(e.clientX, e.clientY);
+      if(dragging){
+        var dx = e.clientX - dragStartX;
+        tryy = Math.max(-24, Math.min(24, dragBaseRy + dx * 0.28));
+        trx = 0;
+      }
+      schedule();
+    }, {passive:true});
+
+    hero.addEventListener('pointerleave', function(){
+      trx = 0; tryy = 0; tsx = 0; schedule();
+    });
+
+    tilt.addEventListener('pointerenter', function(){
+      inside = true;
+      if(media) media.classList.add('is-bottle-live');
+      schedule();
+    });
+    tilt.addEventListener('pointerleave', function(){
+      inside = false;
+      if(!dragging && media) media.classList.remove('is-bottle-live');
+      schedule();
+    });
+
+    tilt.addEventListener('pointerdown', function(e){
+      if(e.pointerType === 'touch') return;
+      dragging = true; dragId = e.pointerId;
+      dragStartX = e.clientX; dragBaseRy = tryy;
+      tilt.classList.add('is-grabbing');
+      try { tilt.setPointerCapture(e.pointerId); } catch(_){}
+    });
+    function endDrag(){
+      if(!dragging) return;
+      dragging = false;
+      tilt.classList.remove('is-grabbing');
+      try { tilt.releasePointerCapture(dragId); } catch(_){}
+      if(!inside && media) media.classList.remove('is-bottle-live');
+      schedule();
+    }
+    tilt.addEventListener('pointerup', endDrag);
+    tilt.addEventListener('pointercancel', endDrag);
+
+    function loop(){
+      raf = 0;
+      rx  += (trx  - rx)  * 0.12;
+      ry  += (tryy - ry)  * 0.12;
+      sx  += (tsx  - sx)  * 0.12;
+      tilt.style.transform =
+        'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+      if(shine){
+        var tOp = (inside || dragging) ? 0.9 : 0;
+        sOp += (tOp - sOp) * 0.12;
+        shine.style.opacity = sOp.toFixed(3);
+        shine.style.transform = 'translateX(calc(-50% + ' + sx.toFixed(1) + '%))';
+      }
+      var settling =
+        Math.abs(trx - rx) > 0.01 || Math.abs(tryy - ry) > 0.01 ||
+        Math.abs(tsx - sx) > 0.05 ||
+        (shine && Math.abs(((inside || dragging) ? 0.9 : 0) - sOp) > 0.01);
+      if(settling || dragging || inside) schedule();
+    }
   }
 })();

@@ -1936,6 +1936,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
      reflexo quente por trás dão a integração com a cena. Frasco, tampa,
      rótulo e proporções permanecem intactos — nunca mascarado. */
   filter:drop-shadow(0 30px 44px rgba(0,0,0,.5)) drop-shadow(0 8px 16px rgba(0,0,0,.35));
+  transition:filter .45s ease;
 }
 /* sombra de contato escura — aterra o produto na cena */
 #inicio .hb-floor{
@@ -1958,7 +1959,40 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   background:linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.05) 55%, transparent);
   filter:blur(4px); mix-blend-mode:screen;
   transform:rotate(7deg); opacity:.4; z-index:2; pointer-events:none;
+  transition:opacity .4s ease;
 }
+/* reflexo especular que acompanha o cursor quando se interage com o frasco */
+#inicio .hb-shine{
+  position:absolute; left:50%; top:12%; width:30%; height:58%;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(ellipse at 50% 32%, rgba(255,255,255,.22), rgba(255,255,255,.05) 55%, transparent 72%);
+  filter:blur(7px); mix-blend-mode:screen;
+  opacity:0; z-index:2; pointer-events:none;
+}
+/* camada de interação 3D do frasco (tilt + arrasto). O flutuar contínuo
+   segue no .hb-bottle-frame; a entrada segue no .hb-bottle-enter — cada
+   transform em seu próprio elemento, sem conflito. */
+#inicio .hb-bottle-tilt{
+  position:relative;
+  will-change:transform;
+  cursor:grab; -webkit-tap-highlight-color:transparent;
+}
+#inicio .hb-bottle-tilt.is-grabbing{ cursor:grabbing; }
+/* estado "na mão": luz de recorte quente no vidro + brilho estático mais presente */
+#inicio .hb-media.is-bottle-live .hb-bottle{
+  filter:drop-shadow(0 30px 44px rgba(0,0,0,.5)) drop-shadow(0 10px 18px rgba(0,0,0,.35)) drop-shadow(0 0 24px rgba(233,204,150,.30));
+}
+#inicio .hb-media.is-bottle-live .hb-glass{ opacity:.62; }
+/* toque no celular: leve balanço elegante */
+@keyframes hb-bottle-tap{
+  0%{ transform:rotate(0) scale(1); }
+  22%{ transform:rotate(-2.4deg) scale(1.012); }
+  55%{ transform:rotate(1.6deg) scale(1.006); }
+  80%{ transform:rotate(-.7deg) scale(1.002); }
+  100%{ transform:rotate(0) scale(1); }
+}
+#inicio .hb-bottle-tilt.is-tap{ animation:hb-bottle-tap .7s cubic-bezier(.3,.7,.3,1); }
 /* luz que percorre o vidro (animada) */
 #inicio .hb-sweep{
   position:absolute; left:14%; top:6%; width:72%; height:86%;
@@ -2052,6 +2086,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-bottle-enter{ opacity:1; transform:none; }
   #inicio .hb-glow{ opacity:.9; }
   #inicio .hb-aura{ opacity:.8; }
+  #inicio .hb-bottle-tilt{ cursor:default; }
 }
 
 /* --- responsivo --- */
