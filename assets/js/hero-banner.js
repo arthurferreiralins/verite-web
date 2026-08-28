@@ -208,8 +208,8 @@
       var ny = (y - (r.top  + r.height / 2)) / (r.height / 2);
       nx = nx < -1.5 ? -1.5 : nx > 1.5 ? 1.5 : nx;
       ny = ny < -1.5 ? -1.5 : ny > 1.5 ? 1.5 : ny;
-      trx = -ny * 10;
-      tryy = nx * 17;
+      trx = -ny * 11;
+      tryy = nx * 21;
       tsx = nx * 34;
     }
 
@@ -302,15 +302,17 @@
       sc += (tsc - sc) * 0.22;
       sx += (tsx - sx) * 0.26;
 
+      /* a perspectiva está no .hb-bottle-enter (CSS); aqui só o giro 3D */
       tilt.style.transform =
-        'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) +
+        'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) +
         'deg) scale(' + sc.toFixed(3) + ')';
 
       if(shine){
         var tOp = (inside || dragging || Math.abs(vry) > 0.5) ? 0.92 : 0;
         sOp += (tOp - sOp) * 0.26;
         shine.style.opacity = sOp.toFixed(3);
-        shine.style.transform = 'translateX(calc(-50% + ' + sx.toFixed(1) + '%))';
+        shine.style.transform =
+          'translateX(calc(-50% + ' + sx.toFixed(1) + '%)) translateZ(22px)';
       }
 
       var busy = dragging || inside ||
