@@ -121,6 +121,17 @@
     if(p.volume) metaParts.push(p.volume);
     if(metaParts.length) body.appendChild(el('p', 'product-tile-volume', metaParts.join(' · ')));
 
+    if(p.shortDescription){
+      body.appendChild(el('p', 'product-tile-desc', p.shortDescription));
+    }
+    var noteParts = [p.notesTop, p.notesHeart, p.notesBase].filter(Boolean);
+    if(!noteParts.length && p.notes){
+      noteParts = Array.isArray(p.notes) ? p.notes.slice(0, 3) : [p.notes];
+    }
+    if(noteParts.length){
+      body.appendChild(el('p', 'product-tile-notes', noteParts.join(' · ')));
+    }
+
     var priceWrap = el('p', 'product-tile-price');
     if(p.salePrice != null && p.price != null && p.salePrice < p.price){
       var was = el('s', 'product-tile-price-was', money(p.price, p.currency));
@@ -148,7 +159,7 @@
     } else if(p.inStock === false){
       actions.appendChild(el('p', 'product-tile-oos', 'Esgotado'));
     }
-    var viewLink = el('a', 'product-tile-view', 'Ver perfume');
+    var viewLink = el('a', 'product-tile-view', 'Ver fragrância');
     viewLink.href = link.href;
     actions.appendChild(viewLink);
     card.appendChild(actions);

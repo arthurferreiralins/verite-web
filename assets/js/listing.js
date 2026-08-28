@@ -44,6 +44,19 @@
     var catalog = VP.all();
     var filters = VP.readFilters();
 
+    /* filtros rápidos do banner: marca o ativo conforme a querystring */
+    (function markQuickChips(){
+      var chips = document.querySelectorAll('.catalog-chip');
+      if(!chips.length) return;
+      var active = filters.busca ? null
+        : filters.colecao === 'lancamentos' ? 'lancamentos'
+        : filters.genero === 'feminino' ? 'feminino'
+        : filters.genero === 'masculino' ? 'masculino'
+        : (!filters.genero && !filters.colecao && !filters.categoria && !filters.familia) ? 'todos'
+        : null;
+      chips.forEach(function(c){ c.classList.toggle('is-active', c.getAttribute('data-chip') === active); });
+    })();
+
     var titleEl = document.getElementById('listing-title');
     var countEl = document.getElementById('listing-count');
     var gridEl = document.getElementById('listing-grid');

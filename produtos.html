@@ -261,21 +261,36 @@
 <main>
 
   <!-- ============ Topo da página ============ -->
-  <section id="top" class="page-hero has-ambient">
+  <section id="top" class="page-hero catalog-hero has-ambient">
     <div class="ambient" data-parallax="20" aria-hidden="true">
       <div class="ambient-orb orb-a" style="width:320px;height:320px;top:-70px;right:8%;"></div>
       <div class="ambient-orb orb-b" style="width:260px;height:260px;bottom:-60px;left:6%;"></div>
       <div class="ambient-particles" data-count="10"></div>
     </div>
-    <div class="emblem-wrap">
-      <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+    <div class="catalog-hero-inner">
+      <div class="emblem-wrap">
+        <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+      </div>
+      <p class="catalog-hero-kicker">A Cole&ccedil;&atilde;o</p>
+      <h1 id="listing-title" class="catalog-hero-title">Nossos Perfumes</h1>
+      <p class="catalog-hero-sub">Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.</p>
+      <form class="catalog-search" action="produtos.html" method="get" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="search" name="busca" placeholder="Buscar perfume pelo nome" aria-label="Buscar perfume pelo nome" autocomplete="off"/>
+        <button type="submit" class="catalog-search-btn">Buscar</button>
+      </form>
+      <div class="catalog-quick-filters" role="group" aria-label="Filtros r&aacute;pidos">
+        <a class="catalog-chip" data-chip="todos" href="produtos.html">Todos</a>
+        <a class="catalog-chip" data-chip="feminino" href="produtos.html?genero=feminino">Femininos</a>
+        <a class="catalog-chip" data-chip="masculino" href="produtos.html?genero=masculino">Masculinos</a>
+        <a class="catalog-chip" data-chip="lancamentos" href="produtos.html?colecao=lancamentos">Lan&ccedil;amentos</a>
+      </div>
     </div>
-    <h1 id="listing-title">Nossos Perfumes</h1>
-    <div class="hairline sweep" aria-hidden="true" style="margin-top:1.8rem;"></div>
+    <div class="hairline sweep" aria-hidden="true" style="margin-top:2.6rem;"></div>
   </section>
 
   <!-- ============ Listagem: filtros + ordenação + grade ============ -->
-  <section id="listing" class="section section-light">
+  <section id="listing" class="section section-dark">
     <div class="wrap">
       <div class="listing-toolbar">
         <button type="button" class="btn btn-ghost listing-filter-toggle" id="listing-filter-toggle" aria-expanded="false" aria-controls="listing-filters">Filtros</button>
@@ -332,6 +347,28 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ Kits Verité ============ -->
+  <section id="kits-verite" class="section section-dark">
+    <div class="wrap">
+      <div class="section-head kits-head reveal">
+        <span class="kits-kicker" aria-hidden="true"></span>
+        <h2 class="kits-title"><span>Kits</span><span class="gold">Verit&eacute;</span></h2>
+        <p class="kits-sub">A cole&ccedil;&atilde;o reunida numa caixa &mdash; para presentear ou come&ccedil;ar a sua.</p>
+      </div>
+      <a class="kits-card reveal" href="produtos.html?categoria=kits">
+        <span class="kits-card-media">
+          <img src="assets/img/frasco-kits.png" alt="Kit Verit&eacute; &mdash; Eau de Parfum 30 ml, 50 ml e 20 ml" width="760" height="570" loading="lazy" decoding="async" draggable="false"/>
+        </span>
+        <span class="kits-card-body">
+          <span class="kits-card-cat">V&Eacute;RIT&Eacute;</span>
+          <span class="kits-card-name">Kit Verit&eacute;</span>
+          <span class="kits-card-meta">Eau de Parfum &middot; 30 ml &middot; 50 ml &middot; 20 ml</span>
+          <span class="kits-card-cta">Ver kits <span aria-hidden="true">&rarr;</span></span>
+        </span>
+      </a>
     </div>
   </section>
 

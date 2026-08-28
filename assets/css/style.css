@@ -1345,6 +1345,197 @@ footer .watermark{
   .product-tile:hover .product-tile-actions, .product-tile:focus-within .product-tile-actions{opacity:1; transform:translateY(0);}
 }
 
+/* descrição curta + notas olfativas no card (só renderizam se o produto tiver) */
+.product-tile-desc{
+  font-size:.8rem; line-height:1.6; color:var(--sec-fg-soft); margin:.55rem 0 0;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.product-tile-notes{
+  font-size:.66rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--gold-deep); margin:.55rem 0 0; line-height:1.5;
+}
+.section-dark .product-tile-notes, .section-2 .product-tile-notes, .section-3 .product-tile-notes{ color:var(--gold-light); }
+.badge-new{ background:linear-gradient(180deg, var(--gold-light), var(--gold)); color:var(--black); letter-spacing:.14em; }
+
+/* =======================================================================
+   Catálogo (produtos.html) — banner, busca, filtros rápidos, grade
+   premium, Kits Verité. Escopo estrito nesta página (#top.catalog-hero,
+   #listing, #kits-verite); nenhuma outra página é afetada.
+   ======================================================================= */
+.catalog-hero{
+  padding:clamp(7rem, 14vh, 10rem) 1.5rem clamp(3rem, 7vh, 4.5rem);
+  background:
+    radial-gradient(ellipse 58% 46% at 50% 0%, rgba(217,189,133,.18), transparent 70%),
+    var(--black);
+}
+.catalog-hero-inner{ max-width:720px; margin:0 auto; }
+.catalog-hero .emblem-wrap{ width:56px; margin:0 auto 1.5rem; color:var(--gold); }
+.catalog-hero .emblem-wrap img{ width:100%; height:auto; display:block; }
+.catalog-hero .catalog-hero-kicker{
+  font-family:var(--font-sans); font-weight:600;
+  font-size:.66rem; letter-spacing:.34em; text-transform:uppercase; color:var(--gold);
+  margin:0 0 1rem;
+}
+.catalog-hero .catalog-hero-title{
+  font-family:var(--font-display); font-weight:500;
+  text-transform:uppercase; letter-spacing:.04em; line-height:1.02;
+  font-size:clamp(2.4rem, 6vw, 4rem); color:var(--off-white); margin:0;
+}
+.catalog-hero .catalog-hero-sub{
+  font-family:var(--font-display); font-style:italic;
+  font-size:clamp(1rem, 1.6vw, 1.2rem); line-height:1.6; color:rgba(250,249,246,.6);
+  margin:clamp(1rem, 2.4vh, 1.5rem) auto 0; max-width:42ch;
+}
+.catalog-search{
+  display:flex; align-items:center; gap:.5rem; max-width:520px;
+  margin:clamp(2.2rem, 5vh, 3.2rem) auto 0;
+  border:1px solid rgba(217,189,133,.28); border-radius:3px;
+  background:rgba(255,255,255,.03); padding:.4rem .4rem .4rem 1rem;
+  transition:border-color .35s ease, box-shadow .35s ease;
+}
+.catalog-search:focus-within{ border-color:var(--gold-light); box-shadow:0 0 32px -12px rgba(217,189,133,.4); }
+.catalog-search > svg{ width:18px; height:18px; color:var(--gold); flex:none; }
+.catalog-search input{
+  flex:1; min-width:0; background:transparent; border:none; outline:none;
+  color:var(--off-white); font-family:var(--font-sans); font-size:.92rem;
+  padding:.7rem 0; letter-spacing:.02em;
+}
+.catalog-search input::placeholder{ color:rgba(250,249,246,.4); }
+.catalog-search-btn{
+  flex:none; border:none; cursor:pointer; background:var(--gold); color:var(--black);
+  font-family:var(--font-sans); font-weight:600;
+  font-size:.62rem; letter-spacing:.18em; text-transform:uppercase;
+  padding:.85rem 1.35rem; border-radius:2px; transition:background-color .3s ease;
+}
+.catalog-search-btn:hover{ background:var(--gold-light); }
+.catalog-quick-filters{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem;
+  margin:clamp(1.6rem, 4vh, 2.4rem) auto 0;
+}
+.catalog-chip{
+  padding:.62rem 1.35rem; border:1px solid rgba(217,189,133,.22); border-radius:999px;
+  font-family:var(--font-sans); font-weight:600;
+  font-size:.6rem; letter-spacing:.16em; text-transform:uppercase;
+  color:rgba(250,249,246,.55); text-decoration:none;
+  transition:border-color .3s ease, color .3s ease, background-color .3s ease;
+}
+.catalog-chip:hover{ border-color:rgba(217,189,133,.5); color:var(--off-white); }
+.catalog-chip.is-active{ background:var(--gold); border-color:var(--gold); color:var(--black); }
+@media (max-width:560px){
+  .catalog-search{ flex-wrap:wrap; padding:.55rem; }
+  .catalog-search > svg{ margin-left:.4rem; }
+  .catalog-search input{ flex-basis:100%; order:2; padding:.55rem .4rem; }
+  .catalog-search-btn{ flex:1; order:3; }
+}
+
+/* --- listagem em tom escuro premium --- */
+#listing{
+  background:
+    radial-gradient(78% 38% at 50% -3%, rgba(217,189,133,.1), transparent 60%),
+    var(--black);
+}
+#listing .listing-count{ color:rgba(250,249,246,.5); }
+#listing .listing-sort,
+#listing .listing-filter-price input,
+#listing .listing-filter-select{
+  background:rgba(255,255,255,.03); color:var(--off-white);
+  border-color:rgba(217,189,133,.2);
+}
+#listing .listing-filter-group h4{ color:var(--gold-light); }
+#listing .listing-filter-option{ color:rgba(250,249,246,.6); }
+#listing .listing-clear{ color:var(--gold-light); }
+#listing-grid{
+  grid-template-columns:repeat(auto-fill, minmax(min(100%, 262px), 1fr));
+  gap:clamp(1.8rem, 3vw, 2.8rem);
+}
+#listing-grid .product-tile{ transition:transform .5s cubic-bezier(.2,.7,.2,1); }
+#listing-grid .product-tile-media{
+  aspect-ratio:4/5; border-color:rgba(217,189,133,.1); border-radius:4px;
+  background:radial-gradient(circle at 50% 64%, rgba(217,189,133,.1), transparent 70%), #0c0a09;
+  transition:border-color .5s ease, box-shadow .5s ease;
+}
+#listing-grid .product-tile-media img{ object-fit:contain; padding:9%; transition:transform .6s cubic-bezier(.2,.7,.2,1); }
+@media (hover:hover) and (pointer:fine){
+  #listing-grid .product-tile:hover{ transform:translateY(-8px); }
+  #listing-grid .product-tile:hover .product-tile-media{
+    border-color:rgba(217,189,133,.34);
+    box-shadow:0 40px 72px -34px rgba(0,0,0,.72), 0 0 52px -16px rgba(217,189,133,.18);
+  }
+  #listing-grid .product-tile:hover .product-tile-media img{ transform:scale(1.05); }
+}
+#listing-empty{
+  max-width:460px; padding:clamp(3rem, 7vh, 4.5rem) 2rem;
+  border-color:rgba(217,189,133,.14); border-radius:4px;
+}
+#listing-empty .icon{ color:var(--gold-light); }
+
+/* --- Kits Verité --- */
+#kits-verite{ padding-block:clamp(5rem, 11vh, 8rem); }
+#kits-verite .kits-head{ max-width:640px; margin:0 auto clamp(2.6rem, 6vh, 4rem); text-align:center; }
+#kits-verite .kits-kicker{
+  display:block; width:54px; height:2px; margin:0 auto 1.4rem;
+  background:linear-gradient(90deg, transparent, var(--gold-light), transparent);
+}
+#kits-verite .kits-title{
+  margin:0; font-family:var(--font-display); font-weight:500;
+  text-transform:uppercase; line-height:1.04; letter-spacing:.04em;
+  font-size:clamp(2rem, 5vw, 3.2rem);
+}
+#kits-verite .kits-title span{ display:block; color:var(--off-white); letter-spacing:.08em; }
+#kits-verite .kits-title .gold{
+  background:linear-gradient(180deg, var(--gold-light), var(--gold-deep));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+#kits-verite .kits-sub{
+  margin:1.2rem auto 0; max-width:44ch;
+  font-family:var(--font-display); font-style:italic;
+  font-size:clamp(1rem, 1.6vw, 1.15rem); color:rgba(250,249,246,.58);
+}
+#kits-verite .kits-card{
+  display:grid; grid-template-columns:1.05fr .95fr; align-items:center;
+  gap:clamp(1.5rem, 4vw, 3.5rem); max-width:900px; margin:0 auto;
+  padding:clamp(1.8rem, 4vw, 3rem);
+  border:1px solid rgba(217,189,133,.12); border-radius:6px;
+  background:
+    radial-gradient(88% 78% at 28% 50%, rgba(217,189,133,.1), transparent 62%),
+    linear-gradient(160deg, #17130f, var(--black));
+  text-decoration:none; color:var(--off-white);
+  transition:border-color .5s ease, box-shadow .5s ease, transform .5s cubic-bezier(.2,.7,.2,1);
+}
+#kits-verite .kits-card-media img{
+  width:100%; height:auto; display:block;
+  filter:drop-shadow(0 26px 34px rgba(0,0,0,.55));
+  transition:transform .5s cubic-bezier(.2,.7,.2,1);
+}
+#kits-verite .kits-card-body{ display:flex; flex-direction:column; gap:.5rem; }
+#kits-verite .kits-card-cat{
+  font-family:var(--font-sans); font-weight:600;
+  font-size:.6rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold);
+}
+#kits-verite .kits-card-name{
+  font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.5rem, 2.6vw, 2rem); color:var(--off-white);
+}
+#kits-verite .kits-card-meta{
+  font-family:var(--font-sans); font-size:.8rem; letter-spacing:.04em; color:rgba(250,249,246,.5);
+}
+#kits-verite .kits-card-cta{
+  margin-top:.8rem; display:inline-flex; align-items:center; gap:.5em;
+  font-family:var(--font-sans); font-weight:600;
+  font-size:.64rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-light);
+}
+@media (hover:hover) and (pointer:fine){
+  #kits-verite .kits-card:hover{
+    transform:translateY(-6px); border-color:rgba(217,189,133,.3);
+    box-shadow:0 44px 80px -38px rgba(0,0,0,.75), 0 0 60px -18px rgba(217,189,133,.16);
+  }
+  #kits-verite .kits-card:hover .kits-card-media img{ transform:scale(1.04); }
+}
+@media (max-width:640px){
+  #kits-verite .kits-card{ grid-template-columns:1fr; text-align:center; }
+  #kits-verite .kits-card-body{ align-items:center; }
+}
+
 /* =======================================================================
    Produto (individual) — gallery + info two-column, related grid.
    Populated by assets/js/product-detail.js; empty state is what renders
