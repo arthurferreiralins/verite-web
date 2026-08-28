@@ -2106,6 +2106,108 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 .clube-home-item h3{font-family:var(--font-display); font-size:1.1rem; margin-bottom:.5rem; color:var(--off-white);}
 .clube-home-item p{font-size:.86rem; color:#b7b2a8; line-height:1.7; margin:0;}
 
+/* --- #clube-home premium (escopo estrito nesta seção) --- */
+#clube-home{ padding-block:clamp(6rem, 14vh, 10rem); }
+#clube-home::before{
+  content:""; display:block; position:absolute; z-index:0; pointer-events:none;
+  left:50%; top:0; transform:translateX(-50%);
+  width:min(900px, 92vw); height:300px;
+  background:radial-gradient(ellipse at 50% 0%, rgba(217,189,133,.13), transparent 70%);
+  filter:blur(30px);
+}
+#clube-home .wrap{ position:relative; z-index:2; }
+
+#clube-home .clube-head{ max-width:720px; margin:0 auto clamp(3rem, 7vh, 5rem); }
+#clube-home .clube-head .eyebrow{ color:var(--gold); }
+#clube-home .clube-title{
+  margin:.85rem 0 0; font-family:var(--font-display); font-weight:500;
+  text-transform:uppercase; line-height:1.02; letter-spacing:.03em;
+  font-size:clamp(2.2rem, 5.5vw, 3.8rem);
+}
+#clube-home .clube-title-1{ display:block; color:var(--off-white); letter-spacing:.08em; }
+#clube-home .clube-title-2{
+  display:block; margin-top:.02em;
+  background:linear-gradient(180deg, var(--gold-light), #d3af71 48%, var(--gold-deep));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 34px rgba(217,189,133,.26));
+}
+#clube-home .clube-head .sub{
+  margin:clamp(1rem, 2.4vh, 1.6rem) auto 0; max-width:46ch;
+  font-family:var(--font-display); font-style:italic;
+  font-size:clamp(1rem, 1.6vw, 1.18rem); line-height:1.6; color:rgba(250,249,246,.58);
+}
+
+#clube-home .clube-home-grid{ gap:clamp(1.4rem, 3vw, 2.2rem); max-width:1060px; margin-top:0; }
+#clube-home .clube-home-item{
+  padding:clamp(1.9rem, 3vw, 2.5rem) clamp(1.6rem, 2.4vw, 2.1rem);
+  border:1px solid rgba(217,189,133,.1); border-radius:4px;
+  background:linear-gradient(168deg, #17130f, #0c0a09 65%, var(--black));
+  position:relative; overflow:hidden;
+  transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1), border-color .5s ease, box-shadow .5s ease;
+}
+#clube-home .clube-home-item::before{        /* fio de luz dourada no topo do card */
+  content:""; position:absolute; left:0; right:0; top:0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(217,189,133,.42), transparent);
+  opacity:.5; transition:opacity .5s ease;
+}
+@media (hover:hover) and (pointer:fine){
+  #clube-home .clube-home-item:hover{
+    border-color:rgba(217,189,133,.28); transform:translateY(-6px);
+    box-shadow:0 30px 56px -30px rgba(0,0,0,.7), 0 0 42px -14px rgba(217,189,133,.15);
+    transition:transform .5s cubic-bezier(.2,.7,.2,1), border-color .5s ease, box-shadow .5s ease;
+    transition-delay:0s;
+  }
+  #clube-home .clube-home-item:hover::before{ opacity:1; }
+  #clube-home .clube-home-item:hover .clube-home-num{ transform:translateY(-2px); }
+}
+#clube-home .clube-home-num{
+  display:block; font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.8rem, 3vw, 2.4rem); line-height:1; color:transparent;
+  background:linear-gradient(180deg, var(--gold-light), var(--gold-deep));
+  -webkit-background-clip:text; background-clip:text;
+  margin-bottom:clamp(1rem, 2.4vh, 1.5rem);
+  transition:transform .4s cubic-bezier(.2,.7,.2,1);
+}
+#clube-home .clube-home-item h3{
+  font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.1rem, 1.7vw, 1.28rem); line-height:1.25;
+  margin:0 0 .55rem; color:var(--off-white);
+}
+#clube-home .clube-home-item p{
+  font-family:var(--font-sans); font-size:.82rem; line-height:1.75;
+  color:rgba(250,249,246,.5); margin:0;
+}
+#clube-home .clube-home-cta{ margin-top:clamp(3rem, 7vh, 4.5rem); }
+
+/* reveal encadeado: cabeçalho (título → descrição) e cards um a um */
+:where(html.js) #clube-home .clube-head.reveal{ opacity:1; transform:none; }
+:where(html.js) #clube-home .clube-head .eyebrow,
+:where(html.js) #clube-home .clube-head .clube-title,
+:where(html.js) #clube-home .clube-head .sub{
+  opacity:0; transform:translateY(14px);
+  transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1);
+}
+#clube-home .clube-head.reveal.in .eyebrow{ opacity:1; transform:none; }
+#clube-home .clube-head.reveal.in .clube-title{ opacity:1; transform:none; transition-delay:.12s; }
+#clube-home .clube-head.reveal.in .sub{ opacity:1; transform:none; transition-delay:.26s; }
+
+:where(html.js) #clube-home .clube-home-item.reveal{ opacity:0; transform:translateY(26px); }
+#clube-home .clube-home-item.reveal.in{ opacity:1; transform:translateY(0); }
+#clube-home .clube-home-grid .clube-home-item:nth-child(2){ transition-delay:.08s,.08s,0s,0s; }
+#clube-home .clube-home-grid .clube-home-item:nth-child(3){ transition-delay:.16s,.16s,0s,0s; }
+#clube-home .clube-home-grid .clube-home-item:nth-child(4){ transition-delay:.24s,.24s,0s,0s; }
+
+@media (max-width:560px){
+  #clube-home{ padding-block:clamp(4.2rem, 12vh, 7rem); }
+  #clube-home .clube-home-item:hover{ box-shadow:none; }
+}
+@media (prefers-reduced-motion:reduce){
+  :where(html.js) #clube-home .clube-home-item.reveal,
+  :where(html.js) #clube-home .clube-head .eyebrow,
+  :where(html.js) #clube-home .clube-head .clube-title,
+  :where(html.js) #clube-home .clube-head .sub{ opacity:1; transform:none; }
+}
+
 /* =======================================================================
    Toast de feedback (assets/js/main.js — window.VeriteToast)
    ======================================================================= */
