@@ -1794,29 +1794,33 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   text-align:left; padding:0; overflow:hidden; isolation:isolate;
   background:
-    radial-gradient(42% 48% at 20% 32%, rgba(177,138,79,.10), transparent 70%),
-    radial-gradient(46% 60% at 84% 60%, rgba(177,138,79,.12), transparent 72%),
-    radial-gradient(125% 125% at 50% 0%, #131011, var(--black) 60%);
+    radial-gradient(38% 44% at 18% 28%, rgba(177,138,79,.12), transparent 68%),
+    radial-gradient(44% 58% at 86% 58%, rgba(198,158,96,.14), transparent 70%),
+    radial-gradient(30% 40% at 62% 110%, rgba(177,138,79,.10), transparent 72%),
+    radial-gradient(130% 120% at 50% 0%, #14100f, var(--black) 58%);
 }
 
 /* --- camadas de fundo --- */
 #inicio .hb-bg{
   position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:radial-gradient(58% 46% at 50% 116%, rgba(177,138,79,.07), transparent 70%);
+  background:
+    radial-gradient(52% 42% at 50% 116%, rgba(177,138,79,.09), transparent 70%),
+    radial-gradient(40% 50% at 82% 40%, rgba(217,189,133,.05), transparent 66%);
+  opacity:0; transition:opacity 1.1s ease;
 }
 #inicio .hb-grid{
   position:absolute; inset:-10px; z-index:0; pointer-events:none;
   background-image:
-    repeating-linear-gradient(0deg, transparent 0 86px, rgba(177,138,79,.05) 86px 87px),
-    repeating-linear-gradient(90deg, transparent 0 86px, rgba(177,138,79,.05) 86px 87px);
+    repeating-linear-gradient(0deg, transparent 0 86px, rgba(177,138,79,.045) 86px 87px),
+    repeating-linear-gradient(90deg, transparent 0 86px, rgba(177,138,79,.045) 86px 87px);
   -webkit-mask-image:radial-gradient(78% 78% at 52% 44%, #000 16%, transparent 78%);
   mask-image:radial-gradient(78% 78% at 52% 44%, #000 16%, transparent 78%);
-  opacity:0; transition:opacity 1s ease .15s;
+  opacity:0; transition:opacity 1.1s ease .2s;
 }
 #inicio .hb-particles{
   position:absolute; inset:0; z-index:0; width:100%; height:100%;
   pointer-events:none; mix-blend-mode:screen; opacity:0;
-  transition:opacity 1.2s ease .3s;
+  transition:opacity 1.4s ease .5s;
 }
 
 /* --- "VERITÉ" gigante ao fundo --- */
@@ -1828,9 +1832,11 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 #inicio .hb-ghost span{
   font-family:var(--font-display); font-weight:500;
-  font-size:clamp(7rem, 26vw, 20rem); line-height:1; letter-spacing:.02em;
-  white-space:nowrap; color:var(--gold);
-  opacity:0; transform:scale(1.06);
+  font-size:clamp(7rem, 27vw, 21rem); line-height:1; letter-spacing:.02em;
+  white-space:nowrap;
+  background:linear-gradient(180deg, rgba(217,189,133,.9), rgba(177,138,79,.5));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  opacity:0; transform:scale(1.08);
 }
 
 /* --- grade interna do conteúdo --- */
@@ -1839,39 +1845,56 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   width:100%; max-width:1240px; margin:0 auto;
   padding:clamp(5rem, 12vh, 8rem) clamp(1.5rem, 6vw, 5.5rem) clamp(4rem, 9vh, 6rem);
   display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
-  align-items:center; gap:clamp(1.5rem, 5vw, 4rem);
+  align-items:center; gap:clamp(1.5rem, 5vw, 4.5rem);
 }
 
 /* --- coluna esquerda: texto --- */
 #inicio .hb-text{ will-change:transform; }
 #inicio .hb-eyebrow{
-  margin:0 0 clamp(1rem, 2.4vh, 1.7rem);
+  margin:0 0 clamp(1.1rem, 2.6vh, 1.8rem);
   font-family:var(--font-sans); font-weight:600;
-  font-size:clamp(.66rem, .9vw, .78rem); letter-spacing:.34em; text-transform:uppercase;
-  color:var(--gold);
+  font-size:clamp(.66rem, .9vw, .78rem); letter-spacing:.36em; text-transform:uppercase;
+  color:var(--gold-light);
 }
 #inicio .hb-title{
   margin:0; animation:none;
   font-family:var(--font-display); font-weight:500;
-  font-size:clamp(2.9rem, 8.6vw, 6.4rem); line-height:.98; letter-spacing:.01em;
-  text-transform:uppercase; text-shadow:0 0 60px rgba(177,138,79,.22);
+  font-size:clamp(3rem, 8.8vw, 6.6rem); line-height:.94; letter-spacing:.015em;
+  text-transform:uppercase; text-wrap:balance;
 }
 #inicio .hb-line{ display:block; }
-#inicio .hb-line-1{ color:var(--off-white); }
+#inicio .hb-line-1{
+  color:var(--off-white); letter-spacing:.05em;
+  text-shadow:0 0 46px rgba(250,249,246,.12);
+}
 #inicio .hb-line-2{
-  background:linear-gradient(180deg, var(--gold-light), #d0ac6e 50%, var(--gold-deep));
+  margin-top:.04em;
+  background:linear-gradient(180deg, var(--gold-light), #d3af71 48%, var(--gold-deep));
   -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 40px rgba(217,189,133,.28));
 }
 #inicio .hb-lede{
-  margin:clamp(1.3rem, 3vh, 2rem) 0 0; max-width:42ch;
+  margin:clamp(1.4rem, 3.2vh, 2.1rem) 0 0; max-width:42ch;
   font-family:var(--font-display); font-style:italic;
   font-size:clamp(1rem, 1.5vw, 1.24rem); line-height:1.6;
-  color:rgba(250,249,246,.66);
+  color:rgba(250,249,246,.62);
 }
-#inicio .hb-cta{ margin-top:clamp(1.8rem, 4vh, 2.6rem); gap:.8em; }
-#inicio .hb-arrow{ display:inline-block; transition:transform .4s var(--ease); }
+#inicio .hb-cta{
+  margin-top:clamp(2rem, 4.4vh, 2.8rem); gap:.8em;
+  transition:background-color .4s ease, color .4s ease, transform .4s var(--ease), box-shadow .5s ease, border-color .4s ease;
+}
+#inicio .hb-cta:hover,
+#inicio .hb-cta:focus-visible{
+  background:rgba(177,138,79,.09);
+  color:var(--off-white);
+  border-color:var(--gold-light);
+  transform:translateY(-2px);
+  box-shadow:0 0 0 1px rgba(217,189,133,.22), 0 20px 44px -24px rgba(217,189,133,.55), 0 0 30px -6px rgba(217,189,133,.22);
+}
+#inicio .hb-cta:active{ transform:translateY(0) scale(.985); }
+#inicio .hb-arrow{ display:inline-block; transition:transform .45s var(--ease); }
 #inicio .hb-cta:hover .hb-arrow,
-#inicio .hb-cta:focus-visible .hb-arrow{ transform:translateX(5px); }
+#inicio .hb-cta:focus-visible .hb-arrow{ transform:translateX(4px); }
 
 /* --- coluna direita: frasco protagonista --- */
 #inicio .hb-media{
@@ -1879,47 +1902,73 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   display:grid; place-items:center;
   min-height:clamp(400px, 72vh, 720px);
 }
+/* luz dourada concentrada logo atrás do frasco */
+#inicio .hb-glow{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:radial-gradient(36% 44% at 50% 47%, rgba(233,204,150,.30), rgba(200,158,95,.10) 42%, transparent 70%);
+  filter:blur(16px); opacity:0;
+}
+/* halo largo que respira devagar */
 #inicio .hb-aura{
   position:absolute; z-index:0;
   width:min(122%, 620px); aspect-ratio:1; border-radius:50%;
-  background:radial-gradient(circle, rgba(217,189,133,.22), rgba(177,138,79,.06) 46%, transparent 70%);
-  filter:blur(10px); opacity:0;
+  background:radial-gradient(circle, rgba(217,189,133,.20), rgba(177,138,79,.05) 46%, transparent 70%);
+  filter:blur(12px); opacity:0;
 }
+/* névoa extremamente discreta */
 #inicio .hb-mist{ position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
 #inicio .hb-mist i{
-  position:absolute; left:50%; top:54%; width:72%; aspect-ratio:1; border-radius:50%;
-  background:radial-gradient(circle, rgba(246,227,189,.07), transparent 64%);
-  filter:blur(28px); transform:translate(-50%,-50%);
+  position:absolute; left:50%; top:55%; width:76%; aspect-ratio:1; border-radius:50%;
+  background:radial-gradient(circle, rgba(246,227,189,.06), transparent 64%);
+  filter:blur(30px); transform:translate(-50%,-50%);
 }
 #inicio .hb-mist i:nth-child(2){
-  top:36%; width:52%;
-  background:radial-gradient(circle, rgba(246,227,189,.05), transparent 64%);
+  top:34%; width:54%;
+  background:radial-gradient(circle, rgba(246,227,189,.045), transparent 64%);
 }
 #inicio .hb-media-inner{ position:relative; z-index:2; will-change:transform; }
-#inicio .hb-bottle-enter{ opacity:0; transform:translateX(9%); }
-#inicio .hb-bottle-frame{ position:relative; width:clamp(210px, 30vw, 344px); }
+#inicio .hb-bottle-enter{ opacity:0; transform:translateX(12%); }
+#inicio .hb-bottle-frame{ position:relative; width:clamp(210px, 30vw, 344px); will-change:transform; }
 #inicio .hb-bottle{
+  position:relative; z-index:1;
   display:block; width:100%; height:auto;
-  /* frasco recortado (PNG com fundo transparente) — só o perfume, sem
-     o fundo escuro da foto original. A sombra + a aura por trás dão o
-     "descolamento". Frasco, tampa, rótulo e proporções intactos. */
-  filter:drop-shadow(0 44px 66px rgba(0,0,0,.6));
+  /* frasco recortado (PNG transparente). Glow + sombra de contato +
+     reflexo quente por trás dão a integração com a cena. Frasco, tampa,
+     rótulo e proporções permanecem intactos — nunca mascarado. */
+  filter:drop-shadow(0 30px 44px rgba(0,0,0,.5)) drop-shadow(0 8px 16px rgba(0,0,0,.35));
 }
+/* sombra de contato escura — aterra o produto na cena */
+#inicio .hb-floor{
+  position:absolute; left:50%; bottom:-3.5%; width:80%; height:8%;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.6), rgba(0,0,0,.3) 44%, transparent 72%);
+  filter:blur(10px); z-index:0;
+}
+/* reflexo quente que sobe do produto */
+#inicio .hb-reflection{
+  position:absolute; left:50%; bottom:-1%; width:62%; height:11%;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse at 50% 0%, rgba(217,189,133,.15), transparent 70%);
+  filter:blur(7px); z-index:0;
+}
+/* brilho especular estático no vidro — fino, discreto, sobre o corpo do frasco */
+#inicio .hb-glass{
+  position:absolute; left:24%; top:15%; width:8%; height:52%;
+  border-radius:50%;
+  background:linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.05) 55%, transparent);
+  filter:blur(4px); mix-blend-mode:screen;
+  transform:rotate(7deg); opacity:.4; z-index:2; pointer-events:none;
+}
+/* luz que percorre o vidro (animada) */
 #inicio .hb-sweep{
-  position:absolute; left:15%; top:7%; width:70%; height:84%;
-  overflow:hidden; border-radius:12px; pointer-events:none;
+  position:absolute; left:14%; top:6%; width:72%; height:86%;
+  overflow:hidden; border-radius:14px; pointer-events:none; z-index:2;
 }
 #inicio .hb-sweep::before{
-  content:""; position:absolute; top:-30%; left:0; width:56%; height:160%;
-  background:linear-gradient(90deg, transparent, rgba(251,231,204,0) 14%, rgba(251,231,204,.7) 50%, rgba(255,255,255,.28) 62%, transparent 86%);
+  content:""; position:absolute; top:-30%; left:0; width:54%; height:160%;
+  background:linear-gradient(90deg, transparent, rgba(251,231,204,0) 14%, rgba(251,231,204,.65) 50%, rgba(255,255,255,.26) 62%, transparent 86%);
   filter:blur(5px); mix-blend-mode:screen;
   transform:translateX(-260%) skewX(-12deg);
-}
-#inicio .hb-reflection{
-  position:absolute; left:50%; bottom:-2%; width:64%; height:12%;
-  transform:translateX(-50%);
-  background:radial-gradient(ellipse at 50% 0%, rgba(217,189,133,.16), transparent 70%);
-  filter:blur(6px); z-index:1;
 }
 
 #inicio .scroll-cue{
@@ -1929,19 +1978,31 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 @media (max-height:640px){ #inicio .scroll-cue{ display:none; } }
 
 /* --- keyframes do banner --- */
-@keyframes hb-ghost-in{ from{opacity:0; transform:scale(1.06);} to{opacity:.055; transform:scale(1);} }
-@keyframes hb-slide-l{ from{opacity:0; transform:translateX(-42px);} to{opacity:1; transform:translateX(0);} }
-@keyframes hb-bottle-in{ 0%{opacity:0; transform:translateX(9%);} 72%{opacity:1; transform:translateX(-1.4%);} 100%{opacity:1; transform:translateX(0);} }
-@keyframes hb-aura-in{ from{opacity:0;} to{opacity:1;} }
-@keyframes hb-aura-breathe{ 0%,100%{opacity:.72;} 50%{opacity:1;} }
+@keyframes hb-ghost-in{ from{opacity:0; transform:scale(1.08);} to{opacity:.072; transform:scale(1);} }
+@keyframes hb-slide-l{ from{opacity:0; transform:translateX(-46px);} to{opacity:1; transform:translateX(0);} }
+@keyframes hb-fade-up{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);} }
+@keyframes hb-bottle-in{
+  0%{ opacity:0; transform:translateX(16%) scale(.985); }
+  58%{ opacity:1; }
+  82%{ transform:translateX(-1.4%) scale(1.004); }
+  100%{ opacity:1; transform:translateX(0) scale(1); }
+}
+@keyframes hb-glow-in{ from{opacity:0;} to{opacity:1;} }
+@keyframes hb-aura-breathe{ 0%,100%{opacity:.6;} 50%{opacity:.9;} }
+@keyframes hb-glow-breathe{ 0%,100%{opacity:.82;} 50%{opacity:1;} }
+@keyframes hb-float{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+@keyframes hb-floor-pulse{
+  0%,100%{ opacity:1; transform:translateX(-50%) scale(1); }
+  50%{ opacity:.72; transform:translateX(-50%) scale(.92); }
+}
 @keyframes hb-sweep-move{
   0%{ transform:translateX(-260%) skewX(-12deg); opacity:0; }
-  6%{ opacity:1; }
-  24%{ transform:translateX(320%) skewX(-12deg); opacity:0; }
+  5%{ opacity:1; }
+  22%{ transform:translateX(320%) skewX(-12deg); opacity:0; }
   100%{ transform:translateX(320%) skewX(-12deg); opacity:0; }
 }
 
-/* --- entrada encadeada (só quando há movimento permitido) --- */
+/* --- entrada encadeada e cinematográfica (só quando há movimento permitido) --- */
 @media (prefers-reduced-motion:no-preference){
   /* antes do reveal: texto invisível, grade/partículas apagadas */
   #inicio .hb-text .hb-eyebrow,
@@ -1949,34 +2010,48 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-text .hb-lede,
   #inicio .hb-text .hb-cta{ opacity:0; }
 
-  /* estado final pós-reveal (cascata) — deixado explícito para que o
-     fill "backwards" das animações não trave o transform do :hover do
-     botão depois que a entrada termina */
+  /* estado final pós-reveal — deixado explícito para que o fill
+     "backwards" das animações não trave o transform do :hover do botão */
   #inicio.hero.hb-ready .hb-text .hb-eyebrow,
   #inicio.hero.hb-ready .hb-text .hb-line,
   #inicio.hero.hb-ready .hb-text .hb-lede,
   #inicio.hero.hb-ready .hb-text .hb-cta{ opacity:1; }
 
+  /* 1) fundo aparece suavemente */
+  #inicio.hero.hb-ready .hb-bg{ opacity:1; }
   #inicio.hero.hb-ready .hb-grid{ opacity:1; }
   #inicio.hero.hb-ready .hb-particles{ opacity:1; }
 
-  #inicio.hero.hb-ready .hb-ghost span{ animation:hb-ghost-in 1.2s var(--ease) .1s both; }
-  #inicio.hero.hb-ready .hb-eyebrow{ animation:hb-slide-l .9s var(--ease) .3s backwards; }
-  #inicio.hero.hb-ready .hb-line-1{ animation:hb-slide-l .9s var(--ease) .44s backwards; }
-  #inicio.hero.hb-ready .hb-line-2{ animation:hb-slide-l .9s var(--ease) .58s backwards; }
-  #inicio.hero.hb-ready .hb-lede{ animation:hb-slide-l .9s var(--ease) .8s backwards; }
-  #inicio.hero.hb-ready .hb-cta{ animation:hb-slide-l .9s var(--ease) .94s backwards; }
-  #inicio.hero.hb-ready .hb-bottle-enter{ animation:hb-bottle-in 1.3s cubic-bezier(.16,.84,.28,1) .7s both; }
-  #inicio.hero.hb-ready .hb-aura{ animation:hb-aura-in 1.2s ease .6s both, hb-aura-breathe 7s ease-in-out 2s infinite; }
-  #inicio.hero.hb-ready .hb-sweep::before{ animation:hb-sweep-move 9s cubic-bezier(.45,0,.25,1) 1.9s infinite; }
+  /* 2) VERITÉ gigante surge no fundo */
+  #inicio.hero.hb-ready .hb-ghost span{ animation:hb-ghost-in 1.7s var(--ease) .15s both; }
+  /* 3) texto superior */
+  #inicio.hero.hb-ready .hb-eyebrow{ animation:hb-slide-l 1s var(--ease) .7s backwards; }
+  /* 4) título entra pela esquerda */
+  #inicio.hero.hb-ready .hb-line-1{ animation:hb-slide-l 1s var(--ease) .9s backwards; }
+  #inicio.hero.hb-ready .hb-line-2{ animation:hb-slide-l 1s var(--ease) 1.04s backwards; }
+  /* 5) frasco entra pela direita + 6) desaceleração natural ao assentar */
+  #inicio.hero.hb-ready .hb-bottle-enter{ animation:hb-bottle-in 1.8s cubic-bezier(.16,.78,.3,1) 1.15s both; }
+  #inicio.hero.hb-ready .hb-glow{ animation:hb-glow-in 1.4s ease 1.1s both, hb-glow-breathe 8s ease-in-out 3.6s infinite; }
+  #inicio.hero.hb-ready .hb-aura{ animation:hb-glow-in 1.4s ease 1.2s both, hb-aura-breathe 8s ease-in-out 3.6s infinite; }
+  /* frase de apoio */
+  #inicio.hero.hb-ready .hb-lede{ animation:hb-fade-up 1s var(--ease) 1.65s backwards; }
+  /* 7) uma luz dourada percorre o vidro (logo depois de assentar) */
+  #inicio.hero.hb-ready .hb-sweep::before{ animation:hb-sweep-move 12s cubic-bezier(.45,0,.25,1) 2.6s infinite; }
+  /* 8) botão por último */
+  #inicio.hero.hb-ready .hb-cta{ animation:hb-fade-up 1s var(--ease) 3s backwards; }
+
+  /* movimento contínuo: frasco flutuando + sombra de contato respondendo */
+  #inicio.hero.hb-ready .hb-bottle-frame{ animation:hb-float 6.5s ease-in-out 3.4s infinite; }
+  #inicio.hero.hb-ready .hb-floor{ animation:hb-floor-pulse 6.5s ease-in-out 3.4s infinite; }
 }
 
 /* --- estado final imóvel quando o usuário pede menos movimento --- */
 @media (prefers-reduced-motion:reduce){
-  #inicio .hb-grid, #inicio .hb-particles{ opacity:1; }
-  #inicio .hb-ghost span{ opacity:.055; transform:none; }
+  #inicio .hb-bg, #inicio .hb-grid, #inicio .hb-particles{ opacity:1; }
+  #inicio .hb-ghost span{ opacity:.072; transform:none; }
   #inicio .hb-bottle-enter{ opacity:1; transform:none; }
-  #inicio .hb-aura{ opacity:.85; }
+  #inicio .hb-glow{ opacity:.9; }
+  #inicio .hb-aura{ opacity:.8; }
 }
 
 /* --- responsivo --- */
@@ -1993,11 +2068,19 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-lede{ max-width:none; margin-left:auto; margin-right:auto; }
   #inicio .hb-cta{ width:100%; justify-content:center; }
   #inicio .hb-ghost{ align-items:flex-start; justify-content:center; padding:clamp(3rem, 11vh, 6rem) 0 0; }
-  #inicio .hb-ghost span{ font-size:clamp(5rem, 32vw, 11rem); }
-  #inicio.hero.hb-ready .hb-bottle-enter{ animation-name:hb-slide-l; }
+  #inicio .hb-ghost span{ font-size:clamp(4.6rem, 33vw, 11rem); }
+  #inicio.hero.hb-ready .hb-bottle-enter{ animation-name:hb-fade-up; }
+  #inicio .hb-glass{ opacity:.4; }
 }
 @media (max-width:480px){
-  #inicio .hb-title{ font-size:clamp(2.6rem, 12vw, 3.7rem); }
-  #inicio .hb-bottle-frame{ width:clamp(178px, 58vw, 250px); }
-  #inicio .hb-media{ min-height:clamp(280px, 40vh, 380px); }
+  #inicio .hb-title{ font-size:clamp(2.5rem, 11.5vw, 3.6rem); line-height:.98; }
+  #inicio .hb-line-1{ letter-spacing:.03em; }
+  #inicio .hb-bottle-frame{ width:clamp(172px, 56vw, 240px); }
+  #inicio .hb-media{ min-height:clamp(270px, 38vh, 360px); }
+  #inicio .hb-floor{ bottom:-2.5%; }
+  #inicio.hero.hb-ready .hb-bottle-frame{ animation-duration:7.5s; }
+}
+@media (max-width:360px){
+  #inicio .hb-title{ font-size:clamp(2.15rem, 10.5vw, 2.55rem); }
+  #inicio .hb-eyebrow{ letter-spacing:.28em; }
 }
