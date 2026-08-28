@@ -1943,39 +1943,30 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   position:relative; width:clamp(210px, 30vw, 344px);
   will-change:transform; transform-style:preserve-3d;
 }
-/* ---- frasco como objeto 3D real ----
-   parede da frente (imagem real) + parede de trás (mesma foto, escura) +
-   um "miolo" âmbar entre elas dando volume. Ao girar, o paralaxe entre
-   as paredes lê como vidro com profundidade. --d = meia-profundidade. */
-#inicio .hb-bottle-3d{
+/* ---- VÉRIX ocupa o lugar do produto interativo ----
+   parede da frente (o mascote) + uma silhueta escura logo atrás
+   (translateZ negativo): ao inclinar/girar, a silhueta se separa e dá
+   volume — profundidade sem billboard. --d = meia-profundidade. */
+#inicio .hb-mascot-frame{ width:clamp(240px, 34vw, 400px); }
+#inicio .hb-mascot-3d{
   position:relative; transform-style:preserve-3d;
-  --d:clamp(15px, 3.6vw, 32px);
+  --d:clamp(12px, 2.8vw, 26px);
 }
-#inicio .hb-bottle{
+#inicio .hb-mascot{
   position:relative; z-index:2;
   display:block; width:100%; height:auto;
   transform:translateZ(var(--d));
-  /* frasco recortado (PNG transparente). Frasco, tampa, rótulo e
-     proporções permanecem intactos — nunca mascarado. */
-  filter:drop-shadow(0 30px 44px rgba(0,0,0,.5)) drop-shadow(0 8px 16px rgba(0,0,0,.35));
+  filter:drop-shadow(0 28px 40px rgba(0,0,0,.55)) drop-shadow(0 8px 16px rgba(0,0,0,.35));
   transition:filter .45s ease;
 }
-#inicio .hb-bottle-wall--back{
+#inicio .hb-mascot-shadow{
   position:absolute; left:0; top:0; z-index:0;
   width:100%; height:auto;
   transform:translateZ(calc(var(--d) * -1));
-  filter:brightness(.34) saturate(.82) blur(.5px);
-  opacity:.9; pointer-events:none;
+  filter:brightness(0) blur(6px);
+  opacity:.42; pointer-events:none;
 }
-#inicio .hb-bottle-core{
-  position:absolute; left:19%; right:19%; top:22%; bottom:5%; z-index:1;
-  border-radius:12px / 7px;
-  background:linear-gradient(180deg, rgba(226,183,111,.30), rgba(150,108,54,.15) 60%, rgba(88,60,26,.10));
-  filter:blur(2px);
-  transform:translateZ(0);
-  pointer-events:none;
-}
-/* sombra de contato escura — aterra o produto na cena */
+/* sombra de contato escura — aterra o mascote na cena */
 #inicio .hb-floor{
   position:absolute; left:50%; bottom:-3.5%; width:80%; height:8%;
   transform:translateX(-50%);
@@ -1989,38 +1980,28 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   background:radial-gradient(ellipse at 50% 0%, rgba(217,189,133,.15), transparent 70%);
   filter:blur(7px); z-index:0;
 }
-/* brilho especular estático no vidro — fino, discreto, sobre o corpo do frasco */
-#inicio .hb-glass{
-  position:absolute; left:24%; top:15%; width:8%; height:52%;
-  border-radius:50%;
-  background:linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.05) 55%, transparent);
-  filter:blur(4px); mix-blend-mode:screen;
-  transform:rotate(7deg) translateZ(calc(var(--d) + 1px)); opacity:.4; z-index:3; pointer-events:none;
-  transition:opacity .4s ease;
-}
-/* reflexo especular que acompanha o cursor quando se interage com o frasco */
+/* luz de recorte quente que acompanha o cursor ao interagir com o mascote */
 #inicio .hb-shine{
-  position:absolute; left:50%; top:12%; width:30%; height:58%;
+  position:absolute; left:50%; top:8%; width:56%; height:74%;
   transform:translateX(-50%) translateZ(22px);
   border-radius:50%;
-  background:radial-gradient(ellipse at 50% 32%, rgba(255,255,255,.22), rgba(255,255,255,.05) 55%, transparent 72%);
-  filter:blur(7px); mix-blend-mode:screen;
+  background:radial-gradient(ellipse at 50% 30%, rgba(233,204,150,.20), rgba(233,204,150,.05) 55%, transparent 72%);
+  filter:blur(9px); mix-blend-mode:screen;
   opacity:0; z-index:3; pointer-events:none;
 }
-/* camada de interação 3D do frasco (tilt + giro). O flutuar contínuo
-   segue no .hb-bottle-frame; a entrada segue no .hb-bottle-enter — cada
-   transform em seu próprio elemento, sem conflito. */
+/* camada de interação 3D (tilt + giro). O flutuar contínuo segue no
+   .hb-bottle-frame; a entrada segue no .hb-bottle-enter — cada transform
+   em seu próprio elemento, sem conflito. */
 #inicio .hb-bottle-tilt{
   position:relative; transform-style:preserve-3d;
   will-change:transform;
   cursor:grab; -webkit-tap-highlight-color:transparent;
 }
 #inicio .hb-bottle-tilt.is-grabbing{ cursor:grabbing; }
-/* estado "na mão": luz de recorte quente no vidro + brilho estático mais presente */
-#inicio .hb-media.is-bottle-live .hb-bottle{
-  filter:drop-shadow(0 30px 44px rgba(0,0,0,.5)) drop-shadow(0 10px 18px rgba(0,0,0,.35)) drop-shadow(0 0 24px rgba(233,204,150,.30));
+/* estado "na mão": rim-light dourado no mascote */
+#inicio .hb-media.is-bottle-live .hb-mascot{
+  filter:drop-shadow(0 28px 40px rgba(0,0,0,.55)) drop-shadow(0 10px 18px rgba(0,0,0,.35)) drop-shadow(0 0 26px rgba(233,204,150,.34));
 }
-#inicio .hb-media.is-bottle-live .hb-glass{ opacity:.62; }
 /* toque no celular: leve balanço elegante */
 @keyframes hb-bottle-tap{
   0%{ transform:rotate(0) scale(1); }
@@ -2048,35 +2029,6 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   margin:0; z-index:3;
 }
 @media (max-height:640px){ #inicio .scroll-cue{ display:none; } }
-
-/* --- VÉRIX: mascote no canto inferior esquerdo do banner --- */
-#inicio .hb-verix-layer{
-  position:absolute; left:clamp(.25rem, 2vw, 2.5rem); bottom:0; z-index:2;
-  width:clamp(128px, 15vw, 236px);
-  pointer-events:none; will-change:transform;
-}
-#inicio .hb-verix-layer::after{      /* leve sombra de contato dourada */
-  content:""; position:absolute; left:50%; bottom:-4%; width:88%; height:13%;
-  transform:translateX(-50%);
-  background:radial-gradient(ellipse at 50% 50%, rgba(177,138,79,.16), transparent 70%);
-  filter:blur(9px);
-}
-#inicio .hb-verix{
-  display:block; width:100%; height:auto;
-  filter:drop-shadow(0 24px 30px rgba(0,0,0,.55));
-  opacity:0; transform-origin:bottom center; user-select:none;
-}
-@keyframes hb-verix-in{
-  0%{ opacity:0; transform:translateY(28px) rotate(-4deg) scale(.96); }
-  100%{ opacity:1; transform:translateY(0) rotate(0) scale(1); }
-}
-@keyframes hb-verix-bob{
-  0%,100%{ transform:translateY(0) rotate(0); }
-  50%{ transform:translateY(-7px) rotate(1.4deg); }
-}
-@media (max-width:900px){
-  #inicio .hb-verix-layer{ width:clamp(96px, 22vw, 148px); left:.25rem; }
-}
 
 /* --- keyframes do banner --- */
 @keyframes hb-ghost-in{ from{opacity:0; transform:scale(1.08);} to{opacity:.072; transform:scale(1);} }
@@ -2137,7 +2089,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   /* 4) título entra pela esquerda */
   #inicio.hero.hb-ready .hb-line-1{ animation:hb-slide-l 1s var(--ease) .9s backwards; }
   #inicio.hero.hb-ready .hb-line-2{ animation:hb-slide-l 1s var(--ease) 1.04s backwards; }
-  /* 5) frasco entra pela direita + 6) desaceleração natural ao assentar */
+  /* 5) VÉRIX entra pela direita + 6) desaceleração natural ao assentar */
   #inicio.hero.hb-ready .hb-bottle-enter{ animation:hb-bottle-in 1.35s cubic-bezier(.18,.82,.28,1) 1s both; }
   #inicio.hero.hb-ready .hb-glow{ animation:hb-glow-in 1.2s ease .95s both, hb-glow-breathe 7s ease-in-out 3s infinite; }
   #inicio.hero.hb-ready .hb-aura{ animation:hb-glow-in 1.2s ease 1.05s both, hb-aura-breathe 7s ease-in-out 3s infinite; }
@@ -2148,13 +2100,8 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio.hero.hb-ready .hb-sweep.is-sweeping::before{ animation:hb-sweep-once .8s cubic-bezier(.4,0,.2,1); }
   /* 8) botão por último */
   #inicio.hero.hb-ready .hb-cta{ animation:hb-fade-up .9s var(--ease) 2.2s backwards; }
-  /* 9) VÉRIX entra por último, do canto, e fica com um bob leve */
-  #inicio.hero.hb-ready .hb-verix{
-    animation:hb-verix-in 1.05s cubic-bezier(.18,.8,.28,1) 2.5s both,
-              hb-verix-bob 4.2s ease-in-out 3.7s infinite;
-  }
 
-  /* movimento contínuo: frasco flutuando + sombra de contato respondendo */
+  /* movimento contínuo: mascote flutuando + sombra de contato respondendo */
   #inicio.hero.hb-ready .hb-bottle-frame{ animation:hb-float 5s ease-in-out 2.8s infinite; }
   #inicio.hero.hb-ready .hb-floor{ animation:hb-floor-pulse 5s ease-in-out 2.8s infinite; }
 }
@@ -2168,13 +2115,11 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-aura{ opacity:.8; }
   #inicio .hb-bottle-tilt{ cursor:default; }
   /* sem movimento: achata o objeto 3D pra uma imagem única e limpa */
-  #inicio .hb-bottle-3d{ transform-style:flat; }
-  #inicio .hb-bottle{ transform:none; }
-  #inicio .hb-bottle-wall--back, #inicio .hb-bottle-core{ display:none; }
-  #inicio .hb-glass{ transform:rotate(7deg); }
+  #inicio .hb-mascot-3d{ transform-style:flat; }
+  #inicio .hb-mascot{ transform:none; }
+  #inicio .hb-mascot-shadow{ display:none; }
   #inicio .hb-shine{ transform:translateX(-50%); }
   #inicio .hb-sweep{ transform:none; }
-  #inicio .hb-verix{ opacity:1; }
 }
 
 /* --- responsivo --- */
@@ -2193,12 +2138,12 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-ghost{ align-items:flex-start; justify-content:center; padding:clamp(3rem, 11vh, 6rem) 0 0; }
   #inicio .hb-ghost span{ font-size:clamp(4.6rem, 33vw, 11rem); }
   #inicio.hero.hb-ready .hb-bottle-enter{ animation-name:hb-fade-up; }
-  #inicio .hb-glass{ opacity:.4; }
+  #inicio .hb-mascot-frame{ width:clamp(210px, 46vw, 320px); }
 }
 @media (max-width:480px){
   #inicio .hb-title{ font-size:clamp(2.5rem, 11.5vw, 3.6rem); line-height:.98; }
   #inicio .hb-line-1{ letter-spacing:.03em; }
-  #inicio .hb-bottle-frame{ width:clamp(172px, 56vw, 240px); }
+  #inicio .hb-mascot-frame{ width:clamp(180px, 58vw, 250px); }
   #inicio .hb-media{ min-height:clamp(270px, 38vh, 360px); }
   #inicio .hb-floor{ bottom:-2.5%; }
   #inicio.hero.hb-ready .hb-bottle-frame{ animation-duration:6s; }

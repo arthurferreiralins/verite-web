@@ -262,10 +262,11 @@
 
   <!-- ============ Início / Hero — Banner principal ============
        "Descubra Sua Essência". Estrutura: coluna de texto à esquerda,
-       frasco real (assets/img/hero-frasco.png) protagonista à direita,
-       "VERITÉ" gigante de fundo em baixa opacidade, grade geométrica
-       quase invisível, aura/névoa/partículas douradas. Entrada encadeada
-       (.hb-ready via assets/js/hero-banner.js) + parallax de mouse sutil.
+       o mascote VÉRIX (assets/img/verix.png) como protagonista interativo
+       à direita — tilt 3D, girar arrastando, luz de recorte no hover,
+       bob contínuo. "VERITÉ" gigante de fundo em baixa opacidade, grade
+       geométrica quase invisível, aura/névoa/partículas douradas. Entrada
+       encadeada (.hb-ready via assets/js/hero-banner.js) + parallax sutil.
        Escopo de estilo estrito em #inicio.hero-home — ver style.css. -->
   <section id="inicio" class="section section-dark hero hero-home has-ambient" aria-label="VERITÉ — Descubra sua essência">
     <div class="hb-bg" data-hb-depth="0.03" aria-hidden="true"></div>
@@ -290,16 +291,16 @@
         <div class="hb-mist" aria-hidden="true"><i></i><i></i></div>
         <div class="hb-media-inner" data-hb-depth="0.16" data-hb-invert>
           <div class="hb-bottle-enter">
+            <!-- .hb-bottle-tilt / .hb-bottle-frame: ganchos de interacao
+                 (agora movem o mascote VÉRIX no lugar do frasco) -->
             <div class="hb-bottle-tilt">
-              <div class="hb-bottle-frame">
+              <div class="hb-bottle-frame hb-mascot-frame">
                 <span class="hb-floor" aria-hidden="true"></span>
                 <span class="hb-reflection" aria-hidden="true"></span>
-                <div class="hb-bottle-3d">
-                  <img class="hb-bottle-wall hb-bottle-wall--back" src="assets/img/hero-frasco.png" alt="" width="300" height="528" decoding="async" draggable="false" aria-hidden="true"/>
-                  <span class="hb-bottle-core" aria-hidden="true"></span>
-                  <img class="hb-bottle" src="assets/img/hero-frasco.png" alt="Perfume VERIT&Eacute; Eau de Parfum 40 ml" width="300" height="528" fetchpriority="high" decoding="async" draggable="false"/>
+                <div class="hb-mascot-3d">
+                  <img class="hb-mascot-shadow" src="assets/img/verix.png" alt="" width="560" height="673" decoding="async" draggable="false" aria-hidden="true"/>
+                  <img class="hb-mascot" src="assets/img/verix.png" alt="V&Eacute;RIX &mdash; o mascote da Verit&eacute;" width="560" height="673" fetchpriority="high" decoding="async" draggable="false"/>
                   <span class="hb-shine" aria-hidden="true"></span>
-                  <span class="hb-glass" aria-hidden="true"></span>
                   <span class="hb-sweep" aria-hidden="true"></span>
                 </div>
               </div>
@@ -307,10 +308,6 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="hb-verix-layer" data-hb-depth="0.05">
-      <img class="hb-verix" src="assets/img/verix.png" alt="V&Eacute;RIX &mdash; o mascote da Verit&eacute;" width="560" height="673" loading="lazy" decoding="async" draggable="false"/>
     </div>
 
     <div class="scroll-cue" aria-hidden="true"></div>
