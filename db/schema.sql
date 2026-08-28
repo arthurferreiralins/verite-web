@@ -93,30 +93,29 @@ CREATE INDEX IF NOT EXISTS idx_submission_attempts_ip_kind_time ON public_submis
 -- Seed: real content already live on the site today (nothing invented).
 INSERT INTO content_blocks (key, label, value) VALUES
   ('slogan', 'Slogan (hero)', 'Sua essência. Sua presença.'),
-  ('hero_sub', 'Subtítulo do hero', 'Perfumes criados para deixar uma assinatura inesquecível.'),
-  ('historia_lead', 'Parágrafo de história (A VERITÉ)', 'A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela <em>revela personalidade</em>, <em>desperta lembranças</em> e deixa uma <em>presença</em> que continua mesmo depois que a pessoa vai embora.'),
+  ('hero_sub', 'Subtítulo do hero', 'Perfumes feitos para deixar uma assinatura que não se esquece.'),
+  ('historia_lead', 'Parágrafo de história (A VERITÉ)', 'A VERITÉ nasceu da ideia de que uma fragrância não serve apenas para perfumar. Ela <em>desperta lembranças</em> e deixa uma <em>presença</em> que continua mesmo depois que a pessoa vai embora.'),
   ('essencia_1_title', 'Nossa Essência — item 1 (título)', 'Autenticidade'),
-  ('essencia_1_desc', 'Nossa Essência — item 1 (descrição)', 'A verdade em cada gesto.'),
+  ('essencia_1_desc', 'Nossa Essência — item 1 (descrição)', 'a verdade em cada gesto.'),
   ('essencia_2_title', 'Nossa Essência — item 2 (título)', 'Elegância'),
-  ('essencia_2_desc', 'Nossa Essência — item 2 (descrição)', 'Sofisticação em cada detalhe.'),
+  ('essencia_2_desc', 'Nossa Essência — item 2 (descrição)', 'sofisticação sem excesso.'),
   ('essencia_3_title', 'Nossa Essência — item 3 (título)', 'Qualidade'),
-  ('essencia_3_desc', 'Nossa Essência — item 3 (descrição)', 'Excelência que se sente.'),
+  ('essencia_3_desc', 'Nossa Essência — item 3 (descrição)', 'o que se sente na hora.'),
   ('essencia_4_title', 'Nossa Essência — item 4 (título)', 'Presença'),
-  ('essencia_4_desc', 'Nossa Essência — item 4 (descrição)', 'Uma marca que permanece.'),
+  ('essencia_4_desc', 'Nossa Essência — item 4 (descrição)', 'uma marca que fica.'),
   ('essencia_5_title', 'Nossa Essência — item 5 (título)', 'Exclusividade'),
-  ('essencia_5_desc', 'Nossa Essência — item 5 (descrição)', 'Único, como você.'),
-  ('experiencia_tagline', 'Tagline de "Mais que uma fragrância"', 'Porque uma verdadeira essência não se usa — se vive.'),
-  ('manifesto_lines', 'Linhas do Manifesto (uma por linha)', 'Não acreditamos que uma fragrância seja apenas algo que se usa.
-Ela acompanha momentos.
-Desperta memórias.
-Revela personalidade.
-Cria presença.
+  ('essencia_5_desc', 'Nossa Essência — item 5 (descrição)', 'única, como você.'),
+  ('experiencia_tagline', 'Tagline de "Mais que uma fragrância"', 'Porque essência de verdade não se usa, se vive.'),
+  ('manifesto_lines', 'Linhas do Manifesto (uma por linha)', 'Não acreditamos que uma fragrância seja só algo que se usa.
+Ela acompanha momentos,
+desperta memórias,
+revela personalidade.
 Algumas coisas desaparecem quando você vai embora.
 Outras permanecem.'),
   ('colecao_title', 'Título da Primeira Coleção', 'A primeira coleção VERITÉ está chegando.'),
   ('colecao_tagline', 'Tagline da Primeira Coleção', 'Três expressões. Uma essência.'),
   ('lancamento_title', 'Título da Lista de Espera', 'Seja um dos primeiros a conhecer as próximas criações da VERITÉ.'),
-  ('lancamento_sub', 'Subtítulo da Lista de Espera', 'Um convite discreto para conhecer a VERITÉ antes de todos.')
+  ('lancamento_sub', 'Subtítulo da Lista de Espera', 'Um convite discreto, antes de todo mundo.')
 ON CONFLICT (key) DO NOTHING;
 
 INSERT INTO faq_items (question, answer, sort_order, active) VALUES
