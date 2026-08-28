@@ -1653,6 +1653,14 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #fragrancias .frag-card-media img.frag-card-wide{
   height:auto; width:auto; max-width:96%; max-height:82%;
 }
+/* foto de cena (ex.: kit presente) — preenche a área e as bordas
+   dissolvem no card, sem retângulo visível */
+#fragrancias .frag-card-media img.frag-card-photo{
+  width:100%; height:100%; max-width:none; max-height:none;
+  object-fit:cover; border-radius:3px; filter:none;
+  -webkit-mask-image:radial-gradient(125% 125% at 50% 44%, #000 52%, transparent 92%);
+  mask-image:radial-gradient(125% 125% at 50% 44%, #000 52%, transparent 92%);
+}
 #fragrancias .frag-card-info{
   position:relative; z-index:1; flex:none;
   display:flex; flex-direction:column; align-items:center; gap:.45rem;
