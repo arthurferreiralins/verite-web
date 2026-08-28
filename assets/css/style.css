@@ -329,90 +329,6 @@ html.has-custom-cursor input, html.has-custom-cursor textarea{cursor:none;}
 @keyframes marquee-scroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
 /* =======================================================================
-   ANIMAÇÃO DE ABERTURA VERITÉ — sequência cinematográfica multi-cena
-   -----------------------------------------------------------------------
-   Estrutura (para crescer sem retrabalho):
-     .verite-intro                camada fixa acima da Home (fica no ar
-                                  até a Cena 2 assumir a transição)
-       .verite-intro__scene       uma cena da sequência
-         --1, --2, ...            variação por cena
-       .verite-intro__media       a arte da cena (fade + zoom + luz)
-       .verite-intro__light       brilho quente que "revela" a marca
-
-   CENA 1 — arte "foto 1 carregamento" (tela de carregamento):
-     tela 100% preta -> a imagem surge em fade-in lento, com um zoom
-     mínimo (sensação de profundidade) e a luminosidade subindo aos
-     poucos. Sem nada brusco, sem flash, sem texto/botão/barra.
-     A tela de abertura fica ~2,6s no ar e então some suavemente,
-     revelando a Home. Cenas seguintes entram entre o fade-in e a saída.
-   ======================================================================= */
-.verite-intro{
-  position:fixed; inset:0; z-index:10000;
-  background:#000;
-  overflow:hidden;
-  /* fica visível ~2,6s e sai num fade suave, liberando o site */
-  animation:verite-intro-exit .7s ease 2.6s forwards;
-}
-@keyframes verite-intro-exit{
-  to{ opacity:0; visibility:hidden; pointer-events:none; }
-}
-.verite-intro__scene{
-  position:absolute; inset:0;
-  opacity:0;
-}
-.verite-intro__scene--1{ opacity:1; }
-
-.verite-intro__media{
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  object-fit:cover;               /* preenche a tela sem distorcer */
-  object-position:center 47%;     /* logo VERITÉ como foco central */
-  transform:scale(1.04);
-  will-change:transform, opacity, filter;
-  animation:verite-intro-1-media 2.2s cubic-bezier(.4,0,.2,1) forwards;
-}
-/* Brilho quente e discreto, cresce durante a entrada (a marca "revelada pela luz"). */
-.verite-intro__light{
-  position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(circle at 50% 40%, rgba(214,183,124,.20), rgba(0,0,0,0) 62%);
-  mix-blend-mode:screen;
-  opacity:0;
-  animation:verite-intro-1-light 2.2s cubic-bezier(.4,0,.2,1) forwards;
-}
-@keyframes verite-intro-1-media{
-  0%   { opacity:0; transform:scale(1.04); filter:brightness(.55) saturate(.9); }
-  100% { opacity:1; transform:scale(1.10); filter:brightness(1)   saturate(1); }
-}
-@keyframes verite-intro-1-light{
-  0%   { opacity:0; }
-  60%  { opacity:.34; }
-  100% { opacity:.68; }
-}
-
-/* Celular / retrato / paisagem estreita: 'contain' garante que a logo
-   NUNCA seja cortada; as bordas pretas somem no fundo preto da cena. */
-@media (max-width:768px), (orientation:portrait){
-  .verite-intro__media{
-    object-fit:contain;
-    object-position:center;
-    transform:scale(1);
-    animation-name:verite-intro-1-media-fit;
-  }
-  @keyframes verite-intro-1-media-fit{
-    0%   { opacity:0; transform:scale(1);    filter:brightness(.55) saturate(.9); }
-    100% { opacity:1; transform:scale(1.02); filter:brightness(1)   saturate(1); }
-  }
-}
-
-/* Sem movimento: mostra a arte já no estado final, sem animar. */
-@media (prefers-reduced-motion:reduce){
-  .verite-intro__media,
-  .verite-intro__light{ animation:none; }
-  .verite-intro__media{ opacity:1; transform:none; filter:none; }
-  .verite-intro__light{ opacity:.58; }
-}
-
-/* =======================================================================
    Header / navigation
    ======================================================================= */
 header{
@@ -1984,9 +1900,9 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #inicio .hb-bottle-frame{ position:relative; width:clamp(210px, 30vw, 344px); }
 #inicio .hb-bottle{
   display:block; width:100%; height:auto;
-  /* o frasco real (foto sobre fundo quase preto) funde no preto do banner;
-     a sombra + a aura por trás dão o "descolamento". A imagem nunca é
-     mascarada/recortada — frasco, tampa, rótulo e proporções intactos. */
+  /* frasco recortado (PNG com fundo transparente) — só o perfume, sem
+     o fundo escuro da foto original. A sombra + a aura por trás dão o
+     "descolamento". Frasco, tampa, rótulo e proporções intactos. */
   filter:drop-shadow(0 44px 66px rgba(0,0,0,.6));
 }
 #inicio .hb-sweep{
