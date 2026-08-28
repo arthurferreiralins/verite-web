@@ -1812,6 +1812,22 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 
 /* --- camadas de fundo --- */
+/* foto dos perfumes Verité preenchendo o banner, com scrim escuro pra
+   manter o texto legível e o clima preto-e-dourado */
+#inicio .hb-perfumes{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(9,8,8,.97) 0%, rgba(9,8,8,.78) 30%, rgba(9,8,8,.4) 58%, rgba(9,8,8,.6) 100%),
+    linear-gradient(180deg, rgba(9,8,8,.82) 0%, rgba(9,8,8,.28) 42%, rgba(9,8,8,.72) 100%),
+    url('../img/hero-perfumes.jpg') 62% 58% / cover no-repeat;
+}
+@media (max-width:900px){
+  #inicio .hb-perfumes{
+    background:
+      linear-gradient(180deg, rgba(9,8,8,.9) 0%, rgba(9,8,8,.5) 46%, rgba(9,8,8,.8) 100%),
+      url('../img/hero-perfumes.jpg') 58% 60% / cover no-repeat;
+  }
+}
 #inicio .hb-bg{
   position:absolute; inset:0; z-index:0; pointer-events:none;
   background:
