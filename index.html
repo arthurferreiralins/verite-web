@@ -318,39 +318,108 @@
   </section>
 
   <!-- ============ Encontre sua fragrância ============ -->
-  <section id="fragrancias" class="section section-dark">
+  <section id="fragrancias" class="section section-dark has-ambient">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb frag-orb-a"></div>
+      <div class="ambient-orb orb-b frag-orb-b"></div>
+      <div class="ambient-wash"></div>
+      <div class="ambient-particles" data-count="7"></div>
+    </div>
     <div class="wrap">
       <div class="section-head frag-head reveal">
+        <span class="frag-kicker" aria-hidden="true"></span>
         <h2 class="frag-title">
-          <span class="frag-title-1">Descubra</span>
-          <span class="frag-title-2">Nossas Fragr&acirc;ncias</span>
+          <span class="frag-title-1">Nossas</span>
+          <span class="frag-title-2">Fragr&acirc;ncias</span>
         </h2>
-        <p class="frag-sub">Encontre uma fragr&acirc;ncia que fale por voc&ecirc;.</p>
+        <p class="frag-sub">Encontre a fragr&acirc;ncia que traduz a sua presen&ccedil;a.</p>
       </div>
-      <div class="category-cards">
-        <a class="category-card category-card-feminino reveal" href="produtos.html?genero=feminino" data-letter="F">
+
+      <div class="frag-filters reveal" role="group" aria-label="Filtrar fragrâncias por categoria">
+        <button class="frag-filter is-active" type="button" aria-pressed="true" data-filter="todos">Todos</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="feminino">Femininos</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="masculino">Masculinos</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="unissex">Unissex</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="kits">Kits</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="presentes">Presentes</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="lancamentos">Lan&ccedil;amentos</button>
+      </div>
+
+      <div class="frag-grid">
+        <a class="frag-card reveal" href="produtos.html?genero=feminino" data-filter="feminino">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/hero-frasco.png" alt="Perfume Verit&eacute; &mdash; linha feminina" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Femininos</span>
+            <span class="frag-card-meta">Eau de Parfum</span>
+            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
           <i class="cc-sheen" aria-hidden="true"></i>
-          <span class="category-card-label">Femininos<small>Ver perfumes</small></span>
         </a>
-        <a class="category-card category-card-masculino reveal" href="produtos.html?genero=masculino" data-letter="M">
+        <a class="frag-card reveal" href="produtos.html?genero=masculino" data-filter="masculino">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/hero-frasco.png" alt="Perfume Verit&eacute; &mdash; linha masculina" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Masculinos</span>
+            <span class="frag-card-meta">Eau de Parfum</span>
+            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
           <i class="cc-sheen" aria-hidden="true"></i>
-          <span class="category-card-label">Masculinos<small>Ver perfumes</small></span>
         </a>
-        <a class="category-card category-card-unissex reveal" href="produtos.html?genero=unissex" data-letter="U">
+        <a class="frag-card reveal" href="produtos.html?genero=unissex" data-filter="unissex">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/hero-frasco.png" alt="Perfume Verit&eacute; &mdash; linha unissex" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Unissex</span>
+            <span class="frag-card-meta">Eau de Parfum</span>
+            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
           <i class="cc-sheen" aria-hidden="true"></i>
-          <span class="category-card-label">Unissex<small>Ver perfumes</small></span>
         </a>
-        <a class="category-card category-card-kits reveal" href="produtos.html?categoria=kits" data-letter="K">
+        <a class="frag-card reveal" href="produtos.html?categoria=kits" data-filter="kits">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/hero-frasco.png" alt="Kits Verit&eacute;" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Kits</span>
+            <span class="frag-card-cta">Ver kits <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
           <i class="cc-sheen" aria-hidden="true"></i>
-          <span class="category-card-label">Kits<small>Ver kits</small></span>
         </a>
-        <a class="category-card category-card-presentes reveal" href="produtos.html?categoria=presentes" data-letter="P">
+        <a class="frag-card reveal" href="produtos.html?categoria=presentes" data-filter="presentes">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/hero-frasco.png" alt="Presentes Verit&eacute;" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Presentes</span>
+            <span class="frag-card-cta">Encontrar presente <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
           <i class="cc-sheen" aria-hidden="true"></i>
-          <span class="category-card-label">Presentes<small>Encontrar presente</small></span>
         </a>
-        <a class="category-card category-card-lancamentos reveal" href="produtos.html?colecao=lancamentos" data-letter="L">
+        <a class="frag-card reveal" href="produtos.html?colecao=lancamentos" data-filter="lancamentos">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/hero-frasco.png" alt="Lan&ccedil;amentos Verit&eacute;" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Lan&ccedil;amentos</span>
+            <span class="frag-card-cta">Ver novidades <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
           <i class="cc-sheen" aria-hidden="true"></i>
-          <span class="category-card-label">Lançamentos<small>Ver novidades</small></span>
         </a>
       </div>
     </div>
