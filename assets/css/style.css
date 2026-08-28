@@ -1771,6 +1771,72 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 
 /* =======================================================================
+   #vitrine-reel — os frascos rolando (marquee). Loop infinito 100% CSS
+   (um transform num elemento só, sem JS, sem custo por frame). Pausa no
+   hover; vira scroller manual em prefers-reduced-motion.
+   ======================================================================= */
+#vitrine-reel{ padding-block:clamp(4rem, 9vh, 6.5rem); overflow:hidden; }
+#vitrine-reel .reel-eyebrow{
+  text-align:center; margin:0 0 clamp(2rem, 5vh, 3.2rem);
+  font-family:var(--font-sans); font-weight:600;
+  font-size:.66rem; letter-spacing:.34em; text-transform:uppercase; color:var(--gold);
+}
+.reel{
+  position:relative; width:100%; overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 11%, #000 89%, transparent);
+  mask-image:linear-gradient(90deg, transparent, #000 11%, #000 89%, transparent);
+}
+.reel-track{
+  display:flex; width:max-content; will-change:transform;
+  animation:reel-scroll 46s linear infinite;
+}
+.reel:hover .reel-track{ animation-play-state:paused; }
+.reel-group{ display:flex; flex:none; }
+.reel-item{
+  flex:none; width:clamp(180px, 22vw, 262px);
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+  gap:.9rem; padding:0 clamp(1rem, 2.5vw, 2.2rem); position:relative;
+}
+.reel-item::before{
+  content:""; position:absolute; left:50%; top:40%; width:78%; aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(233,204,150,.13), transparent 68%);
+  filter:blur(18px);
+}
+.reel-item img{
+  position:relative; height:clamp(190px, 26vh, 300px); width:auto; max-width:100%;
+  object-fit:contain; display:block;
+  filter:drop-shadow(0 24px 32px rgba(0,0,0,.55));
+  transition:transform .5s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+}
+.reel-item img.reel-wide{ height:auto; width:100%; max-height:clamp(150px, 22vh, 236px); }
+.reel-name{
+  position:relative; font-family:var(--font-display);
+  font-size:.92rem; letter-spacing:.04em; color:rgba(250,249,246,.6); white-space:nowrap;
+}
+@media (hover:hover) and (pointer:fine){
+  .reel-item:hover img{
+    transform:scale(1.05) translateY(-4px);
+    filter:drop-shadow(0 30px 40px rgba(0,0,0,.6)) drop-shadow(0 0 24px rgba(233,204,150,.22));
+  }
+}
+@keyframes reel-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+@media (max-width:600px){
+  #vitrine-reel{ padding-block:clamp(3rem, 8vh, 4.5rem); }
+  .reel-track{ animation-duration:32s; }
+  .reel-item{ width:clamp(150px, 44vw, 200px); }
+  .reel-item img{ height:clamp(160px, 24vh, 220px); }
+}
+@media (prefers-reduced-motion:reduce){
+  .reel{
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+    -webkit-mask-image:none; mask-image:none;
+  }
+  .reel-track{ animation:none; }
+  .reel-group:nth-child(2){ display:none; }
+}
+
+/* =======================================================================
    Listagem de produtos (produtos.html) — filtros + ordenação + grade
    ======================================================================= */
 .listing-layout{display:grid; grid-template-columns:240px 1fr; gap:3rem; align-items:start;}
