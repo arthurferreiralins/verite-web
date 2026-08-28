@@ -1,14 +1,19 @@
 /**
  * Banner principal da home ("Descubra Sua Essência").
  *
- * Sequência de entrada + parallax de mouse muito sutil + partículas
- * douradas lentas num <canvas>.
+ * Sequência de entrada cinematográfica + parallax de mouse muito sutil +
+ * partículas douradas lentas num <canvas>. O flutuar contínuo do frasco
+ * é 100% CSS (keyframe hb-float).
  *
  * A seção #inicio.hero-home nasce "parada" (textos em opacity:0, grade e
  * partículas em opacity:0). A classe .hb-ready — adicionada aqui — dispara
  * a entrada encadeada, que é toda descrita em CSS, logo no carregamento.
  * Tudo desliga em prefers-reduced-motion, e o parallax + as partículas
  * também desligam em ponteiro grosso (touch).
+ *
+ * Parallax: camadas com [data-hb-depth] deslizam poucos px na direção
+ * oposta ao cursor; [data-hb-invert] inverte o sentido (o frasco reage
+ * em direção diferente do fundo). Efeito propositalmente mínimo.
  */
 (function(){
   'use strict';
@@ -58,15 +63,21 @@
       if(!running){ running = true; window.requestAnimationFrame(loop); }
     }, {passive:true});
 
-    hero.addEventListener('pointerleave', function(){ tx = 0; ty = 0; });
+    hero.addEventListener('pointerleave', function(){
+      tx = 0; ty = 0;
+      if(!running){ running = true; window.requestAnimationFrame(loop); }
+    });
 
     function loop(){
-      cx += (tx - cx) * 0.06;
-      cy += (ty - cy) * 0.06;
+      cx += (tx - cx) * 0.05;
+      cy += (ty - cy) * 0.05;
       for(var i = 0; i < layers.length; i++){
-        var d = parseFloat(layers[i].getAttribute('data-hb-depth')) || 0;
-        layers[i].style.transform =
-          'translate3d(' + (cx * d * 90).toFixed(2) + 'px,' + (cy * d * 90).toFixed(2) + 'px,0)';
+        var el = layers[i];
+        var d = parseFloat(el.getAttribute('data-hb-depth')) || 0;
+        var inv = el.hasAttribute('data-hb-invert') ? -1 : 1;
+        var mx = cx * d * 56 * inv;
+        var my = cy * d * 56 * inv;
+        el.style.transform = 'translate3d(' + mx.toFixed(2) + 'px,' + my.toFixed(2) + 'px,0)';
       }
       if(Math.abs(tx - cx) > 0.0005 || Math.abs(ty - cy) > 0.0005){
         window.requestAnimationFrame(loop);
@@ -103,16 +114,16 @@
       return {
         x: Math.random() * W,
         y: fresh ? Math.random() * H : H + 12,
-        r: 0.5 + Math.random() * 1.8,
-        v: 1.2 + Math.random() * 4.2,
-        a: 0.04 + Math.random() * 0.20,
+        r: 0.4 + Math.random() * 1.3,
+        v: 1.0 + Math.random() * 3.4,
+        a: 0.03 + Math.random() * 0.14,
         ph: Math.random() * 6.28,
-        sw: 0.15 + Math.random() * 0.45
+        sw: 0.13 + Math.random() * 0.4
       };
     }
 
     function seed(){
-      var n = Math.max(14, Math.min(44, Math.round((W * H) / 24000)));
+      var n = Math.max(12, Math.min(34, Math.round((W * H) / 30000)));
       dust = [];
       for(var i = 0; i < n; i++) dust.push(mk(true));
     }
