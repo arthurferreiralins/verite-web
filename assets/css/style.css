@@ -168,11 +168,11 @@ p{margin:0;}
    a rolagem lê como uma superfície só, preto e dourado. */
 #fragrancias{
   background:
-    radial-gradient(64% 60% at 50% -6%, rgba(177,138,79,.11), transparent 62%),
+    radial-gradient(72% 44% at 50% -4%, rgba(217,189,133,.13), transparent 60%),
+    radial-gradient(120% 80% at 50% 122%, rgba(177,138,79,.05), transparent 64%),
     var(--black);
 }
-#fragrancias::before,
-#fragrancias::after{ display:none; }
+#fragrancias::after{ display:none; }   /* sem o corte escuro no topo — emenda no banner */
 
 /* ghost watermark used behind a couple of sections for editorial depth —
    the V drifts extremely slowly, never enough to distract from text */
@@ -1534,6 +1534,137 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 .category-card-kits{background:linear-gradient(160deg,#221619,var(--black));}
 .category-card-presentes{background:linear-gradient(160deg,#161f1a,var(--black));}
 .category-card-lancamentos{background:linear-gradient(160deg,#1a1620,var(--black));}
+
+/* =======================================================================
+   #fragrancias — "Descubra Nossas Fragrâncias" (2ª seção, abaixo do banner)
+   Preto profundo + dourado, muito espaço, revelação progressiva no scroll,
+   cards premium com luz atrás, hover fluido e profundidade sutil no mouse.
+   Escopo estrito em #fragrancias — os .category-card de #presentes ficam
+   intactos. Sem divisão seca com o banner: ponte de luz dourada no topo.
+   ======================================================================= */
+#fragrancias{ padding-block:clamp(6rem, 14vh, 10rem); }
+#fragrancias::before{                       /* ponte de luz com o banner */
+  content:""; display:block; position:absolute; z-index:0; pointer-events:none;
+  left:50%; top:0; transform:translateX(-50%);
+  width:min(900px, 94vw); height:340px;
+  background:radial-gradient(ellipse at 50% 0%, rgba(217,189,133,.16), rgba(177,138,79,.05) 42%, transparent 72%);
+  filter:blur(26px);
+}
+#fragrancias .wrap{ position:relative; z-index:1; }
+
+#fragrancias .frag-head{ max-width:720px; margin-bottom:clamp(3.6rem, 9vh, 6.5rem); }
+#fragrancias .frag-title{
+  margin:0; font-family:var(--font-display); font-weight:500;
+  text-transform:uppercase; line-height:1.02; letter-spacing:.02em;
+  font-size:clamp(2.1rem, 5.4vw, 3.9rem);
+}
+#fragrancias .frag-title-1{ display:block; color:var(--off-white); letter-spacing:.07em; }
+#fragrancias .frag-title-2{
+  display:block; margin-top:.05em;
+  background:linear-gradient(180deg, var(--gold-light), #d3af71 48%, var(--gold-deep));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 34px rgba(217,189,133,.26));
+}
+#fragrancias .frag-sub{
+  margin:clamp(1.1rem, 2.6vh, 1.7rem) 0 0;
+  font-family:var(--font-display); font-style:italic;
+  font-size:clamp(1rem, 1.6vw, 1.2rem); color:rgba(250,249,246,.6);
+}
+
+#fragrancias .category-cards{
+  grid-template-columns:repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap:clamp(1.6rem, 3.4vw, 2.8rem);
+  perspective:1300px;
+}
+#fragrancias .category-card{
+  aspect-ratio:4/5; border-radius:4px;
+  border:1px solid rgba(217,189,133,.08);
+  background:
+    radial-gradient(120% 80% at 50% 116%, rgba(217,189,133,.14), rgba(177,138,79,.04) 44%, transparent 68%),
+    linear-gradient(165deg, #17130f, var(--black) 60%);
+  transform-style:preserve-3d; will-change:transform;
+  transition:
+    opacity .85s ease,
+    transform .8s cubic-bezier(.2,.7,.2,1),
+    border-color .55s ease,
+    box-shadow .55s ease;
+}
+/* distinção de categoria mantida, bem discreta, sobre a base escura */
+#fragrancias .category-card-feminino{    background-image:radial-gradient(120% 80% at 50% 116%, rgba(217,189,133,.15), transparent 62%), linear-gradient(165deg,#241a12,var(--black) 62%); }
+#fragrancias .category-card-masculino{   background-image:radial-gradient(120% 80% at 50% 116%, rgba(217,189,133,.13), transparent 62%), linear-gradient(165deg,#141c22,var(--black) 62%); }
+#fragrancias .category-card-unissex{     background-image:radial-gradient(120% 80% at 50% 116%, rgba(217,189,133,.14), transparent 62%), linear-gradient(165deg,#1c1a12,var(--black) 62%); }
+#fragrancias .category-card-kits{        background-image:radial-gradient(120% 80% at 50% 116%, rgba(217,189,133,.13), transparent 62%), linear-gradient(165deg,#221619,var(--black) 62%); }
+#fragrancias .category-card-presentes{   background-image:radial-gradient(120% 80% at 50% 116%, rgba(217,189,133,.13), transparent 62%), linear-gradient(165deg,#161f1a,var(--black) 62%); }
+#fragrancias .category-card-lancamentos{ background-image:radial-gradient(120% 80% at 50% 116%, rgba(217,189,133,.13), transparent 62%), linear-gradient(165deg,#1a1620,var(--black) 62%); }
+
+/* luz suave "atrás do frasco" dentro de cada card */
+#fragrancias .category-card::before{
+  background:radial-gradient(ellipse at 50% 112%, rgba(217,189,133,.32), rgba(177,138,79,.07) 46%, transparent 70%);
+  opacity:.5; transition:opacity .55s ease;
+}
+/* monograma serifado — o "produto" desta linguagem visual */
+#fragrancias .category-card::after{
+  font-size:clamp(6rem, 15vw, 10.5rem); top:auto; right:.04em; bottom:.02em;
+  opacity:.1; transition:opacity .55s ease, transform .55s cubic-bezier(.2,.7,.2,1);
+}
+#fragrancias .category-card-label{
+  left:1.7rem; right:1.7rem; bottom:1.6rem;
+  font-size:clamp(1.35rem, 2vw, 1.7rem);
+}
+#fragrancias .category-card-label small{ letter-spacing:.2em; margin-top:.55rem; opacity:.88; }
+
+/* brilho discreto que passa no card ao hover */
+#fragrancias .cc-sheen{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  overflow:hidden; border-radius:inherit;
+}
+#fragrancias .cc-sheen::before{
+  content:""; position:absolute; top:-40%; left:-30%; width:42%; height:180%;
+  background:linear-gradient(100deg, transparent, rgba(251,231,204,.14) 46%, rgba(255,255,255,.06) 56%, transparent);
+  transform:translateX(-170%) rotate(4deg); filter:blur(6px);
+}
+
+/* hover — só desktop / ponteiro fino; a elevação fina vem do JS por cima */
+@media (hover:hover) and (pointer:fine){
+  #fragrancias .category-card:hover{
+    transform:translateY(-8px);
+    border-color:rgba(217,189,133,.22);
+    box-shadow:0 34px 64px -32px rgba(0,0,0,.72), 0 0 46px -14px rgba(217,189,133,.16);
+    transition:transform .5s cubic-bezier(.2,.7,.2,1), border-color .5s ease, box-shadow .5s ease;
+    transition-delay:0s;
+  }
+  #fragrancias .category-card:hover::before{ opacity:1; }
+  #fragrancias .category-card:hover::after{ opacity:.16; transform:scale(1.04); }
+  #fragrancias .category-card:hover .cc-sheen::before{
+    transform:translateX(360%) rotate(4deg);
+    transition:transform 1.1s cubic-bezier(.4,0,.2,1);
+  }
+}
+
+/* revelação progressiva — cascata leve quando várias entram juntas
+   (delay só em opacity/transform; o hover reseta o delay acima) */
+#fragrancias .category-cards .category-card:nth-child(2){ transition-delay:.08s,.08s,0s,0s; }
+#fragrancias .category-cards .category-card:nth-child(3){ transition-delay:.16s,.16s,0s,0s; }
+#fragrancias .category-cards .category-card:nth-child(4){ transition-delay:.24s,.24s,0s,0s; }
+#fragrancias .category-cards .category-card:nth-child(5){ transition-delay:.32s,.32s,0s,0s; }
+#fragrancias .category-cards .category-card:nth-child(6){ transition-delay:.40s,.40s,0s,0s; }
+
+/* estado do reveal (usa o observer global .reveal): sobe de baixo + fade */
+:where(html.js) #fragrancias .category-card.reveal{ opacity:0; transform:translateY(28px); }
+#fragrancias .category-card.reveal.in{ opacity:1; transform:translateY(0); }
+
+@media (max-width:600px){
+  #fragrancias{ padding-block:clamp(4.5rem, 12vh, 7rem); }
+  #fragrancias::before{ height:240px; filter:blur(20px); }
+  #fragrancias .category-cards{ gap:1.4rem; perspective:none; }
+  #fragrancias .category-card{ aspect-ratio:5/4; }
+  #fragrancias .category-card::after{ font-size:clamp(5rem, 22vw, 8rem); }
+  #fragrancias .category-card:hover{ box-shadow:none; }
+}
+@media (prefers-reduced-motion:reduce){
+  #fragrancias .cc-sheen{ display:none; }
+  :where(html.js) #fragrancias .category-card.reveal{ opacity:1; transform:none; }
+}
 
 /* =======================================================================
    Listagem de produtos (produtos.html) — filtros + ordenação + grade
