@@ -181,11 +181,28 @@ a:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; border-radiu
 .section-beige{--sec-bg:var(--beige); --sec-fg:var(--ink-on-beige); --sec-fg-soft:#6b5f4c; --sec-line:rgba(44,38,32,.16);
   background:var(--sec-bg); color:var(--sec-fg);}
 
+/* --- símbolo do banner: a grade geométrica dourada, muito discreta,
+   em todos os fundos do site (mesma linguagem de #inicio .hb-grid) --- */
+:root{
+  --grid-line:rgba(217,189,133,.032);
+  --grid-motif:
+    repeating-linear-gradient(0deg, transparent 0 88px, var(--grid-line) 88px 89px),
+    repeating-linear-gradient(90deg, transparent 0 88px, var(--grid-line) 88px 89px);
+}
+.section-light, .section-beige{ --grid-line:rgba(138,106,55,.05); }
+.section-light{ background:var(--grid-motif), var(--sec-bg); }
+.section-dark{ background:var(--grid-motif), var(--sec-bg); }
+.section-2{ background:var(--grid-motif), var(--sec-bg); }
+.section-3{ background:var(--grid-motif), var(--sec-bg); }
+.section-beige{ background:var(--grid-motif), var(--sec-bg); }
+@media (max-width:600px){ :root{ --grid-line:rgba(217,189,133,.024); } .section-light, .section-beige{ --grid-line:rgba(138,106,55,.04); } }
+
 /* "Navegue por Categoria" emenda direto no banner: sem hairline nem
    corte no topo, e o mesmo halo dourado do hero descendo pra dentro —
    a rolagem lê como uma superfície só, preto e dourado. */
 #fragrancias{
   background:
+    var(--grid-motif),
     radial-gradient(72% 44% at 50% -4%, rgba(217,189,133,.13), transparent 60%),
     radial-gradient(120% 80% at 50% 122%, rgba(177,138,79,.05), transparent 64%),
     var(--black);
@@ -846,6 +863,7 @@ nav.links a.nav-clube:hover{
 .launch{
   text-align:center; overflow:hidden;
   background:
+    var(--grid-motif),
     radial-gradient(ellipse 50% 60% at 50% 0%, rgba(177,138,79,.14), transparent 70%),
     var(--black-3);
 }
@@ -1214,6 +1232,7 @@ footer .watermark{
   padding:9rem 2rem 4.5rem; text-align:center; color:var(--off-white);
   position:relative; overflow:hidden;
   background:
+    var(--grid-motif),
     radial-gradient(ellipse 55% 45% at 50% 0%, rgba(177,138,79,.16), transparent 70%),
     var(--black);
 }
@@ -1365,6 +1384,7 @@ footer .watermark{
 .catalog-hero{
   padding:clamp(7rem, 14vh, 10rem) 1.5rem clamp(3rem, 7vh, 4.5rem);
   background:
+    var(--grid-motif),
     radial-gradient(ellipse 58% 46% at 50% 0%, rgba(217,189,133,.18), transparent 70%),
     var(--black);
 }
@@ -1431,6 +1451,7 @@ footer .watermark{
 /* --- listagem em tom escuro premium --- */
 #listing{
   background:
+    var(--grid-motif),
     radial-gradient(78% 38% at 50% -3%, rgba(217,189,133,.1), transparent 60%),
     var(--black);
 }
