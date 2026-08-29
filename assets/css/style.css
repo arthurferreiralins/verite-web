@@ -181,28 +181,41 @@ a:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; border-radiu
 .section-beige{--sec-bg:var(--beige); --sec-fg:var(--ink-on-beige); --sec-fg-soft:#6b5f4c; --sec-line:rgba(44,38,32,.16);
   background:var(--sec-bg); color:var(--sec-fg);}
 
-/* --- símbolo do banner: a grade geométrica dourada, muito discreta,
-   em todos os fundos do site (mesma linguagem de #inicio .hb-grid) --- */
+/* --- símbolos do banner em todos os fundos do site: a grade geométrica
+   dourada + folhas douradas discretas nos cantos (mesma linguagem de
+   #inicio — grade .hb-grid e a folhagem dourada da cena de fundo) --- */
 :root{
   --grid-line:rgba(217,189,133,.032);
+  --leaf:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22240%22%20height=%22240%22%3E%3Cg%20fill=%22%23d9bd8514%22%3E%3Cpath%20d=%22M120%20220C118%20170%20108%20120%2078%2078%20104%2096%20116%20132%20122%20176%20126%20132%20138%2096%20164%2078%20134%20120%20124%20170%20122%20220Z%22/%3E%3Cpath%20d=%22M100%20150C80%20140%2062%20118%2056%2092%2078%20104%2092%20126%20100%20150Z%22/%3E%3Cpath%20d=%22M140%20150C160%20140%20178%20118%20184%2092%20162%20104%20148%20126%20140%20150Z%22/%3E%3Cpath%20d=%22M108%20110C92%20100%2080%2080%2076%2058%2094%2070%20104%2090%20108%20110Z%22/%3E%3Cpath%20d=%22M132%20110C148%20100%20160%2080%20164%2058%20146%2070%20136%2090%20132%20110Z%22/%3E%3Cpath%20d=%22M116%2076C104%2066%2096%2048%2094%2030%20108%2042%20114%2060%20116%2076Z%22/%3E%3Cpath%20d=%22M124%2076C136%2066%20144%2048%20146%2030%20132%2042%20126%2060%20124%2076Z%22/%3E%3C/g%3E%3C/svg%3E");
   --grid-motif:
     repeating-linear-gradient(0deg, transparent 0 88px, var(--grid-line) 88px 89px),
     repeating-linear-gradient(90deg, transparent 0 88px, var(--grid-line) 88px 89px);
+  --bg-symbols:
+    var(--leaf) top -55px right -85px / clamp(220px, 30vw, 420px) no-repeat,
+    var(--leaf) bottom -55px left -85px / clamp(220px, 30vw, 420px) no-repeat,
+    var(--grid-motif);
 }
-.section-light, .section-beige{ --grid-line:rgba(138,106,55,.05); }
-.section-light{ background:var(--grid-motif), var(--sec-bg); }
-.section-dark{ background:var(--grid-motif), var(--sec-bg); }
-.section-2{ background:var(--grid-motif), var(--sec-bg); }
-.section-3{ background:var(--grid-motif), var(--sec-bg); }
-.section-beige{ background:var(--grid-motif), var(--sec-bg); }
-@media (max-width:600px){ :root{ --grid-line:rgba(217,189,133,.024); } .section-light, .section-beige{ --grid-line:rgba(138,106,55,.04); } }
+.section-light, .section-beige{
+  --grid-line:rgba(138,106,55,.05);
+  --leaf:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22240%22%20height=%22240%22%3E%3Cg%20fill=%22%238a6a371f%22%3E%3Cpath%20d=%22M120%20220C118%20170%20108%20120%2078%2078%20104%2096%20116%20132%20122%20176%20126%20132%20138%2096%20164%2078%20134%20120%20124%20170%20122%20220Z%22/%3E%3Cpath%20d=%22M100%20150C80%20140%2062%20118%2056%2092%2078%20104%2092%20126%20100%20150Z%22/%3E%3Cpath%20d=%22M140%20150C160%20140%20178%20118%20184%2092%20162%20104%20148%20126%20140%20150Z%22/%3E%3Cpath%20d=%22M108%20110C92%20100%2080%2080%2076%2058%2094%2070%20104%2090%20108%20110Z%22/%3E%3Cpath%20d=%22M132%20110C148%20100%20160%2080%20164%2058%20146%2070%20136%2090%20132%20110Z%22/%3E%3Cpath%20d=%22M116%2076C104%2066%2096%2048%2094%2030%20108%2042%20114%2060%20116%2076Z%22/%3E%3Cpath%20d=%22M124%2076C136%2066%20144%2048%20146%2030%20132%2042%20126%2060%20124%2076Z%22/%3E%3C/g%3E%3C/svg%3E");
+}
+.section-light{ background:var(--bg-symbols), var(--sec-bg); }
+.section-dark{ background:var(--bg-symbols), var(--sec-bg); }
+.section-2{ background:var(--bg-symbols), var(--sec-bg); }
+.section-3{ background:var(--bg-symbols), var(--sec-bg); }
+.section-beige{ background:var(--bg-symbols), var(--sec-bg); }
+@media (max-width:600px){
+  :root{ --grid-line:rgba(217,189,133,.024); }
+  .section-light, .section-beige{ --grid-line:rgba(138,106,55,.04); }
+  :root{ --bg-symbols:var(--leaf) top -40px right -70px / 200px no-repeat, var(--grid-motif); }
+}
 
 /* "Navegue por Categoria" emenda direto no banner: sem hairline nem
    corte no topo, e o mesmo halo dourado do hero descendo pra dentro —
    a rolagem lê como uma superfície só, preto e dourado. */
 #fragrancias{
   background:
-    var(--grid-motif),
+    var(--bg-symbols),
     radial-gradient(72% 44% at 50% -4%, rgba(217,189,133,.13), transparent 60%),
     radial-gradient(120% 80% at 50% 122%, rgba(177,138,79,.05), transparent 64%),
     var(--black);
@@ -863,7 +876,7 @@ nav.links a.nav-clube:hover{
 .launch{
   text-align:center; overflow:hidden;
   background:
-    var(--grid-motif),
+    var(--bg-symbols),
     radial-gradient(ellipse 50% 60% at 50% 0%, rgba(177,138,79,.14), transparent 70%),
     var(--black-3);
 }
@@ -1232,7 +1245,7 @@ footer .watermark{
   padding:9rem 2rem 4.5rem; text-align:center; color:var(--off-white);
   position:relative; overflow:hidden;
   background:
-    var(--grid-motif),
+    var(--bg-symbols),
     radial-gradient(ellipse 55% 45% at 50% 0%, rgba(177,138,79,.16), transparent 70%),
     var(--black);
 }
@@ -1384,7 +1397,7 @@ footer .watermark{
 .catalog-hero{
   padding:clamp(7rem, 14vh, 10rem) 1.5rem clamp(3rem, 7vh, 4.5rem);
   background:
-    var(--grid-motif),
+    var(--bg-symbols),
     radial-gradient(ellipse 58% 46% at 50% 0%, rgba(217,189,133,.18), transparent 70%),
     var(--black);
 }
@@ -1451,7 +1464,7 @@ footer .watermark{
 /* --- listagem em tom escuro premium --- */
 #listing{
   background:
-    var(--grid-motif),
+    var(--bg-symbols),
     radial-gradient(78% 38% at 50% -3%, rgba(217,189,133,.1), transparent 60%),
     var(--black);
 }
