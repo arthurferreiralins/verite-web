@@ -188,13 +188,15 @@ a:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; border-radiu
   --grid-line:rgba(217,189,133,.032);
   --leaf:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22240%22%20height=%22240%22%3E%3Cg%20fill=%22%23d9bd8514%22%3E%3Cpath%20d=%22M120%20220C118%20170%20108%20120%2078%2078%20104%2096%20116%20132%20122%20176%20126%20132%20138%2096%20164%2078%20134%20120%20124%20170%20122%20220Z%22/%3E%3Cpath%20d=%22M100%20150C80%20140%2062%20118%2056%2092%2078%20104%2092%20126%20100%20150Z%22/%3E%3Cpath%20d=%22M140%20150C160%20140%20178%20118%20184%2092%20162%20104%20148%20126%20140%20150Z%22/%3E%3Cpath%20d=%22M108%20110C92%20100%2080%2080%2076%2058%2094%2070%20104%2090%20108%20110Z%22/%3E%3Cpath%20d=%22M132%20110C148%20100%20160%2080%20164%2058%20146%2070%20136%2090%20132%20110Z%22/%3E%3Cpath%20d=%22M116%2076C104%2066%2096%2048%2094%2030%20108%2042%20114%2060%20116%2076Z%22/%3E%3Cpath%20d=%22M124%2076C136%2066%20144%2048%20146%2030%20132%2042%20126%2060%20124%2076Z%22/%3E%3C/g%3E%3C/svg%3E");
   --mark-v:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22300%22%20height=%22300%22%3E%3Ctext%20x=%22150%22%20y=%22242%22%20font-family=%22Cormorant%20Garamond,Georgia,Cambria,serif%22%20font-size=%22310%22%20font-weight=%22500%22%20text-anchor=%22middle%22%20fill=%22%23d9bd850f%22%3EV%3C/text%3E%3C/svg%3E");
+  --crown:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22130%22%20height=%22100%22%3E%3Cg%20fill=%22%23d9bd8514%22%3E%3Cpath%20d=%22M16%2082%20L16%2036%20L40%2058%20L65%2018%20L90%2058%20L114%2036%20L114%2082%20Z%22/%3E%3Ccircle%20cx=%2216%22%20cy=%2230%22%20r=%226%22/%3E%3Ccircle%20cx=%2265%22%20cy=%2211%22%20r=%227%22/%3E%3Ccircle%20cx=%22114%22%20cy=%2230%22%20r=%226%22/%3E%3Crect%20x=%2212%22%20y=%2284%22%20width=%22106%22%20height=%229%22%20rx=%222%22/%3E%3C/g%3E%3C/svg%3E");
   --grid-motif:
     repeating-linear-gradient(0deg, transparent 0 88px, var(--grid-line) 88px 89px),
     repeating-linear-gradient(90deg, transparent 0 88px, var(--grid-line) 88px 89px);
   --bg-symbols:
-    var(--mark-v) right -70px bottom -95px / clamp(260px, 38vw, 560px) no-repeat,
-    var(--leaf) top -55px right -85px / clamp(200px, 28vw, 380px) no-repeat,
-    var(--leaf) bottom -50px left -80px / clamp(200px, 28vw, 380px) no-repeat,
+    var(--mark-v) right -70px bottom -95px / clamp(240px, 32vw, 460px) no-repeat,
+    var(--crown) left clamp(1rem, 5vw, 4rem) top clamp(1.4rem, 4vh, 3rem) / clamp(70px, 8vw, 104px) no-repeat,
+    var(--leaf) top -30px right -46px / clamp(120px, 15vw, 210px) no-repeat,
+    var(--leaf) bottom -28px left -42px / clamp(120px, 15vw, 210px) no-repeat,
     radial-gradient(62% 32% at 50% 0%, rgba(217,189,133,.055), transparent 62%),
     var(--grid-motif);
 }
@@ -202,6 +204,7 @@ a:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; border-radiu
   --grid-line:rgba(138,106,55,.05);
   --leaf:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22240%22%20height=%22240%22%3E%3Cg%20fill=%22%238a6a371f%22%3E%3Cpath%20d=%22M120%20220C118%20170%20108%20120%2078%2078%20104%2096%20116%20132%20122%20176%20126%20132%20138%2096%20164%2078%20134%20120%20124%20170%20122%20220Z%22/%3E%3Cpath%20d=%22M100%20150C80%20140%2062%20118%2056%2092%2078%20104%2092%20126%20100%20150Z%22/%3E%3Cpath%20d=%22M140%20150C160%20140%20178%20118%20184%2092%20162%20104%20148%20126%20140%20150Z%22/%3E%3Cpath%20d=%22M108%20110C92%20100%2080%2080%2076%2058%2094%2070%20104%2090%20108%20110Z%22/%3E%3Cpath%20d=%22M132%20110C148%20100%20160%2080%20164%2058%20146%2070%20136%2090%20132%20110Z%22/%3E%3Cpath%20d=%22M116%2076C104%2066%2096%2048%2094%2030%20108%2042%20114%2060%20116%2076Z%22/%3E%3Cpath%20d=%22M124%2076C136%2066%20144%2048%20146%2030%20132%2042%20126%2060%20124%2076Z%22/%3E%3C/g%3E%3C/svg%3E");
   --mark-v:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22300%22%20height=%22300%22%3E%3Ctext%20x=%22150%22%20y=%22242%22%20font-family=%22Cormorant%20Garamond,Georgia,Cambria,serif%22%20font-size=%22310%22%20font-weight=%22500%22%20text-anchor=%22middle%22%20fill=%22%238a6a3717%22%3EV%3C/text%3E%3C/svg%3E");
+  --crown:url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22130%22%20height=%22100%22%3E%3Cg%20fill=%22%238a6a3720%22%3E%3Cpath%20d=%22M16%2082%20L16%2036%20L40%2058%20L65%2018%20L90%2058%20L114%2036%20L114%2082%20Z%22/%3E%3Ccircle%20cx=%2216%22%20cy=%2230%22%20r=%226%22/%3E%3Ccircle%20cx=%2265%22%20cy=%2211%22%20r=%227%22/%3E%3Ccircle%20cx=%22114%22%20cy=%2230%22%20r=%226%22/%3E%3Crect%20x=%2212%22%20y=%2284%22%20width=%22106%22%20height=%229%22%20rx=%222%22/%3E%3C/g%3E%3C/svg%3E");
 }
 .section-light{ background:var(--bg-symbols), var(--sec-bg); }
 .section-dark{ background:var(--bg-symbols), var(--sec-bg); }
@@ -211,7 +214,7 @@ a:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; border-radiu
 @media (max-width:600px){
   :root{ --grid-line:rgba(217,189,133,.024); }
   .section-light, .section-beige{ --grid-line:rgba(138,106,55,.04); }
-  :root{ --bg-symbols:var(--mark-v) right -46px bottom -66px / 220px no-repeat, var(--leaf) top -34px left -62px / 190px no-repeat, var(--grid-motif); }
+  :root{ --bg-symbols:var(--mark-v) right -46px bottom -66px / 200px no-repeat, var(--crown) left 1rem top 1.2rem / 64px no-repeat, var(--leaf) top -22px right -36px / 120px no-repeat, var(--grid-motif); }
 }
 
 /* "Navegue por Categoria" emenda direto no banner: sem hairline nem
