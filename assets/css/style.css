@@ -745,6 +745,87 @@ nav.links a.nav-clube:hover{
 @media (prefers-reduced-motion:reduce){ :where(html.js) .reveal-blur{opacity:1; transform:none; filter:none; transition:none;} }
 
 /* =======================================================================
+   scroll-fx — barra de progresso, variações de entrada, faixa
+   cinematográfica. Movimento discreto, GPU (transform/opacity), tudo
+   desliga em prefers-reduced-motion.
+   ======================================================================= */
+.scroll-progress{
+  position:fixed; top:0; left:0; right:0; height:2px; z-index:120;
+  transform:scaleX(0); transform-origin:0 50%; pointer-events:none;
+  background:linear-gradient(90deg, var(--gold-deep), var(--gold-light));
+}
+@media (prefers-reduced-motion:reduce){ .scroll-progress{ display:none; } }
+
+/* variações de entrada — combinam com .reveal (observer global adiciona .in) */
+:where(html.js) .reveal.reveal-left{ transform:translateX(-46px); }
+:where(html.js) .reveal.reveal-right{ transform:translateX(46px); }
+:where(html.js) .reveal.reveal-scale{ transform:scale(.93); }
+.reveal.reveal-left.in, .reveal.reveal-right.in, .reveal.reveal-scale.in{ transform:none; }
+:where(html.js) .reveal.reveal-mask{
+  opacity:1; transform:none; clip-path:inset(0 100% 0 0);
+  transition:clip-path 1.05s cubic-bezier(.2,.7,.2,1);
+}
+.reveal.reveal-mask.in{ clip-path:inset(0 0 0 0); }
+@media (prefers-reduced-motion:reduce){
+  :where(html.js) .reveal.reveal-left,
+  :where(html.js) .reveal.reveal-right,
+  :where(html.js) .reveal.reveal-scale{ transform:none; }
+  :where(html.js) .reveal.reveal-mask{ clip-path:none; }
+}
+
+/* cards de produto entram com um leve zoom (destaque durante o scroll) */
+:where(html.js) #fragrancias .frag-card.reveal{ transform:translateY(30px) scale(.955); }
+:where(html.js) .product-tile.reveal{ opacity:0; transform:translateY(26px) scale(.955); }
+.product-tile.reveal.in{ opacity:1; transform:none; }
+#listing-grid .product-tile.reveal:nth-child(2){ transition-delay:.05s; }
+#listing-grid .product-tile.reveal:nth-child(3){ transition-delay:.1s; }
+#listing-grid .product-tile.reveal:nth-child(4){ transition-delay:.15s; }
+#listing-grid .product-tile.reveal:nth-child(5){ transition-delay:.2s; }
+#listing-grid .product-tile.reveal:nth-child(n+6){ transition-delay:.25s; }
+@media (prefers-reduced-motion:reduce){
+  :where(html.js) #fragrancias .frag-card.reveal,
+  :where(html.js) .product-tile.reveal{ transform:none; opacity:1; }
+}
+
+/* faixa cinematográfica entre seções — tipografia gigante que cresce e
+   clareia conforme o scroll (--p vem do scroll-fx.js) */
+.statement{
+  position:relative; padding:clamp(6rem, 22vh, 13rem) 1.5rem; text-align:center;
+  overflow:hidden;
+  background:
+    radial-gradient(58% 60% at 50% 50%, rgba(217,189,133,.09), transparent 70%),
+    var(--black);
+}
+.statement-word{
+  display:block; margin:0;
+  font-family:var(--font-display); font-weight:500; text-transform:uppercase;
+  letter-spacing:.06em; line-height:.95; font-size:clamp(3rem, 15vw, 11rem);
+  background:linear-gradient(180deg, var(--off-white), var(--gold-light) 55%, var(--gold-deep));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  transform:scale(calc(.86 + .14 * var(--p, 1)));
+  opacity:calc(.3 + .7 * var(--p, 1));
+  will-change:transform, opacity;
+}
+.statement-line{
+  margin:clamp(1.1rem, 3vh, 1.9rem) 0 0;
+  font-family:var(--font-display); font-style:italic;
+  font-size:clamp(1rem, 1.8vw, 1.3rem); color:rgba(250,249,246,.55);
+  opacity:calc(var(--p, 1));
+}
+@media (prefers-reduced-motion:reduce){
+  .statement-word{ transform:none; opacity:1; }
+  .statement-line{ opacity:1; }
+}
+
+/* iluminação da vitrine muda conforme a fragrância sob o cursor */
+#fragrancias{ --tint:217,189,133; }
+#fragrancias .frag-orb-a,
+#fragrancias .frag-orb-b{
+  background:radial-gradient(circle, rgba(var(--tint),.4), transparent 72%);
+  transition:background .8s ease, opacity .8s ease;
+}
+
+/* =======================================================================
    A VERITÉ (brand story) — editorial drop cap on the lead paragraph
    ======================================================================= */
 .section-head-split .lead::first-letter{

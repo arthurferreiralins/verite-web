@@ -75,7 +75,7 @@
    * riscado se houver oferta), favoritar, adicionar ao carrinho, ver perfume.
    */
   function renderProductCard(p){
-    var card = el('div', 'product-tile');
+    var card = el('div', 'product-tile reveal');
 
     var link = el('a', 'product-tile-link');
     link.href = 'produto.html?slug=' + encodeURIComponent(p.id || p.slug);

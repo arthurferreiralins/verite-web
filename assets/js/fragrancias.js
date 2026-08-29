@@ -151,4 +151,27 @@
       });
     });
   }
+
+  /* --------------------------------------------------------------------
+     Iluminação da vitrine muda conforme a fragrância sob o cursor:
+     cada card leva um matiz dourado próprio; ao passar o mouse, o brilho
+     de fundo da seção desliza pra esse tom (transição no CSS).
+     -------------------------------------------------------------------- */
+  if(!reduce && fine && cards.length){
+    var TINTS = {
+      feminino:'233,201,160', masculino:'150,172,196', unissex:'206,196,158',
+      kits:'214,178,124', presentes:'168,200,176', lancamentos:'194,172,214'
+    };
+    cards.forEach(function(card){
+      var tint = TINTS[card.getAttribute('data-filter')];
+      if(!tint) return;
+      card.addEventListener('pointerenter', function(e){
+        if(e.pointerType === 'touch') return;
+        sec.style.setProperty('--tint', tint);
+      });
+      card.addEventListener('pointerleave', function(){
+        sec.style.removeProperty('--tint');
+      });
+    });
+  }
 })();
