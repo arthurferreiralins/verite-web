@@ -1,6 +1,9 @@
 User-agent: *
 Allow: /
-Disallow: /produto.html
+
+Disallow: /painel
+Disallow: /painel/
+Disallow: /api/
 Disallow: /carrinho.html
 Disallow: /favoritos.html
 

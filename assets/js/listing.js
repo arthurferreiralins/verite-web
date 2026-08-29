@@ -141,7 +141,11 @@
 
     function renderAll(){
       updateUrl(filters);
-      if(titleEl) titleEl.textContent = buildTitle(filters);
+      var pageTitle = buildTitle(filters);
+      if(titleEl) titleEl.textContent = pageTitle;
+      document.title = (pageTitle === 'Nossos Perfumes')
+        ? 'Perfumes Verité | Femininos, Masculinos, Unissex e Kits'
+        : pageTitle + ' — Perfumes Verité';
       renderActiveFilters();
 
       var filtered = VP.applySort(VP.applyFilters(catalog, filters), filters.ordenar);

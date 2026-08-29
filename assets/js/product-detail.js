@@ -44,10 +44,30 @@
     var VP = window.VeriteProducts;
 
     document.title = product.seoTitle || (product.name + ' — VERITÉ');
-    if(product.seoDescription){
+    var pageDesc = product.seoDescription || product.shortDescription || product.description || '';
+    if(pageDesc){
       var metaDesc = document.querySelector('meta[name="description"]');
-      if(metaDesc) metaDesc.setAttribute('content', product.seoDescription);
+      if(metaDesc) metaDesc.setAttribute('content', pageDesc);
     }
+
+    // Canonical + Open Graph por produto (URL real com ?slug=), para
+    // compartilhamento e para quando estas paginas forem indexaveis.
+    var canonicalUrl = 'https://veriteperfumes.com.br/produto.html?slug=' + encodeURIComponent(slug);
+    function setMeta(selector, attr, value){
+      if(!value) return;
+      var node = document.head.querySelector(selector);
+      if(node) node.setAttribute(attr, value);
+    }
+    var linkCanon = document.head.querySelector('link[rel="canonical"]');
+    if(linkCanon) linkCanon.setAttribute('href', canonicalUrl);
+    setMeta('meta[property="og:url"]', 'content', canonicalUrl);
+    setMeta('meta[property="og:title"]', 'content', document.title);
+    setMeta('meta[name="twitter:title"]', 'content', document.title);
+    setMeta('meta[property="og:description"]', 'content', pageDesc);
+    setMeta('meta[name="twitter:description"]', 'content', pageDesc);
+    var mainImage = (product.images && product.images.length) ? product.images[0] : '';
+    setMeta('meta[property="og:image"]', 'content', mainImage);
+    setMeta('meta[name="twitter:image"]', 'content', mainImage);
 
     // Dados estruturados (schema.org/Product) — só quando há produto real.
     var existingLd = document.getElementById('product-jsonld');
