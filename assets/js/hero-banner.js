@@ -160,7 +160,6 @@
     var tilt   = hero.querySelector('.hb-bottle-tilt');
     var stage  = hero.querySelector('.hb-bottle-stage');
     var bottle = hero.querySelector('.hb-bottle');
-    var mirror = hero.querySelector('.hb-bottle-mirror');
     var sweep  = hero.querySelector('.hb-sweep');
     var shine  = hero.querySelector('.hb-shine');
     var nameEl = hero.querySelector('.hb-frag-name');
@@ -182,7 +181,6 @@
 
     function paint(f, i){
       bottle.src = f.img; bottle.alt = f.alt;
-      if(mirror) mirror.src = f.img;
       hero.style.setProperty('--tint', f.tint);
       if(brandEl) brandEl.textContent = f.brand;
       if(detailEl) detailEl.textContent = f.detail;

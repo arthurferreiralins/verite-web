@@ -2648,30 +2648,13 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   min-height:100svh;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   text-align:left; padding:0; overflow:hidden; isolation:isolate;
+  /* fundo limpo: um poço de luz dourada onde o frasco fica + preto */
   background:
-    radial-gradient(38% 44% at 18% 28%, rgba(177,138,79,.12), transparent 68%),
-    radial-gradient(44% 58% at 86% 58%, rgba(198,158,96,.14), transparent 70%),
-    radial-gradient(30% 40% at 62% 110%, rgba(177,138,79,.10), transparent 72%),
-    radial-gradient(130% 120% at 50% 0%, #14100f, var(--black) 58%);
+    radial-gradient(46% 54% at 72% 44%, rgba(217,189,133,.14), transparent 64%),
+    radial-gradient(135% 120% at 50% -6%, #15110f, var(--black) 56%);
 }
 
 /* --- camadas de fundo --- */
-/* foto dos perfumes Verité preenchendo o banner, com scrim escuro pra
-   manter o texto legível e o clima preto-e-dourado */
-#inicio .hb-perfumes{
-  position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:
-    linear-gradient(90deg, rgba(9,8,8,.97) 0%, rgba(9,8,8,.78) 30%, rgba(9,8,8,.4) 58%, rgba(9,8,8,.6) 100%),
-    linear-gradient(180deg, rgba(9,8,8,.82) 0%, rgba(9,8,8,.28) 42%, rgba(9,8,8,.72) 100%),
-    url('../img/hero-perfumes.jpg') 62% 58% / cover no-repeat;
-}
-@media (max-width:900px){
-  #inicio .hb-perfumes{
-    background:
-      linear-gradient(180deg, rgba(9,8,8,.9) 0%, rgba(9,8,8,.5) 46%, rgba(9,8,8,.8) 100%),
-      url('../img/hero-perfumes.jpg') 58% 60% / cover no-repeat;
-  }
-}
 #inicio .hb-bg{
   position:absolute; inset:0; z-index:0; pointer-events:none;
   background:
@@ -2778,85 +2761,47 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #inicio .hb-media{
   position:relative; align-self:stretch;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  min-height:clamp(400px, 74vh, 740px);
-}
-/* leve vinheta pra emoldurar a cena */
-#inicio .hb-vignette{
-  position:absolute; inset:0; z-index:1; pointer-events:none;
-  background:
-    radial-gradient(135% 125% at 62% 42%, transparent 42%, rgba(6,5,4,.24) 82%, rgba(3,2,2,.4) 100%),
-    linear-gradient(90deg, rgba(3,2,2,.3), transparent 42%);
+  min-height:clamp(420px, 76vh, 760px);
 }
 /* luz dourada concentrada atrás do frasco — cor segue a fragrância */
 #inicio .hb-glow{
   position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:radial-gradient(34% 46% at 50% 46%, rgba(var(--tint),.34), rgba(var(--tint),.09) 44%, transparent 72%);
+  background:radial-gradient(38% 50% at 50% 46%, rgba(var(--tint),.42), rgba(var(--tint),.12) 44%, transparent 72%);
   filter:blur(18px); opacity:0; transition:background .9s ease;
 }
 /* halo largo que respira devagar */
 #inicio .hb-aura{
   position:absolute; z-index:0;
-  width:min(122%, 640px); aspect-ratio:1; border-radius:50%;
-  background:radial-gradient(circle, rgba(var(--tint),.2), rgba(177,138,79,.05) 46%, transparent 70%);
-  filter:blur(14px); opacity:0; transition:background .9s ease;
-}
-/* névoa extremamente discreta */
-#inicio .hb-mist{ position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none; }
-#inicio .hb-mist i{
-  position:absolute; left:50%; top:55%; width:76%; aspect-ratio:1; border-radius:50%;
-  background:radial-gradient(circle, rgba(246,227,189,.06), transparent 64%);
-  filter:blur(30px); transform:translate(-50%,-50%);
-}
-#inicio .hb-mist i:nth-child(2){
-  top:34%; width:54%;
-  background:radial-gradient(circle, rgba(246,227,189,.045), transparent 64%);
+  width:min(130%, 700px); aspect-ratio:1; border-radius:50%;
+  background:radial-gradient(circle, rgba(var(--tint),.24), rgba(177,138,79,.06) 46%, transparent 70%);
+  filter:blur(16px); opacity:0; transition:background .9s ease;
 }
 #inicio .hb-media-inner{
   position:relative; z-index:2; will-change:transform;
   display:flex; flex-direction:column; align-items:center;
 }
 /* entrada: swoop pela direita com overshoot (keyframe hb-bottle-in) */
-#inicio .hb-bottle-enter{
-  opacity:0; transform:translateX(12%); perspective:1000px;
-  margin-bottom:clamp(2.4rem, 8vh, 6rem);   /* espaço pro reflexo espelhado */
-}
+#inicio .hb-bottle-enter{ opacity:0; transform:translateX(12%); perspective:1000px; }
 /* .hb-bottle-tilt = tilt de mouse (JS) · .hb-bottle-stage = passagem
    ao trocar de fragrância (JS) · .hb-bottle-float = flutuar contínuo (CSS).
    Cada transform no seu elemento, sem conflito. */
 #inicio .hb-bottle-tilt{ position:relative; transform-style:preserve-3d; will-change:transform; }
 #inicio .hb-bottle-stage{
-  position:relative; width:clamp(200px, 27vw, 320px);
+  position:relative; width:clamp(230px, 31vw, 380px);
   will-change:transform, opacity;
 }
 #inicio .hb-bottle-float{ position:relative; display:block; will-change:transform; }
 #inicio .hb-bottle{
   position:relative; z-index:2; display:block; width:100%; height:auto;
-  filter:drop-shadow(0 34px 46px rgba(0,0,0,.55)) drop-shadow(0 10px 20px rgba(0,0,0,.4));
-  transition:opacity .5s ease;
-}
-/* reflexo espelhado do frasco no "chão" */
-#inicio .hb-bottle-mirror{
-  position:absolute; left:0; top:100%; z-index:1;
-  width:100%; height:auto;
-  transform:translateY(-16%) scaleY(-1);
-  -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,.5), transparent 40%);
-  mask-image:linear-gradient(to bottom, rgba(0,0,0,.5), transparent 40%);
-  opacity:.18; filter:blur(1.2px); pointer-events:none;
-  transition:opacity .5s ease;
+  filter:drop-shadow(0 40px 52px rgba(0,0,0,.55)) drop-shadow(0 12px 22px rgba(0,0,0,.42)) drop-shadow(0 0 40px rgba(var(--tint),.16));
+  transition:opacity .5s ease, filter .9s ease;
 }
 /* sombra de contato escura — aterra o frasco */
 #inicio .hb-floor{
-  position:absolute; left:50%; bottom:-4%; width:76%; height:8%;
+  position:absolute; left:50%; bottom:-4%; width:74%; height:8%;
   transform:translateX(-50%);
-  background:radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.62), rgba(0,0,0,.3) 44%, transparent 72%);
-  filter:blur(11px); z-index:0;
-}
-/* reflexo quente que sobe do frasco — cor da fragrância */
-#inicio .hb-reflection{
-  position:absolute; left:50%; bottom:-1%; width:58%; height:11%;
-  transform:translateX(-50%);
-  background:radial-gradient(ellipse at 50% 0%, rgba(var(--tint),.16), transparent 70%);
-  filter:blur(8px); z-index:0; transition:background .9s ease;
+  background:radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.6), rgba(0,0,0,.28) 44%, transparent 72%);
+  filter:blur(12px); z-index:0;
 }
 /* brilho especular que acompanha o cursor */
 #inicio .hb-shine{
@@ -2895,16 +2840,34 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   100%{ opacity:1; transform:translateX(0) scale(1) rotateZ(0); }
 }
 
-/* --- miniaturas (troca de fragrância) --- */
+/* --- dock: nome + miniaturas, centrado na base do banner --- */
+#inicio .hb-dock{
+  position:absolute; left:50%; bottom:clamp(1.4rem, 4.5vh, 3rem);
+  transform:translateX(-50%); z-index:5;
+  display:flex; flex-direction:column; align-items:center; gap:clamp(.7rem, 2vh, 1.1rem);
+  width:max-content; max-width:92vw;
+}
+#inicio .hb-frag-name{
+  text-align:center; margin:0; font-family:var(--font-display);
+  transition:opacity .35s ease;
+}
+#inicio .hb-frag-name.is-fading{ opacity:0; }
+#inicio .hb-frag-brand{
+  display:block; font-size:1rem; letter-spacing:.24em; text-transform:uppercase; color:var(--off-white);
+}
+#inicio .hb-frag-detail{
+  display:block; margin-top:.3rem;
+  font-family:var(--font-sans); font-size:.6rem; letter-spacing:.24em;
+  text-transform:uppercase; color:var(--gold-light);
+}
 #inicio .hb-switch{
-  position:relative; z-index:5;
   display:flex; gap:clamp(.5rem, 1.6vw, 1rem);
-  margin-top:clamp(1.4rem, 3.6vh, 2.4rem);
 }
 #inicio .hb-switch-btn{
-  width:clamp(46px, 6vw, 64px); height:clamp(62px, 8vw, 84px);
+  width:clamp(46px, 6vw, 62px); height:clamp(60px, 8vw, 80px);
   padding:.4rem; border:1px solid rgba(217,189,133,.16); border-radius:4px;
-  background:linear-gradient(160deg, rgba(23,19,15,.72), rgba(12,10,9,.72));
+  background:linear-gradient(160deg, rgba(23,19,15,.82), rgba(12,10,9,.82));
+  -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
   cursor:pointer; display:grid; place-items:center;
   transition:border-color .4s ease, transform .4s cubic-bezier(.2,.7,.2,1), background-color .4s ease;
 }
@@ -2915,38 +2878,16 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #inicio .hb-switch-btn:hover{ border-color:rgba(217,189,133,.4); transform:translateY(-2px); }
 #inicio .hb-switch-btn:hover img{ opacity:.82; }
 #inicio .hb-switch-btn.is-active{
-  border-color:rgba(217,189,133,.55); background:rgba(217,189,133,.08); transform:translateY(-3px);
+  border-color:rgba(217,189,133,.55); background:rgba(217,189,133,.1); transform:translateY(-3px);
 }
 #inicio .hb-switch-btn.is-active img{ opacity:1; }
 #inicio .hb-switch-btn:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; }
-
-/* --- nome da fragrância --- */
-#inicio .hb-frag-name{
-  position:relative; z-index:5; text-align:center;
-  margin:clamp(.9rem, 2.2vh, 1.4rem) 0 0;
-  font-family:var(--font-display);
-  transition:opacity .35s ease;
-}
-#inicio .hb-frag-name.is-fading{ opacity:0; }
-#inicio .hb-frag-brand{
-  display:block; font-size:1.05rem; letter-spacing:.2em; text-transform:uppercase; color:var(--off-white);
-}
-#inicio .hb-frag-detail{
-  display:block; margin-top:.35rem;
-  font-family:var(--font-sans); font-size:.62rem; letter-spacing:.24em;
-  text-transform:uppercase; color:var(--gold-light);
-}
-
-#inicio .scroll-cue{
-  position:absolute; left:50%; bottom:1.6rem; transform:translateX(-50%);
-  margin:0; z-index:3;
-}
-@media (max-height:640px){ #inicio .scroll-cue{ display:none; } }
 
 /* --- keyframes do banner --- */
 @keyframes hb-ghost-in{ from{opacity:0; transform:scale(1.08);} to{opacity:.072; transform:scale(1);} }
 @keyframes hb-slide-l{ from{opacity:0; transform:translateX(-46px);} to{opacity:1; transform:translateX(0);} }
 @keyframes hb-fade-up{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);} }
+@keyframes hb-dock-in{ from{opacity:0; transform:translateX(-50%) translateY(16px);} to{opacity:1; transform:translateX(-50%) translateY(0);} }
 @keyframes hb-bottle-in{
   0%{ opacity:0; transform:translateX(14%) translateY(5%) scale(1.08) rotateZ(-3deg); }
   55%{ opacity:1; transform:translateX(0) translateY(0) scale(1.03) rotateZ(1.4deg); }
@@ -3009,8 +2950,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   /* frase de apoio */
   #inicio.hero.hb-ready .hb-lede{ animation:hb-fade-up .9s var(--ease) 1.35s backwards; }
   /* 7) miniaturas + nome entram junto */
-  #inicio.hero.hb-ready .hb-switch{ animation:hb-fade-up .9s var(--ease) 2s backwards; }
-  #inicio.hero.hb-ready .hb-frag-name{ animation:hb-fade-up .9s var(--ease) 2.2s backwards; }
+  #inicio.hero.hb-ready .hb-dock{ animation:hb-dock-in 1s var(--ease) 2s backwards; }
   /* uma luz dourada percorre o vidro, em ciclo lento */
   #inicio.hero.hb-ready .hb-sweep::before{ animation:hb-sweep-move 9s cubic-bezier(.45,0,.25,1) 3s infinite; }
   #inicio.hero.hb-ready .hb-sweep.is-sweeping::before{ animation:hb-sweep-once .8s cubic-bezier(.4,0,.2,1); }
@@ -3030,7 +2970,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-glow{ opacity:.9; }
   #inicio .hb-aura{ opacity:.8; }
   #inicio .hb-shine{ opacity:0; }
-  #inicio .hb-bottle-mirror{ opacity:.16; }
+  #inicio.hero.hb-ready .hb-dock{ animation:none; opacity:1; }
 }
 
 /* --- responsivo --- */
@@ -3039,11 +2979,12 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
     grid-template-columns:1fr;
     gap:clamp(1.2rem, 5vh, 2.6rem);
     padding-top:clamp(6rem, 14vh, 8.5rem);
-    padding-bottom:clamp(3.4rem, 9vh, 5rem);
+    padding-bottom:clamp(9rem, 22vh, 12rem);   /* reserva espaço pro dock na base */
     text-align:center;
   }
   #inicio .hb-text{ order:1; }
-  #inicio .hb-media{ order:2; min-height:clamp(340px, 50vh, 500px); }
+  #inicio .hb-media{ order:2; min-height:clamp(300px, 44vh, 440px); }
+  #inicio .hb-dock{ bottom:clamp(1.6rem, 5vh, 2.6rem); }
   #inicio .hb-lede{ max-width:none; margin-left:auto; margin-right:auto; }
   #inicio .hb-cta{ width:100%; justify-content:center; }
   #inicio .hb-ghost{ align-items:flex-start; justify-content:center; padding:clamp(3rem, 11vh, 6rem) 0 0; }
@@ -3058,7 +2999,6 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   #inicio .hb-media{ min-height:clamp(300px, 44vh, 400px); }
   #inicio .hb-floor{ bottom:-2.5%; }
   #inicio .hb-switch-btn{ width:44px; height:58px; }
-  #inicio .hb-vignette{ display:none; }
 }
 @media (max-width:360px){
   #inicio .hb-title{ font-size:clamp(2.15rem, 10.5vw, 2.55rem); }
