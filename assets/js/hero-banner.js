@@ -1,19 +1,16 @@
 /**
  * Banner principal da home ("Descubra Sua Essência").
  *
- * Sequência de entrada cinematográfica + parallax de mouse muito sutil +
- * partículas douradas lentas num <canvas>. O flutuar contínuo do frasco
- * é 100% CSS (keyframe hb-float).
+ * Vitrine de fragrância: um frasco Verité flutua num palco iluminado,
+ * inclina levemente acompanhando o mouse, e as miniaturas abaixo trocam
+ * a fragrância com uma passagem cinematográfica — a luz de fundo muda de
+ * cor conforme o perfume (--tint) e uma passada de luz percorre o vidro.
  *
- * A seção #inicio.hero-home nasce "parada" (textos em opacity:0, grade e
- * partículas em opacity:0). A classe .hb-ready — adicionada aqui — dispara
- * a entrada encadeada, que é toda descrita em CSS, logo no carregamento.
- * Tudo desliga em prefers-reduced-motion, e o parallax + as partículas
- * também desligam em ponteiro grosso (touch).
- *
- * Parallax: camadas com [data-hb-depth] deslizam poucos px na direção
- * oposta ao cursor; [data-hb-invert] inverte o sentido (o frasco reage
- * em direção diferente do fundo). Efeito propositalmente mínimo.
+ * Entrada encadeada descrita em CSS, disparada pela classe .hb-ready.
+ * Parallax de mouse (camadas [data-hb-depth]) + partículas douradas num
+ * <canvas>. O flutuar contínuo é 100% CSS (keyframe hb-float).
+ * Tudo desliga em prefers-reduced-motion (a troca de fragrância continua,
+ * só sem animação).
  */
 (function(){
   'use strict';
@@ -27,6 +24,7 @@
 
   if(reduceMotion){
     ready();
+    initFragrance();
     return;
   }
 
@@ -37,16 +35,14 @@
     ready();
     initParallax();
     initParticles();
-    initBottleInteract();
+    initFragrance();
   }
 
-  // revela o banner logo após o primeiro frame
   window.requestAnimationFrame(function(){ window.setTimeout(go, 60); });
 
   /* ---------------------------------------------------------------------
-     Parallax de mouse — desktop, ponteiro fino apenas. Cada camada com
-     [data-hb-depth] desliza alguns pixels na direção oposta ao cursor,
-     com forte suavização (lerp) para nunca parecer "nervoso".
+     Parallax de mouse — desktop, ponteiro fino. Cada camada [data-hb-depth]
+     desliza alguns px na direção oposta ao cursor; [data-hb-invert] inverte.
      --------------------------------------------------------------------- */
   function initParallax(){
     var fine = !window.matchMedia || window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -76,9 +72,8 @@
         var el = layers[i];
         var d = parseFloat(el.getAttribute('data-hb-depth')) || 0;
         var inv = el.hasAttribute('data-hb-invert') ? -1 : 1;
-        var mx = cx * d * 56 * inv;
-        var my = cy * d * 56 * inv;
-        el.style.transform = 'translate3d(' + mx.toFixed(2) + 'px,' + my.toFixed(2) + 'px,0)';
+        el.style.transform =
+          'translate3d(' + (cx * d * 56 * inv).toFixed(2) + 'px,' + (cy * d * 56 * inv).toFixed(2) + 'px,0)';
       }
       if(Math.abs(tx - cx) > 0.0005 || Math.abs(ty - cy) > 0.0005){
         window.requestAnimationFrame(loop);
@@ -89,10 +84,8 @@
   }
 
   /* ---------------------------------------------------------------------
-     Partículas douradas — poucas, lentas, sobem flutuando devagar. Puro
-     canvas 2d com blending aditivo; a contagem escala com a área e é
-     limitada para nunca pesar. Sem canvas/contexto disponível, o banner
-     simplesmente fica sem partículas.
+     Partículas douradas — poucas, lentas, sobem flutuando. Canvas 2d,
+     blending aditivo, contagem limitada.
      --------------------------------------------------------------------- */
   function initParticles(){
     var cv = hero.querySelector('.hb-particles');
@@ -110,7 +103,6 @@
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
       seed();
     }
-
     function mk(fresh){
       return {
         x: Math.random() * W,
@@ -122,13 +114,11 @@
         sw: 0.13 + Math.random() * 0.4
       };
     }
-
     function seed(){
       var n = Math.max(12, Math.min(34, Math.round((W * H) / 30000)));
       dust = [];
       for(var i = 0; i < n; i++) dust.push(mk(true));
     }
-
     function tick(t){
       if(W && H){
         ctx.clearRect(0, 0, W, H);
@@ -157,171 +147,124 @@
   }
 
   /* ---------------------------------------------------------------------
-     Interação com o frasco — responsiva, não lenta.
-     Ponteiro fino (desktop): o frasco inclina em 3D acompanhando o
-     cursor; hover dá um leve "avanço" (scale) + luz de recorte quente;
-     clicar e arrastar gira o frasco 1:1 e, ao soltar, ele sai com
-     inércia (flick) e assenta; clique seco dá um impulso rápido de giro.
-     Um brilho especular acompanha o ponteiro. Passada de luz no vidro
-     ao pegar.
-     Ponteiro grosso (celular): arrastar o dedo gira o frasco (com
-     inércia ao soltar); um toque seco dá um balanço curto (keyframe CSS).
-     Nada depende de giroscópio. Tudo transform/opacity, um rAF com lerp.
-     Desliga em prefers-reduced-motion (go() nem é chamado).
+     Fragrância: troca cinematográfica entre os frascos salvos + tilt de
+     mouse + luz de fundo que muda de cor por perfume.
      --------------------------------------------------------------------- */
-  function initBottleInteract(){
-    var tilt  = hero.querySelector('.hb-bottle-tilt');
-    var media = hero.querySelector('.hb-media');
-    var frame = hero.querySelector('.hb-bottle-frame');
-    var shine = hero.querySelector('.hb-shine');
-    var sweep = hero.querySelector('.hb-sweep');
-    if(!tilt || !frame) return;
+  function initFragrance(){
+    var FRAGS = [
+      { img:'assets/img/frasco-feminino.png', brand:'VÉRITÉ',        detail:'Feminino · Eau de Parfum · 50 ml', tint:'233,201,164', alt:'Perfume Verité Feminino — Eau de Parfum 50 ml' },
+      { img:'assets/img/frasco-unisex.png',   brand:'VÉRITÉ DORÉA',  detail:'Eau de Parfum · 30 ml',            tint:'214,172,124', alt:'Perfume Verité Doréa — Eau de Parfum 30 ml' },
+      { img:'assets/img/hero-frasco.png',     brand:'VÉRITÉ',        detail:'Eau de Parfum · 40 ml',            tint:'210,200,168', alt:'Perfume Verité — Eau de Parfum 40 ml' }
+    ];
+
+    var tilt   = hero.querySelector('.hb-bottle-tilt');
+    var stage  = hero.querySelector('.hb-bottle-stage');
+    var bottle = hero.querySelector('.hb-bottle');
+    var mirror = hero.querySelector('.hb-bottle-mirror');
+    var sweep  = hero.querySelector('.hb-sweep');
+    var shine  = hero.querySelector('.hb-shine');
+    var nameEl = hero.querySelector('.hb-frag-name');
+    var brandEl  = hero.querySelector('.hb-frag-brand');
+    var detailEl = hero.querySelector('.hb-frag-detail');
+    var btns = Array.prototype.slice.call(hero.querySelectorAll('.hb-switch-btn'));
+    if(!stage || !bottle || !btns.length) return;
 
     var fine = !window.matchMedia || window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var cur = 0, switching = false;
 
-    var rx = 0, ry = 0, sc = 1;        // atuais
-    var trx = 0, tryy = 0, tsc = 1;    // alvos
-    var sx = 0, tsx = 0, sOp = 0;      // brilho: posição (%) / opacidade
-    var vry = 0;                        // velocidade angular (inércia)
-    var raf = 0;
-    var inside = false, dragging = false, dragId = null, lastX = 0, moved = 0;
-
-    function schedule(){ if(!raf) raf = window.requestAnimationFrame(loop); }
-    function setLive(on){
-      if(!media) return;
-      if(on) media.classList.add('is-bottle-live');
-      else if(!inside && !dragging) media.classList.remove('is-bottle-live');
-    }
     function flashSweep(){
       if(!sweep) return;
       sweep.classList.remove('is-sweeping');
       void sweep.offsetWidth;
       sweep.classList.add('is-sweeping');
     }
-    if(sweep){
-      sweep.addEventListener('animationend', function(){ sweep.classList.remove('is-sweeping'); });
-    }
+    if(sweep) sweep.addEventListener('animationend', function(){ sweep.classList.remove('is-sweeping'); });
 
-    function aimHover(x, y){
-      var r = frame.getBoundingClientRect();
-      var nx = (x - (r.left + r.width  / 2)) / (r.width  / 2);
-      var ny = (y - (r.top  + r.height / 2)) / (r.height / 2);
-      nx = nx < -1.5 ? -1.5 : nx > 1.5 ? 1.5 : nx;
-      ny = ny < -1.5 ? -1.5 : ny > 1.5 ? 1.5 : ny;
-      trx = -ny * 13;
-      tryy = nx * 27;
-      tsx = nx * 34;
-    }
-
-    /* hover (só ponteiro fino) */
-    if(fine){
-      hero.addEventListener('pointermove', function(e){
-        if(e.pointerType === 'touch' || dragging) return;
-        aimHover(e.clientX, e.clientY);
-        schedule();
-      }, {passive:true});
-      hero.addEventListener('pointerleave', function(){
-        if(dragging) return;
-        trx = 0; tryy = 0; tsx = 0; schedule();
-      });
-      tilt.addEventListener('pointerenter', function(){
-        inside = true; tsc = 1.035; setLive(true); schedule();
-      });
-      tilt.addEventListener('pointerleave', function(){
-        inside = false; tsc = 1; setLive(false); schedule();
+    function paint(f, i){
+      bottle.src = f.img; bottle.alt = f.alt;
+      if(mirror) mirror.src = f.img;
+      hero.style.setProperty('--tint', f.tint);
+      if(brandEl) brandEl.textContent = f.brand;
+      if(detailEl) detailEl.textContent = f.detail;
+      btns.forEach(function(b, bi){
+        b.classList.toggle('is-active', bi === i);
+        b.setAttribute('aria-pressed', bi === i ? 'true' : 'false');
       });
     }
 
-    /* arrasto — fino e grosso */
-    tilt.addEventListener('pointerdown', function(e){
-      dragging = true; dragId = e.pointerId; lastX = e.clientX; moved = 0; vry = 0;
-      tilt.classList.add('is-grabbing');
-      setLive(true); flashSweep();
-      try { tilt.setPointerCapture(e.pointerId); } catch(_){}
-      if(fine){ tsc = 1.05; schedule(); }   /* no touch, só agenda quando arrasta de fato */
+    function setFrag(i){
+      if(i === cur || switching || !FRAGS[i]) return;
+      var f = FRAGS[i], dir = i > cur ? 1 : -1;
+
+      if(reduceMotion){ paint(f, i); cur = i; return; }
+
+      switching = true;
+      btns.forEach(function(b, bi){
+        b.classList.toggle('is-active', bi === i);
+        b.setAttribute('aria-pressed', bi === i ? 'true' : 'false');
+      });
+      if(nameEl) nameEl.classList.add('is-fading');
+      stage.classList.remove('is-in', 'is-in-l', 'is-in-r');
+      stage.classList.add('is-out', dir > 0 ? 'is-out-l' : 'is-out-r');
+
+      window.setTimeout(function(){
+        paint(f, i);
+        if(nameEl) nameEl.classList.remove('is-fading');
+        stage.classList.remove('is-out', 'is-out-l', 'is-out-r');
+        void stage.offsetWidth;
+        stage.classList.add('is-in', dir > 0 ? 'is-in-r' : 'is-in-l');
+        flashSweep();
+        cur = i;
+      }, 340);
+
+      window.setTimeout(function(){
+        stage.classList.remove('is-in', 'is-in-l', 'is-in-r');
+        switching = false;
+      }, 1300);
+    }
+
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){ setFrag(parseInt(b.getAttribute('data-i'), 10) || 0); });
     });
-    tilt.addEventListener('pointermove', function(e){
-      if(!dragging) return;
-      var dx = e.clientX - lastX; lastX = e.clientX; moved += Math.abs(dx);
-      tryy = Math.max(-52, Math.min(52, tryy + dx * (fine ? 0.5 : 0.6)));
-      vry  = dx * (fine ? 1.05 : 1.2);
-      trx  = 0;
-      tsx  = Math.max(-40, Math.min(40, tryy));
-      schedule();
-    }, {passive:true});
-    function endDrag(e){
-      if(!dragging) return;
-      dragging = false;
-      tilt.classList.remove('is-grabbing');
-      try { tilt.releasePointerCapture(dragId); } catch(_){}
 
-      if(moved < 6){
-        if(fine){
-          /* clique seco: impulso rápido de giro (feedback via JS) */
-          var r = frame.getBoundingClientRect();
-          var side = (e && typeof e.clientX === 'number')
-            ? ((e.clientX - (r.left + r.width / 2)) >= 0 ? 1 : -1) : 1;
-          vry += side * 11;
-        } else {
-          /* toque seco no celular: balanço curto via CSS, sem transform inline */
-          tilt.style.transform = '';
-          rx = ry = sx = 0; sc = 1; vry = 0;
-          trx = tryy = tsx = 0; tsc = 1;
-          tilt.classList.remove('is-tap');
-          void tilt.offsetWidth;
-          tilt.classList.add('is-tap');
-          setLive(false);
-          return;
+    /* tilt de mouse — só ponteiro fino, sem movimento reduzido */
+    if(fine && !reduceMotion && tilt){
+      var rx = 0, ry = 0, trx = 0, tryy = 0, sop = 0, tsop = 0, sx = 0, tsx = 0, raf = 0;
+      function sched(){ if(!raf) raf = window.requestAnimationFrame(frame); }
+
+      hero.addEventListener('pointermove', function(e){
+        if(e.pointerType === 'touch') return;
+        var r = stage.getBoundingClientRect();
+        var nx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+        var ny = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+        nx = nx < -1.6 ? -1.6 : nx > 1.6 ? 1.6 : nx;
+        ny = ny < -1.6 ? -1.6 : ny > 1.6 ? 1.6 : ny;
+        trx = -ny * 6; tryy = nx * 10; tsx = nx * 22;
+        tsop = (Math.abs(nx) < 1.2 && Math.abs(ny) < 1.2) ? 0.8 : 0;
+        sched();
+      }, {passive:true});
+
+      hero.addEventListener('pointerleave', function(){
+        trx = 0; tryy = 0; tsop = 0; tsx = 0; sched();
+      });
+
+      function frame(){
+        raf = 0;
+        rx += (trx - rx) * 0.12;
+        ry += (tryy - ry) * 0.12;
+        sop += (tsop - sop) * 0.12;
+        sx += (tsx - sx) * 0.12;
+        tilt.style.transform = 'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
+        if(shine){
+          shine.style.opacity = sop.toFixed(3);
+          shine.style.transform = 'translateX(calc(-50% + ' + sx.toFixed(1) + '%))';
         }
-      }
-      trx = 0; tryy = 0; tsx = 0;
-      tsc = inside ? 1.035 : 1;
-      setLive(false);
-      schedule();
-    }
-    tilt.addEventListener('pointerup', endDrag);
-    tilt.addEventListener('pointercancel', endDrag);
-    tilt.addEventListener('animationend', function(){ tilt.classList.remove('is-tap'); });
-
-    function loop(){
-      raf = 0;
-
-      if(dragging){
-        ry = tryy;                                   // segue o cursor/dedo 1:1
-      } else if(Math.abs(vry) > 0.06){
-        ry += vry;                                   // inércia
-        vry *= 0.85;
-        ry += (tryy - ry) * 0.10;                    // + puxa de volta ao alvo
-      } else {
-        vry = 0;
-        ry += (tryy - ry) * 0.26;                    // assenta rápido
-      }
-      ry = Math.max(-58, Math.min(58, ry));
-
-      rx += (trx - rx) * 0.26;
-      sc += (tsc - sc) * 0.22;
-      sx += (tsx - sx) * 0.26;
-
-      /* a perspectiva está no .hb-bottle-enter (CSS); aqui só o giro 3D */
-      tilt.style.transform =
-        'rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) +
-        'deg) scale(' + sc.toFixed(3) + ')';
-
-      if(shine){
-        var tOp = (inside || dragging || Math.abs(vry) > 0.5) ? 0.92 : 0;
-        sOp += (tOp - sOp) * 0.26;
-        shine.style.opacity = sOp.toFixed(3);
-        shine.style.transform =
-          'translateX(calc(-50% + ' + sx.toFixed(1) + '%)) translateZ(22px)';
-      }
-
-      var busy = dragging || inside ||
-        Math.abs(trx - rx) > 0.02 || Math.abs(tryy - ry) > 0.02 ||
-        Math.abs(tsc - sc) > 0.003 || Math.abs(vry) > 0.06 ||
-        Math.abs(tsx - sx) > 0.1 || sOp > 0.02;
-      if(busy){ schedule(); }
-      else if(Math.abs(ry) < 0.05 && Math.abs(rx) < 0.05 && Math.abs(sc - 1) < 0.004){
-        tilt.style.transform = '';   /* em repouso, o CSS volta a mandar sozinho */
+        if(Math.abs(trx - rx) > 0.01 || Math.abs(tryy - ry) > 0.01 ||
+           Math.abs(tsop - sop) > 0.01 || Math.abs(tsx - sx) > 0.1){
+          sched();
+        } else if(Math.abs(rx) < 0.04 && Math.abs(ry) < 0.04){
+          tilt.style.transform = '';
+        }
       }
     }
   }

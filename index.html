@@ -307,9 +307,9 @@
 
   <!-- ============ Início / Hero — Banner principal ============
        "Descubra Sua Essência". Estrutura: coluna de texto à esquerda,
-       o mascote VÉRIX (assets/img/verix.png) como protagonista interativo
-       à direita — tilt 3D, girar arrastando, luz de recorte no hover,
-       bob contínuo. "VERITÉ" gigante de fundo em baixa opacidade, grade
+       o frasco Verité como protagonista à direita — vitrine com troca
+       cinematográfica de fragrância (miniaturas), tilt de mouse, luz de
+       fundo que muda de cor por perfume, reflexo e bob contínuo. "VERITÉ" gigante de fundo em baixa opacidade, grade
        geométrica quase invisível, aura/névoa/partículas douradas. Entrada
        encadeada (.hb-ready via assets/js/hero-banner.js) + parallax sutil.
        Escopo de estilo estrito em #inicio.hero-home — ver style.css. -->
@@ -319,6 +319,7 @@
     <div class="hb-grid" data-hb-depth="0.05" aria-hidden="true"></div>
     <canvas class="hb-particles" aria-hidden="true"></canvas>
     <div class="hb-ghost" data-hb-depth="0.13" aria-hidden="true"><span>VERIT&Eacute;</span></div>
+    <div class="hb-vignette" aria-hidden="true"></div>
 
     <div class="hb-inner">
       <div class="hb-text" data-hb-depth="0.04">
@@ -337,23 +338,37 @@
         <div class="hb-mist" aria-hidden="true"><i></i><i></i></div>
         <div class="hb-media-inner" data-hb-depth="0.16" data-hb-invert>
           <div class="hb-bottle-enter">
-            <!-- .hb-bottle-tilt / .hb-bottle-frame: ganchos de interacao
-                 (agora movem o mascote VÉRIX no lugar do frasco) -->
+            <!-- .hb-bottle-tilt = tilt de mouse · .hb-bottle-stage =
+                 passagem ao trocar de fragrância · .hb-bottle-float = bob -->
             <div class="hb-bottle-tilt">
-              <div class="hb-bottle-frame hb-mascot-frame">
-                <span class="hb-floor" aria-hidden="true"></span>
-                <span class="hb-reflection" aria-hidden="true"></span>
-                <div class="hb-mascot-3d">
-                  <img class="hb-mascot-shadow" src="assets/img/verix.png" alt="" width="560" height="673" decoding="async" draggable="false" aria-hidden="true"/>
-                  <img class="hb-mascot-slab hb-mascot-slab--2" src="assets/img/verix.png" alt="" width="560" height="673" decoding="async" draggable="false" aria-hidden="true"/>
-                  <img class="hb-mascot-slab hb-mascot-slab--1" src="assets/img/verix.png" alt="" width="560" height="673" decoding="async" draggable="false" aria-hidden="true"/>
-                  <img class="hb-mascot" src="assets/img/verix.png" alt="V&Eacute;RIX &mdash; o mascote da Verit&eacute;" width="560" height="673" fetchpriority="high" decoding="async" draggable="false"/>
+              <div class="hb-bottle-stage">
+                <div class="hb-bottle-float">
+                  <img class="hb-bottle" src="assets/img/frasco-feminino.png" alt="Perfume Verit&eacute; Feminino &mdash; Eau de Parfum 50 ml" width="540" height="725" fetchpriority="high" decoding="async" draggable="false"/>
+                  <img class="hb-bottle-mirror" src="assets/img/frasco-feminino.png" alt="" width="540" height="725" decoding="async" draggable="false" aria-hidden="true"/>
+                  <span class="hb-floor" aria-hidden="true"></span>
+                  <span class="hb-reflection" aria-hidden="true"></span>
                   <span class="hb-shine" aria-hidden="true"></span>
                   <span class="hb-sweep" aria-hidden="true"></span>
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="hb-switch" role="group" aria-label="Escolha a fragr&acirc;ncia">
+            <button class="hb-switch-btn is-active" type="button" data-i="0" aria-pressed="true" aria-label="Verit&eacute; Feminino">
+              <img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async"/>
+            </button>
+            <button class="hb-switch-btn" type="button" data-i="1" aria-pressed="false" aria-label="Verit&eacute; Dor&eacute;a">
+              <img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async"/>
+            </button>
+            <button class="hb-switch-btn" type="button" data-i="2" aria-pressed="false" aria-label="Verit&eacute; Eau de Parfum">
+              <img src="assets/img/hero-frasco.png" alt="" width="300" height="528" loading="lazy" decoding="async"/>
+            </button>
+          </div>
+          <p class="hb-frag-name" aria-live="polite">
+            <span class="hb-frag-brand">V&Eacute;RIT&Eacute;</span>
+            <span class="hb-frag-detail">Feminino &middot; Eau de Parfum &middot; 50 ml</span>
+          </p>
         </div>
       </div>
     </div>
