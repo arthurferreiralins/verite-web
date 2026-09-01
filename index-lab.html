@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!-- ============================================================
+     RASCUNHO / LABORATÓRIO — cópia de index.html só para testar
+     mudanças no ar antes de levar pro site original (index.html).
+     Não é indexada, não entra no sitemap. Fluxo: edite aqui, aprove
+     com o cliente, depois porte as mudanças pra index.html.
+     ============================================================ -->
+<meta name="description" content="Descubra fragrâncias Verité criadas para transformar presença em memória. Perfumes femininos, masculinos e experiências exclusivas."/>
+<meta name="theme-color" content="#0c0c0d"/>
+<title>[RASCUNHO] Verité Perfumes — laboratório de mudanças</title>
+<link rel="canonical" href="https://veriteperfumes.com.br/"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="preload" as="image" href="assets/img/frasco-feminino.png" fetchpriority="high"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
+<link rel="apple-touch-icon" href="assets/img/favicon-256.png"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="VERITÉ"/>
+<meta property="og:url" content="https://veriteperfumes.com.br/"/>
+<meta property="og:title" content="Verité Perfumes | Perfumaria de Luxo &amp; Fragrâncias Exclusivas"/>
+<meta property="og:description" content="Descubra fragrâncias Verité criadas para transformar presença em memória. Perfumes femininos, masculinos e experiências exclusivas."/>
+<meta property="og:image" content="https://veriteperfumes.com.br/assets/img/og-image.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:locale" content="pt_BR"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Verité Perfumes | Perfumaria de Luxo &amp; Fragrâncias Exclusivas"/>
+<meta name="twitter:description" content="Descubra fragrâncias Verité criadas para transformar presença em memória."/>
+<meta name="twitter:image" content="https://veriteperfumes.com.br/assets/img/og-image.jpg"/>
+<meta property="og:image:alt" content="Verité Perfumes — perfumaria de luxo"/>
+<!-- structured data removido nesta copia de rascunho (evita entidades SEO duplicadas) -->
+</head>
+<body>
+<a class="skip-link" href="#fragrancias">Pular para conteúdo</a>
+
+<!-- selo de rascunho: só aparece nesta cópia, nunca vai pra index.html -->
+<div style="position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:9999;
+     background:rgba(20,16,12,.92);border:1px solid rgba(217,189,133,.4);color:#e8d8b8;
+     font:600 11px/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;
+     padding:8px 16px;border-radius:999px;pointer-events:none;
+     -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);">
+  Rascunho · não é o site oficial
+</div>
+
+<header>
+  <div class="wrap header-top">
+    <a class="brand-mini" href="#inicio">
+      <span class="emblem-mini">
+        <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+      </span>
+      <span class="word">Verité</span>
+    </a>
+    <form class="header-search" action="produtos.html" method="get" role="search">
+      <input type="search" name="busca" placeholder="Qual fragrância você procura?" aria-label="Buscar fragrância" autocomplete="off"/>
+      <button type="submit" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+    </form>
+    <div class="header-actions">
+      <a class="header-icon" href="/clube" aria-label="Minha conta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.4-4.2 5.9-6 8-6s6.6 1.8 8 6"/></svg>
+        <span class="header-icon-label">Conta</span>
+      </a>
+      <a class="header-icon" href="favoritos.html" aria-label="Favoritos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.5-9.3-8.8C1.2 8 2.5 4.7 6 3.9c2-.5 4 .3 6 2.4 2-2.1 4-2.9 6-2.4 3.5.8 4.8 4.1 3.3 7.3C19 15.5 12 20 12 20Z"/></svg>
+        <span class="header-icon-label">Favoritos</span>
+        <span class="header-icon-badge" data-fav-count hidden>0</span>
+      </a>
+      <div class="header-cart">
+        <button type="button" class="header-icon" id="mini-cart-toggle" aria-label="Carrinho" aria-expanded="false" aria-controls="mini-cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12l-1 11H7L6 9Z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/></svg>
+          <span class="header-icon-label">Carrinho</span>
+          <span class="header-icon-badge" data-cart-count hidden>0</span>
+        </button>
+        <div id="mini-cart" role="dialog" aria-label="Carrinho">
+          <div id="mini-cart-items"></div>
+          <div class="mini-cart-footer">
+            <span>Subtotal: <strong id="mini-cart-subtotal">R$ 0,00</strong></span>
+            <a class="btn" href="carrinho.html">Ver carrinho</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Abrir menu">
+      <span></span>
+    </button>
+  </div>
+  <div class="wrap nav-inner">
+    <nav id="primary-nav" class="links mega-nav">
+      <a href="#inicio">Início</a>
+    <div class="nav-item" data-mega="perfumes">
+      <button type="button" class="nav-trigger" id="mega-trigger-perfumes" aria-expanded="false" aria-controls="mega-panel-perfumes">
+        Perfumes
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-perfumes" aria-labelledby="mega-trigger-perfumes">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Por gênero</p>
+        <a href="produtos.html?categoria=perfumes&amp;genero=feminino">Femininos</a>
+        <a href="produtos.html?categoria=perfumes&amp;genero=masculino">Masculinos</a>
+        <a href="produtos.html?categoria=perfumes&amp;genero=unissex">Unissex</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Descubra</p>
+        <a href="produtos.html?categoria=perfumes&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?categoria=perfumes&amp;colecao=mais-vendidos">Mais Vendidos</a>
+        <a href="produtos.html?categoria=presentes">Presentes</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?categoria=perfumes">Ver todos os Perfumes <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="femininos">
+      <button type="button" class="nav-trigger" id="mega-trigger-femininos" aria-expanded="false" aria-controls="mega-panel-femininos">
+        Femininos
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-femininos" aria-labelledby="mega-trigger-femininos">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Perfumes Femininos</p>
+        <a href="produtos.html?genero=feminino&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=feminino&amp;colecao=mais-vendidos">Mais Vendidos</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?genero=feminino&amp;categoria=kits">Kits Femininos</a>
+        <a href="produtos.html?genero=feminino&amp;categoria=presentes">Presentes para Elas</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?genero=feminino">Ver todos os Femininos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="masculinos">
+      <button type="button" class="nav-trigger" id="mega-trigger-masculinos" aria-expanded="false" aria-controls="mega-panel-masculinos">
+        Masculinos
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-masculinos" aria-labelledby="mega-trigger-masculinos">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Perfumes Masculinos</p>
+        <a href="produtos.html?genero=masculino&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=masculino&amp;colecao=mais-vendidos">Mais Vendidos</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?genero=masculino&amp;categoria=kits">Kits Masculinos</a>
+        <a href="produtos.html?genero=masculino&amp;categoria=presentes">Presentes para Eles</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?genero=masculino">Ver todos os Masculinos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="unissex">
+      <button type="button" class="nav-trigger" id="mega-trigger-unissex" aria-expanded="false" aria-controls="mega-panel-unissex">
+        Unissex
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-unissex" aria-labelledby="mega-trigger-unissex">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Perfumes Unissex</p>
+        <a href="produtos.html?genero=unissex&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=unissex&amp;colecao=mais-vendidos">Mais Vendidos</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?genero=unissex&amp;categoria=kits">Kits Unissex</a>
+        <a href="produtos.html?genero=unissex&amp;categoria=presentes">Presentes Unissex</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?genero=unissex">Ver todos os Unissex <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="kits">
+      <button type="button" class="nav-trigger" id="mega-trigger-kits" aria-expanded="false" aria-controls="mega-panel-kits">
+        Kits
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-kits" aria-labelledby="mega-trigger-kits">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Kits por gênero</p>
+        <a href="produtos.html?categoria=kits&amp;genero=feminino">Femininos</a>
+        <a href="produtos.html?categoria=kits&amp;genero=masculino">Masculinos</a>
+        <a href="produtos.html?categoria=kits&amp;genero=unissex">Unissex</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Ideal para</p>
+        <a href="produtos.html?categoria=presentes">Presentear</a>
+        <a href="produtos.html?categoria=kits&amp;colecao=lancamentos">Lançamentos</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?categoria=kits">Ver todos os Kits <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="presentes">
+      <button type="button" class="nav-trigger" id="mega-trigger-presentes" aria-expanded="false" aria-controls="mega-panel-presentes">
+        Presentes
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-presentes" aria-labelledby="mega-trigger-presentes">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Presentear</p>
+        <a href="produtos.html?categoria=presentes&amp;genero=feminino">Para Elas</a>
+        <a href="produtos.html?categoria=presentes&amp;genero=masculino">Para Eles</a>
+        <a href="produtos.html?categoria=kits">Kits para Presentear</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Ideias</p>
+        <a href="produtos.html?categoria=presentes&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?categoria=presentes&amp;colecao=mais-vendidos">Mais Vendidos</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?categoria=presentes">Ver todos os Presentes <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="lancamentos">
+      <button type="button" class="nav-trigger" id="mega-trigger-lancamentos" aria-expanded="false" aria-controls="mega-panel-lancamentos">
+        Lançamentos
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-lancamentos" aria-labelledby="mega-trigger-lancamentos">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Por gênero</p>
+        <a href="produtos.html?colecao=lancamentos&amp;genero=feminino">Femininos</a>
+        <a href="produtos.html?colecao=lancamentos&amp;genero=masculino">Masculinos</a>
+        <a href="produtos.html?colecao=lancamentos&amp;genero=unissex">Unissex</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?colecao=lancamentos&amp;categoria=kits">Kits</a>
+        <a href="produtos.html?colecao=lancamentos&amp;categoria=presentes">Presentes</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?colecao=lancamentos">Ver todos os Lançamentos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="nav-item" data-mega="mais-vendidos">
+      <button type="button" class="nav-trigger" id="mega-trigger-mais-vendidos" aria-expanded="false" aria-controls="mega-panel-mais-vendidos">
+        Mais Vendidos
+        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="mega-panel" id="mega-panel-mais-vendidos" aria-labelledby="mega-trigger-mais-vendidos">
+        <div class="mega-panel-inner">
+      <div class="mega-col">
+        <p class="mega-col-title">Por gênero</p>
+        <a href="produtos.html?colecao=mais-vendidos&amp;genero=feminino">Femininos</a>
+        <a href="produtos.html?colecao=mais-vendidos&amp;genero=masculino">Masculinos</a>
+        <a href="produtos.html?colecao=mais-vendidos&amp;genero=unissex">Unissex</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Também explore</p>
+        <a href="produtos.html?colecao=mais-vendidos&amp;categoria=kits">Kits</a>
+        <a href="produtos.html?colecao=mais-vendidos&amp;categoria=presentes">Presentes</a>
+      </div>
+        </div>
+        <a class="mega-cta" href="produtos.html?colecao=mais-vendidos">Ver todos os Mais Vendidos <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+      <a class="nav-clube" href="/clube">Clube Verité</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ Início / Hero — Banner principal ============
+       "Descubra Sua Essência". Estrutura: coluna de texto à esquerda,
+       o frasco Verité como protagonista à direita — vitrine com troca
+       cinematográfica de fragrância (miniaturas), tilt de mouse, luz de
+       fundo que muda de cor por perfume, reflexo e bob contínuo. "VERITÉ" gigante de fundo em baixa opacidade, grade
+       geométrica quase invisível, aura/névoa/partículas douradas. Entrada
+       encadeada (.hb-ready via assets/js/hero-banner.js) + parallax sutil.
+       Escopo de estilo estrito em #inicio.hero-home — ver style.css. -->
+  <section id="inicio" class="section section-dark hero hero-home has-ambient" aria-label="VERITÉ — Descubra sua essência">
+    <div class="hb-bg" data-hb-depth="0.03" aria-hidden="true"></div>
+    <div class="hb-grid" data-hb-depth="0.05" aria-hidden="true"></div>
+    <canvas class="hb-particles" aria-hidden="true"></canvas>
+    <div class="hb-ghost" data-hb-depth="0.13" aria-hidden="true"><span>VERIT&Eacute;</span></div>
+
+    <div class="hb-inner">
+      <div class="hb-text" data-hb-depth="0.04">
+        <p class="hb-eyebrow">&mdash; A Ess&ecirc;ncia da Eleg&acirc;ncia</p>
+        <h1 class="hb-title">
+          <span class="hb-line hb-line-1">Descubra</span>
+          <span class="hb-line hb-line-2">Sua Ess&ecirc;ncia</span>
+        </h1>
+        <p class="hb-lede">&ldquo;Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.&rdquo;</p>
+        <a class="btn hb-cta" href="produtos.html">Conhe&ccedil;a a Cole&ccedil;&atilde;o <span class="hb-arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+
+      <div class="hb-media">
+        <div class="hb-glow" data-hb-depth="0.08" aria-hidden="true"></div>
+        <div class="hb-aura" data-hb-depth="0.12" aria-hidden="true"></div>
+        <div class="hb-media-inner" data-hb-depth="0.16" data-hb-invert>
+          <div class="hb-bottle-enter">
+            <!-- .hb-bottle-tilt = tilt de mouse · .hb-bottle-stage =
+                 passagem ao trocar de fragrância · .hb-bottle-float = bob -->
+            <div class="hb-bottle-tilt">
+              <div class="hb-bottle-stage">
+                <div class="hb-bottle-float">
+                  <img class="hb-bottle" src="assets/img/frasco-feminino.png" alt="Perfume Verit&eacute; Feminino &mdash; Eau de Parfum 50 ml" width="540" height="725" fetchpriority="high" decoding="async" draggable="false"/>
+                  <span class="hb-floor" aria-hidden="true"></span>
+                  <span class="hb-shine" aria-hidden="true"></span>
+                  <span class="hb-sweep" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hb-dock">
+      <p class="hb-frag-name" aria-live="polite">
+        <span class="hb-frag-brand">V&Eacute;RIT&Eacute;</span>
+        <span class="hb-frag-detail">Feminino &middot; Eau de Parfum &middot; 50 ml</span>
+      </p>
+      <div class="hb-switch" role="group" aria-label="Escolha a fragr&acirc;ncia">
+        <button class="hb-switch-btn is-active" type="button" data-i="0" aria-pressed="true" aria-label="Verit&eacute; Feminino">
+          <img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async"/>
+        </button>
+        <button class="hb-switch-btn" type="button" data-i="1" aria-pressed="false" aria-label="Verit&eacute; Dor&eacute;a">
+          <img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async"/>
+        </button>
+        <button class="hb-switch-btn" type="button" data-i="2" aria-pressed="false" aria-label="Verit&eacute; Eau de Parfum">
+          <img src="assets/img/hero-frasco.png" alt="" width="300" height="528" loading="lazy" decoding="async"/>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Encontre sua fragrância ============ -->
+  <section id="fragrancias" class="section section-dark has-ambient">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb frag-orb-a"></div>
+      <div class="ambient-orb orb-b frag-orb-b"></div>
+      <div class="ambient-wash"></div>
+      <div class="ambient-particles" data-count="7"></div>
+    </div>
+    <div class="wrap">
+      <div class="section-head frag-head reveal">
+        <span class="frag-kicker" aria-hidden="true"></span>
+        <h2 class="frag-title">
+          <span class="frag-title-1">Nossas</span>
+          <span class="frag-title-2">Fragr&acirc;ncias</span>
+        </h2>
+        <p class="frag-sub">Encontre a fragr&acirc;ncia que traduz a sua presen&ccedil;a.</p>
+      </div>
+
+      <div class="frag-filters reveal" role="group" aria-label="Filtrar fragrâncias por categoria">
+        <button class="frag-filter is-active" type="button" aria-pressed="true" data-filter="todos">Todos</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="feminino">Femininos</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="masculino">Masculinos</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="unissex">Unissex</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="kits">Kits</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="presentes">Presentes</button>
+        <button class="frag-filter" type="button" aria-pressed="false" data-filter="lancamentos">Lan&ccedil;amentos</button>
+      </div>
+
+      <div class="frag-grid">
+        <a class="frag-card reveal" href="produtos.html?genero=feminino" data-filter="feminino">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/frasco-feminino.png" alt="Perfume Verit&eacute; feminino &mdash; Eau de Parfum 50 ml" width="540" height="725" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Femininos</span>
+            <span class="frag-card-meta">Eau de Parfum</span>
+            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
+          <i class="cc-sheen" aria-hidden="true"></i>
+        </a>
+        <a class="frag-card reveal" href="produtos.html?genero=masculino" data-filter="masculino">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/hero-frasco.png" alt="Perfume Verit&eacute; &mdash; linha masculina" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Masculinos</span>
+            <span class="frag-card-meta">Eau de Parfum</span>
+            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
+          <i class="cc-sheen" aria-hidden="true"></i>
+        </a>
+        <a class="frag-card reveal" href="produtos.html?genero=unissex" data-filter="unissex">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img src="assets/img/frasco-unisex.png" alt="Perfume Verit&eacute; Dor&eacute;a &mdash; Eau de Parfum 30 ml" width="560" height="840" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Unissex</span>
+            <span class="frag-card-meta">Eau de Parfum</span>
+            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
+          <i class="cc-sheen" aria-hidden="true"></i>
+        </a>
+        <a class="frag-card reveal" href="produtos.html?categoria=kits" data-filter="kits">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img class="frag-card-wide" src="assets/img/frasco-kits.png" alt="Kit Verit&eacute; &mdash; 30 ml, 50 ml e 20 ml" width="760" height="570" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Kits</span>
+            <span class="frag-card-cta">Ver kits <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
+          <i class="cc-sheen" aria-hidden="true"></i>
+        </a>
+        <a class="frag-card reveal" href="produtos.html?categoria=presentes" data-filter="presentes">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img class="frag-card-photo" src="assets/img/frasco-presentes.jpg" alt="Kit presente Verit&eacute; com la&ccedil;o &mdash; tr&ecirc;s frascos" width="900" height="640" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Presentes</span>
+            <span class="frag-card-cta">Encontrar presente <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
+          <i class="cc-sheen" aria-hidden="true"></i>
+        </a>
+        <a class="frag-card reveal" href="produtos.html?colecao=lancamentos" data-filter="lancamentos">
+          <span class="frag-card-glow" aria-hidden="true"></span>
+          <span class="frag-card-media">
+            <img class="frag-card-photo" src="assets/img/frasco-lancamentos.jpg" alt="Lan&ccedil;amentos Verit&eacute; &mdash; Dor&eacute;a 30 ml, Verit&eacute; 50 ml e 20 ml" width="1102" height="633" loading="lazy" decoding="async" draggable="false"/>
+          </span>
+          <span class="frag-card-info">
+            <span class="frag-card-cat">V&Eacute;RIT&Eacute;</span>
+            <span class="frag-card-name">Lan&ccedil;amentos</span>
+            <span class="frag-card-cta">Ver novidades <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
+          </span>
+          <i class="cc-sheen" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Vitrine em movimento — os frascos rolando ============ -->
+  <section id="vitrine-reel" class="section section-dark" aria-label="A coleção Verité em movimento">
+    <p class="reel-eyebrow reveal reveal-scale">A Cole&ccedil;&atilde;o Verit&eacute;</p>
+    <div class="reel" aria-hidden="true">
+      <div class="reel-track">
+        <div class="reel-group">
+          <span class="reel-item"><img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Feminino</span></span>
+          <span class="reel-item"><img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Dor&eacute;a</span></span>
+          <span class="reel-item"><img src="assets/img/hero-frasco.png" alt="" width="300" height="528" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Eau de Parfum</span></span>
+          <span class="reel-item"><img class="reel-wide" src="assets/img/frasco-kits.png" alt="" width="760" height="570" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Kit</span></span>
+          <span class="reel-item"><img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Feminino</span></span>
+          <span class="reel-item"><img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Dor&eacute;a</span></span>
+        </div>
+        <div class="reel-group" aria-hidden="true">
+          <span class="reel-item"><img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Feminino</span></span>
+          <span class="reel-item"><img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Dor&eacute;a</span></span>
+          <span class="reel-item"><img src="assets/img/hero-frasco.png" alt="" width="300" height="528" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Eau de Parfum</span></span>
+          <span class="reel-item"><img class="reel-wide" src="assets/img/frasco-kits.png" alt="" width="760" height="570" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Kit</span></span>
+          <span class="reel-item"><img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Feminino</span></span>
+          <span class="reel-item"><img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async" draggable="false"/><span class="reel-name">Verit&eacute; &mdash; Dor&eacute;a</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Faixa cinematográfica ============ -->
+  <section class="statement" aria-label="A verdade está na sua essência" data-scrollfx>
+    <p class="statement-word">Ess&ecirc;ncia</p>
+    <p class="statement-line">A verdade est&aacute; na sua ess&ecirc;ncia.</p>
+  </section>
+
+  <!-- ============ Destaques Verité ============ -->
+  <!-- Nasce hidden: só aparece quando houver produto com featured=true
+       (ver initShowcases em assets/js/products.js) — nunca mostra caixa
+       "Em preparação", a seção inteira some até existir conteúdo real. -->
+  <section id="destaques" class="section section-dark section-2 has-ambient" data-showcase="featured" data-limit="8" hidden>
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:320px;height:320px;top:-90px;right:6%;"></div>
+      <div class="ambient-particles" data-count="8"></div>
+    </div>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Seleção Verité</p>
+        <h2>Destaques Verité</h2>
+      </div>
+      <div class="product-grid" data-role="grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ Os favoritos da Verité ============ -->
+  <section id="favoritos-verite" class="section section-beige" data-showcase="bestsellers" data-limit="8" hidden>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Os Mais Procurados</p>
+        <h2>Os Mais Desejados</h2>
+      </div>
+      <div class="product-grid" data-role="grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ Novas essências. Novas histórias. ============ -->
+  <section id="lancamentos-verite" class="section section-light" data-showcase="new" data-limit="4" hidden>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Recém-Chegados</p>
+        <h2>Novas essências. Novas histórias.</h2>
+      </div>
+      <div class="product-grid product-grid-large" data-role="grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ Presenteie com Verité ============ -->
+  <section id="presentes" class="section section-beige" data-showcase="gifts" data-limit="6" hidden>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Para Presentear</p>
+        <h2>Presenteie com Verité</h2>
+        <p class="sub">Kits femininos, kits masculinos e presentes especiais, prontos para encantar.</p>
+      </div>
+      <div class="product-grid" data-role="grid"></div>
+      <div class="hero-cta reveal" style="justify-content:center; margin-top:2.6rem;">
+        <a class="btn" href="produtos.html?categoria=presentes">Encontrar presente</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Qual Verité combina com você? ============ -->
+  <section id="quiz" class="quiz-section section section-dark has-ambient">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:320px;height:320px;top:-90px;left:50%;margin-left:-160px;"></div>
+      <div class="ambient-particles" data-count="8"></div>
+    </div>
+    <div class="wrap">
+      <div class="section-head quiz-head reveal">
+        <p class="eyebrow">Descubra Sua Verité</p>
+        <h2 class="quiz-title">
+          <span class="quiz-title-1">Qual estilo</span>
+          <span class="quiz-title-2">combina com voc&ecirc;?</span>
+        </h2>
+        <p class="quiz-sub">Tr&ecirc;s perguntas r&aacute;pidas para revelar a fragr&acirc;ncia que fala a sua l&iacute;ngua.</p>
+      </div>
+      <div class="quiz" id="quiz-app">
+        <div class="quiz-progress" id="quiz-progress" aria-hidden="true"></div>
+        <div class="quiz-steps" id="quiz-steps"></div>
+        <div class="quiz-result" id="quiz-result" hidden>
+          <h3>Sua Verité é...</h3>
+          <div class="quiz-result-card" id="quiz-result-card"></div>
+          <button type="button" class="quiz-restart" id="quiz-restart">Refazer teste</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Clube Verité ============ -->
+  <section id="clube-home" class="section section-dark section-3 has-ambient">
+    <div class="ambient" aria-hidden="true">
+      <div class="ambient-orb" style="width:340px;height:340px;top:-90px;left:50%;margin-left:-170px;"></div>
+      <div class="ambient-particles" data-count="10"></div>
+    </div>
+    <div class="wrap clube-home-wrap">
+      <div class="section-head clube-head reveal">
+        <p class="eyebrow">Área Exclusiva</p>
+        <h2 class="clube-title">
+          <span class="clube-title-1">Clube</span>
+          <span class="clube-title-2">Verité</span>
+        </h2>
+        <p class="sub">Um espaço para quem decidiu fazer parte da nossa história.</p>
+      </div>
+      <div class="clube-home-grid">
+        <div class="clube-home-item reveal">
+          <span class="clube-home-num">01</span>
+          <h3>Pontos a cada compra</h3>
+          <p>Acumule pontos e troque por benefícios reais no Clube.</p>
+        </div>
+        <div class="clube-home-item reveal">
+          <span class="clube-home-num">02</span>
+          <h3>Cupons exclusivos</h3>
+          <p>Cupons liberados só para quem faz parte — incluindo um de boas-vindas.</p>
+        </div>
+        <div class="clube-home-item reveal">
+          <span class="clube-home-num">03</span>
+          <h3>Produtos exclusivos</h3>
+          <p>Fragrâncias e edições reservadas para membros do Clube.</p>
+        </div>
+        <div class="clube-home-item reveal">
+          <span class="clube-home-num">04</span>
+          <h3>Acesso antecipado</h3>
+          <p>Fique por dentro dos lançamentos antes de todo mundo.</p>
+        </div>
+      </div>
+      <div class="hero-cta reveal clube-home-cta" style="justify-content:center;">
+        <a class="btn" href="/clube">Entrar no Clube</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ A Essência Verité (mini, linka pra /sobre) ============ -->
+  <section id="essencia-mini" class="section section-beige">
+    <div class="wrap essencia-mini-wrap">
+      <p class="eyebrow reveal">A Marca</p>
+      <h2 class="reveal reveal-scale">A Essência <span class="gold">Verité</span></h2>
+      <p class="lead reveal">Fragrâncias pensadas para virar memória, não só perfume. Cada frasco carrega autenticidade e elegância que dá pra sentir, não pra copiar.</p>
+      <a class="btn reveal" href="sobre.html">Conhecer a Verité</a>
+    </div>
+  </section>
+
+  <!-- ============ Lançamento (teaser misterioso) ============ -->
+  <section id="lancamento" class="section section-dark section-3 launch has-ambient">
+    <div class="ambient-wash" aria-hidden="true"></div>
+    <div class="ambient" data-parallax="10" aria-hidden="true">
+      <div class="ambient-orb orb-c" style="width:420px;height:420px;top:-120px;left:50%;margin-left:-210px;"></div>
+      <div class="ambient-shape shape-diamond" style="width:180px;height:180px;bottom:8%;right:10%;"></div>
+      <div class="ambient-particles" data-count="16"></div>
+    </div>
+    <div class="wrap">
+      <p class="eyebrow reveal">Acesso Antecipado</p>
+      <h2 class="reveal" data-content-key="lancamento_title">Seja um dos primeiros a conhecer as próximas criações da VERITÉ.</h2>
+      <p class="sub reveal" data-content-key="lancamento_sub">Um convite discreto, antes de todo mundo.</p>
+      <div data-form-container>
+        <form class="stack-form reveal" id="launch-form" data-submit-endpoint="/api/public/waitlist" novalidate>
+          <div class="field">
+            <label for="launch-name">Nome</label>
+            <input id="launch-name" name="name" type="text" autocomplete="name" placeholder="Seu nome" required/>
+            <span class="field-error" aria-live="polite"></span>
+          </div>
+          <div class="field">
+            <label for="launch-email">E-mail</label>
+            <input id="launch-email" name="email" type="email" autocomplete="email" placeholder="Seu melhor e-mail" required/>
+            <span class="field-error" aria-live="polite"></span>
+          </div>
+          <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"/>
+          <button type="submit" class="btn btn-block">
+            <span class="btn-label">Solicitar Acesso</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+          <p class="form-error-general" role="alert" aria-live="polite" hidden></p>
+        </form>
+        <p class="note reveal">Sem spam. Apenas a verdade da sua essência.</p>
+        <div class="form-thanks" role="status">
+          <p class="form-thanks-title">Seu acesso antecipado está garantido.</p>
+          <p class="form-thanks-sub">Você será uma das primeiras pessoas a conhecer a VERITÉ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!--
+    Vitrines (Destaques/Mais Desejados/Novidades/Presentes) ficam ocultas
+    por completo quando não têm produto correspondente (ver initShowcases em
+    assets/js/products.js) — nunca mostram uma caixa "Em preparação" grande.
+    Conteúdo institucional completo (história/essência/visão/manifesto/FAQ/
+    contato) mora em sobre.html; aqui na home fica só um teaser pequeno
+    (#essencia-mini). Checkout continua fora de escopo — carrinho é real,
+    "Finalizar Compra" encaminha pro WhatsApp.
+  -->
+
+</main>
+
+<footer>
+  <div class="watermark" aria-hidden="true">V</div>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient-orb" style="width:280px;height:280px;top:-40px;left:50%;margin-left:-140px; animation-duration:26s;"></div>
+  </div>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand reveal">
+        <div class="emblem-wrap">
+          <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+        </div>
+        <span class="word">Verité</span>
+        <p>A verdade está na sua essência.</p>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Comprar</h4>
+        <ul>
+          <li><a href="produtos.html?categoria=perfumes">Perfumes</a></li>
+          <li><a href="produtos.html?genero=feminino">Femininos</a></li>
+          <li><a href="produtos.html?genero=masculino">Masculinos</a></li>
+          <li><a href="produtos.html?genero=unissex">Unissex</a></li>
+          <li><a href="produtos.html?categoria=kits">Kits</a></li>
+          <li><a href="produtos.html?categoria=presentes">Presentes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Verité</h4>
+        <ul>
+          <li><a href="sobre.html">Sobre nós</a></li>
+          <li><a href="/clube">Clube Verité</a></li>
+          <li><a href="produtos.html?colecao=exclusivos">Exclusivos</a></li>
+          <li><a href="produtos.html?colecao=lancamentos">Lançamentos</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Ajuda</h4>
+        <ul>
+          <li><a href="sobre.html#contato">Contato</a></li>
+          <li><a href="entregas.html">Entregas</a></li>
+          <li><a href="pagamentos.html">Pagamentos</a></li>
+          <li><a href="trocas.html">Trocas</a></li>
+          <li><a href="sobre.html#faq">Perguntas Frequentes</a></li>
+        </ul>
+      </div>
+      <div class="footer-col reveal">
+        <h4>Redes Sociais</h4>
+        <ul>
+          <li class="disabled-link" title="Canal em preparação" data-settings-key="instagram">Instagram — canal em preparação</li>
+          <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-legal reveal">
+      <a href="privacidade.html">Política de Privacidade</a>
+      <span class="footer-legal-dot" aria-hidden="true">·</span>
+      <a href="termos.html">Termos de Uso</a>
+    </div>
+    <div class="footer-bottom">
+      <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
+      <a class="to-top" href="#inicio">
+        Voltar ao topo
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/ambient.js"></script>
+<script src="assets/js/pointer.js"></script>
+<script src="assets/js/hero-banner.js"></script>
+<script src="assets/js/fragrancias.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/scroll-fx.js"></script>
+<script src="assets/js/favorites.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/search.js"></script>
+<script src="assets/js/products.js"></script>
+<script src="assets/js/quiz.js"></script>
+<script src="assets/js/products-loader.js"></script>
+<script src="assets/js/site-data.js"></script>
+</body>
+</html>
