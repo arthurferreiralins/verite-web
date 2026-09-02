@@ -52,6 +52,31 @@
     });
   }
 
+  /* 1) Banner — variante mais escura do líquido do frasco Feminino (só
+     no rascunho, arquivo novo assets/img/frasco-feminino-lab-escuro.png,
+     a foto oficial não foi alterada). hero-banner.js troca bottle.src ao
+     alternar fragrância usando o caminho original em FRAGS; como esse
+     array vive dentro do próprio hero-banner.js (não dá pra editar sem
+     tocar no arquivo de produção), interceptamos a troca de src aqui e
+     trocamos de volta pra variante escura sempre que ela apontar pro
+     Feminino original — assim a cor se mantém mesmo depois de o
+     visitante trocar de fragrância e voltar pro Feminino. */
+  var hbBottleImg = document.querySelector('#inicio .hb-bottle');
+  if(hbBottleImg){
+    var HB_FEMININO_ORIGINAL = 'assets/img/frasco-feminino.png';
+    var HB_FEMININO_ESCURO = 'assets/img/frasco-feminino-lab-escuro.png';
+    var swappingBottle = false;
+    function hbSwapDarkFeminino(){
+      if(swappingBottle) return;
+      if(hbBottleImg.getAttribute('src') === HB_FEMININO_ORIGINAL){
+        swappingBottle = true;
+        hbBottleImg.setAttribute('src', HB_FEMININO_ESCURO);
+        swappingBottle = false;
+      }
+    }
+    new MutationObserver(hbSwapDarkFeminino).observe(hbBottleImg, {attributes:true, attributeFilter:['src']});
+  }
+
   /* 1) Banner — saída cinematográfica ao rolar. Grava --hb-exit (0→1)
      em #inicio conforme o herói sai de cena; o CSS (lab-refresh.css)
      usa essa variável pra esmaecer/recuar .hb-inner e .hb-dock. Não
