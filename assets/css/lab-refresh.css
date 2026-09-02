@@ -6,9 +6,10 @@
    que index.html (produção) fique 100% intocado enquanto isto é testado
    e aprovado. Quando aprovado, migrar o que fizer sentido pra style.css.
 
-   Cobre os 10 primeiros itens da lista de melhorias combinada:
+   Cobre a lista completa de melhorias combinada:
    1 banner · 2 nossa fragrância · 3 produtos · 4 lançamentos · 5 kits ·
-   6 clube verité · 7 animações · 8 scroll · 9 responsividade · 10 mobile
+   6 clube verité · 7 animações · 8 scroll · 9 responsividade · 10 mobile ·
+   11 acabamento visual premium
    ======================================================================= */
 
 /* -----------------------------------------------------------------------
@@ -136,3 +137,31 @@
   }
   .lab-nav-backdrop.is-visible{ opacity:1; pointer-events:auto; }
 }
+
+/* -----------------------------------------------------------------------
+   11) ACABAMENTO VISUAL PREMIUM
+   - Seleção de texto com tom dourado em vez do azul padrão do sistema.
+   - Véu de abertura cinematográfico (cortina que sobe ao carregar a
+     página) — 100% CSS, invisível por padrão (:where(html.js) é o mesmo
+     guard-rail que style.css já usa em .reveal), pointer-events:none
+     desde o início então nunca bloqueia clique.
+   - Imagens carregadas sob demanda (loading="lazy": grade de fragrâncias,
+     vitrine, miniaturas) entram com um fade suave em vez de "estourar"
+     assim que o navegador termina o download. O frasco principal do
+     banner (fetchpriority="high", LCP) fica de fora de propósito.
+   ----------------------------------------------------------------------- */
+::selection{ background:rgba(177,138,79,.35); color:var(--off-white); }
+
+.lab-veil{
+  position:fixed; inset:0; z-index:10000; background:var(--black);
+  opacity:0; pointer-events:none;
+}
+:where(html.js) .lab-veil{
+  opacity:1; animation:lab-veil-out .9s ease .15s forwards;
+}
+@keyframes lab-veil-out{ to{ opacity:0; visibility:hidden; } }
+@media (prefers-reduced-motion:reduce){ :where(html.js) .lab-veil{ opacity:0; animation:none; } }
+
+main img[loading="lazy"]{ opacity:0; transition:opacity .6s ease; }
+main img[loading="lazy"].is-loaded{ opacity:1; }
+@media (prefers-reduced-motion:reduce){ main img[loading="lazy"]{ opacity:1; transition:none; } }

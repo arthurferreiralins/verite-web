@@ -51,4 +51,14 @@
       toggle.setAttribute('aria-expanded', 'false');
     });
   }
+
+  /* 11) Acabamento premium — fade-in das imagens lazy (frag-grid, reel,
+     miniaturas) assim que cada uma termina de carregar, em vez de
+     aparecerem de repente. O frasco principal do banner não usa
+     loading="lazy", então nunca é afetado por isto. */
+  document.querySelectorAll('main img[loading="lazy"]').forEach(function(img){
+    if(img.complete && img.naturalWidth){ img.classList.add('is-loaded'); return; }
+    img.addEventListener('load', function(){ img.classList.add('is-loaded'); });
+    img.addEventListener('error', function(){ img.classList.add('is-loaded'); });
+  });
 })();
