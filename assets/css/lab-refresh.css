@@ -13,10 +13,23 @@
    ======================================================================= */
 
 /* -----------------------------------------------------------------------
-   1) BANNER — acabamento cinematográfico: grain sutil + vinheta nas
-   bordas, por cima de tudo que já existe (grade, partículas, frasco).
-   Não interfere no parallax nem na troca de fragrância.
+   1) BANNER — reformulação grande: VÉRITÉ como elemento de maior presença
+   visual (antes só existia como textura de fundo em baixa opacidade),
+   dourado tratado como detalhe (não domina mais o título), mais espaço
+   negativo, luz autônoma discreta e uma saída cinematográfica no scroll.
+
+   Tudo abaixo evita de propósito animar `transform` em qualquer elemento
+   [data-hb-depth] ou .hb-bottle-tilt — esses já recebem transform via
+   JS (hero-banner.js) a cada frame de parallax/tilt, e uma animação CSS
+   competindo pela mesma propriedade no mesmo elemento seria sobrescrita
+   ou entraria em conflito. .hb-emblem tem [data-hb-depth] (parallax de
+   mouse funciona nele automaticamente, sem precisar tocar no JS), mas
+   sua centralização mora no wrapper .hb-emblem-wrap, que não tem
+   [data-hb-depth] — assim o JS só soma um pequeno deslocamento por cima
+   da centralização, sem disputa.
    ----------------------------------------------------------------------- */
+
+/* --- grain + vinheta cinematográfica, por cima de tudo -------------- */
 #inicio .hb-cine{
   position:absolute; inset:0; z-index:4; pointer-events:none;
 }
@@ -32,38 +45,38 @@
 @keyframes hb-grain{ 0%,100%{transform:translate(0,0);} 50%{transform:translate(-1.5%,1%);} }
 @media (prefers-reduced-motion:reduce){ #inicio .hb-cine::after{ animation:none; } }
 
-/* --- banner: luz autônoma (não depende do mouse) ---------------------
-   Tudo abaixo evita de propósito animar `transform` em qualquer elemento
-   [data-hb-depth] ou .hb-bottle-tilt — esses já recebem transform via
-   JS (hero-banner.js) a cada frame de parallax/tilt, e uma animação CSS
-   competindo pela mesma propriedade no mesmo elemento seria sobrescrita
-   ou entraria em conflito. Por isso os elementos novos abaixo são todos
-   camadas próprias, novas, sem [data-hb-depth]. */
-
-/* feixes de luz lentos atrás do frasco — vive dentro de .hb-media,
-   entre o glow/aura (z0) e o frasco (z2) */
-#inicio .hb-rays{
-  position:absolute; left:50%; top:46%; width:150%; aspect-ratio:1; z-index:0;
-  transform:translate(-50%,-50%); pointer-events:none; opacity:.55; mix-blend-mode:screen;
-  background:conic-gradient(from 0deg,
-    transparent 0deg, rgba(233,204,150,.16) 5deg, transparent 12deg,
-    transparent 45deg, rgba(233,204,150,.1) 52deg, transparent 60deg,
-    transparent 110deg, rgba(233,204,150,.13) 118deg, transparent 126deg,
-    transparent 170deg, rgba(233,204,150,.08) 178deg, transparent 186deg,
-    transparent 235deg, rgba(233,204,150,.11) 243deg, transparent 251deg,
-    transparent 310deg, rgba(233,204,150,.13) 318deg, transparent 326deg,
-    transparent 360deg);
-  -webkit-mask-image:radial-gradient(closest-side, #000 0%, transparent 74%);
-  mask-image:radial-gradient(closest-side, #000 0%, transparent 74%);
-  animation:hb-rays-spin 70s linear infinite;
+/* --- marca d'água: o emblema oficial (V + chama), não o texto repetido
+   — evita duplicar a palavra "VÉRITÉ" que agora também é o título grande
+   em primeiro plano, e usa uma peça de identidade real da marca. ------ */
+#inicio .hb-emblem-wrap{
+  position:absolute; z-index:0; pointer-events:none;
+  left:50%; top:46%; width:min(52vw, 620px);
+  opacity:calc(.065 - .045 * var(--hb-exit, 0));
+  transform:translate(-50%,-50%) scale(calc(1 + .16 * var(--hb-exit, 0)));
 }
-@keyframes hb-rays-spin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
-@media (prefers-reduced-motion:reduce){ #inicio .hb-rays{ animation:none; } }
+#inicio .hb-emblem{ display:block; width:100%; height:auto; }
+@media (prefers-reduced-motion:reduce){
+  #inicio .hb-emblem-wrap{ opacity:.065; transform:translate(-50%,-50%); }
+}
 
-/* holofote suave que percorre a cena inteira devagar, sozinho — dá
-   sensação de "iluminação de estúdio" mesmo sem o mouse em cima */
+/* --- luz autônoma, não depende do mouse ------------------------------ */
+/* um único feixe de luz suave cruzando a cena devagar — mais editorial
+   que um "raio" de template, respirando em vez de girar */
+#inicio .hb-beam{
+  position:absolute; left:-25%; top:-30%; width:75%; height:160%; z-index:0;
+  pointer-events:none; opacity:.42; mix-blend-mode:screen;
+  background:linear-gradient(115deg, transparent 42%, rgba(233,204,150,.16) 50%, transparent 58%);
+  animation:hb-beam-drift 34s ease-in-out infinite;
+}
+@keyframes hb-beam-drift{
+  0%,100%{ transform:translateX(0) rotate(0deg); }
+  50%{ transform:translateX(6%) rotate(1.1deg); }
+}
+@media (prefers-reduced-motion:reduce){ #inicio .hb-beam{ animation:none; } }
+
+/* holofote que percorre a cena inteira bem devagar, sozinho */
 #inicio .hb-spot{
-  position:absolute; inset:-15%; z-index:0; pointer-events:none; opacity:.5;
+  position:absolute; inset:-15%; z-index:0; pointer-events:none; opacity:.36;
   background:radial-gradient(340px 280px at center, rgba(217,189,133,.15), transparent 72%);
   background-repeat:no-repeat;
   animation:hb-spot-drift 26s ease-in-out infinite;
@@ -77,23 +90,65 @@
 }
 @media (prefers-reduced-motion:reduce){ #inicio .hb-spot{ animation:none; background-position:20% 30%; } }
 
-/* uma luz passa devagar sobre o título, no mesmo espírito do brilho que
+/* --- hierarquia do texto: VÉRITÉ é o elemento dominante; dourado vira
+   detalhe (traço fino sob o título, palavra única na frase, eyebrow) --- */
+#inicio .hb-eyebrow{ margin-bottom:clamp(1.6rem, 3.6vh, 2.4rem); }
+#inicio .hb-title{
+  position:relative; font-size:clamp(3.4rem, 11vw, 8.4rem);
+  padding-bottom:clamp(1.1rem, 2.6vh, 1.7rem);
+}
+#inicio .hb-word{
+  display:inline-block; color:var(--off-white); letter-spacing:.05em;
+  text-shadow:0 0 60px rgba(250,249,246,.14), 0 0 130px rgba(217,189,133,.1);
+}
+/* traço dourado fino — o único acento de cor forte no título */
+#inicio .hb-title::before{
+  content:""; position:absolute; left:2px; bottom:0; width:64px; height:2px;
+  background:linear-gradient(90deg, var(--gold-light), var(--gold-deep));
+  box-shadow:0 0 16px rgba(217,189,133,.5);
+}
+/* brilho que passa devagar sobre o título, mesmo espírito do brilho que
    já percorre o vidro do frasco (.hb-sweep) — mesma linguagem visual */
-#inicio .hb-title{ position:relative; }
 #inicio .hb-title::after{
   content:""; position:absolute; inset:-14% -8%; z-index:1; pointer-events:none;
-  background:linear-gradient(100deg, transparent 42%, rgba(255,255,255,.14) 50%, transparent 58%);
+  background:linear-gradient(100deg, transparent 42%, rgba(255,255,255,.13) 50%, transparent 58%);
   transform:translateX(-150%) skewX(-10deg);
   animation:hb-title-shimmer 8s ease-in-out 2.6s infinite;
 }
 @keyframes hb-title-shimmer{ 0%,72%{ transform:translateX(-150%) skewX(-10deg); } 100%{ transform:translateX(150%) skewX(-10deg); } }
 @media (prefers-reduced-motion:reduce){ #inicio .hb-title::after{ animation:none; display:none; } }
 
-/* saída cinematográfica ao rolar a página — o herói recua e esmaece
+#inicio .hb-lede{ margin-top:clamp(2rem, 4.2vh, 2.9rem); }
+#inicio .hb-lede em{ font-style:italic; color:var(--gold-light); }
+#inicio .hb-cta{ margin-top:clamp(2.8rem, 5.8vh, 3.8rem); }
+
+/* mais ar entre o topo/base do herói e o conteúdo */
+#inicio.hero .hb-inner{
+  padding-top:clamp(6.5rem, 15vh, 9.5rem);
+  padding-bottom:clamp(5.5rem, 12vh, 7.5rem);
+}
+
+/* --- dock: nome + indicadores discretos (pontos, não caixas com miniatura
+   grande) — a troca de fragrância continua igual, só a apresentação do
+   controle fica mais discreta, como pede a marca. ---------------------- */
+#inicio .hb-switch{ gap:clamp(.6rem, 1.4vw, .9rem); }
+#inicio .hb-switch-btn{
+  width:34px; height:34px; padding:0; border-radius:50%;
+  background:rgba(12,10,9,.4); border:1px solid rgba(250,249,246,.16);
+}
+#inicio .hb-switch-btn img{ transform:none; opacity:.85; }
+#inicio .hb-switch-btn:hover{ transform:translateY(-2px); border-color:rgba(217,189,133,.5); }
+#inicio .hb-switch-btn:hover img{ transform:none; opacity:1; }
+#inicio .hb-switch-btn.is-active{
+  border-color:var(--gold-light); background:rgba(217,189,133,.14); transform:translateY(-2px);
+}
+#inicio .hb-switch-btn.is-active img{ transform:none; opacity:1; }
+
+/* --- saída cinematográfica ao rolar a página — o herói recua e esmaece
    suavemente em vez de simplesmente sumir atrás da próxima seção.
    --hb-exit (0→1) é gravado por lab-refresh.js em #inicio (ancestral
-   comum), então tanto .hb-inner quanto .hb-dock conseguem ler por
-   herança de custom property. Sem JS, var(...,0) mantém tudo normal. */
+   comum), então .hb-inner, .hb-dock e .hb-emblem-wrap conseguem ler por
+   herança de custom property. Sem JS, var(...,0) mantém tudo normal. --- */
 #inicio .hb-inner{
   opacity:calc(1 - .55 * var(--hb-exit, 0));
   transform:translateY(calc(var(--hb-exit, 0) * 46px)) scale(calc(1 - .045 * var(--hb-exit, 0)));
@@ -105,6 +160,19 @@
 @media (prefers-reduced-motion:reduce){
   #inicio .hb-inner{ opacity:1; transform:none; }
   #inicio .hb-dock{ opacity:1; transform:translateX(-50%); }
+}
+
+/* --- mobile: experiência própria, não desktop encolhido -------------- */
+@media (max-width:760px){
+  #inicio .hb-title{ font-size:clamp(3rem, 15vw, 4.4rem); padding-bottom:1rem; }
+  #inicio .hb-eyebrow{ margin-bottom:1.2rem; }
+  #inicio .hb-lede{ margin-top:1.3rem; }
+  #inicio .hb-cta{ margin-top:1.8rem; }
+  #inicio.hero .hb-inner{ padding-top:5.5rem; padding-bottom:3.5rem; }
+  #inicio .hb-beam, #inicio .hb-spot{ opacity:.24; animation:none; }
+  #inicio .hb-title::after{ display:none; }
+  #inicio .hb-emblem-wrap{ width:78vw; }
+  #inicio .hb-switch-btn{ width:30px; height:30px; }
 }
 
 /* -----------------------------------------------------------------------
