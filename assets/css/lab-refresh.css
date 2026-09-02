@@ -131,6 +131,44 @@
 }
 
 /* -----------------------------------------------------------------------
+   2b) FOTOS DE PRODUTO — mesma luz de estúdio do banner (contra-luz +
+   sombra de contato) aplicada aos frascos da grade de fragrâncias e da
+   vitrine em movimento, que hoje só têm o drop-shadow acompanhando o
+   recorte. Não mexe nas fotos de cena (presentes/lançamentos, já vêm
+   com iluminação própria da fotografia) nem nos arquivos de imagem em
+   si — só a camada de luz por cima, em CSS.
+   ----------------------------------------------------------------------- */
+#fragrancias .frag-card-media::before,
+.reel-item::after{
+  content:""; position:absolute; z-index:1; pointer-events:none;
+  left:16%; top:6%; width:34%; height:64%; border-radius:50%;
+  background:linear-gradient(200deg, rgba(255,255,255,.18), transparent 62%);
+  filter:blur(15px); mix-blend-mode:screen; opacity:.85;
+}
+.reel-item{ position:relative; }
+.reel-item::after{ left:22%; top:2%; width:30%; height:60%; }
+
+/* sombra de contato no chão do frasco — ausente hoje na grade e na
+   vitrine (só o banner principal tinha .hb-floor) */
+#fragrancias .frag-card-media::after{
+  content:""; position:absolute; z-index:0; pointer-events:none;
+  left:50%; bottom:6%; width:52%; height:9%; transform:translateX(-50%);
+  background:radial-gradient(ellipse at center, rgba(0,0,0,.5), rgba(0,0,0,.18) 55%, transparent 76%);
+  filter:blur(8px);
+}
+/* fotos de cena (presentes/lançamentos) já têm luz e sombra reais —
+   não duplicar em cima delas */
+#fragrancias .frag-card[data-filter="presentes"] .frag-card-media::before,
+#fragrancias .frag-card[data-filter="presentes"] .frag-card-media::after,
+#fragrancias .frag-card[data-filter="lancamentos"] .frag-card-media::before,
+#fragrancias .frag-card[data-filter="lancamentos"] .frag-card-media::after{
+  display:none;
+}
+@media (max-width:600px){
+  #fragrancias .frag-card-media::after{ display:none; }
+}
+
+/* -----------------------------------------------------------------------
    6) CLUBE VERITÉ — escada de níveis (Start → Basic → Plus → Pro →
    Master), hoje ausente na home. Conteúdo real (nomes já definidos pela
    marca), apenas apresentação nova.
