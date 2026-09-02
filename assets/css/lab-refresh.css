@@ -237,6 +237,6 @@
 @keyframes lab-veil-out{ to{ opacity:0; visibility:hidden; } }
 @media (prefers-reduced-motion:reduce){ :where(html.js) .lab-veil{ opacity:0; animation:none; } }
 
-main img[loading="lazy"]{ opacity:0; transition:opacity .6s ease; }
+:where(html.js) main img[loading="lazy"]{ opacity:0; transition:opacity .6s ease; }
 main img[loading="lazy"].is-loaded{ opacity:1; }
-@media (prefers-reduced-motion:reduce){ main img[loading="lazy"]{ opacity:1; transition:none; } }
+@media (prefers-reduced-motion:reduce){ :where(html.js) main img[loading="lazy"]{ opacity:1; transition:none; } }
