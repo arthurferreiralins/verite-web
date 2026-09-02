@@ -52,6 +52,30 @@
     });
   }
 
+  /* 1) Banner — saída cinematográfica ao rolar. Grava --hb-exit (0→1)
+     em #inicio conforme o herói sai de cena; o CSS (lab-refresh.css)
+     usa essa variável pra esmaecer/recuar .hb-inner e .hb-dock. Não
+     toca em nenhum elemento [data-hb-depth] nem .hb-bottle-tilt, então
+     não disputa transform com o parallax/tilt de hero-banner.js. */
+  var hbHero = document.querySelector('#inicio.hero-home');
+  if(hbHero && !reduceMotion){
+    var hbTicking = false;
+    function hbUpdate(){
+      hbTicking = false;
+      var r = hbHero.getBoundingClientRect();
+      var p = -r.top / (r.height * 0.9);
+      p = p < 0 ? 0 : p > 1 ? 1 : p;
+      hbHero.style.setProperty('--hb-exit', p.toFixed(3));
+    }
+    window.addEventListener('scroll', function(){
+      if(!hbTicking){ hbTicking = true; window.requestAnimationFrame(hbUpdate); }
+    }, {passive:true});
+    window.addEventListener('resize', function(){
+      if(!hbTicking){ hbTicking = true; window.requestAnimationFrame(hbUpdate); }
+    }, {passive:true});
+    hbUpdate();
+  }
+
   /* 11) Acabamento premium — fade-in das imagens lazy (frag-grid, reel,
      miniaturas) assim que cada uma termina de carregar, em vez de
      aparecerem de repente. O frasco principal do banner não usa

@@ -32,6 +32,81 @@
 @keyframes hb-grain{ 0%,100%{transform:translate(0,0);} 50%{transform:translate(-1.5%,1%);} }
 @media (prefers-reduced-motion:reduce){ #inicio .hb-cine::after{ animation:none; } }
 
+/* --- banner: luz autônoma (não depende do mouse) ---------------------
+   Tudo abaixo evita de propósito animar `transform` em qualquer elemento
+   [data-hb-depth] ou .hb-bottle-tilt — esses já recebem transform via
+   JS (hero-banner.js) a cada frame de parallax/tilt, e uma animação CSS
+   competindo pela mesma propriedade no mesmo elemento seria sobrescrita
+   ou entraria em conflito. Por isso os elementos novos abaixo são todos
+   camadas próprias, novas, sem [data-hb-depth]. */
+
+/* feixes de luz lentos atrás do frasco — vive dentro de .hb-media,
+   entre o glow/aura (z0) e o frasco (z2) */
+#inicio .hb-rays{
+  position:absolute; left:50%; top:46%; width:150%; aspect-ratio:1; z-index:0;
+  transform:translate(-50%,-50%); pointer-events:none; opacity:.55; mix-blend-mode:screen;
+  background:conic-gradient(from 0deg,
+    transparent 0deg, rgba(233,204,150,.16) 5deg, transparent 12deg,
+    transparent 45deg, rgba(233,204,150,.1) 52deg, transparent 60deg,
+    transparent 110deg, rgba(233,204,150,.13) 118deg, transparent 126deg,
+    transparent 170deg, rgba(233,204,150,.08) 178deg, transparent 186deg,
+    transparent 235deg, rgba(233,204,150,.11) 243deg, transparent 251deg,
+    transparent 310deg, rgba(233,204,150,.13) 318deg, transparent 326deg,
+    transparent 360deg);
+  -webkit-mask-image:radial-gradient(closest-side, #000 0%, transparent 74%);
+  mask-image:radial-gradient(closest-side, #000 0%, transparent 74%);
+  animation:hb-rays-spin 70s linear infinite;
+}
+@keyframes hb-rays-spin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+@media (prefers-reduced-motion:reduce){ #inicio .hb-rays{ animation:none; } }
+
+/* holofote suave que percorre a cena inteira devagar, sozinho — dá
+   sensação de "iluminação de estúdio" mesmo sem o mouse em cima */
+#inicio .hb-spot{
+  position:absolute; inset:-15%; z-index:0; pointer-events:none; opacity:.5;
+  background:radial-gradient(340px 280px at center, rgba(217,189,133,.15), transparent 72%);
+  background-repeat:no-repeat;
+  animation:hb-spot-drift 26s ease-in-out infinite;
+}
+@keyframes hb-spot-drift{
+  0%{ background-position:12% 22%; }
+  25%{ background-position:62% 12%; }
+  50%{ background-position:82% 62%; }
+  75%{ background-position:32% 78%; }
+  100%{ background-position:12% 22%; }
+}
+@media (prefers-reduced-motion:reduce){ #inicio .hb-spot{ animation:none; background-position:20% 30%; } }
+
+/* uma luz passa devagar sobre o título, no mesmo espírito do brilho que
+   já percorre o vidro do frasco (.hb-sweep) — mesma linguagem visual */
+#inicio .hb-title{ position:relative; }
+#inicio .hb-title::after{
+  content:""; position:absolute; inset:-14% -8%; z-index:1; pointer-events:none;
+  background:linear-gradient(100deg, transparent 42%, rgba(255,255,255,.14) 50%, transparent 58%);
+  transform:translateX(-150%) skewX(-10deg);
+  animation:hb-title-shimmer 8s ease-in-out 2.6s infinite;
+}
+@keyframes hb-title-shimmer{ 0%,72%{ transform:translateX(-150%) skewX(-10deg); } 100%{ transform:translateX(150%) skewX(-10deg); } }
+@media (prefers-reduced-motion:reduce){ #inicio .hb-title::after{ animation:none; display:none; } }
+
+/* saída cinematográfica ao rolar a página — o herói recua e esmaece
+   suavemente em vez de simplesmente sumir atrás da próxima seção.
+   --hb-exit (0→1) é gravado por lab-refresh.js em #inicio (ancestral
+   comum), então tanto .hb-inner quanto .hb-dock conseguem ler por
+   herança de custom property. Sem JS, var(...,0) mantém tudo normal. */
+#inicio .hb-inner{
+  opacity:calc(1 - .55 * var(--hb-exit, 0));
+  transform:translateY(calc(var(--hb-exit, 0) * 46px)) scale(calc(1 - .045 * var(--hb-exit, 0)));
+}
+#inicio .hb-dock{
+  opacity:calc(1 - .7 * var(--hb-exit, 0));
+  transform:translateX(-50%) translateY(calc(var(--hb-exit, 0) * 26px));
+}
+@media (prefers-reduced-motion:reduce){
+  #inicio .hb-inner{ opacity:1; transform:none; }
+  #inicio .hb-dock{ opacity:1; transform:translateX(-50%); }
+}
+
 /* -----------------------------------------------------------------------
    2) NOSSA FRAGRÂNCIA — selo "Kit" no card de Kits (o card já usa
    frag-card-wide) e entrada em cascata card a card (hoje todo o grid
