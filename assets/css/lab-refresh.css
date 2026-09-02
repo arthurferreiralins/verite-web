@@ -29,6 +29,12 @@
    da centralização, sem disputa.
    ----------------------------------------------------------------------- */
 
+/* capa padrão agora é o Verité Eau de Parfum (masculino) em vez do
+   Feminino — a luz de fundo (--tint, ver style.css) acompanha desde o
+   primeiro frame em vez de nascer com o tom do Feminino e só corrigir
+   depois que hero-banner.js troca a fragrância. */
+#inicio.hero-home{ --tint:210,200,168; }
+
 /* --- grain + vinheta cinematográfica, por cima de tudo -------------- */
 #inicio .hb-cine{
   position:absolute; inset:0; z-index:4; pointer-events:none;
@@ -128,21 +134,49 @@
   padding-bottom:clamp(5.5rem, 12vh, 7.5rem);
 }
 
-/* --- dock: nome + indicadores discretos (pontos, não caixas com miniatura
-   grande) — a troca de fragrância continua igual, só a apresentação do
-   controle fica mais discreta, como pede a marca. ---------------------- */
+/* --- dock: nome + indicadores discretos (pontos com foto legível, não
+   caixas retangulares grandes) — a troca de fragrância continua igual,
+   só a apresentação do controle fica mais discreta, como pede a marca. */
 #inicio .hb-switch{ gap:clamp(.6rem, 1.4vw, .9rem); }
 #inicio .hb-switch-btn{
-  width:34px; height:34px; padding:0; border-radius:50%;
+  width:42px; height:42px; padding:0; border-radius:50%; overflow:hidden;
   background:rgba(12,10,9,.4); border:1px solid rgba(250,249,246,.16);
 }
-#inicio .hb-switch-btn img{ transform:none; opacity:.85; }
+/* object-fit:cover (em vez do contain padrão) preenche o círculo com um
+   recorte legível do frasco, em vez de uma tira fina sobrando espaço
+   vazio nas laterais de uma garrafa alta dentro de um círculo */
+#inicio .hb-switch-btn img{ width:100%; height:100%; object-fit:cover; transform:none; opacity:.82; }
 #inicio .hb-switch-btn:hover{ transform:translateY(-2px); border-color:rgba(217,189,133,.5); }
 #inicio .hb-switch-btn:hover img{ transform:none; opacity:1; }
 #inicio .hb-switch-btn.is-active{
   border-color:var(--gold-light); background:rgba(217,189,133,.14); transform:translateY(-2px);
+  box-shadow:0 0 0 3px rgba(217,189,133,.16);
 }
 #inicio .hb-switch-btn.is-active img{ transform:none; opacity:1; }
+
+/* --- setas de navegação junto ao frasco --------------------------------- */
+#inicio .hb-nav-arrow{
+  appearance:none; -webkit-appearance:none; font:inherit;
+  position:absolute; top:50%; z-index:6; transform:translateY(-50%);
+  width:42px; height:42px; border-radius:50%; display:grid; place-items:center;
+  background:rgba(12,10,9,.42); border:1px solid rgba(250,249,246,.18);
+  color:rgba(250,249,246,.75); cursor:pointer; padding:0;
+  opacity:.55; transition:opacity .35s ease, border-color .35s ease, color .35s ease, transform .35s ease;
+}
+#inicio .hb-nav-arrow svg{ width:18px; height:18px; }
+#inicio .hb-nav-prev{ left:clamp(-4px, -1vw, 6px); }
+#inicio .hb-nav-next{ right:clamp(-4px, -1vw, 6px); }
+@media (hover:hover) and (pointer:fine){
+  #inicio .hb-media:hover .hb-nav-arrow{ opacity:.9; }
+}
+#inicio .hb-nav-arrow:hover{
+  opacity:1 !important; border-color:var(--gold-light); color:var(--gold-light);
+  transform:translateY(-50%) scale(1.06);
+}
+#inicio .hb-nav-arrow:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; opacity:1; }
+@media (max-width:900px){
+  #inicio .hb-nav-arrow{ opacity:.7; }
+}
 
 /* --- saída cinematográfica ao rolar a página — o herói recua e esmaece
    suavemente em vez de simplesmente sumir atrás da próxima seção.
@@ -172,7 +206,9 @@
   #inicio .hb-beam, #inicio .hb-spot{ opacity:.24; animation:none; }
   #inicio .hb-title::after{ display:none; }
   #inicio .hb-emblem-wrap{ width:78vw; }
-  #inicio .hb-switch-btn{ width:30px; height:30px; }
+  #inicio .hb-switch-btn{ width:36px; height:36px; }
+  #inicio .hb-nav-arrow{ width:36px; height:36px; }
+  #inicio .hb-nav-arrow svg{ width:15px; height:15px; }
 }
 
 /* -----------------------------------------------------------------------

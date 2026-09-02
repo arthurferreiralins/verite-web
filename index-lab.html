@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
 <link rel="stylesheet" href="assets/css/style.css"/>
 <link rel="stylesheet" href="assets/css/lab-refresh.css"/>
-<link rel="preload" as="image" href="assets/img/frasco-feminino-lab-escuro.png" fetchpriority="high"/>
+<link rel="preload" as="image" href="assets/img/hero-frasco.png" fetchpriority="high"/>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon-256.png"/>
@@ -310,6 +310,12 @@
         <div class="hb-glow" data-hb-depth="0.08" aria-hidden="true"></div>
         <div class="hb-aura" data-hb-depth="0.12" aria-hidden="true"></div>
         <div class="hb-beam" aria-hidden="true"></div>
+        <button type="button" class="hb-nav-arrow hb-nav-prev" aria-label="Fragr&acirc;ncia anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button type="button" class="hb-nav-arrow hb-nav-next" aria-label="Pr&oacute;xima fragr&acirc;ncia">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
         <div class="hb-media-inner" data-hb-depth="0.16" data-hb-invert>
           <div class="hb-bottle-enter">
             <!-- .hb-bottle-tilt = tilt de mouse · .hb-bottle-stage =
@@ -317,7 +323,7 @@
             <div class="hb-bottle-tilt">
               <div class="hb-bottle-stage">
                 <div class="hb-bottle-float">
-                  <img class="hb-bottle" src="assets/img/frasco-feminino-lab-escuro.png" alt="Perfume Verit&eacute; Feminino &mdash; Eau de Parfum 50 ml" width="540" height="725" fetchpriority="high" decoding="async" draggable="false"/>
+                  <img class="hb-bottle" src="assets/img/hero-frasco.png" alt="Perfume Verit&eacute; &mdash; Eau de Parfum 40 ml" width="300" height="528" fetchpriority="high" decoding="async" draggable="false"/>
                   <span class="hb-floor" aria-hidden="true"></span>
                   <span class="hb-shine" aria-hidden="true"></span>
                   <span class="hb-sweep" aria-hidden="true"></span>
@@ -332,16 +338,16 @@
     <div class="hb-dock">
       <p class="hb-frag-name" aria-live="polite">
         <span class="hb-frag-brand">V&Eacute;RIT&Eacute;</span>
-        <span class="hb-frag-detail">Feminino &middot; Eau de Parfum &middot; 50 ml</span>
+        <span class="hb-frag-detail">Eau de Parfum &middot; 40 ml</span>
       </p>
       <div class="hb-switch" role="group" aria-label="Escolha a fragr&acirc;ncia">
-        <button class="hb-switch-btn is-active" type="button" data-i="0" aria-pressed="true" aria-label="Verit&eacute; Feminino">
+        <button class="hb-switch-btn" type="button" data-i="0" aria-pressed="false" aria-label="Verit&eacute; Feminino">
           <img src="assets/img/frasco-feminino-lab-escuro.png" alt="" width="540" height="725" loading="lazy" decoding="async"/>
         </button>
         <button class="hb-switch-btn" type="button" data-i="1" aria-pressed="false" aria-label="Verit&eacute; Dor&eacute;a">
           <img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async"/>
         </button>
-        <button class="hb-switch-btn" type="button" data-i="2" aria-pressed="false" aria-label="Verit&eacute; Eau de Parfum">
+        <button class="hb-switch-btn is-active" type="button" data-i="2" aria-pressed="true" aria-label="Verit&eacute; Eau de Parfum">
           <img src="assets/img/hero-frasco.png" alt="" width="300" height="528" loading="lazy" decoding="async"/>
         </button>
       </div>

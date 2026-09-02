@@ -77,6 +77,58 @@
     new MutationObserver(hbSwapDarkFeminino).observe(hbBottleImg, {attributes:true, attributeFilter:['src']});
   }
 
+  /* 1) Banner — a capa agora abre no Verité Eau de Parfum (masculino,
+     data-i="2") em vez do Feminino (data-i="0"), mas o estado interno
+     de hero-banner.js (a variável `cur`) começa sempre em 0, hardcoded
+     lá dentro — não dá pra mudar isso sem editar o arquivo de produção.
+     Corrigimos simulando um clique real no botão do masculino assim que
+     a entrada do herói começa (.hb-ready), o que já acontece por trás
+     de ~1s de opacidade zero em .hb-bottle-enter — a troca inteira
+     (paint + transição) termina bem antes disso, então fica invisível.
+     Sem essa correção, o primeiro clique no ponto do Feminino não faria
+     nada (o código acharia que o Feminino já é o atual). */
+  var hbHeroForSync = document.querySelector('#inicio.hero-home');
+  var hbMasculinoBtn = hbHeroForSync && hbHeroForSync.querySelector('.hb-switch-btn[data-i="2"]');
+  if(hbHeroForSync && hbMasculinoBtn){
+    var hbSynced = false;
+    function hbSyncToMasculino(){
+      if(hbSynced) return;
+      hbSynced = true;
+      hbMasculinoBtn.click();
+    }
+    if(hbHeroForSync.classList.contains('hb-ready')){
+      hbSyncToMasculino();
+    } else {
+      var hbReadyObserver = new MutationObserver(function(){
+        if(hbHeroForSync.classList.contains('hb-ready')){
+          hbReadyObserver.disconnect();
+          hbSyncToMasculino();
+        }
+      });
+      hbReadyObserver.observe(hbHeroForSync, {attributes:true, attributeFilter:['class']});
+    }
+  }
+
+  /* 1) Banner — setas de navegação ao lado do frasco, além dos pontinhos.
+     Não acessam nada interno de hero-banner.js — descobrem a fragrância
+     atual pelo botão .is-active (sempre correto, venha a troca de onde
+     vier) e simulam um clique real no próximo/anterior. */
+  var hbArrowHero = document.querySelector('#inicio.hero-home');
+  if(hbArrowHero){
+    var hbArrowBtns = Array.prototype.slice.call(hbArrowHero.querySelectorAll('.hb-switch-btn'));
+    function hbStep(dir){
+      if(!hbArrowBtns.length) return;
+      var activeBtn = hbArrowHero.querySelector('.hb-switch-btn.is-active') || hbArrowBtns[0];
+      var idx = parseInt(activeBtn.getAttribute('data-i'), 10) || 0;
+      var next = (idx + dir + hbArrowBtns.length) % hbArrowBtns.length;
+      hbArrowBtns[next].click();
+    }
+    var hbPrev = hbArrowHero.querySelector('.hb-nav-prev');
+    var hbNext = hbArrowHero.querySelector('.hb-nav-next');
+    if(hbPrev) hbPrev.addEventListener('click', function(){ hbStep(-1); });
+    if(hbNext) hbNext.addEventListener('click', function(){ hbStep(1); });
+  }
+
   /* 1) Banner — saída cinematográfica ao rolar. Grava --hb-exit (0→1)
      em #inicio conforme o herói sai de cena; o CSS (lab-refresh.css)
      usa essa variável pra esmaecer/recuar .hb-inner e .hb-dock. Não
