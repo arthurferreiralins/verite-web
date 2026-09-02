@@ -1,0 +1,138 @@
+/* =======================================================================
+   VERITÉ — camada de refinamento do RASCUNHO (index-lab.html)
+   -----------------------------------------------------------------------
+   Só é carregada por index-lab.html, depois de assets/css/style.css.
+   Nunca edita regras existentes — só soma classes/seletores novos, para
+   que index.html (produção) fique 100% intocado enquanto isto é testado
+   e aprovado. Quando aprovado, migrar o que fizer sentido pra style.css.
+
+   Cobre os 10 primeiros itens da lista de melhorias combinada:
+   1 banner · 2 nossa fragrância · 3 produtos · 4 lançamentos · 5 kits ·
+   6 clube verité · 7 animações · 8 scroll · 9 responsividade · 10 mobile
+   ======================================================================= */
+
+/* -----------------------------------------------------------------------
+   1) BANNER — acabamento cinematográfico: grain sutil + vinheta nas
+   bordas, por cima de tudo que já existe (grade, partículas, frasco).
+   Não interfere no parallax nem na troca de fragrância.
+   ----------------------------------------------------------------------- */
+#inicio .hb-cine{
+  position:absolute; inset:0; z-index:4; pointer-events:none;
+}
+#inicio .hb-cine::before{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(120% 95% at 50% 42%, transparent 55%, rgba(0,0,0,.5) 100%);
+}
+#inicio .hb-cine::after{
+  content:""; position:absolute; inset:-60px; opacity:.4; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation:hb-grain 1s steps(2) infinite;
+}
+@keyframes hb-grain{ 0%,100%{transform:translate(0,0);} 50%{transform:translate(-1.5%,1%);} }
+@media (prefers-reduced-motion:reduce){ #inicio .hb-cine::after{ animation:none; } }
+
+/* -----------------------------------------------------------------------
+   2) NOSSA FRAGRÂNCIA — selo "Kit" no card de Kits (o card já usa
+   frag-card-wide) e entrada em cascata card a card (hoje todo o grid
+   revela junto; aqui cada card ganha um pequeno atraso extra).
+   ----------------------------------------------------------------------- */
+#fragrancias .frag-card-badge{
+  position:absolute; top:1rem; left:1rem; z-index:3;
+  font-family:var(--font-sans); font-weight:700;
+  font-size:.58rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--black); background:linear-gradient(180deg, var(--gold-light), var(--gold));
+  padding:.32rem .7rem; border-radius:999px;
+  box-shadow:0 8px 18px -8px rgba(0,0,0,.5);
+}
+#fragrancias .frag-grid .frag-card:nth-child(1){ transition-delay:0s; }
+#fragrancias .frag-grid .frag-card:nth-child(2){ transition-delay:.06s; }
+#fragrancias .frag-grid .frag-card:nth-child(3){ transition-delay:.12s; }
+#fragrancias .frag-grid .frag-card:nth-child(4){ transition-delay:.18s; }
+#fragrancias .frag-grid .frag-card:nth-child(5){ transition-delay:.24s; }
+#fragrancias .frag-grid .frag-card:nth-child(6){ transition-delay:.3s; }
+@media (prefers-reduced-motion:reduce){
+  #fragrancias .frag-grid .frag-card{ transition-delay:0s !important; }
+}
+
+/* -----------------------------------------------------------------------
+   6) CLUBE VERITÉ — escada de níveis (Start → Basic → Plus → Pro →
+   Master), hoje ausente na home. Conteúdo real (nomes já definidos pela
+   marca), apenas apresentação nova.
+   ----------------------------------------------------------------------- */
+.clube-tiers{
+  display:flex; align-items:stretch; justify-content:center; gap:0;
+  max-width:960px; margin:clamp(3rem, 6vh, 4.4rem) auto 0; position:relative;
+}
+.clube-tier{
+  flex:1 1 0; display:flex; flex-direction:column; align-items:center; gap:.6rem;
+  padding:0 .4rem; position:relative;
+}
+.clube-tier-dot{
+  width:12px; height:12px; border-radius:50%; background:var(--black-2);
+  border:1px solid rgba(217,189,133,.35); position:relative; z-index:2;
+  transition:transform .4s var(--ease), background-color .4s ease, border-color .4s ease, box-shadow .4s ease;
+}
+.clube-tier-line{
+  position:absolute; left:0; right:0; top:6px; height:1px; z-index:1;
+  background:linear-gradient(90deg, rgba(217,189,133,.08), rgba(217,189,133,.5) 50%, rgba(217,189,133,.08));
+}
+.clube-tier-name{
+  font-family:var(--font-display); font-size:clamp(.8rem, 1.5vw, .98rem);
+  color:rgba(250,249,246,.55); letter-spacing:.02em; text-align:center;
+  transition:color .4s ease;
+}
+.clube-tier:nth-child(1) .clube-tier-dot{ width:15px; height:15px; background:linear-gradient(180deg, var(--gold-light), var(--gold)); border-color:var(--gold-light); box-shadow:0 0 0 4px rgba(217,189,133,.14); }
+.clube-tier:nth-child(1) .clube-tier-name{ color:var(--gold-light); }
+.clube-tier:hover .clube-tier-dot{ transform:scale(1.25); border-color:var(--gold-light); }
+.clube-tier:hover .clube-tier-name{ color:var(--off-white); }
+@media (max-width:760px){
+  .clube-tiers{ flex-wrap:wrap; gap:1.4rem 0; }
+  .clube-tier{ flex:1 1 33.33%; }
+  .clube-tier-line{ display:none; }
+}
+@media (max-width:480px){
+  .clube-tier{ flex-basis:50%; }
+}
+
+/* leve intensificação do brilho superior de #clube-home conforme a
+   seção entra na tela — usa a mesma variável --p que assets/js/scroll-fx.js
+   já grava em qualquer [data-scrollfx] (ver .statement em style.css) */
+#clube-home[data-scrollfx]::before{
+  opacity:calc(.55 + .45 * var(--p, 1));
+  transform:translateX(-50%) scale(calc(.94 + .06 * var(--p, 1)));
+}
+@media (prefers-reduced-motion:reduce){
+  #clube-home[data-scrollfx]::before{ opacity:1; transform:translateX(-50%) scale(1); }
+}
+
+/* -----------------------------------------------------------------------
+   7) ANIMAÇÕES — leve atração magnética nos botões principais ao
+   aproximar o cursor (assets/js/lab-refresh.js aplica --mx/--my).
+   Só roda com mouse de verdade e fora de prefers-reduced-motion.
+   ----------------------------------------------------------------------- */
+@media (hover:hover) and (pointer:fine){
+  .btn.is-magnetic{ transition:transform .25s cubic-bezier(.2,.8,.2,1), background-color .4s ease, color .4s ease, box-shadow .5s ease, border-color .4s ease; }
+  .btn.is-magnetic{ transform:translate(var(--mx, 0), var(--my, 0)); }
+}
+
+/* -----------------------------------------------------------------------
+   9-10) RESPONSIVIDADE + MOBILE — alvo de toque do botão de menu maior,
+   e véu escuro atrás do menu mobile aberto (fecha ao tocar fora — ver
+   lab-refresh.js), evitando que o conteúdo por trás pareça "vazado".
+   ----------------------------------------------------------------------- */
+@media (max-width:860px){
+  .nav-toggle{ width:44px; height:44px; }
+  .nav-toggle::before{ top:15px; }
+  .nav-toggle span{ top:21px; }
+  .nav-toggle::after{ top:27px; }
+  .nav-toggle[aria-expanded="true"] span{ background:transparent; }
+  .nav-toggle[aria-expanded="true"]::before{ top:21px; }
+  .nav-toggle[aria-expanded="true"]::after{ top:21px; }
+
+  .lab-nav-backdrop{
+    position:fixed; inset:0; z-index:35; background:rgba(9,9,10,.6);
+    -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
+    opacity:0; pointer-events:none; transition:opacity .35s ease;
+  }
+  .lab-nav-backdrop.is-visible{ opacity:1; pointer-events:auto; }
+}

@@ -18,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
 <link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="stylesheet" href="assets/css/lab-refresh.css"/>
 <link rel="preload" as="image" href="assets/img/frasco-feminino.png" fetchpriority="high"/>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
@@ -291,6 +292,7 @@
     <div class="hb-grid" data-hb-depth="0.05" aria-hidden="true"></div>
     <canvas class="hb-particles" aria-hidden="true"></canvas>
     <div class="hb-ghost" data-hb-depth="0.13" aria-hidden="true"><span>VERIT&Eacute;</span></div>
+    <div class="hb-cine" aria-hidden="true"></div>
 
     <div class="hb-inner">
       <div class="hb-text" data-hb-depth="0.04">
@@ -413,6 +415,7 @@
           <i class="cc-sheen" aria-hidden="true"></i>
         </a>
         <a class="frag-card reveal" href="produtos.html?categoria=kits" data-filter="kits">
+          <span class="frag-card-badge">Kit</span>
           <span class="frag-card-glow" aria-hidden="true"></span>
           <span class="frag-card-media">
             <img class="frag-card-wide" src="assets/img/frasco-kits.png" alt="Kit Verit&eacute; &mdash; 30 ml, 50 ml e 20 ml" width="760" height="570" loading="lazy" decoding="async" draggable="false"/>
@@ -566,7 +569,7 @@
   </section>
 
   <!-- ============ Clube Verité ============ -->
-  <section id="clube-home" class="section section-dark section-3 has-ambient">
+  <section id="clube-home" class="section section-dark section-3 has-ambient" data-scrollfx>
     <div class="ambient" aria-hidden="true">
       <div class="ambient-orb" style="width:340px;height:340px;top:-90px;left:50%;margin-left:-170px;"></div>
       <div class="ambient-particles" data-count="10"></div>
@@ -601,6 +604,14 @@
           <h3>Acesso antecipado</h3>
           <p>Fique por dentro dos lançamentos antes de todo mundo.</p>
         </div>
+      </div>
+      <div class="clube-tiers reveal" role="list" aria-label="Níveis do Clube Verité">
+        <div class="clube-tier-line" aria-hidden="true"></div>
+        <div class="clube-tier" role="listitem"><span class="clube-tier-dot" aria-hidden="true"></span><span class="clube-tier-name">Start</span></div>
+        <div class="clube-tier" role="listitem"><span class="clube-tier-dot" aria-hidden="true"></span><span class="clube-tier-name">Basic</span></div>
+        <div class="clube-tier" role="listitem"><span class="clube-tier-dot" aria-hidden="true"></span><span class="clube-tier-name">Plus</span></div>
+        <div class="clube-tier" role="listitem"><span class="clube-tier-dot" aria-hidden="true"></span><span class="clube-tier-name">Pro</span></div>
+        <div class="clube-tier" role="listitem"><span class="clube-tier-dot" aria-hidden="true"></span><span class="clube-tier-name">Master</span></div>
       </div>
       <div class="hero-cta reveal clube-home-cta" style="justify-content:center;">
         <a class="btn" href="/clube">Entrar no Clube</a>
@@ -751,5 +762,6 @@
 <script src="assets/js/quiz.js"></script>
 <script src="assets/js/products-loader.js"></script>
 <script src="assets/js/site-data.js"></script>
+<script src="assets/js/lab-refresh.js"></script>
 </body>
 </html>
