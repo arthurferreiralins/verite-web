@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
 <script>document.documentElement.classList.add('js');</script>
+<script>try{if(localStorage.getItem('verite-catalog-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="Catálogo Verité: perfumes femininos, masculinos, unissex, kits e presentes. Perfumaria de luxo — encontre a fragrância que combina com você."/>
@@ -296,6 +297,11 @@
         <a class="catalog-chip" data-chip="masculino" href="produtos.html?genero=masculino">Masculinos</a>
         <a class="catalog-chip" data-chip="lancamentos" href="produtos.html?colecao=lancamentos">Lan&ccedil;amentos</a>
       </div>
+      <button type="button" id="catalog-theme-toggle" class="catalog-theme-toggle" aria-pressed="false">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11Z"/></svg>
+        <span class="catalog-theme-toggle-label">Modo claro</span>
+      </button>
     </div>
     <div class="hairline sweep" aria-hidden="true" style="margin-top:2.6rem;"></div>
   </section>
@@ -487,5 +493,6 @@
 <script src="assets/js/products.js"></script>
 <script src="assets/js/listing.js"></script>
 <script src="assets/js/products-loader.js"></script>
+<script src="assets/js/catalog-theme.js"></script>
 </body>
 </html>
