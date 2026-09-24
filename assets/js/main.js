@@ -145,14 +145,36 @@
     });
   }
 
-  /* Header gains a denser look once the hero has scrolled past */
+  /* Header gains a denser look once the hero has scrolled past.
+     Além disso publica a altura real do cabeçalho em --header-h: o
+     cabeçalho é `position:sticky`, então ele ocupa espaço no fluxo e a
+     primeira seção só tem (100svh − altura do cabeçalho) de tela livre.
+     No celular o banner usa essa medida para garantir que a logo, o CTA e
+     o frasco caibam TODOS na primeira dobra (ver #inicio.hero-scene em
+     style.css) em vez de reservar 100svh e empurrar o frasco pra fora. */
   var header = document.querySelector('header');
   if(header){
+    var publishHeaderHeight = function(){
+      /* mede só com o cabeçalho em repouso: a versão compacta (is-scrolled)
+         é ~30px menor e, se entrasse na conta, mudaria a altura mínima do
+         banner no meio da rolagem — um salto de layout visível */
+      if(header.classList.contains('is-scrolled')) return;
+      var h = Math.round(header.getBoundingClientRect().height);
+      if(h) document.documentElement.style.setProperty('--header-h', h + 'px');
+    };
     var onScroll = function(){
       header.classList.toggle('is-scrolled', window.scrollY > 40);
     };
     onScroll();
+    publishHeaderHeight();
     window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('resize', publishHeaderHeight, {passive:true});
+    window.addEventListener('load', publishHeaderHeight);
+    if(window.ResizeObserver){
+      /* a barra de busca muda de linha entre breakpoints e o modo compacto
+         encolhe o cabeçalho — o observer mantém a medida sempre em dia */
+      new window.ResizeObserver(publishHeaderHeight).observe(header);
+    }
   }
 
   /* Highlight the nav link matching the section currently in view */

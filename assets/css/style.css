@@ -17,6 +17,11 @@
   --gold:#b18a4f;
   --gold-light:#d9bd85;
   --gold-deep:#8a6a37;
+  /* mesmo dourado, na profundidade mínima para texto pequeno sobre bege ou
+     branco atingir WCAG AA (5,7:1 no bege, 8,2:1 no branco). Só para TEXTO
+     em fundo claro — nada de paleta nova: bordas, filetes e gradientes
+     continuam usando --gold e --gold-deep exatamente como antes. */
+  --gold-ink:#6f5429;
   --font-display:'Cormorant Garamond','Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,ui-serif,serif;
   --font-sans:'Futura','Century Gothic',Optima,Candara,'Segoe UI',ui-sans-serif,system-ui,-apple-system,sans-serif;
   --ease:cubic-bezier(.2,.8,.2,1);
@@ -100,6 +105,13 @@ body{
 a{color:inherit;}
 h1,h2,h3{text-wrap:balance; margin:0; font-weight:400;}
 img,svg{max-width:100%;}
+/* As imagens de produto passaram a vir dentro de <picture> (AVIF → WebP →
+   PNG/JPG). `display:contents` deixa o <picture> invisível para o layout,
+   então toda regra já existente que mira `.frag-card-media img`,
+   `.reel-item img`, grid/flex etc. continua valendo exatamente como antes —
+   sem isso, um `height:100%` passaria a medir contra a caixa do <picture>,
+   que tem altura automática, e as imagens colapsavam. */
+picture{display:contents;}
 p{margin:0;}
 
 /* --- polimento global (seleção, scrollbar, foco, controles) --- */
@@ -116,12 +128,56 @@ html{ scrollbar-width:thin; scrollbar-color:rgba(138,106,55,.55) transparent; ac
   border:3px solid transparent; background-clip:content-box;
 }
 ::-webkit-scrollbar-thumb:hover{ background:rgba(177,138,79,.85); background-clip:content-box; }
-a:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; border-radius:2px; }
+/* Foco de teclado visível em TUDO que é interativo, no contorno dourado da
+   marca — antes só <a> tinha regra global e vários botões (filtros de
+   fragrância, quiz, acordeões, hambúrguer, ícones do cabeçalho) ficavam
+   sem indicação nenhuma ao navegar por Tab. Componentes que já definem o
+   próprio foco continuam vencendo por especificidade; o `:focus:not(
+   :focus-visible)` limpa o contorno no clique de mouse. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+[role="button"]:focus-visible{
+  outline:1px solid var(--gold); outline-offset:3px; border-radius:2px;
+}
+:focus:not(:focus-visible){ outline:none; }
+/* em fundo bege/claro o dourado claro desaparece — usa o dourado profundo */
+.section-beige :focus-visible, .section-light :focus-visible, .legal-page :focus-visible{
+  outline-color:var(--gold-deep);
+}
 
 .sr-only{
   position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
   clip:rect(0,0,0,0); white-space:nowrap; border:0;
 }
+
+/* =======================================================================
+   Campos à espera de dado real (.fill-pending)
+   -----------------------------------------------------------------------
+   A estrutura dos cards de produto já tem linha de NOTAS/FAMÍLIA OLFATIVA e
+   de VOLUME, mas a marca ainda não fechou esses dados (nomes em
+   desenvolvimento). Em vez de inventar nota olfativa nenhuma — ou de exibir
+   "[NOTAS]" para o cliente — o espaço fica marcado no HTML e **invisível em
+   produção**; abrindo a página com `?fills=1` (ou #fills) o marcador
+   aparece, em caixa dourada tracejada, mostrando exatamente o que falta
+   preencher e onde. Ver a lista no fim de index.html.
+   Para preencher: troque
+     <span class="reel-notes fill-pending" data-fill="[NOTAS]"></span>
+   por
+     <span class="reel-notes">Âmbar · Jasmim · Sândalo</span>
+   ======================================================================= */
+.fill-pending{display:none;}
+html.show-fills .fill-pending{
+  display:inline-block; font-family:var(--font-sans); font-size:.6rem;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--gold-light);
+  border:1px dashed rgba(217,189,133,.6); border-radius:2px;
+  padding:.12rem .45rem; line-height:1.5; white-space:nowrap;
+}
+html.show-fills .fill-pending::before{content:attr(data-fill);}
 
 .skip-link{
   position:absolute; left:1rem; top:-4rem; z-index:100;
@@ -138,6 +194,13 @@ a:focus-visible{ outline:1px solid var(--gold); outline-offset:3px; border-radiu
   font-size:.7rem; letter-spacing:.32em; text-transform:uppercase;
   color:var(--gold); font-weight:600; margin:0 0 1.4rem 0;
 }
+/* O dourado da marca (--gold) tem contraste de sobra sobre preto, mas cai
+   para ~2,6:1 sobre o bege — e o .eyebrow é texto pequeno (11px) em caixa
+   alta, justamente o caso mais exigente. Nas seções claras ele passa a usar
+   --gold-ink, que é o mesmo dourado em profundidade maior (paleta intacta:
+   filetes, molduras e gradientes continuam com --gold/--gold-deep). */
+.section-beige .eyebrow, .section-light .eyebrow, .legal-page .eyebrow,
+.page-hero.section-beige .eyebrow{ color:var(--gold-ink); }
 
 .hairline{height:1px; width:64px; margin:0 auto; background:var(--gold);}
 .hairline.glow{position:relative;}
@@ -575,7 +638,38 @@ nav.links a.nav-clube:hover{
 .mega-cta:hover span{transform:translateX(3px);}
 .mega-cta:focus-visible{outline:1px solid var(--gold); outline-offset:3px;}
 
+/* ---------- variante larga: o painel de "Perfumes" ----------
+   Recebeu as três colunas de gênero (Femininos/Masculinos/Unissex) que
+   antes eram itens de topo separados, com TODOS os links que aqueles
+   painéis tinham — nenhuma URL foi perdida, só deixaram de ocupar a barra.
+   Continua ancorado em left:0 pelo .nav-item (herdado de .mega-panel): com
+   860px de largura e "Perfumes" como 2º item, cabe folgado já em 1024px. */
+.mega-panel-wide{
+  min-width:0; width:min(860px, calc(100vw - 3rem)); max-width:none;
+}
+/* main.js marca .align-right (left:auto; right:0) quando um painel estouraria
+   a direita da janela; no painel largo isso só o desalinharia, porque a
+   largura dele já é calculada pra caber ancorado à esquerda. */
+.mega-panel-wide.align-right{left:0; right:auto;}
+.mega-panel-wide .mega-panel-inner{
+  display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:1.2rem 2rem;
+}
+.mega-panel-wide .mega-col{min-width:0;}
+/* "ver todos" de cada gênero: primeira linha da coluna, em dourado, para a
+   coluna continuar sendo um caminho direto pra categoria inteira */
+.mega-col a.mega-col-all{color:var(--gold-light); letter-spacing:.02em;}
+.mega-col a.mega-col-all:hover, .mega-col a.mega-col-all:focus-visible{color:var(--off-white);}
+
+@media (min-width:861px) and (max-width:1023px){
+  /* nessa faixa a barra é mais estreita: 2 colunas em vez de 4 */
+  .mega-panel-wide{width:min(660px, calc(100vw - 3rem));}
+  .mega-panel-wide .mega-panel-inner{grid-template-columns:repeat(2, minmax(0, 1fr));}
+}
+
 @media (max-width:860px){
+  .mega-panel-wide{width:auto;}
+  .mega-panel-wide .mega-panel-inner{grid-template-columns:1fr; gap:0;}
+  .mega-panel.mega-panel-wide.is-open{max-height:1400px;}
   .nav-item{width:100%; flex-direction:column; align-items:stretch;}
   .nav-trigger{
     width:100%; justify-content:space-between; padding:1rem 0; border-bottom:1px solid rgba(250,249,246,.1);
@@ -810,7 +904,7 @@ nav.links a.nav-clube:hover{
 .statement-line{
   margin:clamp(1.1rem, 3vh, 1.9rem) 0 0;
   font-family:var(--font-display); font-style:italic;
-  font-size:clamp(1rem, 1.8vw, 1.3rem); color:rgba(250,249,246,.55);
+  font-size:clamp(1rem, 1.8vw, 1.3rem); color:rgba(250,249,246,.70);
   opacity:calc(var(--p, 1));
 }
 @media (prefers-reduced-motion:reduce){
@@ -1234,7 +1328,7 @@ p.form-thanks{font-family:var(--font-display); font-style:italic; font-size:1.15
 .faq-item.is-open .faq-panel{grid-template-rows:1fr;}
 .faq-panel-inner{overflow:hidden; min-height:0;}
 .faq-panel-inner p{color:var(--sec-fg-soft); font-size:.98rem; line-height:1.8; padding-bottom:1.6rem; margin:0;}
-.faq-panel-inner a{color:var(--gold-deep); text-decoration:underline; text-underline-offset:3px;}
+.faq-panel-inner a{color:var(--gold-ink); text-decoration:underline; text-underline-offset:3px;}
 @media (prefers-reduced-motion:reduce){ .faq-panel{transition:none;} }
 
 /* =======================================================================
@@ -1306,16 +1400,16 @@ footer .watermark{
   transition:color .25s ease, transform .25s ease;
 }
 .footer-col a:hover{color:var(--off-white); transform:translateX(4px);}
-.footer-col .disabled-link{color:#726e66; cursor:default; font-style:italic;}
+.footer-col .disabled-link{color:#9a948a; cursor:default; font-style:italic;}
 
 .footer-legal{text-align:center; padding-top:2.6rem; font-size:.76rem;}
-.footer-legal a{text-decoration:none; color:#8c887d; transition:color .25s ease;}
+.footer-legal a{text-decoration:none; color:#a8a39a; transition:color .25s ease;}
 .footer-legal a:hover{color:var(--off-white);}
 .footer-legal-dot{margin:0 .8rem; color:#5c584f;}
 
 .footer-bottom{
   display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
-  padding:1.8rem 0 2.6rem; font-size:.72rem; letter-spacing:.06em; color:#726e66;
+  padding:1.8rem 0 2.6rem; font-size:.72rem; letter-spacing:.06em; color:#9a948a;
 }
 @media (max-width:760px){ .footer-bottom{justify-content:center; text-align:center;} }
 .to-top{
@@ -1505,7 +1599,7 @@ footer .watermark{
 }
 .catalog-hero .catalog-hero-sub{
   font-family:var(--font-display); font-style:italic;
-  font-size:clamp(1rem, 1.6vw, 1.2rem); line-height:1.6; color:rgba(250,249,246,.6);
+  font-size:clamp(1rem, 1.6vw, 1.2rem); line-height:1.6; color:rgba(250,249,246,.70);
   margin:clamp(1rem, 2.4vh, 1.5rem) auto 0; max-width:42ch;
 }
 .catalog-search{
@@ -1522,7 +1616,7 @@ footer .watermark{
   color:var(--off-white); font-family:var(--font-sans); font-size:.92rem;
   padding:.7rem 0; letter-spacing:.02em;
 }
-.catalog-search input::placeholder{ color:rgba(250,249,246,.4); }
+.catalog-search input::placeholder{ color:rgba(250,249,246,.62); }
 .catalog-search-btn{
   flex:none; border:none; cursor:pointer; background:var(--gold); color:var(--black);
   font-family:var(--font-sans); font-weight:600;
@@ -1538,7 +1632,7 @@ footer .watermark{
   padding:.62rem 1.35rem; border:1px solid rgba(217,189,133,.22); border-radius:999px;
   font-family:var(--font-sans); font-weight:600;
   font-size:.6rem; letter-spacing:.16em; text-transform:uppercase;
-  color:rgba(250,249,246,.55); text-decoration:none;
+  color:rgba(250,249,246,.70); text-decoration:none;
   transition:border-color .3s ease, color .3s ease, background-color .3s ease;
 }
 .catalog-chip:hover{ border-color:rgba(217,189,133,.5); color:var(--off-white); }
@@ -1580,7 +1674,7 @@ footer .watermark{
     radial-gradient(78% 38% at 50% -3%, rgba(217,189,133,.1), transparent 60%),
     var(--black);
 }
-#listing .listing-count{ color:rgba(250,249,246,.5); }
+#listing .listing-count{ color:rgba(250,249,246,.66); }
 #listing .listing-sort,
 #listing .listing-filter-price input,
 #listing .listing-filter-select{
@@ -1588,7 +1682,7 @@ footer .watermark{
   border-color:rgba(217,189,133,.2);
 }
 #listing .listing-filter-group h4{ color:var(--gold-light); }
-#listing .listing-filter-option{ color:rgba(250,249,246,.6); }
+#listing .listing-filter-option{ color:rgba(250,249,246,.70); }
 #listing .listing-clear{ color:var(--gold-light); }
 #listing-grid{
   grid-template-columns:repeat(auto-fill, minmax(min(100%, 262px), 1fr));
@@ -1635,7 +1729,7 @@ footer .watermark{
 #kits-verite .kits-sub{
   margin:1.2rem auto 0; max-width:44ch;
   font-family:var(--font-display); font-style:italic;
-  font-size:clamp(1rem, 1.6vw, 1.15rem); color:rgba(250,249,246,.58);
+  font-size:clamp(1rem, 1.6vw, 1.15rem); color:rgba(250,249,246,.70);
 }
 #kits-verite .kits-card{
   display:grid; grid-template-columns:1.05fr .95fr; align-items:center;
@@ -1663,7 +1757,7 @@ footer .watermark{
   font-size:clamp(1.5rem, 2.6vw, 2rem); color:var(--off-white);
 }
 #kits-verite .kits-card-meta{
-  font-family:var(--font-sans); font-size:.8rem; letter-spacing:.04em; color:rgba(250,249,246,.5);
+  font-family:var(--font-sans); font-size:.8rem; letter-spacing:.04em; color:rgba(250,249,246,.66);
 }
 #kits-verite .kits-card-cta{
   margin-top:.8rem; display:inline-flex; align-items:center; gap:.5em;
@@ -1701,7 +1795,7 @@ footer .watermark{
   background:rgba(12,12,13,.03);
 }
 [data-theme="light"] .catalog-search input{ color:var(--black); }
-[data-theme="light"] .catalog-search input::placeholder{ color:rgba(12,12,13,.42); }
+[data-theme="light"] .catalog-search input::placeholder{ color:rgba(12,12,13,.6); }
 [data-theme="light"] .catalog-chip{
   border-color:rgba(138,106,55,.25); color:rgba(12,12,13,.58);
 }
@@ -1796,13 +1890,13 @@ footer .watermark{
 }
 .legal-body h2:first-of-type{border-top:none; padding-top:0;}
 .legal-body p{color:var(--sec-fg-soft); line-height:1.85; margin:0 0 1.8rem;}
-.legal-body a{color:var(--gold-deep); text-decoration:underline; text-underline-offset:3px;}
+.legal-body a{color:var(--gold-ink); text-decoration:underline; text-underline-offset:3px;}
 .legal-note{
   font-style:italic; color:var(--gold-deep); background:rgba(177,138,79,.08);
   border-left:2px solid var(--gold); padding:.9rem 1.2rem; border-radius:2px;
   margin:0 0 1.8rem;
 }
-.legal-note-inline{font-style:italic; color:var(--gold-deep);}
+.legal-note-inline{font-style:italic; color:var(--gold-ink);}
 .legal-page .btn{margin-top:1rem;}
 
 /* =======================================================================
@@ -1862,12 +1956,18 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 .search-suggestion-info{display:flex; flex-direction:column; gap:.15rem; min-width:0;}
 .search-suggestion-info strong{font-size:.85rem; font-weight:500;}
 .search-suggestion-meta{font-size:.76rem; color:var(--gold-light);}
-.header-search:focus-within{border-color:var(--gold); background:rgba(250,249,246,.07);}
+/* o <input> tem outline:none (a pílula inteira é o controle visual), então o
+   foco de teclado precisa ficar evidente NA pílula — só a mudança de cor da
+   borda passava quase despercebida ao navegar por Tab */
+.header-search:focus-within{
+  border-color:var(--gold); background:rgba(250,249,246,.07);
+  box-shadow:0 0 0 2px rgba(177,138,79,.35);
+}
 .header-search input{
   flex:1; min-width:0; background:none; border:none; outline:none; color:var(--off-white);
   font-family:inherit; font-size:.85rem; padding:.55rem 0;
 }
-.header-search input::placeholder{color:#8c887d;}
+.header-search input::placeholder{color:#a8a39a;}
 .header-search button{
   appearance:none; background:none; border:none; color:var(--gold); cursor:pointer;
   width:36px; height:36px; border-radius:50%; flex:none;
@@ -1907,22 +2007,87 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 .mini-cart-row img, .mini-cart-noimg{width:44px; height:52px; object-fit:cover; border-radius:2px; background:rgba(250,249,246,.06); flex:none; display:block;}
 .mini-cart-info{display:flex; flex-direction:column; gap:.15rem; font-size:.76rem; color:#b7b2a8; min-width:0;}
 .mini-cart-info strong{color:var(--off-white); font-weight:500; font-size:.82rem;}
-.mini-cart-empty{font-size:.82rem; color:#8c887d; text-align:center; padding:1rem 0; margin:0;}
-.mini-cart-more{font-size:.72rem; color:#8c887d; padding-top:.6rem; margin:0;}
+.mini-cart-empty{font-size:.82rem; color:#a8a39a; text-align:center; padding:1rem 0; margin:0;}
+.mini-cart-more{font-size:.72rem; color:#a8a39a; padding-top:.6rem; margin:0;}
 .mini-cart-footer{display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(250,249,246,.14);}
 .mini-cart-footer strong{font-size:.88rem;}
 .mini-cart-footer .btn{padding:.6rem 1.2rem; font-size:.62rem;}
 
-@media (max-width:860px){
-  .header-top{flex-wrap:wrap;}
-  .header-search{order:3; flex-basis:100%; max-width:none; margin-top:.7rem;}
-  .header-icon-label{display:none;}
+/* ---------- versão compacta ao rolar ----------
+   header.is-scrolled já existia (só mexia no padding). Aqui o cabeçalho
+   realmente encolhe: o emblema e a palavra "Verité" diminuem, os rótulos
+   de texto dos ícones recolhem (o aria-label e o ícone seguem lá) e a
+   busca fica mais rasa. Tudo em transição suave, e o clique nos ícones
+   continua com área confortável porque o padding lateral não muda. */
+.brand-mini .word{transition:font-size .35s ease, letter-spacing .35s ease;}
+.header-icon-label{
+  max-height:1.4em; opacity:1; overflow:hidden;
+  transition:max-height .35s ease, opacity .25s ease;
+}
+.header-search input{transition:padding .35s ease;}
+header.is-scrolled .brand-mini .emblem-mini{height:22px;}
+header.is-scrolled .brand-mini .word{font-size:.92rem; letter-spacing:.2em;}
+header.is-scrolled .header-icon-label{max-height:0; opacity:0;}
+header.is-scrolled .header-icon{padding-top:.5rem; padding-bottom:.5rem;}
+header.is-scrolled .header-search input{padding:.42rem 0;}
+header.is-scrolled .header-search button{width:32px; height:32px;}
+@media (prefers-reduced-motion:reduce){
+  .brand-mini .word, .header-icon-label, .header-search input,
+  .brand-mini .emblem-mini{transition:none;}
 }
 
-/* nav com muitos itens: permite quebrar em 2 linhas em telas médias em vez
-   de vazar horizontalmente */
+/* ---------- mobile: hambúrguer + logo + ícones na MESMA linha ----------
+   O .nav-toggle vem por último no DOM (fica à direita no desktop, junto da
+   navegação), então antes ele caía sozinho numa segunda linha no celular.
+   `order` resolve sem tocar no HTML: menu → logo → ícones, e a busca
+   assume a linha de baixo inteira. */
+@media (max-width:860px){
+  /* No celular a navegação é um flyout `position:absolute` — a faixa
+     .nav-inner ficava então como uma tira vazia de ~37px só engordando o
+     cabeçalho. Ela some do fluxo e o flyout continua ancorado em `top:100%`
+     do <header>, exatamente como antes. */
+  .nav-inner{padding-top:0; padding-bottom:0;}
+  header.is-scrolled .nav-inner{padding-top:0; padding-bottom:0;}
+
+  .header-top{flex-wrap:wrap; gap:.55rem; align-items:center;}
+  .nav-toggle{order:0;}
+  .brand-mini{order:1; min-width:0;}
+  .header-actions{order:2; margin-left:auto;}
+  .header-search{order:3; flex-basis:100%; max-width:none; margin-top:.55rem; width:100%;}
+  .header-icon-label{display:none;}
+  .header-icon{padding:.4rem .45rem;}
+  .brand-mini .emblem-mini{height:24px;}
+  .brand-mini .word{font-size:.95rem; letter-spacing:.2em;}
+  header.is-scrolled .brand-mini .word{font-size:.88rem;}
+}
+@media (max-width:400px){
+  /* nos aparelhos mais estreitos tudo cede um pouco de espaço para os três
+     ícones — a palavra "Verité" continua visível, só menor */
+  .header-top{gap:.35rem;}
+  .brand-mini .word{font-size:.85rem; letter-spacing:.14em;}
+  .header-icon{padding:.4rem .3rem;}
+  .nav-toggle{width:38px; height:34px;}
+  .nav-toggle::before, .nav-toggle::after, .nav-toggle span{left:9px; right:9px;}
+  .nav-toggle::before{top:12px;}
+  .nav-toggle span{top:17px;}
+  .nav-toggle::after{top:22px;}
+}
+
+/* Navegação em UMA linha a partir de 1024px
+   -----------------------------------------------------------------------
+   O menu tinha 10 itens de topo (Início + 8 categorias + Clube) e quebrava
+   em 2 linhas em 1280px, deixando o cabeçalho altíssimo. Femininos /
+   Masculinos / Unissex passaram a ser colunas dentro do mega-painel de
+   "Perfumes" (nenhum link foi perdido — ver .mega-panel-wide), sobrando 7
+   itens; aqui os espaçamentos encolhem e o wrap é proibido a partir de
+   1024px pra garantir a linha única. Entre 861 e 1023px o wrap continua
+   liberado, que é melhor que vazar horizontalmente. */
 @media (min-width:861px){
-  nav.links{flex-wrap:wrap; row-gap:.6rem;}
+  nav.links{flex-wrap:wrap; row-gap:.6rem; column-gap:1.5rem;}
+}
+@media (min-width:1024px){
+  nav.links{flex-wrap:nowrap; column-gap:clamp(1.15rem, 1.9vw, 2.1rem); white-space:nowrap;}
+  nav.links a.nav-clube{margin-left:.4rem;}
 }
 
 /* =======================================================================
@@ -2021,7 +2186,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #fragrancias .frag-sub{
   margin:clamp(1.2rem, 2.8vh, 1.9rem) auto 0; max-width:44ch;
   font-family:var(--font-display); font-style:italic;
-  font-size:clamp(1rem, 1.6vw, 1.22rem); line-height:1.6; color:rgba(250,249,246,.6);
+  font-size:clamp(1rem, 1.6vw, 1.22rem); line-height:1.6; color:rgba(250,249,246,.70);
 }
 
 /* ---------- filtro minimalista ---------- */
@@ -2035,7 +2200,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   cursor:pointer; position:relative;
   font-family:var(--font-sans); font-weight:600;
   font-size:.68rem; letter-spacing:.2em; text-transform:uppercase;
-  color:rgba(250,249,246,.46); padding:.5rem .35rem;
+  color:rgba(250,249,246,.62); padding:.5rem .35rem;
   transition:color .35s ease;
 }
 #fragrancias .frag-filter::after{
@@ -2116,7 +2281,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 #fragrancias .frag-card-meta{
   font-family:var(--font-sans); font-size:.72rem; letter-spacing:.06em;
-  color:rgba(250,249,246,.5);
+  color:rgba(250,249,246,.66);
 }
 #fragrancias .frag-card-cta{
   margin-top:clamp(.7rem, 1.8vh, 1.15rem);
@@ -2250,9 +2415,32 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   transition:transform .5s cubic-bezier(.2,.7,.2,1), filter .5s ease;
 }
 .reel-item img.reel-wide{ height:auto; width:100%; max-height:clamp(150px, 22vh, 236px); }
+/* ---------- ficha do card: nome / família olfativa / volume ----------
+   Três linhas, na hierarquia de uma etiqueta de perfumaria. As linhas sem
+   dado real da marca ficam como .fill-pending (invisíveis em produção) —
+   nada de nota olfativa inventada. Sem preço, de propósito. */
+.reel-meta{
+  position:relative; display:flex; flex-direction:column; align-items:center;
+  justify-content:flex-start; gap:.28rem; text-align:center;
+  width:100%; max-width:100%;
+  /* altura fixa: cada frasco tem um número diferente de linhas preenchidas
+     (uns já têm volume, outros ainda não), e sem isto os cards ficavam
+     desalinhados na esteira, cada nome numa altura */
+  min-height:5.2rem;
+}
 .reel-name{
-  position:relative; font-family:var(--font-display);
-  font-size:.92rem; letter-spacing:.04em; color:rgba(250,249,246,.6); white-space:nowrap;
+  font-family:var(--font-display);
+  font-size:.98rem; letter-spacing:.04em; color:rgba(250,249,246,.88);
+  max-width:100%; text-wrap:balance;
+}
+.reel-notes{
+  font-family:var(--font-display); font-style:italic;
+  font-size:.78rem; line-height:1.4; color:rgba(250,249,246,.70);
+  max-width:20ch;
+}
+.reel-vol{
+  font-family:var(--font-sans); font-size:.62rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--gold-light);
 }
 @media (hover:hover) and (pointer:fine){
   .reel-item:hover img{
@@ -2376,7 +2564,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #quiz .quiz-sub{
   margin:clamp(1rem, 2.4vh, 1.5rem) auto 0; max-width:46ch;
   font-family:var(--font-display); font-style:italic;
-  font-size:clamp(.98rem, 1.5vw, 1.15rem); line-height:1.6; color:rgba(250,249,246,.58);
+  font-size:clamp(.98rem, 1.5vw, 1.15rem); line-height:1.6; color:rgba(250,249,246,.70);
 }
 
 #quiz .quiz{ max-width:720px; margin:0 auto; text-align:center; position:relative; z-index:2; }
@@ -2427,7 +2615,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   display:inline-flex; align-items:center; gap:.5em; margin:clamp(1.8rem,4vh,2.6rem) auto 0;
   font-family:var(--font-sans); font-weight:600;
   font-size:.64rem; letter-spacing:.2em; text-transform:uppercase;
-  color:rgba(250,249,246,.45); background:none; border:none; cursor:pointer;
+  color:rgba(250,249,246,.62); background:none; border:none; cursor:pointer;
   transition:color .3s ease;
 }
 #quiz .quiz-back:hover{ color:var(--gold-light); }
@@ -2450,7 +2638,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #quiz .quiz-result-media img{ width:100%; height:100%; object-fit:contain; display:block; padding:12%; }
 #quiz .quiz-result-info h4{ font-family:var(--font-display); font-size:clamp(1.4rem,2.6vw,1.7rem); margin:.2rem 0 .7rem; }
 #quiz .quiz-result-info .eyebrow{ color:var(--gold); }
-#quiz .quiz-result-desc{ color:rgba(250,249,246,.6); line-height:1.7; margin-bottom:.9rem; }
+#quiz .quiz-result-desc{ color:rgba(250,249,246,.70); line-height:1.7; margin-bottom:.9rem; }
 #quiz .quiz-result-price{ font-family:var(--font-display); font-size:1.2rem; color:var(--gold-light); margin-bottom:1.4rem; }
 #quiz .quiz-result-actions{ display:flex; flex-wrap:wrap; gap:.8rem; }
 @media (max-width:560px){ #quiz .quiz-result-actions{ justify-content:center; } }
@@ -2465,10 +2653,10 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 #quiz .quiz-profile-text{
   font-family:var(--font-display); font-style:italic; line-height:1.7;
-  font-size:clamp(1rem,1.6vw,1.15rem); color:rgba(250,249,246,.62);
+  font-size:clamp(1rem,1.6vw,1.15rem); color:rgba(250,249,246,.72);
   margin:0 0 clamp(1.8rem,4vh,2.6rem);
 }
-#quiz .quiz-empty{ color:rgba(250,249,246,.55); }
+#quiz .quiz-empty{ color:rgba(250,249,246,.70); }
 
 #quiz .quiz-restart{
   display:inline-flex; align-items:center; gap:.5em; margin:clamp(2.4rem,5vh,3.2rem) auto 0;
@@ -2672,7 +2860,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 #clube-home .clube-head .sub{
   margin:clamp(1rem, 2.4vh, 1.6rem) auto 0; max-width:46ch;
   font-family:var(--font-display); font-style:italic;
-  font-size:clamp(1rem, 1.6vw, 1.18rem); line-height:1.6; color:rgba(250,249,246,.58);
+  font-size:clamp(1rem, 1.6vw, 1.18rem); line-height:1.6; color:rgba(250,249,246,.70);
 }
 
 #clube-home .clube-home-grid{ gap:clamp(1.4rem, 3vw, 2.2rem); max-width:1060px; margin-top:0; }
@@ -2713,7 +2901,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 #clube-home .clube-home-item p{
   font-family:var(--font-sans); font-size:.82rem; line-height:1.75;
-  color:rgba(250,249,246,.5); margin:0;
+  color:rgba(250,249,246,.66); margin:0;
 }
 #clube-home .clube-home-cta{ margin-top:clamp(3rem, 7vh, 4.5rem); }
 
@@ -2792,7 +2980,18 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
     radial-gradient(58% 46% at 68% 20%, rgba(217,189,133,.12), transparent 68%),
     radial-gradient(135% 120% at 50% -6%, #15110f, var(--black) 56%);
 }
-#inicio .scene-pin{ position:relative; height:auto; }
+/* .hero (regra genérica, mais acima) é `display:flex; flex-direction:column;
+   align-items:center; justify-content:center` — e aí está a armadilha: como
+   .scene-pin é o ÚNICO filho e, no modo cinematográfico, todos os filhos
+   DELE são `position:absolute`, o pin virava um flex item sem conteúdo em
+   fluxo → largura de conteúdo 0 → a cena inteira colapsava para 0px de
+   largura (banner "todo preto" no desktop), e o `justify-content:center` do
+   pai ainda empurrava o item pro meio de uma seção de 180vh, quebrando o
+   `position:sticky`. As duas linhas abaixo (largura explícita no pin + a
+   seção voltando a ser bloco no modo cinematográfico) são a correção;
+   NÃO trocar .scene-pin por `width:auto` nem devolver display:flex à seção
+   no modo cinematográfico. */
+#inicio .scene-pin{ position:relative; width:100%; height:auto; }
 #inicio .scene-stage{
   position:relative; z-index:2;
   display:flex; flex-direction:column; align-items:center;
@@ -2843,8 +3042,16 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 
 /* --- quadros da cena --------------------------------------------------
    No modo base os dois quadros são blocos normais, empilhados; no modo
-   cinematográfico (.scene-enhanced) viram camadas absolutas que se
-   cruzam conforme --op-*/--mv-* (ver assets/js/hero-scene.js). --- */
+   cinematográfico (.scene-enhanced) viram camadas absolutas que se cruzam
+   conforme as variáveis de opacidade e deslocamento (--op-brand, --mv-brand,
+   --op-product, --mv-product — ver assets/js/hero-scene.js).
+
+   CUIDADO: a versão anterior deste comentário escrevia essas variáveis como
+   "--op-* / --mv-*" SEM espaço, e o "*" seguido de "/" fecha o comentário no
+   meio. O resto da frase virava CSS inválido e o parser descartava a regra
+   `#inicio .scene-frame` inteira — ou seja, os quadros nunca recebiam
+   `display:flex`, e a frase do banner aparecia encostada à esquerda em vez
+   de centralizada. Não voltar a escrever "*" colado numa "/" aqui. --- */
 #inicio .scene-frame{
   position:relative; z-index:2; width:100%;
   display:flex; flex-direction:column; align-items:center; text-align:center;
@@ -2865,7 +3072,7 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   margin:0; max-width:42ch;
   font-family:var(--font-display); font-style:italic;
   font-size:clamp(1rem, 1.5vw, 1.24rem); line-height:1.6;
-  color:rgba(250,249,246,.62);
+  color:rgba(250,249,246,.72);
 }
 #inicio .scene-actions{
   margin-top:clamp(.6rem, 1.4vh, 1rem);
@@ -2912,6 +3119,12 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
   font-family:var(--font-sans); font-size:.72rem; letter-spacing:.2em;
   text-transform:uppercase; color:var(--gold-light);
 }
+/* mesma ficha dos cards da vitrine (nome / notas / volume) — a linha de
+   notas só aparece quando a marca fechar o dado; ver .fill-pending */
+#inicio .scene-product-notes{
+  font-family:var(--font-display); font-style:italic;
+  font-size:.86rem; color:rgba(250,249,246,.72); max-width:26ch;
+}
 
 /* --- convite para rolar — desaparece assim que a rolagem começa --- */
 #inicio .scene-scrollcue{
@@ -2924,11 +3137,15 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
    ======================================================================= */
 @media (min-width:901px){
   #inicio.hero-scene.scene-enhanced{
+    /* display:block é obrigatório aqui: assim o pin começa no TOPO da seção
+       (nada de flex centering empurrando o item sticky pro meio dos 180vh)
+       e o `top:0` abaixo gruda de verdade durante os 80vh de rolagem. */
+    display:block;
     height:180vh; padding:0;
     background:var(--black);
   }
   #inicio.hero-scene.scene-enhanced .scene-pin{
-    position:sticky; top:0; height:100vh; height:100svh;
+    position:sticky; top:0; width:100%; height:100vh; height:100svh;
     display:flex; align-items:center; justify-content:center; overflow:hidden;
   }
   #inicio.hero-scene.scene-enhanced .scene-stage{
@@ -2991,14 +3208,74 @@ header.is-scrolled .header-top{padding-top:.7rem; padding-bottom:.7rem;}
 }
 @media (prefers-reduced-motion:reduce){
   #inicio.hero-scene.scene-enhanced .scene-brand{ animation:none !important; }
+  /* rede de segurança: hero-scene.js já não liga o modo cinematográfico com
+     movimento reduzido (logo, o canvas nem começa a rodar) e ambient.js nem
+     cria as motas — isto cobre o caso de a classe ficar presa por alguma
+     mudança de preferência no meio da sessão. */
+  #inicio .scene-particles{ display:none !important; }
+  .mote{ animation:none !important; opacity:.45; }
 }
 
+/* =======================================================================
+   Mobile / tablet — o frasco é PROTAGONISTA na primeira dobra
+   -----------------------------------------------------------------------
+   Aqui nunca existe modo cinematográfico (o JS só liga acima de 900px), e
+   antes o quadro do produto caía abaixo da primeira tela: a pilha era
+   eyebrow + logo grande + lede + CTAs (com gap de até 4.5rem) e só então o
+   frasco, em coluna, com a foto em tamanho de desktop. O ajuste é de
+   COMPACTAÇÃO, não de reordenação — o DOM segue idêntico (o modo
+   cinematográfico do desktop depende dessa ordem), mas o quadro do produto
+   vira uma faixa horizontal baixa (frasco à esquerda, nome/volume à
+   direita) e o conjunto todo cabe em 100svh já em 375×667.
+   ======================================================================= */
 @media (max-width:900px){
-  #inicio .scene-logo{ width:clamp(170px, 34vw, 240px); }
+  #inicio.hero-scene{
+    padding:clamp(2.2rem, 6vh, 3.6rem) 0 clamp(2.6rem, 7vh, 4rem);
+    /* .hero pede min-height:100svh. Como o cabeçalho é sticky (logo, ocupa
+       espaço no fluxo), 100svh AQUI significa "uma tela cheia DEPOIS do
+       cabeçalho" — e era isso que jogava o frasco abaixo da primeira dobra.
+       --header-h vem de assets/js/main.js; o fallback de 120px cobre o caso
+       sem JS e ainda deixa a cena mais curta que antes. */
+    min-height:calc(100svh - var(--header-h, 120px));
+  }
+  #inicio .scene-stage{ gap:clamp(1.5rem, 4vh, 2.4rem); }
+  #inicio .scene-brand{ gap:clamp(.9rem, 2vh, 1.3rem); }
+  #inicio .scene-logo{ width:clamp(150px, 30vw, 210px); }
+  #inicio .scene-lede{ font-size:clamp(.95rem, 2.5vw, 1.1rem); max-width:34ch; }
+
+  /* faixa do produto: baixa e horizontal, com uma linha dourada fina por
+     cima que a separa do bloco da marca sem virar "outra seção" */
+  #inicio .scene-product{
+    flex-direction:row; align-items:center; justify-content:center;
+    text-align:left; gap:clamp(1rem, 4vw, 1.8rem);
+    width:auto; max-width:min(420px, 88vw); margin:0 auto;
+    padding-top:clamp(1.1rem, 3vh, 1.8rem);
+    border-top:1px solid rgba(217,189,133,.18);
+  }
+  #inicio .scene-product-media{ width:clamp(88px, 26vw, 130px); }
+  #inicio .scene-product-info{ gap:.3rem; }
+  #inicio .scene-product-eyebrow{ font-size:.6rem; letter-spacing:.24em; }
+  #inicio .scene-product-name{ font-size:clamp(1.15rem, 4.6vw, 1.5rem); }
+  #inicio .scene-product-meta{ font-size:.66rem; letter-spacing:.16em; }
+  /* na primeira dobra o frasco não pode depender do observer de .reveal */
+  #inicio .scene-product.reveal{ opacity:1; transform:none; }
 }
 @media (max-width:480px){
-  #inicio.hero-scene{ padding-top:clamp(5.5rem, 16vh, 7.5rem); }
-  #inicio .scene-logo{ width:clamp(150px, 44vw, 200px); }
-  #inicio .scene-actions{ flex-direction:column; gap:1.2rem; }
-  #inicio .scene-cta{ width:100%; justify-content:center; }
+  #inicio.hero-scene{ padding:clamp(1.4rem, 4vh, 2.2rem) 0 clamp(2rem, 5vh, 3rem); }
+  #inicio .scene-stage{ gap:1.1rem; }
+  #inicio .scene-brand{ gap:.8rem; }
+  #inicio .scene-eyebrow{ font-size:.6rem; letter-spacing:.3em; }
+  #inicio .scene-logo{ width:min(124px, 34vw); }
+  #inicio .scene-lede{ font-size:.92rem; line-height:1.5; max-width:30ch; }
+  #inicio .scene-actions{ flex-direction:column; gap:.8rem; margin-top:.1rem; }
+  #inicio .scene-cta{ width:100%; justify-content:center; padding:.85rem 1.6rem; }
+  #inicio .scene-product{ padding-top:.9rem; gap:.9rem; }
+  #inicio .scene-product-media{ width:min(84px, 23vw); }
+}
+/* telas muito baixas (paisagem no celular): encolhe ainda mais em vez de
+   empurrar o frasco pra fora da tela */
+@media (max-width:900px) and (max-height:620px){
+  #inicio .scene-logo{ width:min(120px, 26vw); }
+  #inicio .scene-stage{ gap:1rem; }
+  #inicio .scene-product-media{ width:clamp(70px, 18vw, 100px); }
 }

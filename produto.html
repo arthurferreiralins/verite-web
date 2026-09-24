@@ -37,7 +37,7 @@
   <div class="wrap header-top">
     <a class="brand-mini" href="index.html#inicio">
       <span class="emblem-mini">
-        <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+        <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" width="468" height="431" decoding="async" />
       </span>
       <span class="word">Verité</span>
     </a>
@@ -84,13 +84,38 @@
         Perfumes
         <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      <div class="mega-panel" id="mega-panel-perfumes" aria-labelledby="mega-trigger-perfumes">
+      <!-- Painel largo: Femininos / Masculinos / Unissex viraram colunas
+           daqui (antes eram três itens de topo, e é por isso que o menu
+           quebrava em duas linhas no desktop). Todos os links que aqueles
+           painéis tinham continuam presentes, um por um. -->
+      <div class="mega-panel mega-panel-wide" id="mega-panel-perfumes" aria-labelledby="mega-trigger-perfumes">
         <div class="mega-panel-inner">
       <div class="mega-col">
-        <p class="mega-col-title">Por gênero</p>
-        <a href="produtos.html?categoria=perfumes&amp;genero=feminino">Femininos</a>
-        <a href="produtos.html?categoria=perfumes&amp;genero=masculino">Masculinos</a>
-        <a href="produtos.html?categoria=perfumes&amp;genero=unissex">Unissex</a>
+        <p class="mega-col-title">Femininos</p>
+        <a class="mega-col-all" href="produtos.html?genero=feminino">Ver todos os Femininos</a>
+        <a href="produtos.html?categoria=perfumes&amp;genero=feminino">Perfumes Femininos</a>
+        <a href="produtos.html?genero=feminino&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=feminino&amp;colecao=mais-vendidos">Mais Vendidos</a>
+        <a href="produtos.html?genero=feminino&amp;categoria=kits">Kits Femininos</a>
+        <a href="produtos.html?genero=feminino&amp;categoria=presentes">Presentes para Elas</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Masculinos</p>
+        <a class="mega-col-all" href="produtos.html?genero=masculino">Ver todos os Masculinos</a>
+        <a href="produtos.html?categoria=perfumes&amp;genero=masculino">Perfumes Masculinos</a>
+        <a href="produtos.html?genero=masculino&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=masculino&amp;colecao=mais-vendidos">Mais Vendidos</a>
+        <a href="produtos.html?genero=masculino&amp;categoria=kits">Kits Masculinos</a>
+        <a href="produtos.html?genero=masculino&amp;categoria=presentes">Presentes para Eles</a>
+      </div>
+      <div class="mega-col">
+        <p class="mega-col-title">Unissex</p>
+        <a class="mega-col-all" href="produtos.html?genero=unissex">Ver todos os Unissex</a>
+        <a href="produtos.html?categoria=perfumes&amp;genero=unissex">Perfumes Unissex</a>
+        <a href="produtos.html?genero=unissex&amp;colecao=lancamentos">Lançamentos</a>
+        <a href="produtos.html?genero=unissex&amp;colecao=mais-vendidos">Mais Vendidos</a>
+        <a href="produtos.html?genero=unissex&amp;categoria=kits">Kits Unissex</a>
+        <a href="produtos.html?genero=unissex&amp;categoria=presentes">Presentes Unissex</a>
       </div>
       <div class="mega-col">
         <p class="mega-col-title">Descubra</p>
@@ -100,69 +125,6 @@
       </div>
         </div>
         <a class="mega-cta" href="produtos.html?categoria=perfumes">Ver todos os Perfumes <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-    <div class="nav-item" data-mega="femininos">
-      <button type="button" class="nav-trigger" id="mega-trigger-femininos" aria-expanded="false" aria-controls="mega-panel-femininos">
-        Femininos
-        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div class="mega-panel" id="mega-panel-femininos" aria-labelledby="mega-trigger-femininos">
-        <div class="mega-panel-inner">
-      <div class="mega-col">
-        <p class="mega-col-title">Perfumes Femininos</p>
-        <a href="produtos.html?genero=feminino&amp;colecao=lancamentos">Lançamentos</a>
-        <a href="produtos.html?genero=feminino&amp;colecao=mais-vendidos">Mais Vendidos</a>
-      </div>
-      <div class="mega-col">
-        <p class="mega-col-title">Também explore</p>
-        <a href="produtos.html?genero=feminino&amp;categoria=kits">Kits Femininos</a>
-        <a href="produtos.html?genero=feminino&amp;categoria=presentes">Presentes para Elas</a>
-      </div>
-        </div>
-        <a class="mega-cta" href="produtos.html?genero=feminino">Ver todos os Femininos <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-    <div class="nav-item" data-mega="masculinos">
-      <button type="button" class="nav-trigger" id="mega-trigger-masculinos" aria-expanded="false" aria-controls="mega-panel-masculinos">
-        Masculinos
-        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div class="mega-panel" id="mega-panel-masculinos" aria-labelledby="mega-trigger-masculinos">
-        <div class="mega-panel-inner">
-      <div class="mega-col">
-        <p class="mega-col-title">Perfumes Masculinos</p>
-        <a href="produtos.html?genero=masculino&amp;colecao=lancamentos">Lançamentos</a>
-        <a href="produtos.html?genero=masculino&amp;colecao=mais-vendidos">Mais Vendidos</a>
-      </div>
-      <div class="mega-col">
-        <p class="mega-col-title">Também explore</p>
-        <a href="produtos.html?genero=masculino&amp;categoria=kits">Kits Masculinos</a>
-        <a href="produtos.html?genero=masculino&amp;categoria=presentes">Presentes para Eles</a>
-      </div>
-        </div>
-        <a class="mega-cta" href="produtos.html?genero=masculino">Ver todos os Masculinos <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-    <div class="nav-item" data-mega="unissex">
-      <button type="button" class="nav-trigger" id="mega-trigger-unissex" aria-expanded="false" aria-controls="mega-panel-unissex">
-        Unissex
-        <svg class="nav-caret" viewBox="0 0 12 8" width="9" height="6" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div class="mega-panel" id="mega-panel-unissex" aria-labelledby="mega-trigger-unissex">
-        <div class="mega-panel-inner">
-      <div class="mega-col">
-        <p class="mega-col-title">Perfumes Unissex</p>
-        <a href="produtos.html?genero=unissex&amp;colecao=lancamentos">Lançamentos</a>
-        <a href="produtos.html?genero=unissex&amp;colecao=mais-vendidos">Mais Vendidos</a>
-      </div>
-      <div class="mega-col">
-        <p class="mega-col-title">Também explore</p>
-        <a href="produtos.html?genero=unissex&amp;categoria=kits">Kits Unissex</a>
-        <a href="produtos.html?genero=unissex&amp;categoria=presentes">Presentes Unissex</a>
-      </div>
-        </div>
-        <a class="mega-cta" href="produtos.html?genero=unissex">Ver todos os Unissex <span aria-hidden="true">→</span></a>
       </div>
     </div>
     <div class="nav-item" data-mega="kits">
@@ -347,7 +309,7 @@
     <div class="footer-grid">
       <div class="footer-brand reveal">
         <div class="emblem-wrap">
-          <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" />
+          <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" width="468" height="431" decoding="async" />
         </div>
         <span class="word">Verité</span>
         <p>A verdade está na sua essência.</p>
