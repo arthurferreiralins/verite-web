@@ -38,6 +38,25 @@ module.exports = async function handler(req, res) {
     return;
   }
 
+  // O HTML e lido ANTES da checagem de sessao, de proposito. Nao e leitura
+  // cara (fica em cache no modulo depois da primeira vez) e serve de teste de
+  // fumaca do deploy: se o includeFiles do vercel.json nao tiver embarcado
+  // api/_private/dashboard.html junto da funcao, a rota responde 500 para
+  // qualquer um — da para descobrir isso num preview, sem precisar logar, em
+  // vez de so notar quando o Arthur tentar entrar no painel.
+  // Nao vaza nada: a diferenca entre 500 e 302 revela apenas se um arquivo
+  // existe no bundle, jamais o conteudo dele.
+  let html;
+  try {
+    html = readDashboard();
+  } catch (e) {
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.end('Painel indisponível: o HTML do dashboard não foi embarcado no deploy.');
+    return;
+  }
+
   // Sem sessao valida o visitante volta para o login, sem nunca receber o
   // HTML do dashboard. requireAdminSession escreve um 401 JSON por conta
   // propria; aqui a resposta certa e um redirect, entao a checagem e feita
@@ -54,18 +73,6 @@ module.exports = async function handler(req, res) {
     res.setHeader('Location', '/painel');
     res.setHeader('Cache-Control', 'no-store');
     res.end();
-    return;
-  }
-
-  let html;
-  try {
-    html = readDashboard();
-  } catch (e) {
-    // Se por algum motivo o arquivo nao tiver sido embarcado na funcao, e
-    // melhor falhar de forma clara do que servir o dashboard sem protecao.
-    res.statusCode = 500;
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.end('Painel indisponível: o HTML do dashboard não foi encontrado no deploy.');
     return;
   }
 
