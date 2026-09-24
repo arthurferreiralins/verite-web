@@ -127,7 +127,7 @@ INSERT INTO faq_items (question, answer, sort_order, active) VALUES
 ON CONFLICT (question) DO NOTHING;
 
 INSERT INTO site_settings (id, instagram_url, whatsapp_number, contact_email)
-VALUES (1, NULL, '5581981553632', NULL)
+VALUES (1, 'https://www.instagram.com/verite.perfumes/', '5581981553632', NULL)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO seo_settings (id, site_title, meta_description, share_image_url)
