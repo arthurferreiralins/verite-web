@@ -3,5 +3,13 @@
     { "source": "/painel", "destination": "/painel/index.html" },
     { "source": "/clube", "destination": "/clube/index.html" },
     { "source": "/plano-conteudo", "destination": "/plano-conteudo/index.html" }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.veriteperfumes.com.br" }],
+      "destination": "https://veriteperfumes.com.br/:path*",
+      "statusCode": 301
+    }
   ]
 }

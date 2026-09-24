@@ -6,6 +6,5 @@ Disallow: /painel/
 Disallow: /api/
 Disallow: /carrinho.html
 Disallow: /favoritos.html
-Disallow: /index-lab.html
 
 Sitemap: https://veriteperfumes.com.br/sitemap.xml

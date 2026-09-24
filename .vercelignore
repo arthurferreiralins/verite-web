@@ -1,0 +1,10 @@
+# Arquivos que ficam no repositorio mas NAO vao para o deploy publico.
+#
+# index-lab.html e o rascunho interno ("[RASCUNHO] laboratorio de mudancas").
+# Ele abria para qualquer visitante em veriteperfumes.com.br/index-lab.html —
+# o robots.txt so pedia para nao indexar, o que nao impede ninguem de abrir.
+# Continua versionado aqui para consulta; no ar responde 404.
+index-lab.html
+assets/css/lab-refresh.css
+assets/js/lab-refresh.js
+assets/js/hero-banner.js
