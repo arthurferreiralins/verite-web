@@ -7,6 +7,12 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.veriteperfumes.com.br" }],
+      "destination": "https://veriteperfumes.com.br/",
+      "statusCode": 301
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "www.veriteperfumes.com.br" }],
       "destination": "https://veriteperfumes.com.br/:path*",
