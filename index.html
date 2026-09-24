@@ -12,7 +12,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
 <link rel="stylesheet" href="assets/css/style.css"/>
-<link rel="preload" as="image" href="assets/img/frasco-feminino.png" fetchpriority="high"/>
+<link rel="preload" as="image" href="assets/img/verite-logo-full.webp" fetchpriority="high"/>
+<link rel="preload" as="image" href="assets/img/frasco-feminino.png"/>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon-256.png"/>
@@ -305,69 +306,60 @@
 
 <main>
 
-  <!-- ============ Início / Hero — Banner principal ============
-       "Descubra Sua Essência". Estrutura: coluna de texto à esquerda,
-       o frasco Verité como protagonista à direita — vitrine com troca
-       cinematográfica de fragrância (miniaturas), tilt de mouse, luz de
-       fundo que muda de cor por perfume, reflexo e bob contínuo. "VERITÉ" gigante de fundo em baixa opacidade, grade
-       geométrica quase invisível, aura/névoa/partículas douradas. Entrada
-       encadeada (.hb-ready via assets/js/hero-banner.js) + parallax sutil.
-       Escopo de estilo estrito em #inicio.hero-home — ver style.css. -->
-  <section id="inicio" class="section section-dark hero hero-home has-ambient" aria-label="VERITÉ — Descubra sua essência">
-    <div class="hb-bg" data-hb-depth="0.03" aria-hidden="true"></div>
-    <div class="hb-grid" data-hb-depth="0.05" aria-hidden="true"></div>
-    <canvas class="hb-particles" aria-hidden="true"></canvas>
-    <div class="hb-ghost" data-hb-depth="0.13" aria-hidden="true"><span>VERIT&Eacute;</span></div>
+  <!-- ============ Início / Hero — Cena de abertura com scroll ============
+       Banner sem frascos: fundo preto, faixa abstrata de luz dourada
+       ("reflexo sobre seda"), logo oficial em destaque. Rolar a página
+       controla uma transformação real (não apenas reveals): a seção tem
+       altura extra (--scene-scroll) com um palco `sticky` por dentro; um
+       progresso 0→1 (assets/js/hero-scene.js, var --p e derivadas) anima
+       o quadro da marca encolhendo/subindo enquanto a luz se desloca, e o
+       primeiro frasco (Feminino, mesma imagem do card em #fragrancias)
+       surge e se acomoda ao lado do nome — terminando exatamente onde a
+       seção de fragrâncias começa, sem telas vazias. Em telas pequenas ou
+       com movimento reduzido, tudo vira uma pilha estática normal (ver
+       media queries em style.css) — o conteúdo nunca depende da animação
+       para existir. Escopo estrito em #inicio.hero-scene — ver style.css. -->
+  <section id="inicio" class="section section-dark hero hero-scene" aria-label="VERITÉ — Descubra sua essência">
+    <div class="scene-pin" data-scene-pin>
 
-    <div class="hb-inner">
-      <div class="hb-text" data-hb-depth="0.04">
-        <p class="hb-eyebrow">&mdash; A Ess&ecirc;ncia da Eleg&acirc;ncia</p>
-        <h1 class="hb-title">
-          <span class="hb-line hb-line-1">Descubra</span>
-          <span class="hb-line hb-line-2">Sua Ess&ecirc;ncia</span>
-        </h1>
-        <p class="hb-lede">&ldquo;Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.&rdquo;</p>
-        <a class="btn hb-cta" href="produtos.html">Conhe&ccedil;a a Cole&ccedil;&atilde;o <span class="hb-arrow" aria-hidden="true">&rarr;</span></a>
-      </div>
-
-      <div class="hb-media">
-        <div class="hb-glow" data-hb-depth="0.08" aria-hidden="true"></div>
-        <div class="hb-aura" data-hb-depth="0.12" aria-hidden="true"></div>
-        <div class="hb-media-inner" data-hb-depth="0.16" data-hb-invert>
-          <div class="hb-bottle-enter">
-            <!-- .hb-bottle-tilt = tilt de mouse · .hb-bottle-stage =
-                 passagem ao trocar de fragrância · .hb-bottle-float = bob -->
-            <div class="hb-bottle-tilt">
-              <div class="hb-bottle-stage">
-                <div class="hb-bottle-float">
-                  <img class="hb-bottle" src="assets/img/frasco-feminino.png" alt="Perfume Verit&eacute; Feminino &mdash; Eau de Parfum 50 ml" width="540" height="725" fetchpriority="high" decoding="async" draggable="false"/>
-                  <span class="hb-floor" aria-hidden="true"></span>
-                  <span class="hb-shine" aria-hidden="true"></span>
-                  <span class="hb-sweep" aria-hidden="true"></span>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="scene-band-outer" data-scene-pointer aria-hidden="true">
+        <div class="scene-band-scroll" data-scene-band>
+          <span class="scene-band"></span>
         </div>
       </div>
-    </div>
+      <canvas class="scene-particles" aria-hidden="true"></canvas>
 
-    <div class="hb-dock">
-      <p class="hb-frag-name" aria-live="polite">
-        <span class="hb-frag-brand">V&Eacute;RIT&Eacute;</span>
-        <span class="hb-frag-detail">Feminino &middot; Eau de Parfum &middot; 50 ml</span>
-      </p>
-      <div class="hb-switch" role="group" aria-label="Escolha a fragr&acirc;ncia">
-        <button class="hb-switch-btn is-active" type="button" data-i="0" aria-pressed="true" aria-label="Verit&eacute; Feminino">
-          <img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async"/>
-        </button>
-        <button class="hb-switch-btn" type="button" data-i="1" aria-pressed="false" aria-label="Verit&eacute; Dor&eacute;a">
-          <img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async"/>
-        </button>
-        <button class="hb-switch-btn" type="button" data-i="2" aria-pressed="false" aria-label="Verit&eacute; Eau de Parfum">
-          <img src="assets/img/hero-frasco.png" alt="" width="300" height="528" loading="lazy" decoding="async"/>
-        </button>
+      <div class="scene-stage" data-scene-stage>
+
+        <div class="scene-frame scene-brand" data-scene-frame="brand">
+          <p class="scene-eyebrow">&mdash; A Ess&ecirc;ncia da Eleg&acirc;ncia</p>
+          <h1 class="scene-logo-h1">
+            <img class="scene-logo" src="assets/img/verite-logo-full.webp" alt="Verit&eacute; Perfumes &mdash; Perfumaria de Luxo &amp; Fragr&acirc;ncias Exclusivas" width="791" height="760" fetchpriority="high" decoding="async"/>
+          </h1>
+          <p class="scene-lede">&ldquo;Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.&rdquo;</p>
+          <div class="scene-actions">
+            <a class="btn scene-cta" href="#fragrancias">Explorar Fragr&acirc;ncias <span class="scene-arrow" aria-hidden="true">&rarr;</span></a>
+            <a class="scene-club" href="/clube">Clube Verit&eacute; <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
+
+        <div class="scene-frame scene-product reveal scene-frame-idle" data-scene-frame="product">
+          <div class="scene-product-media">
+            <span class="scene-product-glow" aria-hidden="true"></span>
+            <img class="scene-product-bottle" src="assets/img/frasco-feminino.png" alt="Perfume Verit&eacute; Feminino &mdash; Eau de Parfum 50 ml" width="540" height="725" loading="lazy" decoding="async" draggable="false"/>
+          </div>
+          <div class="scene-product-info">
+            <span class="scene-product-eyebrow">Nossas Fragr&acirc;ncias</span>
+            <span class="scene-product-name">Verit&eacute; &mdash; Feminino</span>
+            <span class="scene-product-meta">Eau de Parfum &middot; 50 ml</span>
+          </div>
+        </div>
+
       </div>
+
+      <a class="scene-scrollcue" href="#fragrancias" data-scene-cue aria-label="Rolar para ver as fragr&acirc;ncias">
+        <span></span>
+      </a>
     </div>
   </section>
 
@@ -745,7 +737,7 @@
       <div class="footer-col reveal">
         <h4>Redes Sociais</h4>
         <ul>
-          <li class="disabled-link" title="Canal em preparação" data-settings-key="instagram">Instagram — canal em preparação</li>
+          <li><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
           <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
         </ul>
       </div>
@@ -767,7 +759,7 @@
 
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
-<script src="assets/js/hero-banner.js"></script>
+<script src="assets/js/hero-scene.js"></script>
 <script src="assets/js/fragrancias.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/scroll-fx.js"></script>

@@ -61,6 +61,20 @@
     clear(li);
     li.appendChild(a);
   }
+  /* Same idea as activateDisabledLi, but for a channel whose static HTML is
+     already a real link (e.g. Instagram, hardcoded to the official profile
+     as a sane default) — just update href/label in place instead of
+     rebuilding the element. Falls back to activateDisabledLi for the older
+     "canal em preparação" <li> shape, if that ever comes back. */
+  function applyLinkSetting(el, href, displayText){
+    if(el.tagName !== 'A'){ activateDisabledLi(el, href, displayText); return; }
+    el.classList.remove('disabled-link');
+    el.removeAttribute('title');
+    el.href = href;
+    if(href.indexOf('http') === 0){ el.target = '_blank'; el.rel = 'noopener'; }
+    var value = el.querySelector('.value');
+    if(value) value.textContent = displayText;
+  }
   function applySettings(settings){
     if(!settings) return;
     if(settings.whatsappNumber){
@@ -72,8 +86,8 @@
       });
     }
     if(settings.instagramUrl){
-      document.querySelectorAll('[data-settings-key="instagram"]').forEach(function(li){
-        activateDisabledLi(li, settings.instagramUrl, extractInstagramHandle(settings.instagramUrl));
+      document.querySelectorAll('[data-settings-key="instagram"]').forEach(function(el){
+        applyLinkSetting(el, settings.instagramUrl, extractInstagramHandle(settings.instagramUrl));
       });
     }
     if(settings.contactEmail){
