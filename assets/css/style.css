@@ -99,7 +99,17 @@ body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   text-rendering:optimizeLegibility;
+  /* Trava de rolagem horizontal — mas com `clip`, NÃO com `hidden`.
+     `overflow-x:hidden` força o eixo Y a virar `auto`, o que transforma o
+     <body> num scroll container: qualquer `position:sticky` mais abaixo na
+     árvore passa a se referenciar a ESSE container (que nunca rola) e
+     simplesmente deixa de grudar. Foi uma das duas causas do banner da home
+     rolar junto com a página e deixar ~700px de tela preta vazia.
+     `overflow-x:clip` corta igual, sem criar scroll container e sem mexer no
+     eixo Y. A linha `hidden` fica antes só como fallback para navegadores
+     anteriores ao suporte de `clip` (Safari < 16), que a ignoram. */
   overflow-x:hidden;
+  overflow-x:clip;
 }
 
 a{color:inherit;}
@@ -2974,7 +2984,17 @@ header.is-scrolled .header-search button{width:32px; height:32px;}
    Escopo estrito em #inicio.hero-scene — nenhuma outra seção é afetada.
    ======================================================================= */
 #inicio.hero-scene{
-  position:relative; overflow:hidden; isolation:isolate;
+  position:relative; isolation:isolate;
+  /* `overflow:clip` e NUNCA `overflow:hidden` aqui: `hidden` faria desta
+     seção um scroll container, e o `.scene-pin` lá dentro (position:sticky)
+     passaria a se referenciar a ela em vez da janela — o pin nunca grudava,
+     rolava junto com a página e sobravam ~700px de preto vazio antes de
+     "Nossas Fragrâncias", com o quadro do frasco já fora da tela quando
+     finalmente aparecia. `clip` corta a faixa de luz do mesmo jeito, sem
+     criar scroll container. A linha `hidden` é só fallback para navegadores
+     sem suporte a `clip` (Safari < 16), que a ignoram. */
+  overflow:hidden;
+  overflow:clip;
   padding:clamp(6.5rem, 18vh, 10rem) 0 clamp(4.5rem, 11vh, 6.5rem);
   background:
     radial-gradient(58% 46% at 68% 20%, rgba(217,189,133,.12), transparent 68%),

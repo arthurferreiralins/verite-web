@@ -30,6 +30,7 @@
   var hero = document.querySelector('#inicio.hero-scene');
   if(!hero) return;
 
+  var pin    = hero.querySelector('.scene-pin');
   var stage  = hero.querySelector('.scene-stage');
   var brand  = hero.querySelector('.scene-brand');
   var product = hero.querySelector('.scene-product');
@@ -48,8 +49,15 @@
 
   function render(){
     ticking = false;
-    var h = hero.offsetHeight, vh = window.innerHeight || document.documentElement.clientHeight;
-    var scrollable = h - vh;
+    /* O trecho de rolagem que a cena consome é exatamente a diferença entre a
+       altura da seção e a altura do PALCO grudado — medida no próprio pin, em
+       vez de assumir que ele tem 100vh. Isso mantém o progresso honesto quando
+       100svh != 100vh (barra do navegador aparecendo/sumindo no celular) e se
+       um dia o palco ganhar um recuo (ex.: descontar o cabeçalho). Enquanto o
+       pin estiver grudado, p vai de 0 a 1 e o rect.top dele fica em 0. */
+    var h = hero.offsetHeight;
+    var pinH = pin ? pin.offsetHeight : (window.innerHeight || document.documentElement.clientHeight);
+    var scrollable = h - pinH;
     var top = hero.getBoundingClientRect().top;
     var p = scrollable > 0 ? clamp01(-top / scrollable) : 0;
 
