@@ -1,7 +1,13 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');
+/* Modo de revisão interna: abrir a página com ?fills=1 (ou #fills) revela os
+   campos que ainda esperam dado real da marca. Fora disso (= sempre, para o
+   cliente) os marcadores ficam display:none. */
+if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
+  document.documentElement.classList.add('show-fills');
+}</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="VERITÉ — Termos de Uso deste site institucional."/>
@@ -257,7 +263,19 @@
         <p>Estes termos podem ser atualizados conforme o projeto evolui — especialmente quando produtos, preços e um sistema de compras forem efetivamente adicionados. A data no topo desta página sempre indicará a versão mais recente.</p>
 
         <h2>7. Identificação da empresa</h2>
-        <p class="legal-note">Esta seção será completada com a razão social, CNPJ e endereço oficiais da VERITÉ assim que estiverem definidos.</p>
+        <!-- Dados vindos de assets/js/dados-empresa.js (fonte única). Enquanto
+             os campos estiverem vazios, aparece a frase honesta abaixo; assim
+             que forem preenchidos, ela dá lugar aos dados reais. Nada aqui é
+             inventado. -->
+        <div data-empresa-legal>
+          <p class="legal-note" data-empresa-pendente>Esta seção será completada com a razão social, CNPJ e endereço oficiais da VERITÉ assim que estiverem definidos.</p>
+          <ul class="legal-empresa" data-empresa-pronto hidden>
+            <li><strong>Razão social:</strong> <span data-empresa="razaoSocial"></span></li>
+            <li><strong>CNPJ:</strong> <span data-empresa="cnpj"></span></li>
+            <li><strong>Endereço:</strong> <span data-empresa="endereco"></span></li>
+            <li><strong>E-mail:</strong> <span data-empresa="email"></span></li>
+          </ul>
+        </div>
 
         <h2>8. Legislação aplicável</h2>
         <p>Estes termos são regidos pelas leis da República Federativa do Brasil. <span class="legal-note-inline">(O foro/comarca específico será definido junto com a identificação jurídica da empresa, na seção 7.)</span></p>
@@ -328,6 +346,7 @@
       <span class="footer-legal-dot" aria-hidden="true">·</span>
       <a href="termos.html">Termos de Uso</a>
     </div>
+    <p class="footer-empresa" data-empresa-linha hidden></p>
     <div class="footer-bottom">
       <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
       <a class="to-top" href="index.html#inicio">
@@ -345,5 +364,6 @@
 <script src="assets/js/favorites.js"></script>
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/search.js"></script>
+<script src="assets/js/dados-empresa.js"></script>
 </body>
 </html>

@@ -1,7 +1,13 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');
+/* Modo de revisão interna: abrir a página com ?fills=1 (ou #fills) revela os
+   campos que ainda esperam dado real da marca. Fora disso (= sempre, para o
+   cliente) os marcadores ficam display:none. */
+if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
+  document.documentElement.classList.add('show-fills');
+}</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="VERITÉ — página não encontrada."/>
@@ -44,5 +50,6 @@
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/dados-empresa.js"></script>
 </body>
 </html>

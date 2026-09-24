@@ -1412,6 +1412,12 @@ footer .watermark{
 .footer-col a:hover{color:var(--off-white); transform:translateX(4px);}
 .footer-col .disabled-link{color:#9a948a; cursor:default; font-style:italic;}
 
+/* linha discreta de razão social / CNPJ / endereço — só aparece quando
+   assets/js/dados-empresa.js encontra ao menos um campo preenchido */
+.footer-empresa{
+  text-align:center; margin:.9rem auto 0; max-width:60ch;
+  font-size:.74rem; line-height:1.7; color:#a8a39a; letter-spacing:.01em;
+}
 .footer-legal{text-align:center; padding-top:2.6rem; font-size:.76rem;}
 .footer-legal a{text-decoration:none; color:#a8a39a; transition:color .25s ease;}
 .footer-legal a:hover{color:var(--off-white);}
@@ -1907,6 +1913,9 @@ footer .watermark{
   margin:0 0 1.8rem;
 }
 .legal-note-inline{font-style:italic; color:var(--gold-ink);}
+/* ficha de identificação da empresa (termos.html / privacidade.html) */
+.legal-empresa{list-style:none; margin:.6rem 0 0; padding:0; display:flex; flex-direction:column; gap:.45rem;}
+.legal-empresa strong{font-weight:600;}
 .legal-page .btn{margin-top:1rem;}
 
 /* =======================================================================

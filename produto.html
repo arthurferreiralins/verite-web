@@ -1,7 +1,13 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<script>document.documentElement.classList.add('js');</script>
+<script>document.documentElement.classList.add('js');
+/* Modo de revisão interna: abrir a página com ?fills=1 (ou #fills) revela os
+   campos que ainda esperam dado real da marca. Fora disso (= sempre, para o
+   cliente) os marcadores ficam display:none. */
+if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
+  document.documentElement.classList.add('show-fills');
+}</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="Fragrância Verité — perfumaria de luxo com identidade autêntica. Veja notas olfativas, volume e preço."/>
@@ -357,6 +363,7 @@
       <span class="footer-legal-dot" aria-hidden="true">·</span>
       <a href="termos.html">Termos de Uso</a>
     </div>
+    <p class="footer-empresa" data-empresa-linha hidden></p>
     <div class="footer-bottom">
       <p class="copyright">© 2026 VERITÉ. Todos os direitos reservados.</p>
       <a class="to-top" href="produtos.html">
@@ -377,5 +384,6 @@
 <script src="assets/js/products.js"></script>
 <script src="assets/js/product-detail.js"></script>
 <script src="assets/js/products-loader.js"></script>
+<script src="assets/js/dados-empresa.js"></script>
 </body>
 </html>
