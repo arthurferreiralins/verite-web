@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/painel", "destination": "/painel/index.html" },
+    { "source": "/painel/app", "destination": "/api/painel" },
     { "source": "/clube", "destination": "/clube/index.html" },
     { "source": "/plano-conteudo", "destination": "/plano-conteudo/index.html" }
   ],
@@ -11,5 +12,10 @@
       "destination": "https://veriteperfumes.com.br/:path*",
       "statusCode": 301
     }
-  ]
+  ],
+  "functions": {
+    "api/painel.js": {
+      "includeFiles": "api/_private/**"
+    }
+  }
 }

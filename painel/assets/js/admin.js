@@ -225,57 +225,27 @@
     };
   }
 
-  /* ============================ Auth ============================ */
-  var loginView = document.getElementById('login-view');
+  /* ============================ Auth ============================
+     O painel virou DUAS páginas:
+       /painel      → painel/index.html, só o formulário de login (público,
+                      com script próprio; este arquivo nem é carregado lá)
+       /painel/app  → api/painel.js, que valida a sessão no servidor ANTES
+                      de devolver o HTML do dashboard
+     Logo, quando este script roda o visitante já passou pelo porteiro. Não
+     existe mais #login-view nesta página: "mostrar o login" agora significa
+     sair para /painel. */
   var appView = document.getElementById('app-view');
-  var loginForm = document.getElementById('login-form');
-  var loginError = document.getElementById('login-error');
-
-  var pwToggle = document.getElementById('login-password-toggle');
-  var pwInput = document.getElementById('login-password');
-  pwToggle.addEventListener('click', function(){
-    var show = pwInput.type === 'password';
-    pwInput.type = show ? 'text' : 'password';
-    pwToggle.textContent = show ? 'Ocultar' : 'Mostrar';
-    pwInput.focus();
-  });
 
   function showLogin(){
-    loginView.hidden = false;
-    appView.hidden = true;
+    window.location.replace('/painel');
   }
   function showApp(){
-    loginView.hidden = true;
-    appView.hidden = false;
+    if(appView) appView.hidden = false;
   }
-
-  loginForm.addEventListener('submit', function(e){
-    e.preventDefault();
-    var btn = loginForm.querySelector('button[type="submit"]');
-    loginError.hidden = true;
-    setLoading(btn, true);
-    api('/api/admin/login', {
-      method: 'POST',
-      body: {
-        email: document.getElementById('login-email').value,
-        password: document.getElementById('login-password').value
-      }
-    }).then(function(){
-      showApp();
-      boot();
-      navigate(currentRoute() || 'dashboard');
-    }).catch(function(err){
-      loginError.textContent = err.status === 429 ? err.message : (err.message || 'Não foi possível entrar.');
-      loginError.hidden = false;
-    }).finally(function(){
-      setLoading(btn, false);
-    });
-  });
 
   document.getElementById('logout-btn').addEventListener('click', function(){
     api('/api/admin/logout', { method: 'POST' }).finally(function(){
-      showLogin();
-      window.location.hash = '';
+      window.location.href = '/painel';
     });
   });
 
