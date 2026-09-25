@@ -3221,24 +3221,31 @@ header.is-scrolled .header-search button{width:32px; height:32px;}
     display:block;
     height:300vh; padding:0;
   }
+  /* O palco ocupa exatamente a ÁREA VISÍVEL ABAIXO DO CABEÇALHO, não a tela
+     inteira. Com 100svh cheios e o cabeçalho (sticky, sempre presente) por
+     cima, em telas mais baixas a composição estourava dos dois lados: em
+     1366x768 o CTA terminava em y=794 (cortado) e a marca "V" começava em
+     y=129, por baixo do cabeçalho, que vai até 155. Descontando a altura do
+     cabeçalho o palco passa a ser a caixa real onde dá para desenhar, e o
+     `top` casa com ela — some a necessidade do padding de compensação que
+     existia aqui antes. */
   #inicio.hero-scene.rev-enhanced .scene-pin{
-    position:sticky; top:0; width:100%; height:100vh; height:100svh;
+    position:sticky;
+    top:var(--header-h-compact, 0px);
+    width:100%;
+    height:calc(100vh - var(--header-h-compact, 0px));
+    height:calc(100svh - var(--header-h-compact, 0px));
     display:flex; align-items:center; justify-content:center;
     overflow:hidden; overflow:clip;
   }
   #inicio.hero-scene.rev-enhanced .rev-canvas{ display:block; }
 
+  /* Sem padding de compensação: o próprio palco já é a área abaixo do
+     cabeçalho (ver .scene-pin acima), então centrar nele é centrar certo,
+     tanto antes quanto depois de grudar. */
   #inicio.hero-scene.rev-enhanced .scene-stage{
     position:absolute; inset:0; z-index:2; max-width:none; gap:0;
     padding:0 clamp(1.5rem, 5vw, 4rem);
-    /* antes de a seção grudar, o cabeçalho ainda está ACIMA dela no fluxo:
-       a composição se centra no espaço que sobra embaixo. Depois de grudar,
-       o cabeçalho passa a cobrir o topo do palco e o padding compensa. */
-    padding-bottom:var(--header-h, 0px);
-    transition:padding .45s var(--ease);
-  }
-  #inicio.hero-scene.rev-enhanced.is-pinned .scene-stage{
-    padding-top:var(--header-h-compact, 0px); padding-bottom:0;
   }
 
   #inicio.hero-scene.rev-enhanced .rev-act{
@@ -3302,6 +3309,36 @@ header.is-scrolled .header-search button{width:32px; height:32px;}
 @keyframes rev-open-in{
   from{ opacity:0; transform:translate3d(0, 26px, 0) scale(.97); }
   to{ opacity:1; transform:translate3d(0, 0, 0) scale(1); }
+}
+
+/* =======================================================================
+   Telas BAIXAS no desktop (1366x768, 1280x800, notebooks em geral)
+   -----------------------------------------------------------------------
+   A largura não é o problema: a ALTURA é. Descontado o cabeçalho, sobram
+   ~610px em 768 de altura, e a composição de abertura pedia ~650. Aqui ela
+   encolhe proporcionalmente — frasco menor, respiros menores — em vez de
+   estourar. Sem isto, o CTA ficava para fora da tela.
+   ======================================================================= */
+@media (min-width:901px) and (max-height:900px){
+  #inicio .rev-mark{ width:clamp(38px, 3.6vw, 50px); }
+  #inicio .rev-eyebrow{ font-size:clamp(.72rem, .85vw, .78rem); letter-spacing:.3em; }
+  #inicio .rev-act-open{ gap:clamp(.7rem, 1.6vh, 1.1rem); }
+  #inicio .rev-open-top{ gap:.5rem; }
+  #inicio .rev-bottle-wrap{
+    width:clamp(150px, 15vw, 214px);
+    margin-bottom:clamp(1.5rem, 3.2vh, 2.4rem);
+  }
+  #inicio .rev-lede{ font-size:clamp(.98rem, 1.15vw, 1.12rem); }
+  #inicio .rev-open-bottom{ gap:clamp(.8rem, 1.8vh, 1.2rem); }
+  #inicio .rev-piece-media{ height:clamp(128px, 17vh, 180px); }
+}
+@media (min-width:901px) and (max-height:780px){
+  #inicio .rev-mark{ width:40px; }
+  #inicio .rev-bottle-wrap{ width:clamp(136px, 13vw, 180px); margin-bottom:1.3rem; }
+  #inicio .rev-act-open{ gap:.65rem; }
+  #inicio .rev-lede{ font-size:1rem; line-height:1.5; }
+  #inicio .rev-piece-media{ height:clamp(112px, 15vh, 150px); }
+  #inicio .rev-piece-btn{ padding:.42rem 1rem; }
 }
 
 /* =======================================================================

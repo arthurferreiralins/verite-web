@@ -72,7 +72,13 @@
     var alturaPalco = pin.offsetHeight;
     var percurso = alturaSecao - alturaPalco;
     var topo = hero.getBoundingClientRect().top;
-    var p = percurso > 0 ? clamp01(-topo / percurso) : 0;
+    /* O palco gruda em `top: var(--header-h-compact)` — ele ocupa a área
+       ABAIXO do cabeçalho, não a tela inteira. Então o progresso começa a
+       contar quando o topo da seção alcança ESSE offset, não o topo da
+       janela; sem descontar, --p ficaria adiantado e a cena terminaria
+       antes de o palco se soltar. */
+    var offsetPalco = parseFloat(getComputedStyle(pin).top) || 0;
+    var p = percurso > 0 ? clamp01((offsetPalco - topo) / percurso) : 0;
     progress = p;
 
     var opOpen = 1 - ramp(p, ATO.openOut[0], ATO.openOut[1]);
@@ -92,7 +98,7 @@
     /* o palco só encosta no topo depois que a seção gruda; antes disso a
        composição precisa se centrar no espaço ABAIXO do cabeçalho, que
        ainda está em cima dela no fluxo */
-    hero.classList.toggle('is-pinned', topo <= 0.5);
+    hero.classList.toggle('is-pinned', topo <= offsetPalco + 0.5);
 
     /* quem está invisível não pode receber clique nem foco de teclado */
     actOpen.classList.toggle('rev-idle', opOpen <= 0.02);
