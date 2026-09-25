@@ -1,6 +1,0 @@
-# Os videos de origem sao pesados e nao entram no Git — so o LEIA-ME e este
-# arquivo ficam versionados, para o caminho e os nomes existirem no repo.
-*.mp4
-*.mov
-*.webm
-*.m4v

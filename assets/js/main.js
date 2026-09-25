@@ -169,9 +169,17 @@
        linhas), o que é mais confiável do que repetir os paddings em JS. */
     var publishCompactHeight = function(){
       var jaCompacto = header.classList.contains('is-scrolled');
+      /* As transições do cabeçalho duram .35s. Se a medida for tirada logo
+         depois de pôr a classe, getBoundingClientRect devolve o valor do
+         MEIO da transição, não o final — foi assim que --header-h-compact
+         virou 147px num cabeçalho que fecha em 123px, e o banner passou a
+         grudar 24px mais baixo do que precisava. `.medindo` desliga as
+         transições só durante a medição. */
+      header.classList.add('medindo');
       if(!jaCompacto) header.classList.add('is-scrolled');
       var h = Math.round(header.getBoundingClientRect().height);
       if(!jaCompacto) header.classList.remove('is-scrolled');
+      header.classList.remove('medindo');
       if(h) document.documentElement.style.setProperty('--header-h-compact', h + 'px');
     };
     var onScroll = function(){

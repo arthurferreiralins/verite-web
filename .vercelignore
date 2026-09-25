@@ -8,3 +8,10 @@ index-lab.html
 assets/css/lab-refresh.css
 assets/js/lab-refresh.js
 assets/js/hero-banner.js
+
+# referencia/ guarda o prototipo aprovado do banner "Impossivel de ignorar"
+# (banner-gigante-referencia.html), que e a FONTE OFICIAL do que esta no ar.
+# Fica versionado para consulta e comparacao, mas nao vai para o ar: e uma
+# pagina inteira, com barra e textos de prototipo, que nao deve ser
+# acessivel em veriteperfumes.com.br.
+referencia/
