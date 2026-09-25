@@ -279,72 +279,164 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 
 <main>
 
-  <!-- ============ Início / Hero — Cena de abertura com scroll ============
-       Banner sem frascos: fundo preto, faixa abstrata de luz dourada
-       ("reflexo sobre seda"), logo oficial em destaque. Rolar a página
-       controla uma transformação real (não apenas reveals): a seção tem
-       altura extra (--scene-scroll) com um palco `sticky` por dentro; um
-       progresso 0→1 (assets/js/hero-scene.js, var --p e derivadas) anima
-       o quadro da marca encolhendo/subindo enquanto a luz se desloca, e o
-       primeiro frasco (Feminino, mesma imagem do card em #fragrancias)
-       surge e se acomoda ao lado do nome — terminando exatamente onde a
-       seção de fragrâncias começa, sem telas vazias. Em telas pequenas ou
-       com movimento reduzido, tudo vira uma pilha estática normal (ver
-       media queries em style.css) — o conteúdo nunca depende da animação
-       para existir. Escopo estrito em #inicio.hero-scene — ver style.css. -->
+  <!-- ============ Início / Hero — "Revelação" ============================
+       Banner de campanha em três atos, conduzidos pela rolagem. A seção é
+       alta (`--rev-scroll`) e tem, por dentro, um palco `position:sticky`
+       que fica preso na tela enquanto essa altura é consumida; um progresso
+       0→1 (assets/js/hero-reveal.js, variável --p) reparte os atos:
+
+         ATO 1  p 0,00 → 0,30   ABERTURA
+                O frasco saindo do escuro no centro, feixe de luz dourada
+                vindo de cima, reflexo no piso preto espelhado e névoa em
+                volta. A marca "V" aparece menor, no topo. Frase e CTAs
+                abaixo. Tudo isso já está na PRIMEIRA TELA, sem rolar.
+
+         ATO 2  p 0,30 → 0,58   A PALAVRA
+                A névoa se condensa: as mesmas partículas douradas viajam
+                para as posições que desenham "VERITÉ" (texto amostrado de
+                um canvas fora de tela, na fonte da marca), seguram um
+                instante e se dissolvem.
+
+         ATO 3  p 0,58 → 1,00   A COLEÇÃO
+                Os quatro frascos entram em sequência, lado a lado, cada um
+                com nome, volume e botão "Conhecer". O ato termina montado
+                exatamente quando a seção acaba — sem trecho preto antes de
+                "Nossas Fragrâncias".
+
+       REGRA DURA: dois atos nunca dividem a tela com texto legível ao mesmo
+       tempo. As janelas de opacidade são disjuntas (ver --op-* em
+       hero-reveal.js) e o ato que sai zera antes de o seguinte passar de um
+       fiapo de opacidade; quem está invisível também perde `pointer-events`.
+
+       PROGRESSIVE ENHANCEMENT: sem JS, com tela estreita (≤900px) ou com
+       `prefers-reduced-motion`, nada disso liga. A seção vira uma pilha
+       estática: abertura completa (com o frasco na primeira dobra) seguida
+       da coleção em grade. O conteúdo nunca depende da animação para
+       existir — ver as media queries em style.css.
+       ===================================================================== -->
   <section id="inicio" class="section section-dark hero hero-scene" aria-label="VERITÉ — Descubra sua essência">
     <div class="scene-pin" data-scene-pin>
 
-      <div class="scene-band-outer" data-scene-pointer aria-hidden="true">
-        <div class="scene-band-scroll" data-scene-band>
-          <span class="scene-band"></span>
-        </div>
-      </div>
-      <canvas class="scene-particles" aria-hidden="true"></canvas>
-
-      <div class="scene-stage" data-scene-stage>
-
-        <div class="scene-frame scene-brand" data-scene-frame="brand">
-          <p class="scene-eyebrow">&mdash; A Ess&ecirc;ncia da Eleg&acirc;ncia</p>
-          <!-- O H1 da home era puramente gr&aacute;fico (s&oacute; a logo). O texto
-               abaixo d&aacute; ao H1 conte&uacute;do de verdade para leitor de tela e para
-               busca, sem alterar nada do visual: .sr-only o remove do fluxo,
-               a logo segue sendo o elemento vis&iacute;vel. -->
-          <h1 class="scene-logo-h1">
-            <span class="sr-only">Verit&eacute; Perfumes &mdash; Perfumaria de Luxo e Fragr&acirc;ncias Exclusivas</span>
-            <img class="scene-logo" src="assets/img/verite-logo-full.webp" alt="" width="791" height="760" fetchpriority="high" decoding="async"/>
-          </h1>
-          <p class="scene-lede">&ldquo;Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.&rdquo;</p>
-          <div class="scene-actions">
-            <a class="btn scene-cta" href="#fragrancias">Explorar Fragr&acirc;ncias <span class="scene-arrow" aria-hidden="true">&rarr;</span></a>
-            <a class="scene-club" href="/clube">Clube Verit&eacute; <span aria-hidden="true">&rarr;</span></a>
-          </div>
-        </div>
-
-        <div class="scene-frame scene-product reveal scene-frame-idle" data-scene-frame="product">
-          <div class="scene-product-media">
-            <span class="scene-product-glow" aria-hidden="true"></span>
-            <!-- Frasco do banner: est&aacute; na primeira dobra (no mobile
-                 inclusive), ent&atilde;o NUNCA pode ser loading="lazy" — leva
-                 fetchpriority="high". AVIF 21KB / WebP 39KB contra 300KB do
-                 PNG, com o PNG mantido como &uacute;ltimo fallback. -->
-            <picture>
-              <source type="image/avif" srcset="assets/img/frasco-feminino.avif"/>
-              <source type="image/webp" srcset="assets/img/frasco-feminino.webp"/>
-              <img class="scene-product-bottle" src="assets/img/frasco-feminino.png" alt="Frasco de perfume Verit&eacute; feminino, Eau de Parfum 50 ml" width="540" height="725" fetchpriority="high" decoding="async" draggable="false"/>
-            </picture>
-          </div>
-          <div class="scene-product-info">
-            <span class="scene-product-eyebrow">Nossas Fragr&acirc;ncias</span>
-            <span class="scene-product-name">Verit&eacute; &mdash; Feminino</span>
-            <span class="scene-product-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span>
-            <span class="scene-product-meta">Eau de Parfum &middot; 50 ml</span>
-          </div>
-        </div>
-
+      <!-- Cenário, tudo em CSS: nenhuma imagem de fundo, nenhum vídeo. -->
+      <div class="rev-set" aria-hidden="true">
+        <span class="rev-beam"></span>
+        <span class="rev-haze"></span>
+        <span class="rev-floor"></span>
       </div>
 
-      <a class="scene-scrollcue" href="#fragrancias" data-scene-cue aria-label="Rolar para ver as fragr&acirc;ncias">
+      <!-- Névoa + partículas + a palavra "VERITÉ" (um canvas só) -->
+      <canvas class="rev-canvas" data-rev-canvas aria-hidden="true"></canvas>
+
+      <div class="scene-stage" data-rev-stage>
+
+        <!-- ------------------------------ ATO 1: abertura -->
+        <div class="rev-act rev-act-open" data-rev-act="open">
+          <div class="rev-open-top">
+            <h1 class="rev-mark-h1">
+              <span class="sr-only">Verit&eacute; Perfumes &mdash; Perfumaria de Luxo e Fragr&acirc;ncias Exclusivas</span>
+              <img class="rev-mark" src="assets/img/verite-emblem.webp" alt="" width="468" height="431" fetchpriority="high" decoding="async"/>
+            </h1>
+            <p class="rev-eyebrow">A Ess&ecirc;ncia da Eleg&acirc;ncia</p>
+          </div>
+
+          <div class="rev-stand">
+            <div class="rev-bottle-wrap">
+              <span class="rev-bottle-glow" aria-hidden="true"></span>
+              <!-- Protagonista da primeira tela: nunca loading="lazy". -->
+              <picture>
+                <source type="image/avif" srcset="assets/img/frasco-feminino.avif"/>
+                <source type="image/webp" srcset="assets/img/frasco-feminino.webp"/>
+                <img class="rev-bottle" src="assets/img/frasco-feminino.png" alt="Frasco de perfume Verit&eacute;, Eau de Parfum 50 ml" width="540" height="725" fetchpriority="high" decoding="async" draggable="false"/>
+              </picture>
+              <!-- reflexo no piso: a mesma imagem espelhada, esmaecendo -->
+              <picture class="rev-mirror" aria-hidden="true">
+                <source type="image/avif" srcset="assets/img/frasco-feminino.avif"/>
+                <source type="image/webp" srcset="assets/img/frasco-feminino.webp"/>
+                <img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" decoding="async" draggable="false"/>
+              </picture>
+            </div>
+          </div>
+
+          <div class="rev-open-bottom">
+            <p class="rev-lede">&ldquo;Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.&rdquo;</p>
+            <div class="rev-actions">
+              <a class="btn rev-cta" href="#fragrancias">Explorar Fragr&acirc;ncias <span class="rev-arrow" aria-hidden="true">&rarr;</span></a>
+              <a class="rev-club" href="/clube">Clube Verit&eacute; <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ------------------------------ ATO 3: a coleção
+             (o ATO 2 é só o canvas; não tem DOM próprio)
+             Os nomes e volumes vêm do que já existe no projeto. O que a
+             marca ainda não definiu fica como .fill-pending: invisível em
+             produção, visível abrindo a página com ?fills=1. Nada de nota
+             olfativa ou nome inventado. Sem preços, de propósito. -->
+        <div class="rev-act rev-act-collection" data-rev-act="collection">
+          <p class="rev-collection-kicker">A Cole&ccedil;&atilde;o Verit&eacute;</p>
+          <ul class="rev-collection">
+            <li class="rev-piece" style="--i:0">
+              <a class="rev-piece-link" href="produtos.html?genero=feminino">
+                <span class="rev-piece-media">
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/frasco-feminino.avif"/>
+                    <source type="image/webp" srcset="assets/img/frasco-feminino.webp"/>
+                    <img src="assets/img/frasco-feminino.png" alt="Frasco Verit&eacute; Feminino, Eau de Parfum 50 ml" width="540" height="725" loading="lazy" decoding="async" draggable="false"/>
+                  </picture>
+                </span>
+                <span class="rev-piece-name">Verit&eacute; &mdash; Feminino<span class="fill-pending" data-fill="[NOME DO PERFUME]"></span></span>
+                <span class="rev-piece-vol">Eau de Parfum &middot; 50&nbsp;ml</span>
+                <span class="rev-piece-btn">Conhecer <span aria-hidden="true">&rarr;</span></span>
+              </a>
+            </li>
+            <li class="rev-piece" style="--i:1">
+              <a class="rev-piece-link" href="produtos.html?genero=masculino">
+                <span class="rev-piece-media">
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/hero-frasco.avif"/>
+                    <source type="image/webp" srcset="assets/img/hero-frasco.webp"/>
+                    <img src="assets/img/hero-frasco.png" alt="Frasco Verit&eacute; Masculino, Eau de Parfum" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
+                  </picture>
+                </span>
+                <span class="rev-piece-name">Verit&eacute; &mdash; Masculino<span class="fill-pending" data-fill="[NOME DO PERFUME]"></span></span>
+                <span class="rev-piece-vol">Eau de Parfum<span class="fill-pending" data-fill="[VOLUME]"></span></span>
+                <span class="rev-piece-btn">Conhecer <span aria-hidden="true">&rarr;</span></span>
+              </a>
+            </li>
+            <li class="rev-piece" style="--i:2">
+              <a class="rev-piece-link" href="produtos.html?genero=unissex">
+                <span class="rev-piece-media">
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/frasco-unisex.avif"/>
+                    <source type="image/webp" srcset="assets/img/frasco-unisex.webp"/>
+                    <img src="assets/img/frasco-unisex.png" alt="Frasco Verit&eacute; Dor&eacute;a, Eau de Parfum 30 ml" width="560" height="840" loading="lazy" decoding="async" draggable="false"/>
+                  </picture>
+                </span>
+                <span class="rev-piece-name">Verit&eacute; Dor&eacute;a</span>
+                <span class="rev-piece-vol">Eau de Parfum &middot; 30&nbsp;ml</span>
+                <span class="rev-piece-btn">Conhecer <span aria-hidden="true">&rarr;</span></span>
+              </a>
+            </li>
+            <li class="rev-piece" style="--i:3">
+              <a class="rev-piece-link" href="produtos.html?categoria=kits">
+                <span class="rev-piece-media">
+                  <picture>
+                    <source type="image/avif" srcset="assets/img/frasco-kits.avif"/>
+                    <source type="image/webp" srcset="assets/img/frasco-kits.webp"/>
+                    <img class="rev-piece-wide" src="assets/img/frasco-kits.png" alt="Kit Verit&eacute; com tr&ecirc;s frascos: 30 ml, 50 ml e 20 ml" width="760" height="570" loading="lazy" decoding="async" draggable="false"/>
+                  </picture>
+                </span>
+                <span class="rev-piece-name">Verit&eacute; &mdash; Kit<span class="fill-pending" data-fill="[NOME DO KIT]"></span></span>
+                <span class="rev-piece-vol">30&nbsp;ml &middot; 50&nbsp;ml &middot; 20&nbsp;ml</span>
+                <span class="rev-piece-btn">Conhecer <span aria-hidden="true">&rarr;</span></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <a class="rev-scrollcue" href="#fragrancias" data-rev-cue aria-label="Rolar para ver as fragr&acirc;ncias">
         <span></span>
       </a>
     </div>
@@ -683,9 +775,13 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
        ?fills=1 nada disso aparece para o cliente — é por isso que nenhuma
        nota olfativa foi inventada para preencher o espaço.
 
-       1. #inicio (frasco do banner)
-          [FAMÍLIA / NOTAS]  — .scene-product-notes
-          Nome e volume já são reais: "Verité — Feminino", 50 ml.
+       1. #inicio — ATO 3 do banner, .rev-collection (4 frascos):
+          a) Verité — Feminino .. [NOME DO PERFUME]
+                                  volume real: Eau de Parfum · 50 ml
+          b) Verité — Masculino . [NOME DO PERFUME] + [VOLUME]
+          c) Verité Doréa ....... nada pendente (nome e volume reais)
+          d) Verité — Kit ....... [NOME DO KIT]
+                                  volumes reais: 30 ml · 50 ml · 20 ml
 
        2. #vitrine-reel (4 frascos distintos, cada um aparece 2x no laço):
           a) Verité — Feminino .. [NOME DO PERFUME] + [FAMÍLIA / NOTAS]
@@ -782,7 +878,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
-<script src="assets/js/hero-scene.js"></script>
+<script src="assets/js/hero-reveal.js"></script>
 <script src="assets/js/fragrancias.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/scroll-fx.js"></script>

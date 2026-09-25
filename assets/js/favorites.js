@@ -47,8 +47,15 @@
 
   function checkClub() {
     if (clubStatus !== null) return Promise.resolve(clubStatus);
-    return api('/api/club/me').then(function () { clubStatus = true; return true; })
-      .catch(function () { clubStatus = false; return false; });
+    /* /api/club/me agora responde 200 com customer:null para quem não está
+       logado (antes era 401, o que enchia o console de erro em toda página
+       para todo visitante). Logo: NÃO basta a promessa resolver — é preciso
+       olhar o `customer`. O catch continua valendo para o caso de sessão
+       existente porém inválida, que ainda é 401. */
+    return api('/api/club/me').then(function (data) {
+      clubStatus = !!(data && data.customer);
+      return clubStatus;
+    }).catch(function () { clubStatus = false; return false; });
   }
 
   function listSlugs() {

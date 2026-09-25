@@ -2966,345 +2966,385 @@ header.is-scrolled .header-search button{width:32px; height:32px;}
 .verite-toast.is-visible{opacity:1; transform:translate(-50%,0);}
 
 /* =======================================================================
-   BANNER PRINCIPAL — cena de abertura da home, controlada pelo scroll
+   BANNER PRINCIPAL — "Revelação", a cena de abertura da home
    -----------------------------------------------------------------------
-   Sem frascos na primeira tela: preto profundo, uma faixa abstrata de luz
-   dourada ("reflexo sobre seda") e a logo oficial da VERITÉ em destaque.
-   Rolar a página conduz uma transformação real da cena — não é um reveal
-   qualquer: a seção ganha uma altura extra e, por dentro, um palco fixo
-   (`position:sticky`) permanece na tela enquanto essa altura é consumida;
-   um progresso 0→1 dessa rolagem (--p e as variáveis derivadas abaixo)
-   anima o quadro da marca encolhendo/subindo enquanto a luz se desloca, e
-   o primeiro frasco (Feminino — mesma imagem do card em #fragrancias)
-   surge e se acomoda ao lado do nome, terminando exatamente quando a
-   seção de fragrâncias começa. Nunca há tela vazia: os dois quadros se
-   cruzam (crossfade) e o quadro final já está pronto antes do palco se
-   soltar.
+   Três atos conduzidos pela rolagem (ver o comentário de #inicio em
+   index.html e assets/js/hero-reveal.js):
 
-   PROGRESSIVE ENHANCEMENT (essencial): por padrão (sem a classe abaixo)
-   a seção é uma pilha estática simples — sem altura extra, sem sticky,
-   sem transformação por scroll. assets/js/hero-scene.js só acrescenta
-   `.scene-enhanced` quando a tela é larga o bastante e o visitante não
-   pediu movimento reduzido; nesse ponto (e só nesse ponto) a versão
-   cinematográfica assume. Isto é o que garante:
-     - conteúdo visível mesmo se o JS falhar ou não carregar;
-     - telas pequenas recebem a versão simples (mais leve, sem scroll-jack);
-     - prefers-reduced-motion recebe a mesma versão simples, sem exceções.
-   Escopo estrito em #inicio.hero-scene — nenhuma outra seção é afetada.
+     ATO 1  abertura — o frasco saindo do escuro, feixe de luz dourada de
+            cima, reflexo no piso espelhado, névoa em volta, marca "V" no
+            topo, frase e CTAs. Tudo na PRIMEIRA TELA, sem rolar.
+     ATO 2  a palavra — a névoa vira poeira dourada e desenha "VERITÉ"
+            (canvas; nenhum DOM próprio), segura e se dissolve.
+     ATO 3  a coleção — os quatro frascos entram lado a lado, cada um com
+            nome, volume e botão "Conhecer".
+
+   DOIS ATOS NUNCA SE SOBREPÕEM. As janelas de --op-open / --op-word /
+   --op-collection são disjuntas (hero-reveal.js) e quem está invisível
+   ganha .rev-idle, que tira pointer-events e visibilidade — então nem
+   clique nem foco de teclado caem num ato apagado.
+
+   CENÁRIO 100% CSS: feixe, névoa, piso e reflexo são gradientes, máscaras
+   e um transform espelhado. Nenhuma imagem de fundo, nenhum vídeo.
+
+   PROGRESSIVE ENHANCEMENT: sem a classe .rev-enhanced (ou seja: sem JS, em
+   tela ≤900px, ou com prefers-reduced-motion) a seção é uma PILHA ESTÁTICA
+   comum — abertura inteira, depois a coleção em grade, tudo visível e sem
+   scroll-jack. hero-reveal.js só acrescenta o modo cinematográfico quando
+   as três condições batem, e desliga na hora se alguma mudar.
+
+   CUIDADO 1: nenhum ancestral de .scene-pin pode ter overflow hidden/auto —
+   isso cria um scroll container e o sticky para de grudar (já aconteceu
+   aqui: ~700px de tela preta). Por isso `overflow:clip` abaixo e no body.
+   CUIDADO 2: não escrever "*" colado numa "/" dentro destes comentários —
+   fecha o comentário no meio e o parser descarta a regra seguinte inteira
+   (já aconteceu com a antiga .scene-frame).
    ======================================================================= */
 #inicio.hero-scene{
   position:relative; isolation:isolate;
-  /* `overflow:clip` e NUNCA `overflow:hidden` aqui: `hidden` faria desta
-     seção um scroll container, e o `.scene-pin` lá dentro (position:sticky)
-     passaria a se referenciar a ela em vez da janela — o pin nunca grudava,
-     rolava junto com a página e sobravam ~700px de preto vazio antes de
-     "Nossas Fragrâncias", com o quadro do frasco já fora da tela quando
-     finalmente aparecia. `clip` corta a faixa de luz do mesmo jeito, sem
-     criar scroll container. A linha `hidden` é só fallback para navegadores
-     sem suporte a `clip` (Safari < 16), que a ignoram. */
   overflow:hidden;
   overflow:clip;
-  padding:clamp(6.5rem, 18vh, 10rem) 0 clamp(4.5rem, 11vh, 6.5rem);
+  padding:0;
   background:
-    radial-gradient(58% 46% at 68% 20%, rgba(217,189,133,.12), transparent 68%),
-    radial-gradient(135% 120% at 50% -6%, #15110f, var(--black) 56%);
+    radial-gradient(70% 50% at 50% 0%, rgba(217,189,133,.10), transparent 70%),
+    radial-gradient(120% 90% at 50% 100%, #131010, var(--black) 62%);
 }
-/* .hero (regra genérica, mais acima) é `display:flex; flex-direction:column;
-   align-items:center; justify-content:center` — e aí está a armadilha: como
-   .scene-pin é o ÚNICO filho e, no modo cinematográfico, todos os filhos
-   DELE são `position:absolute`, o pin virava um flex item sem conteúdo em
-   fluxo → largura de conteúdo 0 → a cena inteira colapsava para 0px de
-   largura (banner "todo preto" no desktop), e o `justify-content:center` do
-   pai ainda empurrava o item pro meio de uma seção de 180vh, quebrando o
-   `position:sticky`. As duas linhas abaixo (largura explícita no pin + a
-   seção voltando a ser bloco no modo cinematográfico) são a correção;
-   NÃO trocar .scene-pin por `width:auto` nem devolver display:flex à seção
-   no modo cinematográfico. */
 #inicio .scene-pin{ position:relative; width:100%; height:auto; }
+
+/* --- cenário: feixe, névoa e piso espelhado -------------------------- */
+#inicio .rev-set{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+/* NADA de `filter: blur()` nem `mix-blend-mode` aqui, de propósito.
+   Medido: com blur de 28–34px e blend `screen` nestes dois elementos de
+   tela cheia, o quadro do banner custava ~380ms numa máquina sem
+   aceleração — um gradiente já é suave por natureza, o blur só repetia o
+   efeito a um preço altíssimo. Sem eles o visual é o mesmo e o custo
+   despenca. Se algum dia bater vontade de "melhorar" com blur aqui, meça
+   antes (scratchpad/imgtools/perf.js faz o A/B). */
+#inicio .rev-beam{
+  position:absolute; left:50%; top:-10%; width:min(58vw, 700px); height:92%;
+  transform:translateX(-50%) translate3d(var(--par-x, 0px), 0, 0);
+  background:linear-gradient(to bottom,
+    rgba(233,204,150,.20), rgba(233,204,150,.10) 32%,
+    rgba(233,204,150,.04) 60%, transparent 84%);
+  clip-path:polygon(40% 0, 60% 0, 100% 100%, 0 100%);
+  transition:transform .6s ease-out;
+}
+#inicio .rev-haze{
+  position:absolute; left:-10%; right:-10%; bottom:0; height:58%;
+  background:radial-gradient(62% 62% at 50% 100%, rgba(217,189,133,.17), transparent 72%);
+  opacity:.9;
+  transform:translate3d(var(--par-x, 0px), var(--par-y, 0px), 0);
+  animation:rev-haze-drift 19s ease-in-out infinite;
+  transition:transform .6s ease-out;
+}
+@keyframes rev-haze-drift{
+  0%,100%{ opacity:.72; transform:translate3d(var(--par-x, 0px), var(--par-y, 0px), 0) scale(1); }
+  50%{ opacity:1; transform:translate3d(var(--par-x, 0px), var(--par-y, 0px), 0) scale(1.06); }
+}
+/* o "piso" preto espelhado onde o frasco se apoia */
+#inicio .rev-floor{
+  position:absolute; left:0; right:0; bottom:0; height:30%;
+  background:
+    linear-gradient(to bottom, rgba(250,249,246,.045), rgba(250,249,246,0) 46%),
+    radial-gradient(56% 100% at 50% 0%, rgba(233,204,150,.10), transparent 72%);
+  box-shadow:inset 0 1px 0 rgba(250,249,246,.07);
+}
+/* Também sem `filter` e sem `mix-blend-mode`: sobre um fundo quase preto o
+   `screen` é praticamente idêntico ao normal para pontos claros, e ambos
+   obrigavam o navegador a compor uma camada de tela cheia a cada quadro.
+   A suavidade da poeira vem do próprio desenho (ver hero-reveal.js). */
+#inicio .rev-canvas{
+  position:absolute; inset:0; z-index:1; width:100%; height:100%;
+  pointer-events:none; display:none;
+}
+
+/* --- palco ------------------------------------------------------------ */
 #inicio .scene-stage{
   position:relative; z-index:2;
   display:flex; flex-direction:column; align-items:center;
-  gap:clamp(3rem, 9vh, 4.5rem);
-  max-width:1100px; margin:0 auto; padding:0 clamp(1.5rem, 6vw, 3rem);
+  gap:clamp(2.6rem, 7vh, 4rem);
+  max-width:1180px; margin:0 auto;
+  padding:clamp(2.4rem, 7vh, 4.5rem) clamp(1.25rem, 5vw, 3rem) clamp(3rem, 8vh, 5rem);
+}
+#inicio .rev-act{
+  width:100%; display:flex; flex-direction:column; align-items:center;
+  text-align:center;
 }
 
-/* --- faixa de luz dourada ("reflexo sobre seda") ---------------------
-   3 camadas: outer (offset de mouse, JS) > scroll (offset de rolagem via
-   --band-p, CSS) > band (textura/drift autônomo, CSS puro — é o que dá
-   vida própria à luz em telas de toque, sem depender de ponteiro).
-   Irmã de .scene-stage (não filha) para cobrir sempre a caixa inteira de
-   .scene-pin — no modo base essa caixa é a seção normal; no modo
-   cinematográfico é o palco `sticky` de tela cheia. */
-#inicio .scene-band-outer{
-  position:absolute; inset:-6%; z-index:0; pointer-events:none;
-  will-change:transform;
+/* ============================== ATO 1 ============================== */
+#inicio .rev-act-open{ gap:clamp(1.1rem, 2.6vh, 1.8rem); }
+#inicio .rev-open-top{ display:flex; flex-direction:column; align-items:center; gap:.7rem; }
+#inicio .rev-mark-h1{ margin:0; line-height:0; }
+#inicio .rev-mark{
+  display:block; width:clamp(44px, 5vw, 62px); height:auto;
+  filter:drop-shadow(0 0 26px rgba(217,189,133,.35));
 }
-#inicio .scene-band-scroll{
-  position:absolute; inset:0;
-  transform:
-    translate3d(calc(var(--band-p, 0) * -6%), calc(var(--band-p, 0) * 9%), 0)
-    rotate(calc(var(--band-p, 0) * 3deg));
-}
-#inicio .scene-band{
-  position:absolute; inset:-25%;
-  background:
-    linear-gradient(102deg, transparent 22%, rgba(177,138,79,.16) 38%, rgba(250,231,195,.32) 48%, rgba(217,189,133,.18) 58%, transparent 76%),
-    radial-gradient(55% 42% at 62% 40%, rgba(217,189,133,.12), transparent 70%);
-  background-size:220% 220%, 100% 100%;
-  filter:blur(46px);
-  opacity:.85;
-  mix-blend-mode:screen;
-  animation:scene-silk 17s ease-in-out infinite;
-}
-@keyframes scene-silk{
-  0%,100%{ background-position:0% 0%, 0 0; opacity:.72; }
-  50%{ background-position:9% 7%, 0 0; opacity:1; }
-}
-@media (prefers-reduced-motion:reduce){ #inicio .scene-band{ animation:none; opacity:.8; } }
-
-/* --- partículas douradas, discretas — só no modo cinematográfico --- */
-#inicio .scene-particles{
-  position:absolute; inset:0; z-index:1; width:100%; height:100%;
-  pointer-events:none; mix-blend-mode:screen; opacity:0;
-  display:none;
-}
-
-/* --- quadros da cena --------------------------------------------------
-   No modo base os dois quadros são blocos normais, empilhados; no modo
-   cinematográfico (.scene-enhanced) viram camadas absolutas que se cruzam
-   conforme as variáveis de opacidade e deslocamento (--op-brand, --mv-brand,
-   --op-product, --mv-product — ver assets/js/hero-scene.js).
-
-   CUIDADO: a versão anterior deste comentário escrevia essas variáveis como
-   "--op-* / --mv-*" SEM espaço, e o "*" seguido de "/" fecha o comentário no
-   meio. O resto da frase virava CSS inválido e o parser descartava a regra
-   `#inicio .scene-frame` inteira — ou seja, os quadros nunca recebiam
-   `display:flex`, e a frase do banner aparecia encostada à esquerda em vez
-   de centralizada. Não voltar a escrever "*" colado numa "/" aqui. --- */
-#inicio .scene-frame{
-  position:relative; z-index:2; width:100%;
-  display:flex; flex-direction:column; align-items:center; text-align:center;
-}
-
-#inicio .scene-brand{ gap:clamp(1.1rem, 2.6vh, 1.6rem); }
-#inicio .scene-eyebrow{
+#inicio .rev-eyebrow{
   margin:0; font-family:var(--font-sans); font-weight:600;
-  font-size:clamp(.66rem, .9vw, .78rem); letter-spacing:.36em; text-transform:uppercase;
+  font-size:clamp(.74rem, .95vw, .84rem); letter-spacing:.34em; text-transform:uppercase;
   color:var(--gold-light);
 }
-#inicio .scene-logo-h1{ margin:0; line-height:0; }
-#inicio .scene-logo{
-  display:block; width:clamp(190px, 22vw, 300px); height:auto; margin:0 auto;
-  filter:drop-shadow(0 0 60px rgba(217,189,133,.16));
+
+/* o frasco e o reflexo dele */
+#inicio .rev-stand{ position:relative; display:flex; justify-content:center; width:100%; }
+#inicio .rev-bottle-wrap{
+  position:relative;
+  width:clamp(168px, 20vw, 260px);
+  /* espaço reservado embaixo para o reflexo não empurrar o texto */
+  margin-bottom:clamp(2.4rem, 6vh, 4.2rem);
 }
-#inicio .scene-lede{
-  margin:0; max-width:42ch;
+#inicio .rev-bottle-glow{
+  position:absolute; left:50%; top:46%; width:230%; aspect-ratio:1; z-index:0;
+  transform:translate(-50%,-50%); pointer-events:none;
+  background:radial-gradient(circle, rgba(233,201,164,.30), transparent 62%);
+  filter:blur(28px);
+}
+#inicio .rev-bottle{
+  position:relative; z-index:1; display:block; width:100%; height:auto;
+  filter:drop-shadow(0 34px 46px rgba(0,0,0,.6)) drop-shadow(0 0 40px rgba(233,201,164,.2));
+}
+/* reflexo: a mesma imagem, espelhada e esmaecendo para baixo.
+   `picture` é display:contents no global — aqui precisa voltar a ter caixa. */
+#inicio .rev-mirror{
+  display:block; position:absolute; left:0; right:0; top:99%; z-index:0;
+  opacity:.2; pointer-events:none;
+  -webkit-mask-image:linear-gradient(to bottom, #000, transparent 58%);
+  mask-image:linear-gradient(to bottom, #000, transparent 58%);
+}
+#inicio .rev-mirror img{
+  display:block; width:100%; height:auto; transform:scaleY(-1);
+  filter:blur(1.5px) saturate(.75);
+}
+
+#inicio .rev-open-bottom{ display:flex; flex-direction:column; align-items:center; gap:clamp(1.1rem, 2.4vh, 1.7rem); }
+#inicio .rev-lede{
+  margin:0; max-width:40ch;
   font-family:var(--font-display); font-style:italic;
-  font-size:clamp(1rem, 1.5vw, 1.24rem); line-height:1.6;
-  color:rgba(250,249,246,.72);
+  font-size:clamp(1.05rem, 1.5vw, 1.3rem); line-height:1.6;
+  color:rgba(250,249,246,.78);
 }
-#inicio .scene-actions{
-  margin-top:clamp(.6rem, 1.4vh, 1rem);
+#inicio .rev-actions{
   display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
-  gap:clamp(1.2rem, 2.6vw, 2rem);
+  gap:clamp(1.1rem, 2.4vw, 1.9rem);
 }
-#inicio .scene-cta{ gap:.8em; }
-#inicio .scene-arrow{ display:inline-block; transition:transform .45s var(--ease); }
-#inicio .scene-cta:hover .scene-arrow,
-#inicio .scene-cta:focus-visible .scene-arrow{ transform:translateX(4px); }
-#inicio .scene-club{
+#inicio .rev-cta{ gap:.8em; }
+#inicio .rev-arrow{ display:inline-block; transition:transform .45s var(--ease); }
+#inicio .rev-cta:hover .rev-arrow, #inicio .rev-cta:focus-visible .rev-arrow{ transform:translateX(4px); }
+#inicio .rev-club{
   display:inline-flex; align-items:center; gap:.6em;
-  font-size:.72rem; letter-spacing:.18em; text-transform:uppercase;
+  font-size:.8rem; letter-spacing:.18em; text-transform:uppercase;
   color:var(--gold-light); text-decoration:none;
-  padding-bottom:.3rem; border-bottom:1px solid rgba(217,189,133,.3);
+  padding-bottom:.3rem; border-bottom:1px solid rgba(217,189,133,.35);
   transition:color .3s ease, border-color .3s ease, gap .3s ease;
 }
-#inicio .scene-club:hover, #inicio .scene-club:focus-visible{
+#inicio .rev-club:hover, #inicio .rev-club:focus-visible{
   color:var(--off-white); border-color:var(--gold-light); gap:.9em;
 }
 
-/* --- quadro do primeiro perfume (surge ao rolar) --- */
-#inicio .scene-product{ gap:clamp(1.4rem, 3vh, 2rem); }
-#inicio .scene-product-media{ position:relative; width:clamp(150px, 20vw, 210px); flex:none; }
-#inicio .scene-product-glow{
-  position:absolute; inset:-40%; z-index:0; pointer-events:none;
-  background:radial-gradient(50% 50% at 50% 50%, rgba(233,201,164,.32), transparent 70%);
-  filter:blur(20px);
+/* ============================== ATO 3 ============================== */
+#inicio .rev-act-collection{ gap:clamp(1.6rem, 4vh, 2.6rem); }
+#inicio .rev-collection-kicker{
+  margin:0; font-family:var(--font-sans); font-weight:600;
+  font-size:clamp(.72rem, .9vw, .8rem); letter-spacing:.34em; text-transform:uppercase;
+  color:var(--gold);
 }
-#inicio .scene-product-bottle{
-  position:relative; z-index:1; display:block; width:100%; height:auto;
-  filter:drop-shadow(0 30px 40px rgba(0,0,0,.55)) drop-shadow(0 0 30px rgba(233,201,164,.14));
+#inicio .rev-collection{
+  list-style:none; margin:0; padding:0; width:100%;
+  display:grid; grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:clamp(1rem, 2.2vw, 2rem);
 }
-#inicio .scene-product-info{ display:flex; flex-direction:column; gap:.4rem; }
-#inicio .scene-product-eyebrow{
-  font-family:var(--font-sans); font-weight:600; font-size:.68rem;
-  letter-spacing:.32em; text-transform:uppercase; color:var(--gold);
+#inicio .rev-piece{ min-width:0; }
+#inicio .rev-piece-link{
+  display:flex; flex-direction:column; align-items:center; gap:.55rem;
+  height:100%; padding:1rem .6rem 1.2rem; border-radius:3px;
+  text-decoration:none; color:var(--off-white);
+  border:1px solid transparent;
+  transition:border-color .35s ease, background-color .35s ease, transform .35s ease;
 }
-#inicio .scene-product-name{
-  font-family:var(--font-display); font-weight:500; font-size:clamp(1.5rem, 3vw, 2.1rem);
-  color:var(--off-white); letter-spacing:.02em;
+#inicio .rev-piece-link:hover, #inicio .rev-piece-link:focus-visible{
+  border-color:rgba(217,189,133,.35); background:rgba(250,249,246,.03);
+  transform:translateY(-4px);
 }
-#inicio .scene-product-meta{
-  font-family:var(--font-sans); font-size:.72rem; letter-spacing:.2em;
+/* ÁREA DE IMAGEM DE ALTURA FIXA: é o que impede o frasco de invadir o
+   nome. A imagem se ajusta por dentro com object-fit:contain; o texto
+   começa depois, sempre. */
+#inicio .rev-piece-media{
+  display:flex; align-items:flex-end; justify-content:center;
+  width:100%; height:clamp(150px, 20vh, 224px); margin-bottom:.4rem;
+}
+#inicio .rev-piece-media img{
+  max-width:100%; max-height:100%; width:auto; height:auto;
+  object-fit:contain; display:block;
+  filter:drop-shadow(0 20px 26px rgba(0,0,0,.55));
+  transition:transform .45s var(--ease);
+}
+#inicio .rev-piece-link:hover .rev-piece-media img{ transform:translateY(-5px) scale(1.04); }
+#inicio .rev-piece-name{
+  font-family:var(--font-display); font-size:clamp(1rem, 1.25vw, 1.18rem);
+  line-height:1.35; color:var(--off-white); text-wrap:balance;
+}
+#inicio .rev-piece-vol{
+  font-family:var(--font-sans); font-size:.72rem; letter-spacing:.16em;
   text-transform:uppercase; color:var(--gold-light);
 }
-/* mesma ficha dos cards da vitrine (nome / notas / volume) — a linha de
-   notas só aparece quando a marca fechar o dado; ver .fill-pending */
-#inicio .scene-product-notes{
-  font-family:var(--font-display); font-style:italic;
-  font-size:.86rem; color:rgba(250,249,246,.72); max-width:26ch;
+#inicio .rev-piece-btn{
+  margin-top:.5rem; display:inline-flex; align-items:center; gap:.5em;
+  font-family:var(--font-sans); font-size:.72rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--gold-light);
+  border:1px solid rgba(217,189,133,.4); border-radius:999px;
+  padding:.5rem 1.15rem;
+  transition:color .3s ease, border-color .3s ease, background-color .3s ease;
+}
+#inicio .rev-piece-link:hover .rev-piece-btn,
+#inicio .rev-piece-link:focus-visible .rev-piece-btn{
+  color:var(--black); background:var(--gold-light); border-color:var(--gold-light);
 }
 
-/* --- convite para rolar — desaparece assim que a rolagem começa --- */
-#inicio .scene-scrollcue{
-  display:none;
-}
+#inicio .rev-scrollcue{ display:none; }
 
 /* =======================================================================
-   Modo cinematográfico — só com JS + tela larga + sem movimento reduzido
-   (classe acrescentada por assets/js/hero-scene.js)
+   MODO CINEMATOGRÁFICO — só com JS + tela larga + sem movimento reduzido
+   (classe .rev-enhanced posta por assets/js/hero-reveal.js)
    ======================================================================= */
 @media (min-width:901px){
-  #inicio.hero-scene.scene-enhanced{
-    /* display:block é obrigatório aqui: assim o pin começa no TOPO da seção
-       (nada de flex centering empurrando o item sticky pro meio dos 180vh)
-       e o `top:0` abaixo gruda de verdade durante os 80vh de rolagem. */
+  #inicio.hero-scene.rev-enhanced{
+    /* display:block é obrigatório: .hero é flex e, com todos os filhos do
+       pin em position:absolute, o pin viraria um flex item de largura 0 —
+       a cena inteira sumia. Ver o histórico no topo deste bloco. */
     display:block;
-    height:180vh; padding:0;
-    background:var(--black);
+    height:300vh; padding:0;
   }
-  #inicio.hero-scene.scene-enhanced .scene-pin{
+  #inicio.hero-scene.rev-enhanced .scene-pin{
     position:sticky; top:0; width:100%; height:100vh; height:100svh;
-    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; overflow:clip;
   }
-  #inicio.hero-scene.scene-enhanced .scene-stage{
-    position:absolute; inset:0; z-index:2; max-width:none; padding:0; gap:0;
-  }
-  #inicio.hero-scene.scene-enhanced .scene-particles{ display:block; opacity:1; }
+  #inicio.hero-scene.rev-enhanced .rev-canvas{ display:block; }
 
-  #inicio.hero-scene.scene-enhanced .scene-frame{
-    position:absolute; inset:0; z-index:2;
-    align-items:center; justify-content:center;
-    padding:0 clamp(1.5rem, 6vw, 4rem);
+  #inicio.hero-scene.rev-enhanced .scene-stage{
+    position:absolute; inset:0; z-index:2; max-width:none; gap:0;
+    padding:0 clamp(1.5rem, 5vw, 4rem);
+    /* antes de a seção grudar, o cabeçalho ainda está ACIMA dela no fluxo:
+       a composição se centra no espaço que sobra embaixo. Depois de grudar,
+       o cabeçalho passa a cobrir o topo do palco e o padding compensa. */
+    padding-bottom:var(--header-h, 0px);
+    transition:padding .45s var(--ease);
+  }
+  #inicio.hero-scene.rev-enhanced.is-pinned .scene-stage{
+    padding-top:var(--header-h-compact, 0px); padding-bottom:0;
+  }
+
+  #inicio.hero-scene.rev-enhanced .rev-act{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:inherit;
     will-change:opacity, transform;
   }
-  #inicio.hero-scene.scene-enhanced .scene-frame.scene-frame-idle{ pointer-events:none; }
-
-  #inicio.hero-scene.scene-enhanced .scene-brand{
-    opacity:var(--op-brand, 1);
-    transform:translate3d(0, calc(var(--mv-brand, 0) * -8vh), 0) scale(calc(1 - var(--mv-brand, 0) * .1));
-  }
-  #inicio.hero-scene.scene-enhanced .scene-product{
-    flex-direction:row; text-align:left; justify-content:center;
-    opacity:var(--op-product, 0);
-    transform:translate3d(0, calc(36px - var(--mv-product, 0) * 36px), 0) scale(calc(.93 + var(--mv-product, 0) * .07));
-    /* .reveal (base/mobile fallback) puts a .9s transition on opacity/
-       transform — here the scroll loop drives both every frame, so that
-       transition would lag a full beat behind the scrollbar. Kill it only
-       in this scoped, high-specificity context; .reveal keeps working
-       exactly as before everywhere else, including the base hero layout. */
-    transition:none;
+  /* ato apagado não recebe clique nem foco de teclado */
+  #inicio.hero-scene.rev-enhanced .rev-act.rev-idle{
+    pointer-events:none; visibility:hidden;
   }
 
-  #inicio.hero-scene.scene-enhanced .scene-scrollcue{
+  #inicio.hero-scene.rev-enhanced .rev-act-open{
+    opacity:var(--op-open, 1);
+    transform:translate3d(0, calc(var(--mv-open, 0) * -7vh), 0)
+              scale(calc(1 - var(--mv-open, 0) * .07));
+  }
+  #inicio.hero-scene.rev-enhanced .rev-act-collection{
+    opacity:var(--op-collection, 0);
+    transform:translate3d(0, calc(28px - var(--mv-collection, 0) * 28px), 0);
+  }
+  /* cada frasco entra um pouquinho depois do anterior */
+  #inicio.hero-scene.rev-enhanced .rev-piece{
+    opacity:clamp(0, calc((var(--op-collection, 0) - var(--i) * .12) * 4), 1);
+    transform:translate3d(0, calc((1 - clamp(0, calc((var(--op-collection, 0) - var(--i) * .12) * 4), 1)) * 22px), 0);
+  }
+
+  /* o feixe e a névoa reagem de leve ao progresso, junto com os atos */
+  #inicio.hero-scene.rev-enhanced .rev-beam{
+    opacity:calc(.45 + var(--op-open, 1) * .55);
+  }
+  #inicio.hero-scene.rev-enhanced .rev-floor{
+    opacity:calc(.35 + var(--op-open, 1) * .65);
+  }
+
+  #inicio.hero-scene.rev-enhanced .rev-scrollcue{
     display:flex; align-items:center; justify-content:center;
-    position:absolute; left:50%; bottom:clamp(1.6rem, 4vh, 2.6rem); z-index:3;
+    position:absolute; left:50%; bottom:clamp(1.4rem, 3.5vh, 2.4rem); z-index:3;
     transform:translateX(-50%);
-    width:34px; height:34px; border:1px solid rgba(250,249,246,.25); border-radius:50%;
+    width:34px; height:34px; border:1px solid rgba(250,249,246,.28); border-radius:50%;
     opacity:var(--op-cue, 1);
     transition:border-color .3s ease;
   }
-  #inicio.hero-scene.scene-enhanced .scene-scrollcue:hover{ border-color:var(--gold-light); }
-  #inicio.hero-scene.scene-enhanced .scene-scrollcue span{
+  #inicio.hero-scene.rev-enhanced .rev-scrollcue:hover{ border-color:var(--gold-light); }
+  #inicio.hero-scene.rev-enhanced .rev-scrollcue span{
     width:6px; height:6px; border-radius:50%; background:var(--gold-light);
-    animation:scene-cue-drop 1.8s ease-in-out infinite;
+    animation:rev-cue-drop 1.8s ease-in-out infinite;
   }
-  @keyframes scene-cue-drop{
+  @keyframes rev-cue-drop{
     0%,100%{ transform:translateY(-5px); opacity:.4; }
     50%{ transform:translateY(5px); opacity:1; }
   }
 
-  /* entrada suave no primeiro paint — some sozinha depois de rodar uma vez
-     e devolve o controle da opacidade/transform pras variáveis de scroll
-     acima (sem `forwards`, então nada fica "preso" no fim da animação) */
-  #inicio.hero-scene.scene-enhanced.scene-ready .scene-brand{
-    animation:scene-brand-in 1.15s var(--ease) .1s backwards;
+  /* entrada suave no primeiro paint; roda uma vez e devolve o controle
+     das variáveis de scroll (sem `forwards`, nada fica preso no fim) */
+  #inicio.hero-scene.rev-enhanced.rev-ready .rev-act-open{
+    animation:rev-open-in 1.2s var(--ease) .1s backwards;
   }
 }
-@keyframes scene-brand-in{
-  from{ opacity:0; transform:translate3d(0, 22px, 0) scale(.97); }
+@keyframes rev-open-in{
+  from{ opacity:0; transform:translate3d(0, 26px, 0) scale(.97); }
   to{ opacity:1; transform:translate3d(0, 0, 0) scale(1); }
-}
-@media (prefers-reduced-motion:reduce){
-  #inicio.hero-scene.scene-enhanced .scene-brand{ animation:none !important; }
-  /* rede de segurança: hero-scene.js já não liga o modo cinematográfico com
-     movimento reduzido (logo, o canvas nem começa a rodar) e ambient.js nem
-     cria as motas — isto cobre o caso de a classe ficar presa por alguma
-     mudança de preferência no meio da sessão. */
-  #inicio .scene-particles{ display:none !important; }
-  .mote{ animation:none !important; opacity:.45; }
 }
 
 /* =======================================================================
-   Mobile / tablet — o frasco é PROTAGONISTA na primeira dobra
+   Movimento reduzido: a composição final, parada.
+   ======================================================================= */
+@media (prefers-reduced-motion:reduce){
+  #inicio .rev-haze{ animation:none; opacity:.85; }
+  #inicio .rev-canvas{ display:none !important; }
+  #inicio.hero-scene.rev-enhanced .rev-act-open{ animation:none !important; }
+}
+
+/* =======================================================================
+   Tablet e celular — pilha estática, frasco na PRIMEIRA DOBRA
    -----------------------------------------------------------------------
-   Aqui nunca existe modo cinematográfico (o JS só liga acima de 900px), e
-   antes o quadro do produto caía abaixo da primeira tela: a pilha era
-   eyebrow + logo grande + lede + CTAs (com gap de até 4.5rem) e só então o
-   frasco, em coluna, com a foto em tamanho de desktop. O ajuste é de
-   COMPACTAÇÃO, não de reordenação — o DOM segue idêntico (o modo
-   cinematográfico do desktop depende dessa ordem), mas o quadro do produto
-   vira uma faixa horizontal baixa (frasco à esquerda, nome/volume à
-   direita) e o conjunto todo cabe em 100svh já em 375×667.
+   Aqui nunca existe modo cinematográfico (o JS só liga acima de 900px).
+   A seção desconta a altura real do cabeçalho (--header-h, publicado por
+   assets/js/main.js) para não reservar uma tela inteira DEPOIS dele e
+   empurrar o frasco para fora — era esse o "espaço vazio no topo".
    ======================================================================= */
 @media (max-width:900px){
-  #inicio.hero-scene{
-    padding:clamp(2.2rem, 6vh, 3.6rem) 0 clamp(2.6rem, 7vh, 4rem);
-    /* .hero pede min-height:100svh. Como o cabeçalho é sticky (logo, ocupa
-       espaço no fluxo), 100svh AQUI significa "uma tela cheia DEPOIS do
-       cabeçalho" — e era isso que jogava o frasco abaixo da primeira dobra.
-       --header-h vem de assets/js/main.js; o fallback de 120px cobre o caso
-       sem JS e ainda deixa a cena mais curta que antes. */
-    min-height:calc(100svh - var(--header-h, 120px));
+  #inicio.hero-scene{ min-height:calc(100svh - var(--header-h, 120px)); }
+  #inicio .scene-stage{
+    gap:clamp(2rem, 5vh, 3rem);
+    padding:clamp(1.2rem, 3.5vh, 2.2rem) clamp(1.1rem, 5vw, 2rem) clamp(2.4rem, 6vh, 3.4rem);
   }
-  #inicio .scene-stage{ gap:clamp(1.5rem, 4vh, 2.4rem); }
-  #inicio .scene-brand{ gap:clamp(.9rem, 2vh, 1.3rem); }
-  #inicio .scene-logo{ width:clamp(150px, 30vw, 210px); }
-  #inicio .scene-lede{ font-size:clamp(.95rem, 2.5vw, 1.1rem); max-width:34ch; }
-
-  /* faixa do produto: baixa e horizontal, com uma linha dourada fina por
-     cima que a separa do bloco da marca sem virar "outra seção" */
-  #inicio .scene-product{
-    flex-direction:row; align-items:center; justify-content:center;
-    text-align:left; gap:clamp(1rem, 4vw, 1.8rem);
-    width:auto; max-width:min(420px, 88vw); margin:0 auto;
-    padding-top:clamp(1.1rem, 3vh, 1.8rem);
-    border-top:1px solid rgba(217,189,133,.18);
+  #inicio .rev-act-open{ gap:clamp(.9rem, 2.2vh, 1.4rem); }
+  #inicio .rev-mark{ width:clamp(38px, 9vw, 52px); }
+  #inicio .rev-eyebrow{ font-size:.72rem; letter-spacing:.28em; }
+  #inicio .rev-bottle-wrap{
+    width:clamp(132px, 38vw, 200px);
+    margin-bottom:clamp(1.6rem, 5vh, 2.6rem);
   }
-  #inicio .scene-product-media{ width:clamp(88px, 26vw, 130px); }
-  #inicio .scene-product-info{ gap:.3rem; }
-  #inicio .scene-product-eyebrow{ font-size:.6rem; letter-spacing:.24em; }
-  #inicio .scene-product-name{ font-size:clamp(1.15rem, 4.6vw, 1.5rem); }
-  #inicio .scene-product-meta{ font-size:.66rem; letter-spacing:.16em; }
-  /* na primeira dobra o frasco não pode depender do observer de .reveal */
-  #inicio .scene-product.reveal{ opacity:1; transform:none; }
+  #inicio .rev-lede{ font-size:clamp(.98rem, 3.6vw, 1.12rem); max-width:32ch; }
+  #inicio .rev-collection{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:1rem .8rem; }
+  #inicio .rev-piece-media{ height:clamp(120px, 20vh, 168px); }
+  #inicio .rev-piece-name{ font-size:.98rem; }
+  #inicio .rev-piece-btn{ font-size:.68rem; padding:.45rem .95rem; }
 }
 @media (max-width:480px){
-  #inicio.hero-scene{ padding:clamp(1.4rem, 4vh, 2.2rem) 0 clamp(2rem, 5vh, 3rem); }
-  #inicio .scene-stage{ gap:1.1rem; }
-  #inicio .scene-brand{ gap:.8rem; }
-  #inicio .scene-eyebrow{ font-size:.6rem; letter-spacing:.3em; }
-  #inicio .scene-logo{ width:min(124px, 34vw); }
-  #inicio .scene-lede{ font-size:.92rem; line-height:1.5; max-width:30ch; }
-  #inicio .scene-actions{ flex-direction:column; gap:.8rem; margin-top:.1rem; }
-  #inicio .scene-cta{ width:100%; justify-content:center; padding:.85rem 1.6rem; }
-  #inicio .scene-product{ padding-top:.9rem; gap:.9rem; }
-  #inicio .scene-product-media{ width:min(84px, 23vw); }
+  #inicio .scene-stage{ padding-top:clamp(.9rem, 2.5vh, 1.6rem); gap:1.8rem; }
+  #inicio .rev-mark{ width:clamp(34px, 10vw, 44px); }
+  #inicio .rev-bottle-wrap{ width:min(160px, 44vw); margin-bottom:1.5rem; }
+  #inicio .rev-lede{ font-size:.98rem; line-height:1.55; }
+  #inicio .rev-actions{ flex-direction:column; gap:.9rem; width:100%; }
+  #inicio .rev-cta{ width:100%; justify-content:center; }
+  #inicio .rev-piece-media{ height:clamp(104px, 22vh, 140px); }
 }
-/* telas muito baixas (paisagem no celular): encolhe ainda mais em vez de
-   empurrar o frasco pra fora da tela */
+/* telas muito baixas (celular deitado): encolhe em vez de estourar */
 @media (max-width:900px) and (max-height:620px){
-  #inicio .scene-logo{ width:min(120px, 26vw); }
-  #inicio .scene-stage{ gap:1rem; }
-  #inicio .scene-product-media{ width:clamp(70px, 18vw, 100px); }
+  #inicio .rev-bottle-wrap{ width:min(120px, 26vw); margin-bottom:1rem; }
+  #inicio .scene-stage{ gap:1.2rem; }
+  #inicio .rev-mark{ width:34px; }
 }

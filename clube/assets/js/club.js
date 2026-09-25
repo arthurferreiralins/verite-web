@@ -219,8 +219,16 @@
   });
 
   /* ============================ Sessão inicial ============================ */
+  /* /api/club/me responde 200 com customer:null para visitante sem sessão
+     (antes era 401). Então quem manda aqui é o `customer`, não o status
+     HTTP: sem ele, mostra o portão de entrada, não o painel do membro. */
   api('/api/club/me')
     .then(function (data) {
+      if (!data || !data.customer) {
+        hideLoading();
+        dashboard.hidden = true;
+        return;
+      }
       currentCustomer = data.customer;
       hideLoading();
       gate.style.display = 'none';

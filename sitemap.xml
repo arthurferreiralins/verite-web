@@ -37,6 +37,12 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://veriteperfumes.com.br/clube</loc>
+    <lastmod>2026-09-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://veriteperfumes.com.br/privacidade.html</loc>
     <lastmod>2026-08-29</lastmod>
     <changefreq>yearly</changefreq>

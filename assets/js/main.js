@@ -162,14 +162,27 @@
       var h = Math.round(header.getBoundingClientRect().height);
       if(h) document.documentElement.style.setProperty('--header-h', h + 'px');
     };
+    /* Altura da versão COMPACTA — a que de fato fica na tela durante a
+       rolagem. O banner da home usa esta medida para centrar a cena no
+       espaço abaixo do cabeçalho enquanto o palco está grudado. Medida
+       forçando a classe por um instante (sem pintar nada entre as duas
+       linhas), o que é mais confiável do que repetir os paddings em JS. */
+    var publishCompactHeight = function(){
+      var jaCompacto = header.classList.contains('is-scrolled');
+      if(!jaCompacto) header.classList.add('is-scrolled');
+      var h = Math.round(header.getBoundingClientRect().height);
+      if(!jaCompacto) header.classList.remove('is-scrolled');
+      if(h) document.documentElement.style.setProperty('--header-h-compact', h + 'px');
+    };
     var onScroll = function(){
       header.classList.toggle('is-scrolled', window.scrollY > 40);
     };
+    var publicarAlturas = function(){ publishHeaderHeight(); publishCompactHeight(); };
     onScroll();
-    publishHeaderHeight();
+    publicarAlturas();
     window.addEventListener('scroll', onScroll, {passive:true});
-    window.addEventListener('resize', publishHeaderHeight, {passive:true});
-    window.addEventListener('load', publishHeaderHeight);
+    window.addEventListener('resize', publicarAlturas, {passive:true});
+    window.addEventListener('load', publicarAlturas);
     if(window.ResizeObserver){
       /* a barra de busca muda de linha entre breakpoints e o modo compacto
          encolhe o cabeçalho — o observer mantém a medida sempre em dia */
