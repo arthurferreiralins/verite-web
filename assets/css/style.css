@@ -89,9 +89,16 @@ body::after{
 @keyframes vignette-breathe{ 0%,100%{opacity:.7;} 50%{opacity:1;} }
 @media (prefers-reduced-motion:reduce){ body::after{animation:none; opacity:.85;} }
 
+/* Fundo da página = o preto da marca, não branco.
+   O <header> é preto a 80% com backdrop-filter; quando o que estava atrás
+   dele era o branco do body, ele aparecia CINZA no topo de todas as
+   páginas. Cada seção já pinta o próprio fundo (zebra clara/bege/escura),
+   então isto só muda o que se vê atrás do cabeçalho e nas bordas do
+   overscroll — que passam a ser pretos, como deve ser. */
+html{background:var(--black);}
 body{
   margin:0;
-  background:var(--white);
+  background:var(--black);
   color:var(--black);
   font-family:var(--font-sans);
   font-size:16px;

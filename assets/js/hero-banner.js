@@ -152,9 +152,9 @@
      --------------------------------------------------------------------- */
   function initFragrance(){
     var FRAGS = [
-      { img:'assets/img/frasco-feminino.png', brand:'VÉRITÉ',        detail:'Feminino · Eau de Parfum · 50 ml', tint:'233,201,164', alt:'Perfume Verité Feminino — Eau de Parfum 50 ml' },
-      { img:'assets/img/frasco-unisex.png',   brand:'VÉRITÉ DORÉA',  detail:'Eau de Parfum · 30 ml',            tint:'214,172,124', alt:'Perfume Verité Doréa — Eau de Parfum 30 ml' },
-      { img:'assets/img/hero-frasco.png',     brand:'VÉRITÉ',        detail:'Eau de Parfum · 40 ml',            tint:'210,200,168', alt:'Perfume Verité — Eau de Parfum 40 ml' }
+      { img:'assets/img/frasco-feminino.png', brand:'VERITÉ',        detail:'Feminino · Eau de Parfum · 50 ml', tint:'233,201,164', alt:'Perfume Verité Feminino — Eau de Parfum 50 ml' },
+      { img:'assets/img/frasco-unisex.png',   brand:'VERITÉ DORÉA',  detail:'Eau de Parfum · 30 ml',            tint:'214,172,124', alt:'Perfume Verité Doréa — Eau de Parfum 30 ml' },
+      { img:'assets/img/hero-frasco.png',     brand:'VERITÉ',        detail:'Eau de Parfum · 40 ml',            tint:'210,200,168', alt:'Perfume Verité — Eau de Parfum 40 ml' }
     ];
 
     var tilt   = hero.querySelector('.hb-bottle-tilt');

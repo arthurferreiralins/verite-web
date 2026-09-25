@@ -13,7 +13,7 @@
    ======================================================================= */
 
 /* -----------------------------------------------------------------------
-   1) BANNER — reformulação grande: VÉRITÉ como elemento de maior presença
+   1) BANNER — reformulação grande: VERITÉ como elemento de maior presença
    visual (antes só existia como textura de fundo em baixa opacidade),
    dourado tratado como detalhe (não domina mais o título), mais espaço
    negativo, luz autônoma discreta e uma saída cinematográfica no scroll.
@@ -52,7 +52,7 @@
 @media (prefers-reduced-motion:reduce){ #inicio .hb-cine::after{ animation:none; } }
 
 /* --- marca d'água: o emblema oficial (V + chama), não o texto repetido
-   — evita duplicar a palavra "VÉRITÉ" que agora também é o título grande
+   — evita duplicar a palavra "VERITÉ" que agora também é o título grande
    em primeiro plano, e usa uma peça de identidade real da marca. ------ */
 #inicio .hb-emblem-wrap{
   position:absolute; z-index:0; pointer-events:none;
@@ -96,7 +96,7 @@
 }
 @media (prefers-reduced-motion:reduce){ #inicio .hb-spot{ animation:none; background-position:20% 30%; } }
 
-/* --- hierarquia do texto: VÉRITÉ é o elemento dominante; dourado vira
+/* --- hierarquia do texto: VERITÉ é o elemento dominante; dourado vira
    detalhe (traço fino sob o título, palavra única na frase, eyebrow) --- */
 #inicio .hb-eyebrow{ margin-bottom:clamp(1.6rem, 3.6vh, 2.4rem); }
 #inicio .hb-title{
