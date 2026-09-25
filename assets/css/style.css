@@ -3056,6 +3056,70 @@ header.is-scrolled .header-search button{width:32px; height:32px;}
     radial-gradient(56% 100% at 50% 0%, rgba(233,204,150,.10), transparent 72%);
   box-shadow:inset 0 1px 0 rgba(250,249,246,.07);
 }
+/* =======================================================================
+   O FILME — sequência de imagens controlada pela rolagem
+   -----------------------------------------------------------------------
+   Enquanto não existirem os quadros em assets/hero-seq/, o canvas e os
+   textos ficam ocultos e a seção funciona exatamente como hoje. A classe
+   .tem-sequencia (posta por assets/js/hero-sequence.js quando acha o
+   manifesto) é o que liga tudo isto.
+   ======================================================================= */
+#inicio .rev-seq{
+  position:absolute; inset:0; z-index:0; width:100%; height:100%;
+  display:none; pointer-events:none;
+  /* o object-fit é feito na mão no canvas (ver hero-sequence.js) para o
+     frasco continuar enquadrado em qualquer proporção de tela */
+  background:var(--black);
+}
+#inicio.tem-sequencia .rev-seq{ display:block; }
+/* com filme no fundo, o cenário de estúdio (feixe/névoa/piso) só volta na
+   emenda final — senão brigaria com a imagem do vídeo */
+#inicio.tem-sequencia .rev-set{ opacity:var(--op-open, 0); transition:opacity .4s linear; }
+
+#inicio .rev-film{
+  position:absolute; inset:0; z-index:3; display:none;
+  align-items:center; justify-content:center;
+  padding:0 clamp(1.5rem, 6vw, 4rem); text-align:center;
+  pointer-events:none;
+}
+#inicio.tem-sequencia .rev-film{ display:flex; }
+#inicio .rev-film-line{
+  position:absolute; margin:0; max-width:24ch;
+  font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.6rem, 4vw, 3.4rem); line-height:1.25; letter-spacing:.02em;
+  color:var(--off-white); text-wrap:balance;
+  text-shadow:0 2px 30px rgba(0,0,0,.7);
+  /* a opacidade e o deslocamento de cada linha vêm de --op-line-N, que o
+     JS calcula a partir do progresso; ficam aqui só os valores de repouso */
+  opacity:var(--op-line, 0);
+  transform:translate3d(0, calc((1 - var(--op-line, 0)) * 18px), 0);
+  will-change:opacity, transform;
+}
+#inicio .rev-film-claim{
+  font-style:italic; color:var(--gold-light); max-width:28ch;
+  font-size:clamp(1.3rem, 3vw, 2.4rem);
+}
+/* indicador discreto de "role para descobrir", só na primeira tela */
+#inicio .rev-film-cue{
+  position:absolute; left:50%; bottom:clamp(1.4rem, 4vh, 2.6rem); z-index:4;
+  transform:translateX(-50%);
+  display:none; flex-direction:column; align-items:center; gap:.5rem;
+  font-family:var(--font-sans); font-size:.68rem; letter-spacing:.24em;
+  text-transform:uppercase; color:rgba(250,249,246,.75);
+  opacity:var(--op-cue, 1); pointer-events:none;
+}
+#inicio.tem-sequencia .rev-film-cue{ display:flex; }
+#inicio .rev-film-cue i{
+  display:block; width:1px; height:34px;
+  background:linear-gradient(rgba(250,249,246,.55), transparent);
+}
+@media (prefers-reduced-motion:reduce){
+  /* sem sequência: o CSS mostra o estado final (cena de estúdio), e o JS
+     do filme nem entra em cena — ver hero-sequence.js */
+  #inicio .rev-seq, #inicio .rev-film, #inicio .rev-film-cue{ display:none !important; }
+  #inicio.tem-sequencia .rev-set{ opacity:1; }
+}
+
 /* Também sem `filter` e sem `mix-blend-mode`: sobre um fundo quase preto o
    `screen` é praticamente idêntico ao normal para pontos claros, e ambos
    obrigavam o navegador a compor uma camada de tela cheia a cada quadro.
@@ -3210,10 +3274,20 @@ header.is-scrolled .header-search button{width:32px; height:32px;}
 #inicio .rev-scrollcue{ display:none; }
 
 /* =======================================================================
-   MODO CINEMATOGRÁFICO — só com JS + tela larga + sem movimento reduzido
-   (classe .rev-enhanced posta por assets/js/hero-reveal.js)
+   MODO CINEMATOGRÁFICO — classe .rev-enhanced, posta por hero-reveal.js
+   -----------------------------------------------------------------------
+   Este bloco vivia dentro de @media (min-width:901px). A largura saiu da
+   conta de propósito: quem decide agora é o JS, e ele tem um caso a mais —
+   COM FILME o modo grudado vale em qualquer largura (o conceito tem uma
+   sequência 9:16 só para o celular; barrar por media query deixava o mobile
+   sem filme nenhum, com percurso de rolagem igual a zero). Sem filme, o JS
+   continua ligando só acima de 901px, e `prefers-reduced-motion` desliga
+   tudo nos dois casos.
+
+   As regras de celular do bloco anterior (@media max-width:900px) seguem
+   valendo para a pilha estática: `#inicio.hero-scene.rev-enhanced` tem uma
+   classe a mais e vence por especificidade quando o modo está ligado.
    ======================================================================= */
-@media (min-width:901px){
   #inicio.hero-scene.rev-enhanced{
     /* display:block é obrigatório: .hero é flex e, com todos os filhos do
        pin em position:absolute, o pin viraria um flex item de largura 0 —
@@ -3305,7 +3379,6 @@ header.is-scrolled .header-search button{width:32px; height:32px;}
   #inicio.hero-scene.rev-enhanced.rev-ready .rev-act-open{
     animation:rev-open-in 1.2s var(--ease) .1s backwards;
   }
-}
 @keyframes rev-open-in{
   from{ opacity:0; transform:translate3d(0, 26px, 0) scale(.97); }
   to{ opacity:1; transform:translate3d(0, 0, 0) scale(1); }

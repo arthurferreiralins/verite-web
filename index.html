@@ -20,7 +20,13 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
 <link rel="stylesheet" href="assets/css/style.css"/>
-<link rel="preload" as="image" href="assets/img/verite-logo-full.webp" fetchpriority="high"/>
+<!-- NÃO voltar a dar preload em verite-logo-full.webp: o banner "Revelação"
+     usa o emblema (verite-emblem.webp, 24KB), não o logotipo completo. O
+     preload continuou aqui depois da troca do banner e baixava 48KB que a
+     página nunca exibia — metade do orçamento da primeira tela, à toa.
+     (O arquivo segue existindo: o JSON-LD aponta para ele como logo da
+     marca, o que é só uma URL para buscadores, não um download.) -->
+<link rel="preload" as="image" href="assets/img/verite-emblem.webp" fetchpriority="high"/>
 <!-- O frasco do banner agora vem de um <picture> (AVIF → WebP → PNG): um
      preload fixo aqui baixaria o formato errado em dobro. O preload scanner
      já encontra o <picture> no HTML inicial, e o fetchpriority="high" do
@@ -323,6 +329,27 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
         <span class="rev-haze"></span>
         <span class="rev-floor"></span>
       </div>
+
+      <!-- ================= O FILME =================================
+           Sequência de imagens controlada pela rolagem (assets/hero-seq/,
+           gerada dos vídeos por tools/extrair-quadros.js). Enquanto esses
+           quadros não existirem este canvas fica vazio e invisível, e a
+           cena de estúdio abaixo segue abrindo a seção normalmente — é
+           por isso que dá para publicar a máquina antes dos vídeos.
+           Ver assets/js/hero-sequence.js. -->
+      <canvas class="rev-seq" data-seq-canvas aria-hidden="true"></canvas>
+
+      <!-- Textos do filme, sincronizados com o progresso da rolagem.
+           Só aparecem quando existe sequência (.tem-sequencia). -->
+      <div class="rev-film" data-rev-film aria-hidden="true">
+        <p class="rev-film-line" data-de="0" data-ate="15">A cidade dorme.</p>
+        <p class="rev-film-line" data-de="18" data-ate="38">Uma presen&ccedil;a imposs&iacute;vel de ignorar.</p>
+        <p class="rev-film-line" data-de="42" data-ate="62">A ess&ecirc;ncia se espalha.</p>
+        <p class="rev-film-line rev-film-claim" data-de="66" data-ate="84">A verdade est&aacute; na sua ess&ecirc;ncia.</p>
+      </div>
+      <span class="rev-film-cue" data-rev-film-cue aria-hidden="true">
+        <i></i>Role para descobrir
+      </span>
 
       <!-- Névoa + partículas + a palavra "VERITÉ" (um canvas só) -->
       <canvas class="rev-canvas" data-rev-canvas aria-hidden="true"></canvas>
@@ -879,6 +906,9 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
 <script src="assets/js/hero-reveal.js"></script>
+<!-- Depois de hero-reveal.js de propósito: é ele quem calcula o progresso
+     da seção e emite `rev:progresso`; o filme só escuta. -->
+<script src="assets/js/hero-sequence.js" defer></script>
 <script src="assets/js/fragrancias.js"></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/scroll-fx.js"></script>

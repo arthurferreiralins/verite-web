@@ -54,16 +54,46 @@
   /* -------------------------------------------------------------------
      1. Progresso e repartição dos atos
      ------------------------------------------------------------------- */
-  var ATO = {
-    /* ato 1 some entre 22% e 30%; ato 2 (palavra) vive de 30% a 58%,
-       com pico em 44%; ato 3 entra a partir de 60%. Repare que não há
-       sobreposição: quando op-open chega a 0 (30%), op-word está subindo;
-       quando op-word volta a 0 (58%), op-collection ainda é 0. */
+  /* DUAS LINHAS DO TEMPO.
+     -------------------------------------------------------------------
+     SEM_FILME é a cena de estúdio sozinha, como está hoje: abertura, a
+     palavra em poeira dourada, a coleção. É o que roda enquanto não
+     existirem os quadros da sequência em assets/hero-seq/.
+
+     COM_FILME entra quando hero-sequence.js encontra o manifesto e marca
+     a seção com .tem-sequencia. Aí a abertura de estúdio SAI da frente e
+     vira o final: o filme ocupa 0→88% (os textos dele estão em
+     .rev-film-line, ver style.css) e só nos últimos 12% a cena de estúdio
+     com os CTAs entra, seguida dos 4 frascos — exatamente a emenda pedida
+     no conceito. Nada é recriado: são os mesmos .rev-act-open e
+     .rev-act-collection nos dois casos.
+
+     Em ambas, as janelas são DISJUNTAS: o ato que sai zera antes de o
+     seguinte passar de um fiapo de opacidade. */
+  var SEM_FILME = {
+    openIn: null,
     openOut: [0.22, 0.30],
     wordIn: [0.30, 0.42],
     wordOut: [0.52, 0.62],
     collectionIn: [0.58, 0.76]
   };
+  var COM_FILME = {
+    /* 66–84% é onde o conceito pede as partículas formando "VERITÉ" sobre
+       o céu; 88–100% é a emenda com o estúdio e depois a coleção. */
+    openIn: [0.88, 0.94],
+    openOut: null,
+    wordIn: [0.66, 0.74],
+    wordOut: [0.80, 0.86],
+    collectionIn: [0.95, 1.00]
+  };
+  var ATO = SEM_FILME;
+
+  /* hero-sequence.js chama isto quando acha os quadros */
+  function usarLinhaDoTempoDoFilme() {
+    ATO = COM_FILME;
+    render();
+  }
+  hero.addEventListener('rev:tem-sequencia', usarLinhaDoTempoDoFilme);
 
   function render() {
     ticking = false;
@@ -81,7 +111,12 @@
     var p = percurso > 0 ? clamp01((offsetPalco - topo) / percurso) : 0;
     progress = p;
 
-    var opOpen = 1 - ramp(p, ATO.openOut[0], ATO.openOut[1]);
+    /* openIn e openOut são mutuamente exclusivos: sem filme a abertura já
+       começa na tela e só sai; com filme ela não existe até os 88% e aí
+       entra para ficar. */
+    var opOpen = ATO.openIn
+      ? ramp(p, ATO.openIn[0], ATO.openIn[1])
+      : 1 - ramp(p, ATO.openOut[0], ATO.openOut[1]);
     var opWord = Math.min(ramp(p, ATO.wordIn[0], ATO.wordIn[1]),
                           1 - ramp(p, ATO.wordOut[0], ATO.wordOut[1]));
     var opCollection = ramp(p, ATO.collectionIn[0], ATO.collectionIn[1]);
@@ -91,7 +126,7 @@
     setVar('--op-word', opWord.toFixed(4));
     setVar('--op-collection', opCollection.toFixed(4));
     /* deslocamentos suaves, para os atos entrarem/saírem com movimento */
-    setVar('--mv-open', ramp(p, 0, ATO.openOut[1]).toFixed(4));
+    setVar('--mv-open', (ATO.openIn ? 1 - opOpen : ramp(p, 0, ATO.openOut[1])).toFixed(4));
     setVar('--mv-collection', opCollection.toFixed(4));
     setVar('--op-cue', (1 - ramp(p, 0, 0.10)).toFixed(4));
 
@@ -104,6 +139,11 @@
     actOpen.classList.toggle('rev-idle', opOpen <= 0.02);
     actCollection.classList.toggle('rev-idle', opCollection <= 0.02);
     if (cue) cue.style.pointerEvents = (1 - ramp(p, 0, 0.10)) <= 0.05 ? 'none' : '';
+
+    /* Uma única fonte de verdade para o progresso: hero-sequence.js escuta
+       isto para escolher o quadro do filme, em vez de manter a própria
+       conta de rolagem (duas contas divergem cedo ou tarde). */
+    hero.dispatchEvent(new CustomEvent('rev:progresso', { detail: { p: p } }));
   }
 
   function requestRender() {
@@ -387,8 +427,21 @@
   /* -------------------------------------------------------------------
      3. Liga/desliga o modo cinematográfico
      ------------------------------------------------------------------- */
+  /* Com FILME o modo grudado vale em qualquer largura: o conceito tem uma
+     sequência própria em 9:16 para o celular, então desligar abaixo de
+     901px deixaria o mobile sem filme nenhum. Sem filme, segue a regra
+     antiga — a cena de estúdio em tela estreita é uma pilha estática, que
+     é mais leve e não sequestra a rolagem. Movimento reduzido desliga tudo
+     nos dois casos, sem exceção. */
+  var temFilme = false;
+  hero.addEventListener('rev:tem-sequencia', function () {
+    temFilme = true;
+    sincronizar();
+  });
+
   function deveLigar() {
-    return !!(mqWide.matches && !mqReduce.matches && 'requestAnimationFrame' in window);
+    if (mqReduce.matches || !('requestAnimationFrame' in window)) return false;
+    return !!(mqWide.matches || temFilme);
   }
 
   function ligar() {
