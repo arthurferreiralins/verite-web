@@ -28,7 +28,7 @@
   document.querySelectorAll('[data-bottle]').forEach(i => { i.src = $('#heroImg').src; });
   const flash = $('#flash'), studio = $('#studio'), hint = $('#hint');
   const copies = ['#c1', '#c2', '#c3', '#c4'].map($);
-  const railBtns = [...document.querySelectorAll('#rail button')];
+  const railBtns = [...document.querySelectorAll('#rail button')], railEl = document.getElementById('rail');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) document.documentElement.classList.add('static');
 
@@ -454,6 +454,8 @@
     drawFront(time, pour, wf, fade, show);
     flash.style.opacity = flashA.toFixed(3);
     studio.style.opacity = studioAmt.toFixed(3); studio.style.visibility = studioAmt > .01 ? 'visible' : 'hidden';
+    /* no Estúdio os capítulos somem: no celular eles ficavam por cima do link "Clube Verité" */
+    if (railEl) { railEl.style.opacity = (1 - studioAmt).toFixed(3); railEl.style.visibility = studioAmt > .98 ? 'hidden' : 'visible'; }
     drawFx(time, dt, p, studioAmt);
 
     setCopy(copies[0], band(p, -1, .085, .035));

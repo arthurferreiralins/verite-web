@@ -20,6 +20,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap"/>
 <link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="stylesheet" href="assets/css/home-nova.css"/>
 <!-- A foto do frasco é o protagonista do banner e a primeira coisa que
      aparece — por isso o preload. É a ÚNICA imagem do banner: o resto
      (cidade, luz, névoa, reflexo) é desenhado em canvas por
@@ -91,7 +92,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 </script>
 </head>
 <body>
-<a class="skip-link" href="#fragrancias">Pular para conteúdo</a>
+<a class="skip-link" href="#colecao">Pular para conteúdo</a>
 
 <header>
   <div class="wrap header-top">
@@ -360,212 +361,127 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
     </div>
   </section>
 
-  <!-- ============ A Coleção — os 4 frascos com "Conhecer" ==============
-       Vem logo depois da última cena do banner (o Estúdio) e antes de
-       "Nossas Fragrâncias". Mesma ficha de sempre: nome, volume e botão.
-       O que a marca ainda não definiu fica como .fill-pending — invisível
-       em produção, visível abrindo a página com ?fills=1. -->
-  <section id="colecao" class="section section-dark colecao-hero" aria-label="A coleção Verité">
-    <div class="wrap">
-      <p class="rev-collection-kicker">A Cole&ccedil;&atilde;o Verit&eacute;</p>
-      <ul class="rev-collection">
-        <li class="rev-piece" style="--i:0">
-          <a class="rev-piece-link" href="produtos.html?genero=feminino">
-            <span class="rev-piece-media">
-              <picture>
-                <source type="image/avif" srcset="assets/img/frasco-feminino.avif"/>
-                <source type="image/webp" srcset="assets/img/frasco-feminino.webp"/>
-                <img src="assets/img/frasco-feminino.png" alt="Frasco Verit&eacute; Feminino, Eau de Parfum 50 ml" width="540" height="725" loading="lazy" decoding="async" draggable="false"/>
-              </picture>
-            </span>
-            <span class="rev-piece-name">Verit&eacute; &mdash; Feminino<span class="fill-pending" data-fill="[NOME DO PERFUME]"></span></span>
-            <span class="rev-piece-vol">Eau de Parfum &middot; 50&nbsp;ml</span>
-            <span class="rev-piece-btn">Conhecer <span aria-hidden="true">&rarr;</span></span>
-          </a>
-        </li>
-        <li class="rev-piece" style="--i:1">
-          <a class="rev-piece-link" href="produtos.html?genero=masculino">
-            <span class="rev-piece-media">
-              <picture>
-                <source type="image/avif" srcset="assets/img/hero-frasco.avif"/>
-                <source type="image/webp" srcset="assets/img/hero-frasco.webp"/>
-                <img src="assets/img/hero-frasco.png" alt="Frasco Verit&eacute; Masculino, Eau de Parfum" width="300" height="528" loading="lazy" decoding="async" draggable="false"/>
-              </picture>
-            </span>
-            <span class="rev-piece-name">Verit&eacute; &mdash; Masculino<span class="fill-pending" data-fill="[NOME DO PERFUME]"></span></span>
-            <span class="rev-piece-vol">Eau de Parfum<span class="fill-pending" data-fill="[VOLUME]"></span></span>
-            <span class="rev-piece-btn">Conhecer <span aria-hidden="true">&rarr;</span></span>
-          </a>
-        </li>
-        <li class="rev-piece" style="--i:2">
-          <a class="rev-piece-link" href="produtos.html?genero=unissex">
-            <span class="rev-piece-media">
-              <picture>
-                <source type="image/avif" srcset="assets/img/frasco-unisex.avif"/>
-                <source type="image/webp" srcset="assets/img/frasco-unisex.webp"/>
-                <img src="assets/img/frasco-unisex.png" alt="Frasco Verit&eacute; Dor&eacute;a, Eau de Parfum 30 ml" width="560" height="840" loading="lazy" decoding="async" draggable="false"/>
-              </picture>
-            </span>
-            <span class="rev-piece-name">Verit&eacute; Dor&eacute;a</span>
-            <span class="rev-piece-vol">Eau de Parfum &middot; 30&nbsp;ml</span>
-            <span class="rev-piece-btn">Conhecer <span aria-hidden="true">&rarr;</span></span>
-          </a>
-        </li>
-        <li class="rev-piece" style="--i:3">
-          <a class="rev-piece-link" href="produtos.html?categoria=kits">
-            <span class="rev-piece-media">
-              <picture>
-                <source type="image/avif" srcset="assets/img/frasco-kits.avif"/>
-                <source type="image/webp" srcset="assets/img/frasco-kits.webp"/>
-                <img class="rev-piece-wide" src="assets/img/frasco-kits.png" alt="Kit Verit&eacute; com tr&ecirc;s frascos: 30 ml, 50 ml e 20 ml" width="760" height="570" loading="lazy" decoding="async" draggable="false"/>
-              </picture>
-            </span>
-            <span class="rev-piece-name">Verit&eacute; &mdash; Kit<span class="fill-pending" data-fill="[NOME DO KIT]"></span></span>
-            <span class="rev-piece-vol">30&nbsp;ml &middot; 50&nbsp;ml &middot; 20&nbsp;ml</span>
-            <span class="rev-piece-btn">Conhecer <span aria-hidden="true">&rarr;</span></span>
-          </a>
-        </li>
-      </ul>
+  <!-- ============ NOVA HOME — tudo depois do banner ==============
+       Fonte oficial: referencia/nova-home/index.html (prévia pública em
+       https://verite-nova-home.vercel.app). Estilos em
+       assets/css/home-nova.css e comportamento em assets/js/home-nova.js.
+       Ordem: coleção em salas → valores → manifesto → vitrines dinâmicas
+       (ocultas até existir produto) → quiz → Clube → acesso antecipado. -->
+
+  <!-- ============ 1. A coleção em salas ============
+       Palco fixo; a rolagem vertical passa pelos 4 frascos na horizontal.
+       Cada sala tem luz e partículas próprias (canvas #roomsFx). Clicar
+       no frasco solta uma borrifada. Nada de nota olfativa inventada: só
+       nome, volume e uma frase tirada dos valores da marca. -->
+  <section class="h-rooms" id="colecao" aria-labelledby="colT">
+    <div class="h-rooms-stage" id="roomsStage">
+      <div class="h-bgs" aria-hidden="true">
+        <i class="h-bgl" style="--c1:#21161a;--c2:#0a0809;--lt:rgba(238,196,184,.30)"></i>
+        <i class="h-bgl" style="--c1:#211608;--c2:#070504;--lt:rgba(216,138,52,.36)"></i>
+        <i class="h-bgl" style="--c1:#18140b;--c2:#050504;--lt:rgba(236,200,112,.32)"></i>
+        <i class="h-bgl" style="--c1:#12100c;--c2:#030303;--lt:rgba(201,164,92,.28)"></i>
+      </div>
+      <canvas class="h-fx" id="roomsFx" aria-hidden="true"></canvas>
+
+      <div class="h-rooms-head">
+        <p class="h-eyebrow">A coleção Verité</p>
+        <h2 class="h-h2" id="colT">Quatro formas de <em>presença.</em></h2>
+      </div>
+      <div class="h-count" aria-hidden="true"><b id="rNum">01</b> / 04</div>
+
+      <div class="h-track" id="track">
+        <article class="h-room" aria-label="Verité Feminino" style="--c1:#21161a;--c2:#0a0809;--lt:rgba(238,196,184,.30)">
+          <div class="h-word" aria-hidden="true">FEMININO</div>
+          <div class="h-floor" aria-hidden="true"></div>
+          <div class="h-bottle" data-room="0">
+            <div class="img"><img src="assets/img/frasco-feminino.webp" alt="Frasco Verité Feminino, Eau de Parfum 50 ml" width="540" height="725" loading="lazy" decoding="async" draggable="false"/><i data-mask></i></div>
+            <img class="refl" src="assets/img/frasco-feminino.webp" alt="" aria-hidden="true" width="540" height="725" loading="lazy" decoding="async"/>
+          </div>
+          <div class="h-info">
+            <span class="h-idx">01 — Feminino</span>
+            <h3>Verité <em>Feminino</em></h3>
+            <p class="meta">Eau de Parfum · 50 ml</p>
+            <p class="line">Sofisticação sem excesso.</p>
+            <a class="h-btn" href="produtos.html?genero=feminino">Conhecer <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </article>
+
+        <article class="h-room" aria-label="Verité Masculino" style="--c1:#211608;--c2:#070504;--lt:rgba(216,138,52,.36)">
+          <div class="h-word" aria-hidden="true">MASCULINO</div>
+          <div class="h-floor" aria-hidden="true"></div>
+          <div class="h-bottle" data-room="1">
+            <div class="img"><img src="assets/img/frasco-verite-hero.webp" alt="Frasco Verité Masculino, Eau de Parfum 40 ml" width="263" height="481" loading="lazy" decoding="async" draggable="false"/><i data-mask></i></div>
+            <img class="refl" src="assets/img/frasco-verite-hero.webp" alt="" aria-hidden="true" width="263" height="481" loading="lazy" decoding="async"/>
+          </div>
+          <div class="h-info">
+            <span class="h-idx">02 — Masculino</span>
+            <h3>Verité <em>Masculino</em></h3>
+            <p class="meta">Eau de Parfum · 40 ml</p>
+            <p class="line">Uma presença que fica.</p>
+            <a class="h-btn" href="produtos.html?genero=masculino">Conhecer <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </article>
+
+        <article class="h-room" aria-label="Verité Doréa" style="--c1:#18140b;--c2:#050504;--lt:rgba(236,200,112,.32)">
+          <div class="h-word" aria-hidden="true">DORÉA</div>
+          <div class="h-floor" aria-hidden="true"></div>
+          <div class="h-bottle" data-room="2">
+            <div class="img"><img src="assets/img/frasco-unisex.webp" alt="Frasco Verité Doréa, Eau de Parfum 30 ml" width="560" height="840" loading="lazy" decoding="async" draggable="false"/><i data-mask></i></div>
+            <img class="refl" src="assets/img/frasco-unisex.webp" alt="" aria-hidden="true" width="560" height="840" loading="lazy" decoding="async"/>
+          </div>
+          <div class="h-info">
+            <span class="h-idx">03 — Doréa</span>
+            <h3>Verité <em>Doréa</em></h3>
+            <p class="meta">Eau de Parfum · 30 ml</p>
+            <p class="line">Única, como você.</p>
+            <a class="h-btn" href="produtos.html?genero=unissex">Conhecer <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </article>
+
+        <article class="h-room" aria-label="Kit Verité" style="--c1:#12100c;--c2:#030303;--lt:rgba(201,164,92,.28)">
+          <div class="h-word" aria-hidden="true">KIT</div>
+          <div class="h-floor" aria-hidden="true"></div>
+          <div class="h-bottle wide" data-room="3">
+            <div class="img"><img src="assets/img/frasco-kits.webp" alt="Kit Verité com três frascos: 30 ml, 50 ml e 20 ml" width="760" height="570" loading="lazy" decoding="async" draggable="false"/><i data-mask></i></div>
+            <img class="refl" src="assets/img/frasco-kits.webp" alt="" aria-hidden="true" width="760" height="570" loading="lazy" decoding="async"/>
+          </div>
+          <div class="h-info">
+            <span class="h-idx">04 — Kit</span>
+            <h3>Kit <em>Verité</em></h3>
+            <p class="meta">30 ml · 50 ml · 20 ml</p>
+            <p class="line">Três frascos numa caixa. Para presentear, ou para começar a sua coleção.</p>
+            <a class="h-btn" href="produtos.html?categoria=kits">Conhecer <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </article>
+      </div>
+
+      <div class="h-vig" aria-hidden="true"></div>
+      <nav class="h-nav" aria-label="Fragrâncias da coleção">
+        <button type="button" data-i="0">Feminino<i><b></b></i></button>
+        <button type="button" data-i="1">Masculino<i><b></b></i></button>
+        <button type="button" data-i="2">Doréa<i><b></b></i></button>
+        <button type="button" data-i="3">Kit<i><b></b></i></button>
+      </nav>
     </div>
   </section>
 
-  <!-- ============ Encontre sua fragrância ============ -->
-  <section id="fragrancias" class="section section-dark has-ambient">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb frag-orb-a"></div>
-      <div class="ambient-orb orb-b frag-orb-b"></div>
-      <div class="ambient-wash"></div>
-      <div class="ambient-particles" data-count="7"></div>
-    </div>
-    <div class="wrap">
-      <div class="section-head frag-head reveal">
-        <span class="frag-kicker" aria-hidden="true"></span>
-        <h2 class="frag-title">
-          <span class="frag-title-1">Nossas</span>
-          <span class="frag-title-2">Fragr&acirc;ncias</span>
-        </h2>
-        <p class="frag-sub">Encontre a fragr&acirc;ncia que traduz a sua presen&ccedil;a.</p>
-      </div>
-
-      <div class="frag-filters reveal" role="group" aria-label="Filtrar fragrâncias por categoria">
-        <button class="frag-filter is-active" type="button" aria-pressed="true" data-filter="todos">Todos</button>
-        <button class="frag-filter" type="button" aria-pressed="false" data-filter="feminino">Femininos</button>
-        <button class="frag-filter" type="button" aria-pressed="false" data-filter="masculino">Masculinos</button>
-        <button class="frag-filter" type="button" aria-pressed="false" data-filter="unissex">Unissex</button>
-        <button class="frag-filter" type="button" aria-pressed="false" data-filter="kits">Kits</button>
-        <button class="frag-filter" type="button" aria-pressed="false" data-filter="presentes">Presentes</button>
-        <button class="frag-filter" type="button" aria-pressed="false" data-filter="lancamentos">Lan&ccedil;amentos</button>
-      </div>
-
-      <div class="frag-grid">
-        <a class="frag-card reveal" href="produtos.html?genero=feminino" data-filter="feminino">
-          <span class="frag-card-glow" aria-hidden="true"></span>
-          <span class="frag-card-media">
-            <picture><source type="image/avif" srcset="assets/img/frasco-feminino.avif"/><source type="image/webp" srcset="assets/img/frasco-feminino.webp"/><img src="assets/img/frasco-feminino.png" alt="Perfume Verit&eacute; feminino &mdash; Eau de Parfum 50 ml" width="540" height="725" loading="lazy" decoding="async" draggable="false"/></picture>
-          </span>
-          <span class="frag-card-info">
-            <span class="frag-card-cat">VERIT&Eacute;</span>
-            <span class="frag-card-name">Femininos</span>
-            <span class="frag-card-meta">Eau de Parfum</span>
-            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
-          </span>
-          <i class="cc-sheen" aria-hidden="true"></i>
-        </a>
-        <a class="frag-card reveal" href="produtos.html?genero=masculino" data-filter="masculino">
-          <span class="frag-card-glow" aria-hidden="true"></span>
-          <span class="frag-card-media">
-            <picture><source type="image/avif" srcset="assets/img/hero-frasco.avif"/><source type="image/webp" srcset="assets/img/hero-frasco.webp"/><img src="assets/img/hero-frasco.png" alt="Perfume Verit&eacute; &mdash; linha masculina" width="300" height="528" loading="lazy" decoding="async" draggable="false"/></picture>
-          </span>
-          <span class="frag-card-info">
-            <span class="frag-card-cat">VERIT&Eacute;</span>
-            <span class="frag-card-name">Masculinos</span>
-            <span class="frag-card-meta">Eau de Parfum</span>
-            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
-          </span>
-          <i class="cc-sheen" aria-hidden="true"></i>
-        </a>
-        <a class="frag-card reveal" href="produtos.html?genero=unissex" data-filter="unissex">
-          <span class="frag-card-glow" aria-hidden="true"></span>
-          <span class="frag-card-media">
-            <picture><source type="image/avif" srcset="assets/img/frasco-unisex.avif"/><source type="image/webp" srcset="assets/img/frasco-unisex.webp"/><img src="assets/img/frasco-unisex.png" alt="Perfume Verit&eacute; Dor&eacute;a &mdash; Eau de Parfum 30 ml" width="560" height="840" loading="lazy" decoding="async" draggable="false"/></picture>
-          </span>
-          <span class="frag-card-info">
-            <span class="frag-card-cat">VERIT&Eacute;</span>
-            <span class="frag-card-name">Unissex</span>
-            <span class="frag-card-meta">Eau de Parfum</span>
-            <span class="frag-card-cta">Ver perfumes <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
-          </span>
-          <i class="cc-sheen" aria-hidden="true"></i>
-        </a>
-        <a class="frag-card reveal" href="produtos.html?categoria=kits" data-filter="kits">
-          <span class="frag-card-glow" aria-hidden="true"></span>
-          <span class="frag-card-media">
-            <picture><source type="image/avif" srcset="assets/img/frasco-kits.avif"/><source type="image/webp" srcset="assets/img/frasco-kits.webp"/><img class="frag-card-wide" src="assets/img/frasco-kits.png" alt="Kit Verit&eacute; &mdash; 30 ml, 50 ml e 20 ml" width="760" height="570" loading="lazy" decoding="async" draggable="false"/></picture>
-          </span>
-          <span class="frag-card-info">
-            <span class="frag-card-cat">VERIT&Eacute;</span>
-            <span class="frag-card-name">Kits</span>
-            <span class="frag-card-cta">Ver kits <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
-          </span>
-          <i class="cc-sheen" aria-hidden="true"></i>
-        </a>
-        <a class="frag-card reveal" href="produtos.html?categoria=presentes" data-filter="presentes">
-          <span class="frag-card-glow" aria-hidden="true"></span>
-          <span class="frag-card-media">
-            <picture><source type="image/avif" srcset="assets/img/frasco-presentes.avif"/><source type="image/webp" srcset="assets/img/frasco-presentes.webp"/><img class="frag-card-photo" src="assets/img/frasco-presentes.jpg" alt="Kit presente Verit&eacute; com la&ccedil;o &mdash; tr&ecirc;s frascos" width="900" height="640" loading="lazy" decoding="async" draggable="false"/></picture>
-          </span>
-          <span class="frag-card-info">
-            <span class="frag-card-cat">VERIT&Eacute;</span>
-            <span class="frag-card-name">Presentes</span>
-            <span class="frag-card-cta">Encontrar presente <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
-          </span>
-          <i class="cc-sheen" aria-hidden="true"></i>
-        </a>
-        <a class="frag-card reveal" href="produtos.html?colecao=lancamentos" data-filter="lancamentos">
-          <span class="frag-card-glow" aria-hidden="true"></span>
-          <span class="frag-card-media">
-            <picture><source type="image/avif" srcset="assets/img/frasco-lancamentos.avif"/><source type="image/webp" srcset="assets/img/frasco-lancamentos.webp"/><img class="frag-card-photo" src="assets/img/frasco-lancamentos.jpg" alt="Lan&ccedil;amentos Verit&eacute; &mdash; Dor&eacute;a 30 ml, Verit&eacute; 50 ml e 20 ml" width="1102" height="633" loading="lazy" decoding="async" draggable="false"/></picture>
-          </span>
-          <span class="frag-card-info">
-            <span class="frag-card-cat">VERIT&Eacute;</span>
-            <span class="frag-card-name">Lan&ccedil;amentos</span>
-            <span class="frag-card-cta">Ver novidades <span class="frag-card-arrow" aria-hidden="true">&rarr;</span></span>
-          </span>
-          <i class="cc-sheen" aria-hidden="true"></i>
-        </a>
-      </div>
-    </div>
+  <!-- ============ 2. Valores em letreiro (preenchido por home-nova.js) ============ -->
+  <section class="h-values" aria-label="Valores Verité: autenticidade, elegância, qualidade, presença e exclusividade">
+    <div class="h-marq" data-dir="-1" aria-hidden="true"></div>
+    <div class="h-marq" data-dir="1" aria-hidden="true"></div>
   </section>
 
-  <!-- ============ Vitrine em movimento — os frascos rolando ============ -->
-  <section id="vitrine-reel" class="section section-dark" aria-label="A coleção Verité em movimento">
-    <p class="reel-eyebrow reveal reveal-scale">A Cole&ccedil;&atilde;o Verit&eacute;</p>
-    <div class="reel" aria-hidden="true">
-      <div class="reel-track">
-        <div class="reel-group">
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-feminino.avif"/><source type="image/webp" srcset="assets/img/frasco-feminino.webp"/><img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; &mdash; Feminino</span><span class="fill-pending" data-fill="[NOME DO PERFUME]"></span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">Eau de Parfum &middot; 50 ml</span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-unisex.avif"/><source type="image/webp" srcset="assets/img/frasco-unisex.webp"/><img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; Dor&eacute;a</span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">Eau de Parfum &middot; 30 ml</span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/hero-frasco.avif"/><source type="image/webp" srcset="assets/img/hero-frasco.webp"/><img src="assets/img/hero-frasco.png" alt="" width="300" height="528" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; &mdash; Masculino</span><span class="fill-pending" data-fill="[NOME DO PERFUME]"></span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol fill-pending" data-fill="[VOLUME]"></span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-kits.avif"/><source type="image/webp" srcset="assets/img/frasco-kits.webp"/><img class="reel-wide" src="assets/img/frasco-kits.png" alt="" width="760" height="570" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; &mdash; Kit</span><span class="fill-pending" data-fill="[NOME DO KIT]"></span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">30 ml &middot; 50 ml &middot; 20 ml</span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-feminino.avif"/><source type="image/webp" srcset="assets/img/frasco-feminino.webp"/><img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; &mdash; Feminino</span><span class="fill-pending" data-fill="[NOME DO PERFUME]"></span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">Eau de Parfum &middot; 50 ml</span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-unisex.avif"/><source type="image/webp" srcset="assets/img/frasco-unisex.webp"/><img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; Dor&eacute;a</span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">Eau de Parfum &middot; 30 ml</span></span></span>
-        </div>
-        <div class="reel-group" aria-hidden="true">
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-feminino.avif"/><source type="image/webp" srcset="assets/img/frasco-feminino.webp"/><img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; &mdash; Feminino</span><span class="fill-pending" data-fill="[NOME DO PERFUME]"></span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">Eau de Parfum &middot; 50 ml</span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-unisex.avif"/><source type="image/webp" srcset="assets/img/frasco-unisex.webp"/><img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; Dor&eacute;a</span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">Eau de Parfum &middot; 30 ml</span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/hero-frasco.avif"/><source type="image/webp" srcset="assets/img/hero-frasco.webp"/><img src="assets/img/hero-frasco.png" alt="" width="300" height="528" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; &mdash; Masculino</span><span class="fill-pending" data-fill="[NOME DO PERFUME]"></span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol fill-pending" data-fill="[VOLUME]"></span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-kits.avif"/><source type="image/webp" srcset="assets/img/frasco-kits.webp"/><img class="reel-wide" src="assets/img/frasco-kits.png" alt="" width="760" height="570" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; &mdash; Kit</span><span class="fill-pending" data-fill="[NOME DO KIT]"></span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">30 ml &middot; 50 ml &middot; 20 ml</span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-feminino.avif"/><source type="image/webp" srcset="assets/img/frasco-feminino.webp"/><img src="assets/img/frasco-feminino.png" alt="" width="540" height="725" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; &mdash; Feminino</span><span class="fill-pending" data-fill="[NOME DO PERFUME]"></span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">Eau de Parfum &middot; 50 ml</span></span></span>
-          <span class="reel-item"><picture><source type="image/avif" srcset="assets/img/frasco-unisex.avif"/><source type="image/webp" srcset="assets/img/frasco-unisex.webp"/><img src="assets/img/frasco-unisex.png" alt="" width="560" height="840" loading="lazy" decoding="async" draggable="false"/></picture><span class="reel-meta"><span class="reel-name">Verit&eacute; Dor&eacute;a</span><span class="reel-notes fill-pending" data-fill="[FAM&Iacute;LIA / NOTAS]"></span><span class="reel-vol">Eau de Parfum &middot; 30 ml</span></span></span>
-        </div>
+  <!-- ============ 3. Manifesto (palavras acendem com a rolagem) ============ -->
+  <section class="h-mf" id="manifesto" aria-label="Manifesto Verité">
+    <div class="h-mf-stage" id="mfStage">
+      <canvas id="mfFx" aria-hidden="true"></canvas>
+      <div class="h-mf-beam" id="mfBeam" aria-hidden="true"></div>
+      <p class="h-mf-text" id="mfText">Não acreditamos que uma fragrância seja só algo que se usa. Ela acompanha momentos, desperta memórias, revela personalidade. Algumas coisas desaparecem quando você vai embora. *Outras *permanecem.</p>
+      <div class="h-mf-sign" id="mfSign">
+        <p>A verdade está na sua essência.</p>
+        <a class="h-btn" href="sobre.html">Conhecer a Verité <span aria-hidden="true">&rarr;</span></a>
       </div>
     </div>
-  </section>
-
-  <!-- ============ Faixa cinematográfica ============ -->
-  <section class="statement" aria-label="A verdade está na sua essência" data-scrollfx>
-    <p class="statement-word">Ess&ecirc;ncia</p>
-    <p class="statement-line">A verdade est&aacute; na sua ess&ecirc;ncia.</p>
   </section>
 
   <!-- ============ Destaques Verité ============ -->
@@ -623,20 +539,16 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
     </div>
   </section>
 
-  <!-- ============ Qual Verité combina com você? ============ -->
-  <section id="quiz" class="quiz-section section section-dark has-ambient">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:320px;height:320px;top:-90px;left:50%;margin-left:-160px;"></div>
-      <div class="ambient-particles" data-count="8"></div>
-    </div>
+  <!-- ============ 4. Quiz "Descubra sua Verité" ============
+       O motor continua sendo assets/js/quiz.js (recomenda um produto real
+       do catálogo, ou mostra o perfil quando ainda não há produto).
+       home-nova.js só veste os botões com ícone e aura de cor. -->
+  <section id="quiz" class="quiz-section h-qz">
     <div class="wrap">
-      <div class="section-head quiz-head reveal">
-        <p class="eyebrow">Descubra Sua Verité</p>
-        <h2 class="quiz-title">
-          <span class="quiz-title-1">Qual estilo</span>
-          <span class="quiz-title-2">combina com voc&ecirc;?</span>
-        </h2>
-        <p class="quiz-sub">Tr&ecirc;s perguntas r&aacute;pidas para revelar a fragr&acirc;ncia que fala a sua l&iacute;ngua.</p>
+      <div class="h-qz-head">
+        <p class="h-eyebrow">Descubra sua Verité</p>
+        <h2 class="h-h2">Qual estilo <em>fala a sua língua?</em></h2>
+        <p class="h-sub">Três perguntas rápidas para revelar a fragrância que combina com você.</p>
       </div>
       <div class="quiz" id="quiz-app">
         <div class="quiz-progress" id="quiz-progress" aria-hidden="true"></div>
@@ -650,73 +562,44 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
     </div>
   </section>
 
-  <!-- ============ Clube Verité ============ -->
-  <section id="clube-home" class="section section-dark section-3 has-ambient">
-    <div class="ambient" aria-hidden="true">
-      <div class="ambient-orb" style="width:340px;height:340px;top:-90px;left:50%;margin-left:-170px;"></div>
-      <div class="ambient-particles" data-count="10"></div>
-    </div>
-    <div class="wrap clube-home-wrap">
-      <div class="section-head clube-head reveal">
-        <p class="eyebrow">Área Exclusiva</p>
-        <h2 class="clube-title">
-          <span class="clube-title-1">Clube</span>
-          <span class="clube-title-2">Verité</span>
-        </h2>
-        <p class="sub">Um espaço para quem decidiu fazer parte da nossa história.</p>
-      </div>
-      <div class="clube-home-grid">
-        <div class="clube-home-item reveal">
-          <span class="clube-home-num">01</span>
-          <h3>Pontos a cada compra</h3>
-          <p>Acumule pontos e troque por benefícios reais no Clube.</p>
-        </div>
-        <div class="clube-home-item reveal">
-          <span class="clube-home-num">02</span>
-          <h3>Cupons exclusivos</h3>
-          <p>Cupons liberados só para quem faz parte — incluindo um de boas-vindas.</p>
-        </div>
-        <div class="clube-home-item reveal">
-          <span class="clube-home-num">03</span>
-          <h3>Produtos exclusivos</h3>
-          <p>Fragrâncias e edições reservadas para membros do Clube.</p>
-        </div>
-        <div class="clube-home-item reveal">
-          <span class="clube-home-num">04</span>
-          <h3>Acesso antecipado</h3>
-          <p>Fique por dentro dos lançamentos antes de todo mundo.</p>
+  <!-- ============ 5. Clube Verité (cartão 3D) ============ -->
+  <section class="h-cl" id="clube-home" aria-labelledby="clT">
+    <div class="h-cl-in">
+      <div class="h-cardwrap" id="cardWrap">
+        <div class="h-card" id="card" role="img" aria-label="Cartão de membro do Clube Verité (ilustração)">
+          <span class="v" aria-hidden="true">V</span>
+          <div class="top"><img src="assets/img/verite-emblem.webp" alt="" width="468" height="431" loading="lazy" decoding="async"/><span>Clube Verité</span></div>
+          <div class="name">MEMBRO</div>
+          <div class="bot"><div>Nome<b>Seu nome aqui</b></div><div style="text-align:right">Desde<b>2026</b></div></div>
         </div>
       </div>
-      <div class="hero-cta reveal clube-home-cta" style="justify-content:center;">
-        <a class="btn" href="/clube">Entrar no Clube</a>
+      <div>
+        <p class="h-eyebrow rv">Área exclusiva</p>
+        <h2 class="h-h2 rv d1" id="clT">Clube <em>Verité</em></h2>
+        <p class="lede rv d2">Um espaço para quem decidiu fazer parte da nossa história.</p>
+        <div class="h-ben">
+          <div class="rv"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg><b>Pontos a cada compra</b><span>Acumule pontos e troque por benefícios reais no Clube.</span></div>
+          <div class="rv d1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14.5 6.5v11" stroke-dasharray="1.6 2"/></svg><b>Cupons exclusivos</b><span>Cupons liberados só para quem faz parte, incluindo um de boas-vindas.</span></div>
+          <div class="rv d2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4h11l3.5 5-9 11L3 9z"/><path d="M3 9h18M9.5 4L12 20l2.5-16"/></svg><b>Produtos exclusivos</b><span>Fragrâncias e edições reservadas para membros do Clube.</span></div>
+          <div class="rv d3"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.2 2"/></svg><b>Acesso antecipado</b><span>Fique por dentro dos lançamentos antes de todo mundo.</span></div>
+        </div>
+        <a class="h-btn rv" href="/clube">Entrar no Clube <span aria-hidden="true">&rarr;</span></a>
       </div>
     </div>
   </section>
 
-  <!-- ============ A Essência Verité (mini, linka pra /sobre) ============ -->
-  <section id="essencia-mini" class="section section-beige">
-    <div class="wrap essencia-mini-wrap">
-      <p class="eyebrow reveal">A Marca</p>
-      <h2 class="reveal reveal-scale">A Essência <span class="gold">Verité</span></h2>
-      <p class="lead reveal">Fragrâncias pensadas para virar memória, não só perfume. Cada frasco carrega autenticidade e elegância que dá pra sentir, não pra copiar.</p>
-      <a class="btn reveal" href="sobre.html">Conhecer a Verité</a>
-    </div>
-  </section>
-
-  <!-- ============ Lançamento (teaser misterioso) ============ -->
-  <section id="lancamento" class="section section-dark section-3 launch has-ambient">
-    <div class="ambient-wash" aria-hidden="true"></div>
-    <div class="ambient" data-parallax="10" aria-hidden="true">
-      <div class="ambient-orb orb-c" style="width:420px;height:420px;top:-120px;left:50%;margin-left:-210px;"></div>
-      <div class="ambient-shape shape-diamond" style="width:180px;height:180px;bottom:8%;right:10%;"></div>
-      <div class="ambient-particles" data-count="16"></div>
-    </div>
-    <div class="wrap">
-      <p class="eyebrow reveal">Acesso Antecipado</p>
-      <h2 class="reveal" data-content-key="lancamento_title">Seja um dos primeiros a conhecer as próximas criações da VERITÉ.</h2>
-      <p class="sub reveal" data-content-key="lancamento_sub">Um convite discreto, antes de todo mundo.</p>
+  <!-- ============ 6. Acesso antecipado ============
+       O formulário é o mesmo de antes (main.js envia para
+       /api/public/waitlist e marca [data-form-container] com .is-sent).
+       Quando isso acontece, home-nova.js acende os frascos da fileira. -->
+  <section class="h-ac" id="lancamento" aria-labelledby="acT">
+    <i class="h-ac-glow" aria-hidden="true"></i>
+    <div class="h-ac-in">
+      <p class="h-eyebrow rv">Acesso antecipado</p>
+      <h2 class="h-h2 rv d1" id="acT" data-content-key="lancamento_title">Seja um dos primeiros a conhecer as <em>próximas criações.</em></h2>
+      <p class="lede rv d2" data-content-key="lancamento_sub">Um convite discreto, antes de todo mundo.</p>
       <div data-form-container>
-        <form class="stack-form reveal" id="launch-form" data-submit-endpoint="/api/public/waitlist" novalidate>
+        <form class="stack-form rv d3" id="launch-form" data-submit-endpoint="/api/public/waitlist" novalidate>
           <div class="field">
             <label for="launch-name">Nome</label>
             <input id="launch-name" name="name" type="text" autocomplete="name" placeholder="Seu nome" required/>
@@ -734,12 +617,18 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
           </button>
           <p class="form-error-general" role="alert" aria-live="polite" hidden></p>
         </form>
-        <p class="note reveal">Sem spam. Apenas a verdade da sua essência.</p>
+        <p class="note">Sem spam. Apenas a verdade da sua essência.</p>
         <div class="form-thanks" role="status">
           <p class="form-thanks-title">Seu acesso antecipado está garantido.</p>
           <p class="form-thanks-sub">Você será uma das primeiras pessoas a conhecer a VERITÉ.</p>
         </div>
       </div>
+    </div>
+    <div class="h-lineup" aria-hidden="true">
+      <img src="assets/img/frasco-feminino.webp" alt="" width="540" height="725" loading="lazy" decoding="async"/>
+      <img src="assets/img/frasco-verite-hero.webp" alt="" width="263" height="481" loading="lazy" decoding="async"/>
+      <img src="assets/img/frasco-unisex.webp" alt="" width="560" height="840" loading="lazy" decoding="async"/>
+      <img class="kit" src="assets/img/frasco-kits.webp" alt="" width="760" height="570" loading="lazy" decoding="async"/>
     </div>
   </section>
 
@@ -749,48 +638,23 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
     por completo quando não têm produto correspondente (ver initShowcases em
     assets/js/products.js) — nunca mostram uma caixa "Em preparação" grande.
     Conteúdo institucional completo (história/essência/visão/manifesto/FAQ/
-    contato) mora em sobre.html; aqui na home fica só um teaser pequeno
-    (#essencia-mini). Checkout continua fora de escopo — carrinho é real,
+    contato) mora em sobre.html; aqui na home o manifesto (#manifesto)
+    leva para lá com "Conhecer a Verité". Checkout continua fora de escopo — carrinho é real,
     "Finalizar Compra" encaminha pro WhatsApp.
   -->
 
   <!-- ====================================================================
        O QUE AINDA FALTA PREENCHER (dados reais da marca)
        --------------------------------------------------------------------
-       Abra https://veriteperfumes.com.br/?fills=1 para VER, na própria
-       página, cada campo abaixo marcado em dourado tracejado. Sem o
-       ?fills=1 nada disso aparece para o cliente — é por isso que nenhuma
-       nota olfativa foi inventada para preencher o espaço.
-
-       1. #inicio — ATO 3 do banner, .rev-collection (4 frascos):
-          a) Verité — Feminino .. [NOME DO PERFUME]
-                                  volume real: Eau de Parfum · 50 ml
-          b) Verité — Masculino . [NOME DO PERFUME] + [VOLUME]
-          c) Verité Doréa ....... nada pendente (nome e volume reais)
-          d) Verité — Kit ....... [NOME DO KIT]
-                                  volumes reais: 30 ml · 50 ml · 20 ml
-
-       2. #vitrine-reel (4 frascos distintos, cada um aparece 2x no laço):
-          a) Verité — Feminino .. [NOME DO PERFUME] + [FAMÍLIA / NOTAS]
-                                  volume real: Eau de Parfum · 50 ml
-          b) Verité Doréa ....... [FAMÍLIA / NOTAS]
-                                  nome e volume reais: Doréa, 30 ml
-          c) Verité — Masculino . [NOME DO PERFUME] + [FAMÍLIA / NOTAS]
-                                  + [VOLUME]  (nada real ainda para este)
-          d) Verité — Kit ....... [NOME DO KIT] + [FAMÍLIA / NOTAS]
-                                  volumes reais: 30 ml · 50 ml · 20 ml
-
-       Como preencher: troque o <span> marcado pelo texto real, ex.
-         <span class="reel-notes fill-pending" data-fill="[FAMÍLIA / NOTAS]"></span>
-       por
-         <span class="reel-notes">Floral âmbar · Jasmim, baunilha, sândalo</span>
-
-       Preço NÃO entra aqui de propósito: os cards da vitrine são vitrine;
-       preço vive no catálogo (produtos.html), vindo do painel ADM.
-
-       Os cards de #fragrancias ("Femininos", "Masculinos", "Unissex",
-       "Kits", "Presentes", "Lançamentos") NÃO são cards de produto — são
-       portas de categoria e por isso continuam com o nome da categoria.
+       A nova home não inventa nada: nas salas de #colecao aparecem só nome,
+       volume e uma frase tirada dos valores da marca. Quando a marca
+       definir, dá para acrescentar em cada .h-info:
+         - Verité Feminino ... nome do perfume e família/notas
+         - Verité Masculino .. nome do perfume e família/notas
+         - Verité Doréa ...... família/notas
+         - Kit Verité ........ nome do kit
+       Preço NÃO entra aqui de propósito: preço vive no catálogo
+       (produtos.html), vindo do painel ADM.
        ==================================================================== -->
 
 </main>
@@ -866,7 +730,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <script src="assets/js/ambient.js"></script>
 <script src="assets/js/pointer.js"></script>
 <script src="assets/js/hero-gigante.js" defer></script>
-<script src="assets/js/fragrancias.js"></script>
+<script src="assets/js/home-nova.js" defer></script>
 <script src="assets/js/main.js"></script>
 <script src="assets/js/scroll-fx.js"></script>
 <script src="assets/js/favorites.js"></script>
