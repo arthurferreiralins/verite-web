@@ -102,13 +102,20 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       </span>
       <span class="word">Verité</span>
     </a>
-    <form class="header-search" action="produtos.html" method="get" role="search">
+    <form class="header-search" id="header-busca" action="produtos.html" method="get" role="search">
       <input type="search" name="busca" placeholder="Qual fragrância você procura?" aria-label="Buscar fragrância" autocomplete="off"/>
       <button type="submit" aria-label="Buscar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       </button>
     </form>
     <div class="header-actions">
+      <!-- Só aparece quando o cabeçalho fica compacto (header.is-scrolled):
+           a barra de busca recolhe e esta lupa a devolve. Ver o bloco
+           "MODO COMPACTO DE VERDADE" em assets/css/style.css. -->
+      <button type="button" class="header-icon header-busca-toggle" data-busca-toggle aria-label="Buscar" aria-expanded="false" aria-controls="header-busca">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span class="header-icon-label">Buscar</span>
+      </button>
       <a class="header-icon" href="/clube" aria-label="Minha conta">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.4-4.2 5.9-6 8-6s6.6 1.8 8 6"/></svg>
         <span class="header-icon-label">Conta</span>
@@ -402,7 +409,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
             <h3>Verité <em>Feminino</em></h3>
             <p class="meta">Eau de Parfum · 50 ml</p>
             <p class="line">Sofisticação sem excesso.</p>
-            <a class="h-btn" href="produtos.html?genero=feminino">Conhecer <span aria-hidden="true">&rarr;</span></a>
+            <a class="h-btn" href="perfume-feminino.html" data-perfume="feminino">Conhecer <span aria-hidden="true">&rarr;</span></a>
           </div>
         </article>
 
@@ -418,7 +425,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
             <h3>Verité <em>Masculino</em></h3>
             <p class="meta">Eau de Parfum · 40 ml</p>
             <p class="line">Uma presença que fica.</p>
-            <a class="h-btn" href="produtos.html?genero=masculino">Conhecer <span aria-hidden="true">&rarr;</span></a>
+            <a class="h-btn" href="perfume-masculino.html" data-perfume="masculino">Conhecer <span aria-hidden="true">&rarr;</span></a>
           </div>
         </article>
 
@@ -432,13 +439,9 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
           <div class="h-info">
             <span class="h-idx">03 — Doréa</span>
             <h3>Verité <em>Doréa</em></h3>
-            <!-- As salas 01 e 02 já dizem o gênero no próprio nome
-                 ("Verité Feminino", "Verité Masculino"). O Doréa tem nome
-                 próprio, então sem isto aqui nada na página diz que ele é
-                 um perfume feminino. -->
-            <p class="meta">Perfume feminino · Eau de Parfum · 30 ml</p>
+            <p class="meta">Eau de Parfum · 30 ml</p>
             <p class="line">Única, como você.</p>
-            <a class="h-btn" href="produtos.html?genero=feminino">Conhecer <span aria-hidden="true">&rarr;</span></a>
+            <a class="h-btn" href="perfume-dorea.html" data-perfume="dorea">Conhecer <span aria-hidden="true">&rarr;</span></a>
           </div>
         </article>
 
@@ -454,7 +457,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
             <h3>Kit <em>Verité</em></h3>
             <p class="meta">30 ml · 50 ml · 20 ml</p>
             <p class="line">Três frascos numa caixa. Para presentear, ou para começar a sua coleção.</p>
-            <a class="h-btn" href="produtos.html?categoria=kits">Conhecer <span aria-hidden="true">&rarr;</span></a>
+            <a class="h-btn" href="perfume-kit.html" data-perfume="kit">Conhecer <span aria-hidden="true">&rarr;</span></a>
           </div>
         </article>
       </div>
@@ -710,7 +713,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       <div class="footer-col reveal">
         <h4>Redes Sociais</h4>
         <ul>
-          <li><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
+          <li hidden><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
           <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
         </ul>
       </div>
@@ -745,6 +748,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <script src="assets/js/products-loader.js"></script>
 <script src="assets/js/site-data.js"></script>
 <script src="assets/js/dados-empresa.js"></script>
+<script src="assets/js/perfumes-dados.js"></script>
 <script src="assets/js/generos-vazios.js" defer></script>
 </body>
 </html>

@@ -185,6 +185,43 @@
     var onScroll = function(){
       header.classList.toggle('is-scrolled', window.scrollY > 40);
     };
+    /* A LUPA DO MODO COMPACTO.
+       Com o cabeçalho compacto a barra de busca recolhe (é ela que fazia o
+       cabeçalho ter duas linhas); este botão a traz de volta sem tirar o
+       cabeçalho do modo compacto. Fora do modo compacto o botão nem
+       aparece — a barra já está lá, inteira. */
+    var buscaToggle = header.querySelector('[data-busca-toggle]');
+    var buscaForm = header.querySelector('.header-search');
+    if(buscaToggle && buscaForm){
+      var fecharBusca = function(){
+        header.classList.remove('busca-aberta');
+        buscaToggle.setAttribute('aria-expanded', 'false');
+      };
+      buscaToggle.addEventListener('click', function(){
+        var abriu = header.classList.toggle('busca-aberta');
+        buscaToggle.setAttribute('aria-expanded', abriu ? 'true' : 'false');
+        if(abriu){
+          var campo = buscaForm.querySelector('input[name="busca"]');
+          if(campo) campo.focus();
+        }
+      });
+      document.addEventListener('keydown', function(e){
+        if(e.key === 'Escape' && header.classList.contains('busca-aberta')){
+          fecharBusca(); buscaToggle.focus();
+        }
+      });
+      document.addEventListener('click', function(e){
+        if(!header.classList.contains('busca-aberta')) return;
+        if(buscaForm.contains(e.target) || buscaToggle.contains(e.target)) return;
+        fecharBusca();
+      });
+      /* sair do modo compacto devolve a barra inteira: o estado "aberta"
+         deixa de fazer sentido e some junto */
+      window.addEventListener('scroll', function(){
+        if(!header.classList.contains('is-scrolled')) fecharBusca();
+      }, {passive:true});
+    }
+
     var publicarAlturas = function(){ publishHeaderHeight(); publishCompactHeight(); };
     onScroll();
     publicarAlturas();

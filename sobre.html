@@ -16,8 +16,9 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <link rel="canonical" href="https://veriteperfumes.com.br/sobre.html"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap"/>
 <link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="stylesheet" href="assets/css/home-nova.css"/>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon-256.png"/>
@@ -47,7 +48,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 }
 </script>
 </head>
-<body>
+<body class="h-page">
 <a class="skip-link" href="#topo">Pular para conteúdo</a>
 
 <header>
@@ -58,13 +59,20 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       </span>
       <span class="word">Verité</span>
     </a>
-    <form class="header-search" action="produtos.html" method="get" role="search">
+    <form class="header-search" id="header-busca" action="produtos.html" method="get" role="search">
       <input type="search" name="busca" placeholder="Qual fragrância você procura?" aria-label="Buscar fragrância" autocomplete="off"/>
       <button type="submit" aria-label="Buscar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       </button>
     </form>
     <div class="header-actions">
+      <!-- Só aparece quando o cabeçalho fica compacto (header.is-scrolled):
+           a barra de busca recolhe e esta lupa a devolve. Ver o bloco
+           "MODO COMPACTO DE VERDADE" em assets/css/style.css. -->
+      <button type="button" class="header-icon header-busca-toggle" data-busca-toggle aria-label="Buscar" aria-expanded="false" aria-controls="header-busca">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span class="header-icon-label">Buscar</span>
+      </button>
       <a class="header-icon" href="/clube" aria-label="Minha conta">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.4-4.2 5.9-6 8-6s6.6 1.8 8 6"/></svg>
         <span class="header-icon-label">Conta</span>
@@ -238,7 +246,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 </header>
 
 <main>
-  <section id="topo" class="page-hero has-ambient">
+  <section id="topo" class="page-hero h-pagehero has-ambient">
     <div class="ambient" data-parallax="20" aria-hidden="true">
       <div class="ambient-orb orb-a" style="width:clamp(200px,55vw,320px);height:clamp(200px,55vw,320px);top:-70px;right:8%;"></div>
       <div class="ambient-orb orb-b" style="width:clamp(170px,45vw,260px);height:clamp(170px,45vw,260px);bottom:-60px;left:6%;"></div>
@@ -247,8 +255,8 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
     <div class="emblem-wrap">
       <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" width="468" height="431" decoding="async" />
     </div>
-    <h1>Sobre a Verité</h1>
-    <p class="slogan">A verdade está na sua essência.</p>
+    <h1 class="h-ph-title rv">Sobre a <em>Verité</em></h1>
+    <p class="slogan rv d1">A verdade está na sua essência.</p>
     <div class="hairline sweep" aria-hidden="true" style="margin-top:1.8rem;"></div>
   </section>
 
@@ -528,11 +536,11 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
         <div class="contact-intro reveal">
           <p>Tem uma pergunta, uma parceria em mente ou só quer trocar uma palavra com a VERITÉ? Estamos construindo esta casa com atenção a cada detalhe — inclusive à conversa com quem vai vestir a VERITÉ.</p>
           <ul class="contact-list">
-            <li class="disabled-link" title="Canal em preparação" data-settings-key="email">
+            <li class="disabled-link" title="Canal em preparação" data-settings-key="email" hidden>
               <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="4" y="10" width="40" height="28" rx="2"/><path d="M4 12 L24 28 L44 12"/></svg></span>
               <span><span class="label">E-mail</span><span class="value">Canal em preparação</span></span>
             </li>
-            <li>
+            <li hidden>
               <a class="contact-link" href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">
                 <span class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="36" height="36" rx="10"/><circle cx="24" cy="24" r="9"/><circle cx="34" cy="14" r="1.6" fill="currentColor" stroke="none"/></svg></span>
                 <span><span class="label">Instagram</span><span class="value">@verite.perfumes</span></span>
@@ -630,7 +638,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       <div class="footer-col reveal">
         <h4>Redes Sociais</h4>
         <ul>
-          <li><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
+          <li hidden><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
           <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
         </ul>
       </div>
@@ -660,6 +668,8 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <script src="assets/js/search.js"></script>
 <script src="assets/js/site-data.js"></script>
 <script src="assets/js/dados-empresa.js"></script>
+<script src="assets/js/perfumes-dados.js"></script>
+<script src="assets/js/paginas-internas.js" defer></script>
 <script src="assets/js/generos-vazios.js" defer></script>
 </body>
 </html>

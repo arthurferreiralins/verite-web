@@ -139,12 +139,25 @@
       wrap.hidden = !wrap.children.length;
     }
 
+    /* O título do catálogo usa a linguagem da home: a palavra-chave (a
+       última) em itálico dourado. Monta com nós de texto e <em>, nunca com
+       innerHTML — o texto vem dos filtros da URL. */
+    function setTitleWithEm(el, text){
+      while(el.firstChild) el.removeChild(el.firstChild);
+      var i = text.lastIndexOf(' ');
+      if(i < 0){ var only = document.createElement('em'); only.textContent = text; el.appendChild(only); return; }
+      el.appendChild(document.createTextNode(text.slice(0, i + 1)));
+      var em = document.createElement('em');
+      em.textContent = text.slice(i + 1);
+      el.appendChild(em);
+    }
+
     function renderAll(){
       updateUrl(filters);
       var pageTitle = buildTitle(filters);
-      if(titleEl) titleEl.textContent = pageTitle;
+      if(titleEl) setTitleWithEm(titleEl, pageTitle);
       document.title = (pageTitle === 'Nossos Perfumes')
-        ? 'Perfumes Verité | Femininos, Masculinos, Unissex e Kits'
+        ? 'Perfumes Verité | Femininos, Masculinos e Kits'
         : pageTitle + ' — Perfumes Verité';
       renderActiveFilters();
 
@@ -152,6 +165,22 @@
 
       if(skeletonEl) skeletonEl.hidden = true;
       if(countEl) countEl.textContent = filtered.length + (filtered.length === 1 ? ' perfume encontrado' : ' perfumes encontrados');
+
+      /* Catálogo SEM NENHUM produto publicado: em vez de "0 perfumes
+         encontrados / Em preparação", a vitrine dos 4 perfumes "em breve",
+         cada um apontando para a própria ficha. Com produtos, nada muda. */
+      var vitrine = document.getElementById('embreve-vitrine');
+      var secao = document.getElementById('listing');
+      var semCatalogo = !catalog.length && vitrine;
+      if(secao) secao.classList.toggle('listing-embreve', !!semCatalogo);
+      document.documentElement.classList.toggle('catalogo-vazio', !catalog.length);
+      if(vitrine) vitrine.hidden = !semCatalogo;
+      if(semCatalogo){
+        if(gridEl) gridEl.hidden = true;
+        if(emptyEl) emptyEl.hidden = true;
+        if(countEl) countEl.textContent = '';
+        return;
+      }
 
       if(!filtered.length){
         if(gridEl) gridEl.hidden = true;

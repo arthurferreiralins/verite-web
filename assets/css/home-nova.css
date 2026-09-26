@@ -138,7 +138,7 @@
 /* formulário real (main.js → /api/public/waitlist), só ajustado ao visual */
 .h-ac [data-form-container]{max-width:460px;margin:0 auto}
 .h-ac .stack-form{text-align:left}
-.h-ac .note{margin-top:1.2rem;font-size:.8rem;letter-spacing:.02em;color:var(--h-mute)}
+.h-ac .note{margin-top:1.2rem;font-size:13px;letter-spacing:.02em;color:var(--h-mute)}
 .h-ac .form-thanks-title{font-family:var(--h-serif);font-style:italic;font-size:26px;color:var(--h-gold-hi)}
 .h-ac .form-thanks-sub{color:#d9d2c5}
 .h-lineup{position:absolute;left:50%;bottom:0;transform:translateX(-50%);display:flex;align-items:end;gap:clamp(20px,4vw,70px);height:var(--lineup);z-index:1;pointer-events:none}
@@ -203,3 +203,146 @@
   .h-card{transform:none!important;opacity:1!important}
   .h-card::after,#quiz .quiz-option.h-opt:hover::before{animation:none}
 }
+
+/* =======================================================================
+   PÁGINAS INTERNAS COM A LINGUAGEM DA HOME
+   -----------------------------------------------------------------------
+   produtos.html, produto.html, sobre.html e as fichas dos perfumes
+   (perfume-*.html). Reaproveita as classes h- da home (.h-eyebrow, .h-h2,
+   .h-btn, .rv) e só acrescenta o que é específico destas páginas. Carrega
+   DEPOIS de style.css de propósito: as regras de um único seletor abaixo
+   vencem as antigas (.page-hero, .catalog-hero) pela ordem.
+
+   O QUE SAIU: a coroa, as folhas/ramos e o "V" gigante do topo. Vinham de
+   --bg-symbols, aplicado em .page-hero e .catalog-hero. Aqui o fundo é o da
+   home: preto profundo e uma luz dourada radial suave atrás do título.
+   ======================================================================= */
+body.h-page{background:var(--h-ink)}
+
+.h-pagehero{
+  position:relative; overflow:hidden; isolation:isolate; text-align:center; color:var(--h-ivory);
+  background:radial-gradient(58% 55% at 50% 0%,rgba(241,217,160,.17),transparent 72%),var(--h-ink);
+  --sec-bg:#08080a; --sec-fg:#faf9f6; --sec-fg-soft:#b7b2a8; --sec-line:rgba(250,249,246,.16);
+}
+/* os orbes e partículas genéricos do topo dão lugar à luz radial acima */
+.h-pagehero > .ambient, .h-pagehero .ambient-particles{display:none}
+.h-pagehero > *:not(.ambient){position:relative; z-index:1}
+.h-ph-glow{position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:radial-gradient(50% 45% at 50% 0%,rgba(241,217,160,.13),transparent 70%)}
+
+/* título: Cormorant, palavra-chave em itálico dourado */
+.h-pagehero .h-ph-title,
+.h-dark .h-ph-title{
+  font-family:var(--h-serif); font-weight:500; text-transform:none; letter-spacing:-.01em;
+  line-height:1; font-size:clamp(40px,5.2vw,80px); color:var(--h-ivory); text-wrap:balance;
+  animation:none; margin:0;
+}
+.h-pagehero .h-ph-title em,
+.h-dark .h-ph-title em{font-style:italic; font-weight:400; color:var(--h-gold-hi)}
+/* eyebrow em Jost espaçado — mesmo da home (12px, nunca abaixo disso) */
+.h-pagehero .h-eyebrow{font-size:12px; margin:0 0 16px; letter-spacing:.34em}
+.h-pagehero .catalog-hero-sub{color:#d9d2c5}
+
+/* botões destas páginas: mesma tipografia do .h-btn (o preenchimento dourado
+   no hover já vem do .btn de style.css) */
+.h-page .btn{font-family:var(--h-sans); font-size:12.5px; letter-spacing:.26em; border-color:var(--h-gold)}
+
+/* ---------- ficha "em breve" de um perfume ---------- */
+.h-ficha{padding:clamp(40px,8vh,96px) var(--h-gut) clamp(64px,10vh,120px); text-align:left}
+.h-ficha .btn{color:var(--h-ivory)}
+.h-ficha .btn:hover{background:var(--h-gold); color:#0b0906}
+.h-ficha-in{position:relative; z-index:1; max-width:1180px; margin:0 auto; display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(32px,6vw,96px); align-items:center}
+.h-ficha-foto{position:relative; display:grid; place-items:center; min-height:clamp(320px,58vh,620px)}
+.h-ficha-foto img{position:relative; z-index:1; display:block; width:auto; height:auto; max-width:100%;
+  max-height:min(62vh,600px);
+  filter:drop-shadow(0 40px 50px rgba(0,0,0,.65)) drop-shadow(0 0 40px rgba(233,201,164,.16))}
+.h-ficha-foto.wide img{max-height:min(46vh,420px)}
+.h-ficha-halo{position:absolute; left:50%; top:47%; width:125%; aspect-ratio:1; transform:translate(-50%,-50%);
+  pointer-events:none; background:radial-gradient(circle,rgba(233,201,164,.28),transparent 62%)}
+.h-ficha-piso{position:absolute; left:50%; bottom:5%; width:72%; height:38px; transform:translateX(-50%);
+  pointer-events:none; background:radial-gradient(closest-side,rgba(241,217,160,.30),transparent)}
+.h-ficha-info .h-h2{font-size:clamp(44px,5.4vw,84px)}
+.h-ficha-meta{margin:16px 0 0; font-family:var(--h-sans); font-size:13px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--h-gold-hi)}
+.h-ficha-frase{margin:18px 0 0; max-width:30ch; font-family:var(--h-serif); font-style:italic;
+  font-size:clamp(22px,2.2vw,30px); line-height:1.3; color:var(--h-ivory)}
+.h-selo{display:inline-flex; align-items:center; gap:10px; margin:26px 0 0; padding:8px 16px;
+  border:1px solid rgba(217,189,133,.45); border-radius:999px; font-family:var(--h-sans);
+  font-size:12px; font-weight:500; letter-spacing:.26em; text-transform:uppercase; color:var(--h-gold-hi)}
+.h-selo-ponto{width:6px; height:6px; border-radius:50%; background:var(--h-gold);
+  box-shadow:0 0 10px var(--h-gold); animation:h-selo-pulso 2.4s ease-in-out infinite}
+@keyframes h-selo-pulso{0%,100%{opacity:.45} 50%{opacity:1}}
+.h-avise, .h-disponivel{margin-top:30px; max-width:440px}
+.h-avise-titulo{margin:0 0 14px; font-family:var(--h-serif); font-size:clamp(24px,2.2vw,30px); color:var(--h-ivory)}
+.h-avise .stack-form{text-align:left}
+.h-avise .note{margin-top:14px; font-size:13px; letter-spacing:.02em; color:var(--h-mute)}
+.h-avise .form-thanks-title{font-family:var(--h-serif); font-style:italic; font-size:28px; color:var(--h-gold-hi)}
+.h-avise .form-thanks-sub{color:#d9d2c5}
+
+/* ---------- vitrine "em breve" (cartões) e "conheça também" ---------- */
+.h-outros{padding:clamp(56px,9vh,110px) var(--h-gut); text-align:center; color:var(--h-ivory);
+  background:linear-gradient(#08080a,#050506); border-top:1px solid rgba(217,189,133,.14)}
+.h-outros-in{max-width:1100px; margin:0 auto}
+.h-outros .h-h2{font-size:clamp(32px,3.6vw,52px)}
+.h-embreve-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:clamp(12px,2vw,24px); max-width:1100px; margin:36px auto 0}
+.h-embreve-card{display:flex; flex-direction:column; align-items:center; gap:8px; padding:20px 12px 22px;
+  border:1px solid rgba(217,189,133,.16); border-radius:3px; text-decoration:none; color:var(--h-ivory);
+  background:rgba(250,249,246,.02);
+  transition:border-color .35s ease, transform .35s ease, background-color .35s ease}
+.h-embreve-card:hover, .h-embreve-card:focus-visible{border-color:rgba(217,189,133,.5);
+  background:rgba(250,249,246,.04); transform:translateY(-4px)}
+.h-ec-media{display:flex; align-items:flex-end; justify-content:center; width:100%; height:clamp(150px,22vh,220px)}
+.h-ec-media img{max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain;
+  filter:drop-shadow(0 18px 24px rgba(0,0,0,.55))}
+.h-ec-selo{font-family:var(--h-sans); font-size:12px; font-weight:500; letter-spacing:.24em; text-transform:uppercase; color:var(--h-gold)}
+.h-ec-nome{font-family:var(--h-serif); font-size:clamp(20px,1.8vw,24px); line-height:1.2; text-wrap:balance}
+.h-ec-vol{font-family:var(--h-sans); font-size:12.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--h-gold-hi)}
+.h-ec-cta{margin-top:6px; font-family:var(--h-sans); font-size:12px; font-weight:500; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--h-gold-hi); border-bottom:1px solid rgba(241,217,160,.35); padding-bottom:3px}
+
+/* produtos.html com catálogo vazio: só a vitrine "em breve" */
+.h-embreve{text-align:center}
+.h-embreve .h-embreve-lede{margin:16px auto 0; max-width:46ch; font-family:var(--h-sans); font-size:17px; color:#d9d2c5}
+#listing.listing-embreve .listing-toolbar,
+#listing.listing-embreve #listing-filters,
+#listing.listing-embreve .listing-active-filters{display:none}
+#listing.listing-embreve .listing-layout{display:block}
+
+@media (max-width:900px){
+  .h-ficha-in{grid-template-columns:1fr; gap:28px; text-align:center}
+  .h-ficha-foto{min-height:clamp(260px,46vh,440px)}
+  .h-ficha-foto img{max-height:min(44vh,420px)}
+  .h-ficha-foto.wide img{max-height:min(34vh,300px)}
+  .h-ficha-frase, .h-avise, .h-disponivel{margin-left:auto; margin-right:auto}
+  .h-ficha-info .h-h2{font-size:clamp(40px,11vw,60px)}
+  .h-embreve-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion: reduce){
+  .h-selo-ponto{animation:none}
+  .h-embreve-card{transition:none}
+}
+/* catálogo sem produto: a busca e os atalhos do topo não têm o que buscar */
+html.catalogo-vazio .catalog-search, html.catalogo-vazio .catalog-quick-filters{display:none}
+
+/* produto.html: a página inteira na linguagem da home (fundo preto profundo +
+   luz dourada). Fichas de cor no lugar de .section-light, que era branco. */
+.h-dark{
+  position:relative; color:var(--h-ivory);
+  background:radial-gradient(58% 42% at 50% 0%,rgba(241,217,160,.14),transparent 70%),var(--h-ink);
+  --sec-bg:#08080a; --sec-fg:#faf9f6; --sec-fg-soft:#b7b2a8; --sec-line:rgba(250,249,246,.16);
+}
+.h-dark > .ambient{display:none}
+.h-dark .product-detail-empty{text-align:center}
+.h-dark .product-info .product-price, .h-dark .product-info .eyebrow{color:var(--h-gold-hi)}
+
+/* PISO DE LEGIBILIDADE — nenhum texto visível abaixo de 12px (ver style.css) */
+.h-nav button, .h-card .top span, .h-card .bot{font-size:12px}
+
+
+/* Coroa, folhas e monograma "V" são a decoração da linguagem antiga: nas
+   páginas internas que adotaram a linguagem da home nenhuma seção os
+   desenha — só o fundo liso, como na home. Lógica das demais páginas
+   (carrinho, favoritos, termos…) fica intacta. */
+body.h-page{ --bg-symbols:none; }

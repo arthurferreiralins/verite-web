@@ -23,7 +23,13 @@
      continuam usando --gold e --gold-deep exatamente como antes. */
   --gold-ink:#6f5429;
   --font-display:'Cormorant Garamond','Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,ui-serif,serif;
-  --font-sans:'Futura','Century Gothic',Optima,Candara,'Segoe UI',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  /* Jost na frente: é a única sans que o site REALMENTE carrega (Google
+     Fonts, no <head> de cada página). Antes a pilha começava por Futura e
+     Century Gothic, que não são baixadas — no Windows e no Android o texto
+     caía em outra fonte qualquer e o site mudava de cara de máquina para
+     máquina. O resto da pilha fica como reserva, para o caso de a fonte
+     não chegar. É a mesma --gig-sans que o banner já usava. */
+  --font-sans:Jost,'Futura','Century Gothic',Optima,Candara,'Segoe UI',ui-sans-serif,system-ui,-apple-system,sans-serif;
   --ease:cubic-bezier(.2,.8,.2,1);
 
   /* spacing scale — matches values already in real use across the file
@@ -672,6 +678,10 @@ nav.links a.nav-clube:hover{
   display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:1.2rem 2rem;
 }
 .mega-panel-wide .mega-col{min-width:0;}
+/* catálogo ainda sem produto: "Perfumes" vira a lista das 4 fichas "em breve"
+   (ver assets/js/generos-vazios.js) — uma coluna só, painel estreito */
+.mega-panel-wide.mega-panel-brief{width:min(340px, calc(100vw - 3rem));}
+.mega-panel-wide.mega-panel-brief .mega-panel-inner{grid-template-columns:1fr;}
 /* "ver todos" de cada gênero: primeira linha da coluna, em dourado, para a
    coluna continuar sendo um caminho direto pra categoria inteira */
 .mega-col a.mega-col-all{color:var(--gold-light); letter-spacing:.02em;}
@@ -2058,8 +2068,43 @@ header.is-scrolled .brand-mini .emblem-mini{height:22px;}
 header.is-scrolled .brand-mini .word{font-size:.92rem; letter-spacing:.2em;}
 header.is-scrolled .header-icon-label{max-height:0; opacity:0;}
 header.is-scrolled .header-icon{padding-top:.5rem; padding-bottom:.5rem;}
+
+/* =======================================================================
+   MODO COMPACTO DE VERDADE — a busca vira uma lupa
+   -----------------------------------------------------------------------
+   Encolher só os paddings levava o cabeçalho de ~138px para ~123px: quase
+   nada, e ele continuava comendo um sexto da tela em todo scroll. O que
+   ocupava espaço era a PILHA: barra de busca numa linha, navegação noutra.
+   Compacto, a busca vira um botão de lupa ao lado dos outros ícones e as
+   duas linhas viram uma só — o alvo de 64–72px no desktop.
+   Clicar na lupa devolve a barra (classe .busca-aberta, posta por
+   assets/js/main.js), sem tirar o cabeçalho do modo compacto.
+   ======================================================================= */
+header.is-scrolled .header-top{padding-top:.22rem; padding-bottom:.18rem;}
+header.is-scrolled .nav-inner{padding-top:0; padding-bottom:.22rem;}
+header.is-scrolled .header-icon{padding-top:.3rem; padding-bottom:.3rem;}
+header.is-scrolled .header-icon svg{width:17px; height:17px;}
+header.is-scrolled nav.links a, header.is-scrolled .nav-trigger{padding-bottom:.1rem;}
+header.is-scrolled nav.links a.nav-clube{padding-top:.18rem; padding-bottom:.2rem;}
+header.is-scrolled .brand-mini .emblem-mini{height:20px;}
+
+/* a barra recolhe; a lupa aparece no lugar dela */
+header.is-scrolled .header-search{
+  max-width:0; opacity:0; margin:0; padding:0; border-color:transparent;
+  overflow:hidden; pointer-events:none;
+  transition:max-width .35s var(--ease), opacity .25s ease, padding .35s ease;
+}
+header.is-scrolled.busca-aberta .header-search{
+  max-width:540px; opacity:1; pointer-events:auto;
+  padding:.2rem .3rem .2rem 1.3rem; border-color:rgba(250,249,246,.22);
+}
 header.is-scrolled .header-search input{padding:.42rem 0;}
 header.is-scrolled .header-search button{width:32px; height:32px;}
+
+/* o botão de lupa só existe no modo compacto */
+.header-busca-toggle{display:none;}
+header.is-scrolled .header-busca-toggle{display:flex;}
+header.is-scrolled.busca-aberta .header-busca-toggle{color:var(--gold-light);}
 @media (prefers-reduced-motion:reduce){
   .brand-mini .word, .header-icon-label, .header-search input,
   .brand-mini .emblem-mini{transition:none;}
@@ -2077,6 +2122,13 @@ header.is-scrolled .header-search button{width:32px; height:32px;}
      do <header>, exatamente como antes. */
   .nav-inner{padding-top:0; padding-bottom:0;}
   header.is-scrolled .nav-inner{padding-top:0; padding-bottom:0;}
+
+  /* No celular o cabeçalho compacto é só esta linha (a navegação é um
+     flyout). Com os paddings do desktop ele fechava em 49px, apertado
+     demais para o dedo; aqui volta para a faixa de ~58px. */
+  header.is-scrolled .header-top{padding-top:.72rem; padding-bottom:.72rem;}
+  header.is-scrolled .header-icon{padding-top:.45rem; padding-bottom:.45rem;}
+  header.is-scrolled .header-icon svg{width:19px; height:19px;}
 
   .header-top{flex-wrap:wrap; gap:.55rem; align-items:center;}
   .nav-toggle{order:0;}
@@ -3260,3 +3312,36 @@ html.static #inicio .gig-copy{ display:none; }
 @media (max-width:480px){
   .colecao-hero .rev-piece-media{ height:clamp(104px, 22vh, 140px); }
 }
+
+/* =======================================================================
+   PISO DE LEGIBILIDADE — nenhum texto visível abaixo de 12px
+   -----------------------------------------------------------------------
+   Rótulos, legendas e itens de menu estavam entre 9,6px e 11,8px (.6rem a
+   .74rem). 12px (.75rem) é o mínimo: a auditoria de tamanhos varre TODAS as
+   páginas, em desktop e celular, e lista qualquer texto visível abaixo
+   disso. As regras abaixo elevam cada rótulo encontrado sem mexer no resto
+   (mesma família, mesmo espaçamento entre letras, mesma caixa alta). Ficam
+   no FIM do arquivo de propósito, para vencer as regras originais pela
+   ordem.
+   ======================================================================= */
+.header-icon-label, .field label, .contact-list .label, .footer-col h4,
+.eyebrow, .mega-col-title, .to-top, .footer-bottom p,
+.catalog-theme-toggle-label, .btn, .btn-label,
+#kits-verite .kits-card-cat, #kits-verite .kits-card-cta{ font-size:.75rem; }
+nav.links a, nav.links .disabled-link, .nav-trigger{ font-size:.75rem; }
+#inicio .gig-kicker, #inicio .gig-hint, #inicio .gig-rail button span{ font-size:12px; }
+
+.pillar span:not(.icon){ font-size:.75rem; }
+/* leitura no celular: notas e legendas de apoio chegam a 13px */
+@media (max-width:640px){
+  .copyright, .note, .meta, .legal-updated, .footer-bottom p{ font-size:13px; }
+}
+
+/* CABEÇALHO COMPACTO SEM PULO DE ROLAGEM.
+   O cabeçalho é sticky e ocupa espaço no fluxo. Ao compactar (159→73px) o
+   documento perdia essa diferença de altura: o navegador (scroll anchoring)
+   recuava o scrollY, a rolagem caía abaixo dos 40px, o cabeçalho voltava a
+   ficar grande e o ciclo recomeçava — tremia entre ~40 e ~125px. A margem
+   devolve ao fluxo exatamente o que o cabeçalho encolheu, então a altura do
+   documento não muda e nada se mexe; visualmente só o cabeçalho fica menor. */
+header.is-scrolled{ margin-bottom:max(0px, calc(var(--header-h, 0px) - var(--header-h-compact, 0px))); }

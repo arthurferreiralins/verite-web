@@ -16,7 +16,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <link rel="canonical" href="https://veriteperfumes.com.br/entregas.html"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap"/>
 <link rel="stylesheet" href="assets/css/style.css"/>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
@@ -55,13 +55,20 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       </span>
       <span class="word">Verité</span>
     </a>
-    <form class="header-search" action="produtos.html" method="get" role="search">
+    <form class="header-search" id="header-busca" action="produtos.html" method="get" role="search">
       <input type="search" name="busca" placeholder="Qual fragrância você procura?" aria-label="Buscar fragrância" autocomplete="off"/>
       <button type="submit" aria-label="Buscar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       </button>
     </form>
     <div class="header-actions">
+      <!-- Só aparece quando o cabeçalho fica compacto (header.is-scrolled):
+           a barra de busca recolhe e esta lupa a devolve. Ver o bloco
+           "MODO COMPACTO DE VERDADE" em assets/css/style.css. -->
+      <button type="button" class="header-icon header-busca-toggle" data-busca-toggle aria-label="Buscar" aria-expanded="false" aria-controls="header-busca">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span class="header-icon-label">Buscar</span>
+      </button>
       <a class="header-icon" href="/clube" aria-label="Minha conta">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.4-4.2 5.9-6 8-6s6.6 1.8 8 6"/></svg>
         <span class="header-icon-label">Conta</span>
@@ -299,7 +306,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       <div class="footer-col reveal">
         <h4>Redes Sociais</h4>
         <ul>
-          <li><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
+          <li hidden><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
           <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
         </ul>
       </div>
@@ -328,6 +335,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <script src="assets/js/cart.js"></script>
 <script src="assets/js/search.js"></script>
 <script src="assets/js/dados-empresa.js"></script>
+<script src="assets/js/perfumes-dados.js"></script>
 <script src="assets/js/generos-vazios.js" defer></script>
 </body>
 </html>

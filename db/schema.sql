@@ -28,6 +28,11 @@ CREATE TABLE IF NOT EXISTS leads (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Perfume que a pessoa quer ser avisada (fichas "em breve", perfume-*.html).
+-- Idempotente: pode rodar de novo sem efeito. Opcional: api/_handlers/public/waitlist.js
+-- funciona sem esta coluna (so nao guarda o nome do perfume).
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS perfume TEXT;
+
 CREATE TABLE IF NOT EXISTS messages (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,

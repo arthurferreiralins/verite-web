@@ -15,3 +15,6 @@ assets/js/hero-banner.js
 # pagina inteira, com barra e textos de prototipo, que nao deve ser
 # acessivel em veriteperfumes.com.br.
 referencia/
+
+# tools/ guarda scripts de manutencao (gerar-fichas.py); nao vao para o ar
+tools/

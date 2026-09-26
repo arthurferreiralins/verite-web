@@ -74,7 +74,32 @@
     if(href.indexOf('http') === 0){ el.target = '_blank'; el.rel = 'noopener'; }
     var value = el.querySelector('.value');
     if(value) value.textContent = displayText;
+    else {
+      /* link de texto simples (rodapé: "Instagram — @perfil"): troca só o
+         perfil e mantém o prefixo, senão o texto continuaria mostrando o
+         perfil ANTIGO enquanto o href já aponta para o novo */
+      var m = el.textContent.match(/^(.*?—\s*)/);
+      if(m) el.textContent = m[1] + displayText;
+    }
   }
+  /* Um canal do rodapé/contato só existe se o painel tiver o valor.
+     Esconde o <li> inteiro (ou o próprio elemento, se não estiver numa
+     lista), marcando com um atributo próprio para nunca brigar com um
+     `hidden` que já viesse do HTML por outro motivo. */
+  function esconderSeVazio(chave, valor, aoTerValor){
+    document.querySelectorAll('[data-settings-key="' + chave + '"]').forEach(function(el){
+      var caixa = el.closest('li') || el;
+      if(valor){
+        /* o HTML nasce com o item escondido: aparece SÓ quando o painel tem o dado */
+        caixa.removeAttribute('data-sem-dado'); caixa.hidden = false;
+        aoTerValor(el);
+      } else if(!caixa.hasAttribute('data-sem-dado')){
+        caixa.setAttribute('data-sem-dado', '');
+        caixa.hidden = true;
+      }
+    });
+  }
+
   function applySettings(settings){
     if(!settings) return;
     if(settings.whatsappNumber){
@@ -85,16 +110,18 @@
         if(valueEl) valueEl.textContent = formatPhoneDisplay(settings.whatsappNumber);
       });
     }
-    if(settings.instagramUrl){
-      document.querySelectorAll('[data-settings-key="instagram"]').forEach(function(el){
-        applyLinkSetting(el, settings.instagramUrl, extractInstagramHandle(settings.instagramUrl));
-      });
-    }
-    if(settings.contactEmail){
-      document.querySelectorAll('[data-settings-key="email"]').forEach(function(li){
-        activateDisabledLi(li, 'mailto:' + settings.contactEmail, settings.contactEmail);
-      });
-    }
+    /* QUEM MANDA É O PAINEL, inclusive para ESCONDER.
+       O Instagram estava escrito à mão no rodapé de todas as páginas
+       ("Instagram — @verite.perfumes") e aparecia mesmo com o campo vazio
+       no painel. Um canal anunciado que ninguém cadastrou é promessa que o
+       site não cumpre. Agora: com valor, mostra o valor do painel; sem
+       valor, o item some. E volta sozinho quando for preenchido. */
+    esconderSeVazio('instagram', settings.instagramUrl, function(el){
+      applyLinkSetting(el, settings.instagramUrl, extractInstagramHandle(settings.instagramUrl));
+    });
+    esconderSeVazio('email', settings.contactEmail, function(li){
+      activateDisabledLi(li, 'mailto:' + settings.contactEmail, settings.contactEmail);
+    });
     if(settings.logoUrl){
       document.querySelectorAll('[data-logo="emblem"], [data-logo="full"]').forEach(function(img){
         img.src = settings.logoUrl;

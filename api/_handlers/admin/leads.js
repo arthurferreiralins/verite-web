@@ -16,10 +16,11 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.query.export === 'csv') {
-    const { rows } = await sql`SELECT name, email, created_at FROM leads ORDER BY created_at DESC`;
-    const lines = ['Nome,E-mail,Data de cadastro'];
+    // SELECT * de propósito: a coluna `perfume` pode ainda não existir no banco
+    const { rows } = await sql`SELECT * FROM leads ORDER BY created_at DESC`;
+    const lines = ['Nome,E-mail,Perfume de interesse,Data de cadastro'];
     rows.forEach((r) => {
-      lines.push([csvEscape(r.name), csvEscape(r.email), csvEscape(new Date(r.created_at).toISOString())].join(','));
+      lines.push([csvEscape(r.name), csvEscape(r.email), csvEscape(r.perfume), csvEscape(new Date(r.created_at).toISOString())].join(','));
     });
     const csv = lines.join('\r\n');
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');

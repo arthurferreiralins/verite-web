@@ -516,3 +516,7 @@
   .club-header-inner{gap:.4rem;}
   .digital-card-meta{gap:1rem;}
 }
+
+/* PISO DE LEGIBILIDADE — nenhum texto visível abaixo de 12px (ver style.css) */
+.gate-choice-cta, .club-eyebrow{ font-size:.75rem; }
+

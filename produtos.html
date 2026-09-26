@@ -11,14 +11,15 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <script>try{if(localStorage.getItem('verite-catalog-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Catálogo Verité: perfumes femininos, masculinos, unissex, kits e presentes. Perfumaria de luxo — encontre a fragrância que combina com você."/>
+<meta name="description" content="Catálogo Verité: perfumes femininos, masculinos, kits e presentes. Perfumaria de luxo — encontre a fragrância que combina com você."/>
 <meta name="theme-color" content="#0c0c0d"/>
-<title>Perfumes Verité | Femininos, Masculinos, Unissex e Kits</title>
+<title>Perfumes Verité | Femininos, Masculinos e Kits</title>
 <link rel="canonical" href="https://veriteperfumes.com.br/produtos.html"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap"/>
 <link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="stylesheet" href="assets/css/home-nova.css"/>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="64x64" href="assets/img/favicon-64.png"/>
 <link rel="apple-touch-icon" href="assets/img/favicon-256.png"/>
@@ -26,15 +27,15 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="VERITÉ"/>
 <meta property="og:url" content="https://veriteperfumes.com.br/produtos.html"/>
-<meta property="og:title" content="Perfumes Verité | Femininos, Masculinos, Unissex e Kits"/>
-<meta property="og:description" content="Femininos, masculinos, unissex, kits e presentes — encontre a fragrância que combina com você."/>
+<meta property="og:title" content="Perfumes Verité | Femininos, Masculinos e Kits"/>
+<meta property="og:description" content="Femininos, masculinos, kits e presentes — encontre a fragrância que combina com você."/>
 <meta property="og:image" content="https://veriteperfumes.com.br/assets/img/og-image.jpg"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:locale" content="pt_BR"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Perfumes Verité | Femininos, Masculinos, Unissex e Kits"/>
-<meta name="twitter:description" content="Femininos, masculinos, unissex, kits e presentes."/>
+<meta name="twitter:title" content="Perfumes Verité | Femininos, Masculinos e Kits"/>
+<meta name="twitter:description" content="Femininos, masculinos, kits e presentes."/>
 <meta name="twitter:image" content="https://veriteperfumes.com.br/assets/img/og-image.jpg"/>
 <meta property="og:image:alt" content="Verité Perfumes"/>
 <script type="application/ld+json">
@@ -48,7 +49,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 }
 </script>
 </head>
-<body>
+<body class="h-page">
 <a class="skip-link" href="#listing">Pular para conteúdo</a>
 
 <header>
@@ -59,13 +60,20 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       </span>
       <span class="word">Verité</span>
     </a>
-    <form class="header-search" action="produtos.html" method="get" role="search">
+    <form class="header-search" id="header-busca" action="produtos.html" method="get" role="search">
       <input type="search" name="busca" placeholder="Qual fragrância você procura?" aria-label="Buscar fragrância" autocomplete="off"/>
       <button type="submit" aria-label="Buscar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       </button>
     </form>
     <div class="header-actions">
+      <!-- Só aparece quando o cabeçalho fica compacto (header.is-scrolled):
+           a barra de busca recolhe e esta lupa a devolve. Ver o bloco
+           "MODO COMPACTO DE VERDADE" em assets/css/style.css. -->
+      <button type="button" class="header-icon header-busca-toggle" data-busca-toggle aria-label="Buscar" aria-expanded="false" aria-controls="header-busca">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <span class="header-icon-label">Buscar</span>
+      </button>
       <a class="header-icon" href="/clube" aria-label="Minha conta">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.4-4.2 5.9-6 8-6s6.6 1.8 8 6"/></svg>
         <span class="header-icon-label">Conta</span>
@@ -241,7 +249,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <main>
 
   <!-- ============ Topo da página ============ -->
-  <section id="top" class="page-hero catalog-hero has-ambient">
+  <section id="top" class="page-hero catalog-hero h-pagehero has-ambient">
     <div class="ambient" data-parallax="20" aria-hidden="true">
       <div class="ambient-orb orb-a" style="width:320px;height:320px;top:-70px;right:8%;"></div>
       <div class="ambient-orb orb-b" style="width:260px;height:260px;bottom:-60px;left:6%;"></div>
@@ -251,10 +259,10 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       <div class="emblem-wrap">
         <img data-logo="emblem" src="assets/img/verite-emblem.webp" alt="" width="468" height="431" decoding="async" />
       </div>
-      <p class="catalog-hero-kicker">A Cole&ccedil;&atilde;o</p>
-      <h1 id="listing-title" class="catalog-hero-title">Nossos Perfumes</h1>
-      <p class="catalog-hero-sub">Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.</p>
-      <form class="catalog-search" action="produtos.html" method="get" role="search">
+      <p class="catalog-hero-kicker h-eyebrow rv">A Cole&ccedil;&atilde;o</p>
+      <h1 id="listing-title" class="catalog-hero-title h-ph-title rv d1">Nossos <em>Perfumes</em></h1>
+      <p class="catalog-hero-sub rv d2">Fragr&acirc;ncias criadas para transformar presen&ccedil;a em identidade.</p>
+      <form class="catalog-search rv d3" action="produtos.html" method="get" role="search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
         <input type="search" name="busca" placeholder="Buscar perfume pelo nome" aria-label="Buscar perfume pelo nome" autocomplete="off"/>
         <button type="submit" class="catalog-search-btn">Buscar</button>
@@ -323,6 +331,44 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
             <div class="skeleton-card"></div><div class="skeleton-card"></div>
           </div>
           <div class="product-grid" id="listing-grid" hidden></div>
+          <!-- Vitrine "em breve": aparece no lugar do antigo "Em preparação" enquanto
+               o painel não tiver NENHUM produto publicado (assets/js/listing.js).
+               Só os 4 perfumes reais, cada um apontando para a própria ficha. -->
+          <div class="h-embreve" id="embreve-vitrine" hidden>
+            <p class="h-eyebrow">Em breve</p>
+            <h2 class="h-h2">A coleção <em>Verité</em></h2>
+            <p class="h-embreve-lede">Os perfumes da Verité chegam em breve. Escolha um e deixe seu e-mail para ser avisado quando chegar.</p>
+            <div class="h-embreve-grid">
+          <a class="h-embreve-card" href="perfume-feminino.html" data-perfume="feminino">
+            <span class="h-ec-media"><img src="assets/img/frasco-feminino.webp" alt="Frasco Verité Feminino" width="540" height="725" loading="lazy" decoding="async" draggable="false"/></span>
+            <span class="h-ec-selo">Em breve</span>
+            <span class="h-ec-nome">Verité Feminino</span>
+            <span class="h-ec-vol">Eau de Parfum · 50 ml</span>
+            <span class="h-ec-cta">Ver ficha <span aria-hidden="true">&rarr;</span></span>
+          </a>
+          <a class="h-embreve-card" href="perfume-masculino.html" data-perfume="masculino">
+            <span class="h-ec-media"><img src="assets/img/frasco-verite-hero.webp" alt="Frasco Verité Masculino" width="263" height="481" loading="lazy" decoding="async" draggable="false"/></span>
+            <span class="h-ec-selo">Em breve</span>
+            <span class="h-ec-nome">Verité Masculino</span>
+            <span class="h-ec-vol">Eau de Parfum · 40 ml</span>
+            <span class="h-ec-cta">Ver ficha <span aria-hidden="true">&rarr;</span></span>
+          </a>
+          <a class="h-embreve-card" href="perfume-dorea.html" data-perfume="dorea">
+            <span class="h-ec-media"><img src="assets/img/frasco-dorea.webp" alt="Frasco Verité Doréa" width="560" height="840" loading="lazy" decoding="async" draggable="false"/></span>
+            <span class="h-ec-selo">Em breve</span>
+            <span class="h-ec-nome">Verité Doréa</span>
+            <span class="h-ec-vol">Eau de Parfum · 30 ml</span>
+            <span class="h-ec-cta">Ver ficha <span aria-hidden="true">&rarr;</span></span>
+          </a>
+          <a class="h-embreve-card" href="perfume-kit.html" data-perfume="kit">
+            <span class="h-ec-media wide"><img src="assets/img/frasco-kits.webp" alt="Frasco Kit Verité" width="760" height="570" loading="lazy" decoding="async" draggable="false"/></span>
+            <span class="h-ec-selo">Em breve</span>
+            <span class="h-ec-nome">Kit Verité</span>
+            <span class="h-ec-vol">30 ml · 50 ml · 20 ml</span>
+            <span class="h-ec-cta">Ver ficha <span aria-hidden="true">&rarr;</span></span>
+          </a>
+            </div>
+          </div>
           <div class="category-empty" id="listing-empty" hidden>
             <span class="icon">
               <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><path d="M24 6 C24 6 30 16 30 24 C30 29.5 27.3 34 24 34 C20.7 34 18 29.5 18 24 C18 16 24 6 24 6Z"/></svg>
@@ -431,7 +477,7 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
       <div class="footer-col reveal">
         <h4>Redes Sociais</h4>
         <ul>
-          <li><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
+          <li hidden><a href="https://www.instagram.com/verite.perfumes/" target="_blank" rel="noopener" data-settings-key="instagram">Instagram — @verite.perfumes</a></li>
           <li><a href="https://wa.me/5581981553632" target="_blank" rel="noopener" data-settings-key="whatsapp">WhatsApp</a></li>
         </ul>
       </div>
@@ -464,6 +510,8 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
 <script src="assets/js/products-loader.js"></script>
 <script src="assets/js/catalog-theme.js"></script>
 <script src="assets/js/dados-empresa.js"></script>
+<script src="assets/js/perfumes-dados.js"></script>
+<script src="assets/js/paginas-internas.js" defer></script>
 <script src="assets/js/generos-vazios.js" defer></script>
 </body>
 </html>
