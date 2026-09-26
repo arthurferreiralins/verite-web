@@ -32,7 +32,7 @@ Troca feita em 26/09/2026. Fonte oficial do visual: `referencia/nova-home/index.
 
 ## Dados
 - Mapeamento dos frascos: Feminino 50 ml = frasco-feminino.webp; Masculino 40 ml =
-  frasco-verite-hero.webp; Doréa 30 ml = frasco-unisex.webp; Kit 30·50·20 ml = frasco-kits.webp.
+  frasco-verite-hero.webp; Doréa 30 ml = frasco-dorea.webp; Kit 30·50·20 ml = frasco-kits.webp.
 - Nenhuma nota olfativa ou preço inventado. As frases de cada sala vêm dos valores da marca.
 
 ## Testado

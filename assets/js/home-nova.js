@@ -206,7 +206,7 @@
   };
   const AURA = { 'Floral': 'rgba(236,158,170,.6)', 'Amadeirada': 'rgba(168,104,48,.65)', 'Cítrica': 'rgba(222,210,88,.5)', 'Oriental': 'rgba(176,52,40,.6)', 'Doce': 'rgba(216,150,78,.58)', 'Aromática': 'rgba(118,162,108,.52)', 'Leve': 'rgba(196,210,232,.45)', 'Moderada': 'rgba(214,178,108,.5)', 'Intensa': 'rgba(204,116,44,.6)', 'Dia a dia': 'rgba(240,218,146,.5)', 'Trabalho': 'rgba(168,180,204,.45)', 'Noite': 'rgba(84,92,176,.55)', 'Ocasiões especiais': 'rgba(241,217,160,.6)' };
   const CAPTION = { 'Floral': 'Delicado e marcante', 'Amadeirada': 'Quente e profunda', 'Cítrica': 'Fresca e luminosa', 'Oriental': 'Intensa e envolvente', 'Doce': 'Macia e acolhedora', 'Aromática': 'Verde e elegante', 'Leve': 'Discreta e próxima', 'Moderada': 'Presente sem exagero', 'Intensa': 'Rastro que fica' };
-  const SHELF = [['assets/img/frasco-feminino.webp', ''], ['assets/img/frasco-verite-hero.webp', ''], ['assets/img/frasco-unisex.webp', ''], ['assets/img/frasco-kits.webp', 'kit']];
+  const SHELF = [['assets/img/frasco-feminino.webp', ''], ['assets/img/frasco-verite-hero.webp', ''], ['assets/img/frasco-dorea.webp', ''], ['assets/img/frasco-kits.webp', 'kit']];
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   function dressQuiz() {
     $$('#quiz .quiz-options:not(.h-opts)').forEach(box => { const n = box.children.length; box.classList.add('h-opts'); if (n === 6) box.classList.add('six'); else if (n === 4) box.classList.add('four'); });
