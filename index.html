@@ -426,13 +426,17 @@ if(/[?&]fills=1/.test(location.search) || location.hash === '#fills'){
           <div class="h-word" aria-hidden="true">DORÉA</div>
           <div class="h-floor" aria-hidden="true"></div>
           <div class="h-bottle" data-room="2">
-            <div class="img"><img src="assets/img/frasco-dorea.webp" alt="Frasco Verité Doréa, Eau de Parfum 30 ml" width="560" height="840" loading="lazy" decoding="async" draggable="false"/><i data-mask></i></div>
+            <div class="img"><img src="assets/img/frasco-dorea.webp" alt="Frasco do perfume feminino Verité Doréa, Eau de Parfum 30 ml" width="560" height="840" loading="lazy" decoding="async" draggable="false"/><i data-mask></i></div>
             <img class="refl" src="assets/img/frasco-dorea.webp" alt="" aria-hidden="true" width="560" height="840" loading="lazy" decoding="async"/>
           </div>
           <div class="h-info">
             <span class="h-idx">03 — Doréa</span>
             <h3>Verité <em>Doréa</em></h3>
-            <p class="meta">Eau de Parfum · 30 ml</p>
+            <!-- As salas 01 e 02 já dizem o gênero no próprio nome
+                 ("Verité Feminino", "Verité Masculino"). O Doréa tem nome
+                 próprio, então sem isto aqui nada na página diz que ele é
+                 um perfume feminino. -->
+            <p class="meta">Perfume feminino · Eau de Parfum · 30 ml</p>
             <p class="line">Única, como você.</p>
             <a class="h-btn" href="produtos.html?genero=feminino">Conhecer <span aria-hidden="true">&rarr;</span></a>
           </div>
