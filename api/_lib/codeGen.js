@@ -16,8 +16,20 @@ function formatCode() {
   return `VRT-${randomChunk(4)}-${randomChunk(4)}`;
 }
 
+/* Reconstrói o formato canônico VRT-XXXX-XXXX a partir de QUALQUER jeito
+   razoável de digitar o código de um cartão físico: sem traço, com espaço
+   no lugar do traço, em minúsculas, colado. Antes disto, "VRT 7K4P 92XQ"
+   (o mesmo código, só com espaço em vez de traço) batia "Código não
+   encontrado" — o banco guarda com traço e a comparação era literal. Só
+   reconecta os traços quando o texto tem a cara de um código nosso (VRT +
+   8 caracteres); qualquer outra coisa passa batom (vira maiúsculo/sem
+   espaço) e simplesmente não bate com nada, como antes. */
 function normalizeCode(input) {
-  return String(input || '').trim().toUpperCase().replace(/\s+/g, '');
+  var raw = String(input || '').trim().toUpperCase();
+  var bare = raw.replace(/[^A-Z0-9]/g, '');
+  var m = bare.match(/^VRT([A-Z0-9]{4})([A-Z0-9]{4})$/);
+  if (m) return 'VRT-' + m[1] + '-' + m[2];
+  return raw.replace(/\s+/g, '');
 }
 
 /** Generates a code guaranteed unique against club_codes.code. */

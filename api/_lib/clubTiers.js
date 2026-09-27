@@ -9,8 +9,17 @@ const { sql } = require('./db');
  * Sem pedido real ainda, todo mundo cai no nível de entrada, o que é honesto.
  */
 async function getActiveTiers() {
-  const { rows } = await sql`SELECT * FROM club_tiers WHERE active = true ORDER BY min_spent ASC, min_orders ASC, sort_order ASC`;
-  return rows;
+  try {
+    const { rows } = await sql`SELECT * FROM club_tiers WHERE active = true ORDER BY min_spent ASC, min_orders ASC, sort_order ASC`;
+    return rows;
+  } catch (e) {
+    // 42703 = a coluna min_orders ainda não existe neste banco (migração de
+    // db/schema.sql pendente — "5 níveis oficiais"). Sem isso, /api/club/tier,
+    // /benefits e /card quebravam com 500 pra QUALQUER cliente logado, em vez
+    // de mostrar o nível de entrada honestamente até a migração ser aplicada.
+    if (e && e.code === '42703') return [];
+    throw e;
+  }
 }
 
 function tierUnlocked(tier, totalSpent, ordersCount) {
