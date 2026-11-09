@@ -19,6 +19,16 @@
       "statusCode": 301
     }
   ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Content-Security-Policy", "value": "frame-ancestors 'self' https://jarvis-arthur-tau.vercel.app" }
+      ]
+    }
+  ],
   "functions": {
     "api/painel.js": {
       "includeFiles": "api/_private/**"
